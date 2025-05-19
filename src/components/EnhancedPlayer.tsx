@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Repeat, Shuffle, ListMusic, Maximize2, Minimize2, ChevronUp, ChevronDown, Mic } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
@@ -12,13 +11,17 @@ import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+interface EnhancedPlayerProps {
+  isPlaying?: boolean; // Add this prop to the interface
+}
+
 const sampleLyrics = {
   "song1": "This is where the lyrics would go\nVerse 1 lyrics here\nMore lyrics for the first verse\n\nChorus\nThis is the chorus\nMore chorus lyrics\n\nVerse 2\nSecond verse lyrics here\nContinuing the second verse",
   "song2": "Different song lyrics\nThis is another song's verse\nWith different words\n\nChorus\nAnother chorus here\nWith its own lyrics\n\nBridge\nThis song has a bridge\nWith unique lyrics",
   // More sample lyrics can be added as needed
 };
 
-const EnhancedPlayer = () => {
+const EnhancedPlayer: React.FC<EnhancedPlayerProps> = ({ isPlaying: externalIsPlaying }) => {
   const {
     currentSong,
     isPlaying,
@@ -34,6 +37,9 @@ const EnhancedPlayer = () => {
     setPlaybackMode,
     queue
   } = usePlayer();
+  
+  // If external isPlaying prop is provided, use it, otherwise use the one from PlayerContext
+  const effectiveIsPlaying = externalIsPlaying !== undefined ? externalIsPlaying : isPlaying;
   
   const [showVolumeControl, setShowVolumeControl] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -274,9 +280,9 @@ const EnhancedPlayer = () => {
             <button
               onClick={togglePlayPause}
               className="bg-white text-black rounded-full p-4 hover:bg-gray-200 transition"
-              aria-label={isPlaying ? "Pause" : "Play"}
+              aria-label={effectiveIsPlaying ? "Pause" : "Play"}
             >
-              {isPlaying ? (
+              {effectiveIsPlaying ? (
                 <Pause className="h-8 w-8" />
               ) : (
                 <Play className="h-8 w-8" />
@@ -402,9 +408,9 @@ const EnhancedPlayer = () => {
           <button
             onClick={togglePlayPause}
             className="bg-white text-black rounded-full p-1 hover:bg-gray-200 transition mx-2"
-            aria-label={isPlaying ? "Pause" : "Play"}
+            aria-label={effectiveIsPlaying ? "Pause" : "Play"}
           >
-            {isPlaying ? (
+            {effectiveIsPlaying ? (
               <Pause className="h-5 w-5 md:h-6 md:w-6" />
             ) : (
               <Play className="h-5 w-5 md:h-6 md:w-6" />
