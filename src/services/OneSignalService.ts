@@ -10,15 +10,17 @@ export const setupOneSignal = (): boolean => {
   console.log('Setting up OneSignal with app ID:', ONE_SIGNAL_APP_ID);
   
   // Check if OneSignal is already defined
-  if (typeof window !== 'undefined' && (window as any).OneSignal) {
+  if (typeof window !== 'undefined' && window.OneSignal) {
     try {
-      (window as any).OneSignal.push(function() {
-        (window as any).OneSignal.init({
+      window.OneSignal.push(() => {
+        window.OneSignal.init({
           appId: ONE_SIGNAL_APP_ID,
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: true,
           },
+          serviceWorkerParam: { scope: '/push/' },
+          serviceWorkerPath: '/OneSignalSDKWorker.js',
         });
       });
       return true;
@@ -50,12 +52,12 @@ export const showOneSignalSongNotification = (
   const message = `${title} by ${artist}`;
   
   // Check if OneSignal is available
-  if (typeof window !== 'undefined' && (window as any).OneSignal) {
+  if (typeof window !== 'undefined' && window.OneSignal) {
     try {
       // Send notification to current user
-      (window as any).OneSignal.sendSelfNotification(
-        { en: notificationTitle },
-        { en: message },
+      window.OneSignal.sendSelfNotification(
+        notificationTitle,
+        message,
         window.location.href,
         imageUrl || '',
         { mediaUrl: imageUrl }
@@ -76,5 +78,5 @@ export const showOneSignalSongNotification = (
  * @returns boolean indicating if OneSignal is available
  */
 export const isOneSignalAvailable = (): boolean => {
-  return typeof window !== 'undefined' && typeof (window as any).OneSignal !== 'undefined';
+  return typeof window !== 'undefined' && typeof window.OneSignal !== 'undefined';
 };

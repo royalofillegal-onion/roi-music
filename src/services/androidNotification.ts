@@ -1,12 +1,11 @@
-
 // Detect if running inside Android WebView with native interface
 export const isAndroidWebView = (): boolean => {
-  return /Android/i.test(navigator.userAgent) && typeof (window as any).AndroidInterface !== 'undefined';
+  return /Android/i.test(navigator.userAgent) && typeof window.AndroidInterface !== 'undefined';
 };
 
 // Check if OneSignal is available
 export const isOneSignalAvailable = (): boolean => {
-  return typeof (window as any).OneSignal !== 'undefined';
+  return typeof window !== 'undefined' && typeof window.OneSignal !== 'undefined';
 };
 
 // Call Android native to show notification

@@ -7,7 +7,7 @@ import './index.css';
 // Create OneSignal script element
 function loadOneSignalScript() {
   const script = document.createElement('script');
-  script.src = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
+  script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
   script.async = true;
   document.head.appendChild(script);
   
