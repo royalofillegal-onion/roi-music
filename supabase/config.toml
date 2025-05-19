@@ -1,0 +1,3 @@
+
+project_id = "ekzieegqiyrvbutdchhd"
+storage_config = { buckets = [{ name = "avatars", public = true }, { name = "reels", public = true }] }
