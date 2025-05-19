@@ -2,8 +2,7 @@ import React, { createContext, useState, useEffect, useContext, useRef } from 'r
 import { Song } from '@/data/songs';
 import { supabase } from '@/integrations/supabase/client';
 import { 
-  requestNotificationPermission, 
-  showSongNotification 
+  requestNotificationPermission
 } from '@/services/NotificationService';
 import { 
   isAndroidWebView, 
@@ -12,6 +11,7 @@ import {
   getBackgroundPlaybackEnabled,
   requestBackgroundPlayback
 } from '@/services/androidNotification';
+import { showSongNotification } from '@/services/showSongNotification';
 
 interface PlayerContextType {
   currentSong: Song | null;
@@ -231,9 +231,10 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // Show notification with song info and playing state
         if (notificationsEnabled && currentSong) {
           showSongNotification(
-            `Now Playing: ${currentSong.title}`,
-            `By ${currentSong.artist}`,
-            currentSong.imageUrl
+            currentSong.title,
+            currentSong.artist,
+            currentSong.imageUrl,
+            isPlaying
           );
         }
       }
@@ -269,8 +270,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Update notification if song is playing when background state changes
       if (currentSong && appInBackground && isPlaying) {
         showSongNotification(
-          `Now Playing: ${currentSong.title}`,
-          `By ${currentSong.artist}`,
+          currentSong.title,
+          currentSong.artist,
           currentSong.imageUrl,
           isPlaying
         );
