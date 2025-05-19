@@ -11,7 +11,7 @@ function loadOneSignalScript() {
   script.async = true;
   document.head.appendChild(script);
   
-  // Initialize OneSignal window object
+  // Initialize OneSignal window object as an empty array first
   window.OneSignal = window.OneSignal || [];
 }
 

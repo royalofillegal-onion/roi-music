@@ -1,4 +1,15 @@
 
+// Extend Window interface for OneSignal
+declare global {
+  interface Window {
+    OneSignal: any[] & {
+      push: (callback: () => void) => void;
+      init?: (options: any) => void;
+      sendSelfNotification?: (title: string, message: string, url: string, icon: string, data: any) => void;
+    };
+  }
+}
+
 // OneSignal App ID
 const ONE_SIGNAL_APP_ID = '6b789b89-eb87-40b6-839f-70b6e79d3a48';
 
@@ -13,15 +24,19 @@ export const setupOneSignal = (): boolean => {
   if (typeof window !== 'undefined' && window.OneSignal) {
     try {
       window.OneSignal.push(() => {
-        window.OneSignal.init({
-          appId: ONE_SIGNAL_APP_ID,
-          allowLocalhostAsSecureOrigin: true,
-          notifyButton: {
-            enable: true,
-          },
-          serviceWorkerParam: { scope: '/push/' },
-          serviceWorkerPath: '/OneSignalSDKWorker.js',
-        });
+        if (window.OneSignal.init) {
+          window.OneSignal.init({
+            appId: ONE_SIGNAL_APP_ID,
+            allowLocalhostAsSecureOrigin: true,
+            notifyButton: {
+              enable: true,
+            },
+            serviceWorkerParam: { scope: '/push/' },
+            serviceWorkerPath: '/OneSignalSDKWorker.js',
+          });
+        } else {
+          console.warn('OneSignal.init is not available yet');
+        }
       });
       return true;
     } catch (e) {
@@ -52,7 +67,7 @@ export const showOneSignalSongNotification = (
   const message = `${title} by ${artist}`;
   
   // Check if OneSignal is available
-  if (typeof window !== 'undefined' && window.OneSignal) {
+  if (typeof window !== 'undefined' && window.OneSignal && window.OneSignal.sendSelfNotification) {
     try {
       // Send notification to current user
       window.OneSignal.sendSelfNotification(
@@ -78,5 +93,6 @@ export const showOneSignalSongNotification = (
  * @returns boolean indicating if OneSignal is available
  */
 export const isOneSignalAvailable = (): boolean => {
-  return typeof window !== 'undefined' && typeof window.OneSignal !== 'undefined';
+  return typeof window !== 'undefined' && typeof window.OneSignal !== 'undefined' && 
+    typeof window.OneSignal.sendSelfNotification === 'function';
 };

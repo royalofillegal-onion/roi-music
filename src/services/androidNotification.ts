@@ -1,3 +1,18 @@
+
+// Add AndroidInterface to Window interface
+declare global {
+  interface Window {
+    AndroidInterface?: {
+      showNotification: (title: string, body: string, imageUrl: string, isPlaying: number) => void;
+      cancelNotification: () => void;
+      updatePlaybackState: (isPlaying: number) => void;
+      onSongCompleted: () => void;
+      isBackgroundPlaybackEnabled: () => number;
+      requestBackgroundPlayback: () => void;
+    };
+  }
+}
+
 // Detect if running inside Android WebView with native interface
 export const isAndroidWebView = (): boolean => {
   return /Android/i.test(navigator.userAgent) && typeof window.AndroidInterface !== 'undefined';
@@ -13,7 +28,7 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
   if (isAndroidWebView()) {
     try {
       // Pass image URL and playing state to Android for rich notifications
-      (window as any).AndroidInterface.showNotification(
+      window.AndroidInterface?.showNotification(
         title, 
         body || '', 
         imageUrl || '',
@@ -30,7 +45,7 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
 export const cancelAndroidNotification = () => {
   if (isAndroidWebView()) {
     try {
-      (window as any).AndroidInterface.cancelNotification();
+      window.AndroidInterface?.cancelNotification();
       console.log('Android native notification canceled');
     } catch (e) {
       console.error('Error calling AndroidInterface:', e);
@@ -42,7 +57,7 @@ export const cancelAndroidNotification = () => {
 export const updateAndroidPlaybackState = (isPlaying: boolean) => {
   if (isAndroidWebView()) {
     try {
-      (window as any).AndroidInterface.updatePlaybackState(isPlaying ? 1 : 0);
+      window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
       console.log('Android playback state updated:', isPlaying);
     } catch (e) {
       console.error('Error updating Android playback state:', e);
@@ -54,7 +69,7 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
 export const notifySongCompleted = () => {
   if (isAndroidWebView()) {
     try {
-      (window as any).AndroidInterface.onSongCompleted();
+      window.AndroidInterface?.onSongCompleted();
       console.log('Android notified of song completion');
     } catch (e) {
       console.error('Error notifying song completion:', e);
@@ -66,7 +81,7 @@ export const notifySongCompleted = () => {
 export const getBackgroundPlaybackEnabled = (): boolean => {
   if (isAndroidWebView()) {
     try {
-      return (window as any).AndroidInterface.isBackgroundPlaybackEnabled() === 1;
+      return window.AndroidInterface?.isBackgroundPlaybackEnabled() === 1;
     } catch (e) {
       console.error('Error checking background playback status:', e);
     }
@@ -78,7 +93,7 @@ export const getBackgroundPlaybackEnabled = (): boolean => {
 export const requestBackgroundPlayback = () => {
   if (isAndroidWebView()) {
     try {
-      (window as any).AndroidInterface.requestBackgroundPlayback();
+      window.AndroidInterface?.requestBackgroundPlayback();
       console.log('Background playback requested from Android');
     } catch (e) {
       console.error('Error requesting background playback:', e);

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -35,17 +34,7 @@ import { setupOneSignal, isOneSignalAvailable } from "./services/OneSignalServic
 import { toast } from "sonner";
 import EnhancedPlayer from "@/components/EnhancedPlayer";
 
-// Update OneSignal type definition
-declare global {
-  interface Window {
-    OneSignal: {
-      push: (callback: () => void) => void;
-      init: (options: any) => void;
-      sendSelfNotification: (title: string, message: string, url: string, icon: string, data: any) => void;
-      [key: string]: any;
-    }
-  }
-}
+// OneSignal type is now defined in the respective service files
 
 const queryClient = new QueryClient();
 
