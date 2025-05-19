@@ -19,8 +19,24 @@ let currentMediaInfo = {
   isPlaying: false
 };
 
+// Check if the notification is from OneSignal
+const isOneSignalNotification = (event) => {
+  try {
+    const data = event.data ? event.data.json() : {};
+    return data && data.custom && data.custom.i;
+  } catch (e) {
+    return false;
+  }
+};
+
 self.addEventListener('push', (event) => {
   console.log('Push notification received', event);
+
+  // Skip handling if it's a OneSignal notification (OneSignal has its own handlers)
+  if (isOneSignalNotification(event)) {
+    console.log('OneSignal notification detected, letting OneSignal handle it');
+    return;
+  }
 
   try {
     const data = event.data.json();

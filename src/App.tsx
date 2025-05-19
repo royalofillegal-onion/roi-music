@@ -31,6 +31,7 @@ import {
   isAndroidWebView, 
   requestBackgroundPlayback 
 } from "./services/androidNotification";
+import { setupOneSignal } from "./services/OneSignalService";
 import { toast } from "sonner";
 import EnhancedPlayer from "@/components/EnhancedPlayer";
 
@@ -41,6 +42,7 @@ const App = () => {
   const [appReady, setAppReady] = useState(false);
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [serviceWorkerReg, setServiceWorkerReg] = useState<ServiceWorkerRegistration | null>(null);
+  const [oneSignalInitialized, setOneSignalInitialized] = useState(false);
 
   // Add playback state here
   const [isPlaying, setIsPlaying] = useState(false);
@@ -68,8 +70,22 @@ const App = () => {
 
   useEffect(() => {
     if (appReady) {
+      // Initialize OneSignal
+      const initOneSignal = () => {
+        const result = setupOneSignal();
+        setOneSignalInitialized(result);
+        if (result) {
+          console.log("OneSignal initialized successfully");
+          toast.success('OneSignal notifications enabled');
+        }
+      };
+      
       const setupNotifications = async () => {
         try {
+          // First try to set up OneSignal
+          initOneSignal();
+          
+          // Then set up regular notifications as fallback
           const permission = await requestNotificationPermission();
           if (permission === 'granted') {
             toast.success('Notifications enabled for new songs');

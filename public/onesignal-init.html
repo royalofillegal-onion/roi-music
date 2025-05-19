@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OneSignal Initialization</title>
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: "6b789b89-eb87-40b6-839f-70b6e79d3a48",
+        safari_web_id: "",
+        notifyButton: {
+          enable: true,
+        },
+        allowLocalhostAsSecureOrigin: true,
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>OneSignal Initialization</h1>
+  <p>This page initializes OneSignal for web notifications.</p>
+</body>
+</html>

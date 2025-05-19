@@ -4,6 +4,11 @@ export const isAndroidWebView = (): boolean => {
   return /Android/i.test(navigator.userAgent) && typeof (window as any).AndroidInterface !== 'undefined';
 };
 
+// Check if OneSignal is available
+export const isOneSignalAvailable = (): boolean => {
+  return typeof (window as any).OneSignal !== 'undefined';
+};
+
 // Call Android native to show notification
 export const showAndroidNotification = (title: string, body?: string, imageUrl?: string, isPlaying?: boolean) => {
   if (isAndroidWebView()) {
@@ -80,4 +85,59 @@ export const requestBackgroundPlayback = () => {
       console.error('Error requesting background playback:', e);
     }
   }
+};
+
+// Initialize OneSignal with your app ID
+export const initializeOneSignal = (appId: string) => {
+  if (typeof (window as any).OneSignal !== 'undefined') {
+    try {
+      (window as any).OneSignal.init({
+        appId: appId,
+        notifyButton: {
+          enable: true,
+        },
+        allowLocalhostAsSecureOrigin: true,
+      });
+      console.log('OneSignal initialized with app ID:', appId);
+      return true;
+    } catch (e) {
+      console.error('Error initializing OneSignal:', e);
+      return false;
+    }
+  }
+  return false;
+};
+
+// Send OneSignal notification
+export const sendOneSignalNotification = (title: string, message: string, imageUrl?: string) => {
+  if (typeof (window as any).OneSignal !== 'undefined') {
+    try {
+      // Create notification content
+      const notificationContent = {
+        headings: { en: title },
+        contents: { en: message },
+        url: window.location.href
+      };
+      
+      // Add image if provided
+      if (imageUrl) {
+        notificationContent['big_picture'] = imageUrl;
+        notificationContent['large_icon'] = imageUrl;
+      }
+      
+      // Send notification to current user
+      (window as any).OneSignal.sendSelfNotification(
+        notificationContent.headings,
+        notificationContent.contents,
+        notificationContent.url
+      );
+      
+      console.log('OneSignal notification sent');
+      return true;
+    } catch (e) {
+      console.error('Error sending OneSignal notification:', e);
+      return false;
+    }
+  }
+  return false;
 };
