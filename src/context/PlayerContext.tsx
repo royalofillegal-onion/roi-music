@@ -1,7 +1,17 @@
 import React, { createContext, useState, useEffect, useContext, useRef } from 'react';
 import { Song } from '@/data/songs';
 import { supabase } from '@/integrations/supabase/client';
-import { requestNotificationPermission, showSongNotification } from '@/services/NotificationService';
+import { 
+  requestNotificationPermission, 
+  showSongNotification 
+} from '@/services/NotificationService';
+import { 
+  isAndroidWebView, 
+  notifySongCompleted, 
+  updateAndroidPlaybackState,
+  getBackgroundPlaybackEnabled,
+  requestBackgroundPlayback
+} from '@/services/androidNotification';
 
 interface PlayerContextType {
   currentSong: Song | null;
@@ -14,6 +24,7 @@ interface PlayerContextType {
   likedSongs: string[];
   playMode: 'sequence' | 'shuffle' | 'repeat';
   notificationsEnabled: boolean;
+  backgroundPlaybackEnabled: boolean;
   playSong: (song: Song) => void;
   pauseSong: () => void;
   togglePlayPause: () => void;
@@ -53,6 +64,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [availableSongs, setAvailableSongs] = useState<Song[]>([]);
   const [songEndedByUser, setSongEndedByUser] = useState(false);
   const [forceNextSong, setForceNextSong] = useState(false);
+  const [backgroundPlaybackEnabled, setBackgroundPlaybackEnabled] = useState(true);
+  const [lastInteractionTime, setLastInteractionTime] = useState(Date.now());
+  const [appInBackground, setAppInBackground] = useState(false);
   
   // Add timeUpdateInterval for smoother time updates
   const timeUpdateIntervalRef = useRef<number | null>(null);
@@ -83,6 +97,16 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
     });
     
+    // Add error handler for better debugging
+    audioRef.current.addEventListener('error', (e) => {
+      console.error("Audio playback error:", e);
+      // Try to recover and move to next song
+      if (!transitionInProgressRef.current) {
+        console.log("Error recovery - trying next song");
+        nextSong();
+      }
+    });
+    
     // More precise time updating with setInterval
     timeUpdateIntervalRef.current = window.setInterval(() => {
       if (audioRef.current && isPlaying) {
@@ -98,7 +122,19 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           setForceNextSong(true);
         }
       }
-    }, 200); // Update 5 times per second for smoother UI and better end detection
+    }, 200);
+
+    // Add visibility change listener for Android background detection
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Check for Android background playback status
+    if (isAndroidWebView()) {
+      const bgEnabled = getBackgroundPlaybackEnabled();
+      setBackgroundPlaybackEnabled(bgEnabled);
+      if (!bgEnabled) {
+        requestBackgroundPlayback();
+      }
+    }
 
     // Import songs from the database
     import('@/data/songs').then(module => {
@@ -113,13 +149,36 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         audioRef.current.removeEventListener('loadedmetadata', updateDuration);
         audioRef.current.removeEventListener('ended', handleSongEnd);
         audioRef.current.removeEventListener('canplaythrough', () => {});
+        audioRef.current.removeEventListener('error', () => {});
       }
       
       if (timeUpdateIntervalRef.current) {
         clearInterval(timeUpdateIntervalRef.current);
       }
+      
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
+
+  // Handle visibility change for Android background detection
+  const handleVisibilityChange = () => {
+    const isHidden = document.hidden;
+    console.log("Visibility changed, hidden:", isHidden);
+    setAppInBackground(isHidden);
+    
+    if (isHidden) {
+      // App going to background
+      if (isPlaying && currentSong) {
+        // Update notification with current playback state
+        showSongNotification(
+          currentSong.title, 
+          currentSong.artist, 
+          currentSong.imageUrl,
+          true
+        );
+      }
+    }
+  };
 
   // Force next song when forceNextSong is true
   useEffect(() => {
@@ -169,19 +228,20 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           });
         }
         
-        // Show notification if enabled
+        // Show notification with song info and playing state
         if (notificationsEnabled && currentSong) {
           showSongNotification(
             currentSong.title,
             currentSong.artist,
-            currentSong.imageUrl
+            currentSong.imageUrl,
+            true
           );
         }
       }
     }
   }, [currentSong]);
   
-  // Update audio element when play state changes
+  // Update audio element when play state changes with notification update
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -193,11 +253,31 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             setIsPlaying(false);
           });
         }
+        
+        // Update Android notification with playing state
+        if (currentSong && isAndroidWebView()) {
+          updateAndroidPlaybackState(true);
+        }
       } else {
         audioRef.current.pause();
+        
+        // Update Android notification with paused state
+        if (currentSong && isAndroidWebView()) {
+          updateAndroidPlaybackState(false);
+        }
+      }
+      
+      // Update notification if song is playing when background state changes
+      if (currentSong && appInBackground && isPlaying) {
+        showSongNotification(
+          currentSong.title,
+          currentSong.artist,
+          currentSong.imageUrl,
+          isPlaying
+        );
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, appInBackground]);
   
   // Update volume when it changes
   useEffect(() => {
@@ -266,12 +346,18 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     console.log('Song ended, playback mode:', playMode);
     setSongEndedByUser(false);
     
+    // Notify Android that song completed (for background handling)
+    if (isAndroidWebView()) {
+      notifySongCompleted();
+    }
+    
     if (transitionInProgressRef.current) {
       console.log("Transition already in progress, skipping duplicate handleSongEnd");
       return;
     }
     
     transitionInProgressRef.current = true;
+    setLastInteractionTime(Date.now());
     
     if (playMode === 'repeat' && currentSong) {
       // Repeat current song
@@ -365,9 +451,15 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsPlaying(false);
   };
   
-  // Toggle play/pause
+  // Toggle play/pause with notification update
   const togglePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    const newPlayingState = !isPlaying;
+    setIsPlaying(newPlayingState);
+    
+    // Update Android notification with new playing state
+    if (currentSong && isAndroidWebView()) {
+      updateAndroidPlaybackState(newPlayingState);
+    }
   };
   
   // Enhanced nextSong function for circular linked list approach
@@ -535,6 +627,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     likedSongs,
     playMode,
     notificationsEnabled,
+    backgroundPlaybackEnabled,
     playSong,
     pauseSong,
     togglePlayPause,

@@ -1,15 +1,21 @@
 
-import { isAndroidWebView, showAndroidNotification } from './androidNotification';
-import { showNotification, isMobileDevice } from './NotificationService'; // Add this import
+import { isAndroidWebView, showAndroidNotification } from './androidNotification'; 
+import { showNotification, isMobileDevice } from './NotificationService';
 
 export const showSongNotification = (
   title: string,
   artist: string,
-  imageUrl?: string
+  imageUrl?: string,
+  isPlaying: boolean = true
 ): Notification | null => {
   if (isAndroidWebView()) {
-    // Use Android native notification instead of web Notification API
-    showAndroidNotification(`Now Playing: ${title}`, `By ${artist}`);
+    // Use Android native notification with rich media info
+    showAndroidNotification(
+      `Now Playing: ${title}`, 
+      `By ${artist}`, 
+      imageUrl, 
+      isPlaying
+    );
     return null; // We can't return a Notification object from Android native
   }
 

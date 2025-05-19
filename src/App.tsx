@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -26,6 +27,10 @@ import {
   registerServiceWorker,
   subscribeToPushNotifications
 } from "./services/NotificationService";
+import { 
+  isAndroidWebView, 
+  requestBackgroundPlayback 
+} from "./services/androidNotification";
 import { toast } from "sonner";
 import EnhancedPlayer from "@/components/EnhancedPlayer";
 
@@ -35,11 +40,12 @@ const App = () => {
   const [showSplash, setShowSplash] = useState(true);
   const [appReady, setAppReady] = useState(false);
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const [serviceWorkerReg, setServiceWorkerReg] = useState<ServiceWorkerRegistration | null>(null);
 
   // Add playback state here
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Your existing authentication check and notification setup logic (no change)
+  // Your existing authentication check and notification setup logic
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setAuthenticated(!!session);
@@ -69,6 +75,8 @@ const App = () => {
             toast.success('Notifications enabled for new songs');
             if ('serviceWorker' in navigator) {
               const registration = await registerServiceWorker();
+              setServiceWorkerReg(registration);
+              
               if (registration && isMobileDevice()) {
                 const subscription = await subscribeToPushNotifications(registration);
                 if (subscription && authenticated) {
@@ -76,7 +84,12 @@ const App = () => {
                   if (session) {
                     console.log('Push subscription:', JSON.stringify(subscription));
                     toast.success('Push notifications enabled');
-                    // TODO: Save subscription to DB if ready
+                    
+                    // Request Android background playback if applicable
+                    if (isAndroidWebView()) {
+                      requestBackgroundPlayback();
+                      toast.success('Background playback enabled');
+                    }
                   }
                 }
               }
@@ -90,6 +103,44 @@ const App = () => {
     }
   }, [appReady, authenticated]);
 
+  // Add event listener for service worker messages
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'media-control') {
+          handleMediaControl(event.data.action);
+        }
+      });
+    }
+    
+    return () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', () => {});
+      }
+    };
+  }, []);
+  
+  // Handle media controls from service worker
+  const handleMediaControl = (action: string) => {
+    console.log('Received media control action:', action);
+    switch (action) {
+      case 'play':
+        setIsPlaying(true);
+        break;
+      case 'pause':
+        setIsPlaying(false);
+        break;
+      case 'next':
+        // The player component will handle this via the usePlayer hook
+        document.dispatchEvent(new CustomEvent('media-control', { detail: { action: 'next' } }));
+        break;
+      case 'previous':
+        // The player component will handle this via the usePlayer hook
+        document.dispatchEvent(new CustomEvent('media-control', { detail: { action: 'previous' } }));
+        break;
+    }
+  };
+
   const handleSplashFinished = () => {
     setAppReady(true);
     setTimeout(() => setShowSplash(false), 500);
@@ -102,9 +153,6 @@ const App = () => {
       document.body.classList.remove('bg-gradient-to-b', 'from-gray-900', 'to-black');
     };
   }, []);
-
-  // For demo: You can add some buttons to control playback state
-  // Or connect this to your actual PlayerContext playback controls
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -135,12 +183,6 @@ const App = () => {
 
                 {/* Pass playback state to EnhancedPlayer */}
                 <EnhancedPlayer isPlaying={isPlaying} />
-
-                {/* Demo controls to toggle playback (remove if you have actual playback controls elsewhere) */}
-                <div className="fixed bottom-4 right-4 space-x-2">
-                  <button onClick={() => setIsPlaying(true)} className="bg-green-600 px-4 py-2 rounded">Play</button>
-                  <button onClick={() => setIsPlaying(false)} className="bg-red-600 px-4 py-2 rounded">Pause</button>
-                </div>
               </div>
             </AdminProvider>
           </BrowserRouter>
