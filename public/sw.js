@@ -1,4 +1,3 @@
-
 // Service Worker for Push Notifications and Media Playback
 
 self.addEventListener('install', (event) => {

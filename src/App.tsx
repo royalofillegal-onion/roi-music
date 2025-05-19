@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -31,9 +30,16 @@ import {
   isAndroidWebView, 
   requestBackgroundPlayback 
 } from "./services/androidNotification";
-import { setupOneSignal } from "./services/OneSignalService";
+import { setupOneSignal, isOneSignalAvailable } from "./services/OneSignalService";
 import { toast } from "sonner";
 import EnhancedPlayer from "@/components/EnhancedPlayer";
+
+// Add OneSignal type definition
+declare global {
+  interface Window {
+    OneSignal: any[];
+  }
+}
 
 const queryClient = new QueryClient();
 
