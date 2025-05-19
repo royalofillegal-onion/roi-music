@@ -271,7 +271,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         showSongNotification(
           `Now Playing: ${currentSong.title}`,
           `By ${currentSong.artist}`,
-          currentSong.imageUrl
+          currentSong.imageUrl,
+          isPlaying
         );
       }
     }
