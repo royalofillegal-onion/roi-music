@@ -171,8 +171,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (isPlaying && currentSong) {
         // Update notification with current playback state
         showSongNotification(
-          currentSong.title, 
-          currentSong.artist, 
+          `Now Playing: ${currentSong.title}`,
+          `By ${currentSong.artist}`,
           currentSong.imageUrl,
           true
         );
@@ -231,10 +231,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // Show notification with song info and playing state
         if (notificationsEnabled && currentSong) {
           showSongNotification(
-            currentSong.title,
-            currentSong.artist,
-            currentSong.imageUrl,
-            true
+            `Now Playing: ${currentSong.title}`,
+            `By ${currentSong.artist}`,
+            currentSong.imageUrl
           );
         }
       }
@@ -270,10 +269,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Update notification if song is playing when background state changes
       if (currentSong && appInBackground && isPlaying) {
         showSongNotification(
-          currentSong.title,
-          currentSong.artist,
-          currentSong.imageUrl,
-          isPlaying
+          `Now Playing: ${currentSong.title}`,
+          `By ${currentSong.artist}`,
+          currentSong.imageUrl
         );
       }
     }
