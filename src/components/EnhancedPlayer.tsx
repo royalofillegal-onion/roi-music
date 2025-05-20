@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import Player from './Player';
 import { usePlayer } from '@/context/PlayerContext';
-import { updateAndroidPlaybackState } from '@/services/androidNotification';
+import { updateAndroidPlaybackState, requestBackgroundPlayback, getBackgroundPlaybackEnabled } from '@/services/androidNotification';
 
 interface EnhancedPlayerProps {
   isPlaying?: boolean;
@@ -10,6 +10,15 @@ interface EnhancedPlayerProps {
 
 const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) => {
   const { isPlaying, togglePlayPause, setVolume, currentSong } = usePlayer();
+
+  // Request background playback permission when component mounts
+  useEffect(() => {
+    // Request Android background playback permission on mount
+    if (typeof window !== 'undefined' && window.AndroidInterface) {
+      requestBackgroundPlayback();
+      console.log('Background playback requested from Android');
+    }
+  }, []);
 
   // Listen for media control events from Android
   useEffect(() => {

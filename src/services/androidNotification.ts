@@ -1,3 +1,4 @@
+
 // Add AndroidInterface to Window interface
 declare global {
   interface Window {
@@ -8,6 +9,7 @@ declare global {
       onSongCompleted: () => void;
       isBackgroundPlaybackEnabled: () => number;
       requestBackgroundPlayback: () => void;
+      disableBackgroundPlayback: () => void; // New method to disable background playback
     };
   }
 }
@@ -96,6 +98,18 @@ export const requestBackgroundPlayback = () => {
       console.log('Background playback requested from Android');
     } catch (e) {
       console.error('Error requesting background playback:', e);
+    }
+  }
+};
+
+// Disable background playback
+export const disableBackgroundPlayback = () => {
+  if (isAndroidWebView()) {
+    try {
+      window.AndroidInterface?.disableBackgroundPlayback();
+      console.log('Background playback disabled from Android');
+    } catch (e) {
+      console.error('Error disabling background playback:', e);
     }
   }
 };
