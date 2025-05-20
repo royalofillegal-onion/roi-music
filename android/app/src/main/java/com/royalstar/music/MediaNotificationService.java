@@ -12,9 +12,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
-import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -37,6 +37,7 @@ public class MediaNotificationService extends Service {
     private String currentArtUrl = "";
     private boolean isPlaying = false;
     private Bitmap albumArt = null;
+    private PowerManager.WakeLock serviceLock;
 
     @Override
     public void onCreate() {
@@ -47,6 +48,13 @@ public class MediaNotificationService extends Service {
         
         // Create media session for notification controls
         mediaSession = new MediaSessionCompat(this, "RoyalStarMusic");
+        
+        // Create partial wake lock for service
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        serviceLock = powerManager.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK,
+                "RoyalStarMusic:ServiceWakeLock");
+        serviceLock.setReferenceCounted(false);
     }
 
     private void createNotificationChannel() {
@@ -68,6 +76,13 @@ public class MediaNotificationService extends Service {
         currentArtUrl = imageUrl;
         isPlaying = playing;
         
+        // Acquire wake lock if playing to prevent service from being killed
+        if (playing && !serviceLock.isHeld()) {
+            serviceLock.acquire(3 * 60 * 60 * 1000L); // Hold for 3 hours max
+        } else if (!playing && serviceLock.isHeld()) {
+            serviceLock.release();
+        }
+        
         // Load album art in background
         if (imageUrl != null && !imageUrl.isEmpty()) {
             executorService.execute(() -> {
@@ -88,12 +103,21 @@ public class MediaNotificationService extends Service {
     
     public void updatePlaybackState(boolean playing) {
         isPlaying = playing;
+        
+        // Handle wake lock based on playback state
+        if (playing && !serviceLock.isHeld()) {
+            serviceLock.acquire(3 * 60 * 60 * 1000L);
+        } else if (!playing && serviceLock.isHeld()) {
+            serviceLock.release();
+        }
+        
         showNotification();
     }
 
     private void showNotification() {
         // Create intent for when user taps notification
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
@@ -159,13 +183,18 @@ public class MediaNotificationService extends Service {
     }
     
     public void cancelNotification() {
+        // Release wake lock if held
+        if (serviceLock.isHeld()) {
+            serviceLock.release();
+        }
+        
         notificationManager.cancel(NOTIFICATION_ID);
         stopForeground(true);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
+        return START_STICKY; // Service will be restarted if killed by the system
     }
 
     @Nullable
@@ -177,6 +206,12 @@ public class MediaNotificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        
+        // Release wake lock if held
+        if (serviceLock.isHeld()) {
+            serviceLock.release();
+        }
+        
         mediaSession.release();
         executorService.shutdown();
     }

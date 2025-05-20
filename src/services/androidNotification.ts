@@ -1,4 +1,3 @@
-
 // Add AndroidInterface to Window interface
 declare global {
   interface Window {
@@ -9,7 +8,9 @@ declare global {
       onSongCompleted: () => void;
       isBackgroundPlaybackEnabled: () => number;
       requestBackgroundPlayback: () => void;
-      disableBackgroundPlayback: () => void; // New method to disable background playback
+      disableBackgroundPlayback: () => void;
+      keepAwake: () => void;
+      allowSleep: () => void;
     };
   }
 }
@@ -28,6 +29,9 @@ export const isOneSignalAvailable = (): boolean => {
 export const showAndroidNotification = (title: string, body?: string, imageUrl?: string, isPlaying?: boolean) => {
   if (isAndroidWebView()) {
     try {
+      // First ensure background playback is enabled
+      requestBackgroundPlayback();
+      
       // Pass image URL and playing state to Android for rich notifications
       window.AndroidInterface?.showNotification(
         title, 
@@ -58,6 +62,14 @@ export const cancelAndroidNotification = () => {
 export const updateAndroidPlaybackState = (isPlaying: boolean) => {
   if (isAndroidWebView()) {
     try {
+      // If playing, request background playback and keep device awake
+      if (isPlaying) {
+        requestBackgroundPlayback();
+        keepDeviceAwake();
+      } else {
+        allowDeviceSleep();
+      }
+      
       window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
       console.log('Android playback state updated:', isPlaying);
     } catch (e) {
@@ -70,6 +82,9 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
 export const notifySongCompleted = () => {
   if (isAndroidWebView()) {
     try {
+      // Ensure background playback is enabled for continuous playback
+      requestBackgroundPlayback();
+      
       window.AndroidInterface?.onSongCompleted();
       console.log('Android notified of song completion');
     } catch (e) {
@@ -110,6 +125,30 @@ export const disableBackgroundPlayback = () => {
       console.log('Background playback disabled from Android');
     } catch (e) {
       console.error('Error disabling background playback:', e);
+    }
+  }
+};
+
+// Keep device awake during playback
+export const keepDeviceAwake = () => {
+  if (isAndroidWebView() && window.AndroidInterface?.keepAwake) {
+    try {
+      window.AndroidInterface.keepAwake();
+      console.log('Requested device to stay awake during playback');
+    } catch (e) {
+      console.error('Error keeping device awake:', e);
+    }
+  }
+};
+
+// Allow device to sleep
+export const allowDeviceSleep = () => {
+  if (isAndroidWebView() && window.AndroidInterface?.allowSleep) {
+    try {
+      window.AndroidInterface.allowSleep();
+      console.log('Allowing device to sleep');
+    } catch (e) {
+      console.error('Error allowing device sleep:', e);
     }
   }
 };

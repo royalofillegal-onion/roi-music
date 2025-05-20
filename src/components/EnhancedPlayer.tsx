@@ -1,8 +1,9 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Player from './Player';
 import { usePlayer } from '@/context/PlayerContext';
 import { updateAndroidPlaybackState, requestBackgroundPlayback, getBackgroundPlaybackEnabled } from '@/services/androidNotification';
+import { toast } from "sonner";
 
 interface EnhancedPlayerProps {
   isPlaying?: boolean;
@@ -10,15 +11,36 @@ interface EnhancedPlayerProps {
 
 const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) => {
   const { isPlaying, togglePlayPause, setVolume, currentSong } = usePlayer();
+  const [backgroundPlaybackConfirmed, setBackgroundPlaybackConfirmed] = useState(false);
 
   // Request background playback permission when component mounts
   useEffect(() => {
-    // Request Android background playback permission on mount
+    // Request Android background playback permission on mount and show confirmation
     if (typeof window !== 'undefined' && window.AndroidInterface) {
-      requestBackgroundPlayback();
-      console.log('Background playback requested from Android');
+      const backgroundEnabled = getBackgroundPlaybackEnabled();
+      
+      if (!backgroundEnabled || !backgroundPlaybackConfirmed) {
+        requestBackgroundPlayback();
+        console.log('Background playback requested from Android');
+        
+        // Confirm background playback was enabled and show toast notification
+        setTimeout(() => {
+          if (getBackgroundPlaybackEnabled()) {
+            toast.success("Background playback enabled", {
+              duration: 3000,
+              description: "Music will continue even when app is closed"
+            });
+            setBackgroundPlaybackConfirmed(true);
+          } else {
+            toast.error("Background playback not enabled", {
+              duration: 3000,
+              description: "Playback may stop when app is closed"
+            });
+          }
+        }, 1000);
+      }
     }
-  }, []);
+  }, [backgroundPlaybackConfirmed]);
 
   // Listen for media control events from Android
   useEffect(() => {
