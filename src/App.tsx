@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,7 +15,7 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import UserSettings from "./pages/UserSettings";
 import LikedSongs from "./pages/LikedSongs";
-import Reels from "./pages/Reels";
+import Live from "./pages/Live";
 import Navbar from "./components/Navbar";
 import SplashScreen from "./components/SplashScreen";
 import { PlayerProvider } from "./context/PlayerContext";
@@ -47,6 +48,9 @@ const App = () => {
 
   // Add playback state here
   const [isPlaying, setIsPlaying] = useState(false);
+  const [lastPlayedSong, setLastPlayedSong] = useState<string | null>(null);
+  const [lastPlayedPosition, setLastPlayedPosition] = useState<number>(0);
+  const [activeSongId, setActiveSongId] = useState<string | null>(null);
 
   // Your existing authentication check and notification setup logic
   useEffect(() => {
@@ -55,18 +59,105 @@ const App = () => {
       if (event === 'SIGNED_OUT') {
         localStorage.removeItem('auth.session');
         localStorage.removeItem('supabase.auth.token');
+      } else if (event === 'SIGNED_IN' && session) {
+        // Get user's last played song
+        getSavedPlaybackState(session.user.id);
       }
     });
+    
     const checkAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         setAuthenticated(!!session);
+        if (session) {
+          // Get user's last played song
+          getSavedPlaybackState(session.user.id);
+        }
       } catch {
         setAuthenticated(false);
       }
     };
+    
     checkAuth();
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Function to get saved playback state
+  const getSavedPlaybackState = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('active_song_id, active_song_position, is_playing')
+        .eq('user_id', userId)
+        .single();
+        
+      if (error) throw error;
+      
+      if (data) {
+        setActiveSongId(data.active_song_id);
+        setLastPlayedSong(data.active_song_id);
+        setLastPlayedPosition(data.active_song_position || 0);
+        setIsPlaying(data.is_playing || false);
+        
+        // Dispatch an event to notify the player to resume playback
+        if (data.active_song_id) {
+          document.dispatchEvent(new CustomEvent('restore-playback', { 
+            detail: { 
+              songId: data.active_song_id,
+              position: data.active_song_position,
+              play: data.is_playing
+            } 
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Error getting saved playback state:', error);
+    }
+  };
+
+  // Update playback state when song changes or playback state changes
+  useEffect(() => {
+    const updatePlaybackState = async () => {
+      if (!authenticated) return;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      try {
+        const { error } = await supabase
+          .from('users')
+          .update({
+            active_song_id: activeSongId,
+            active_song_position: lastPlayedPosition,
+            is_playing: isPlaying
+          })
+          .eq('user_id', session.user.id);
+          
+        if (error) throw error;
+      } catch (error) {
+        console.error('Error updating playback state:', error);
+      }
+    };
+
+    if (activeSongId !== lastPlayedSong || isPlaying !== undefined) {
+      updatePlaybackState();
+    }
+  }, [activeSongId, isPlaying, lastPlayedPosition, authenticated]);
+
+  // Listen for playback events from the player
+  useEffect(() => {
+    const handlePlaybackChange = (event: CustomEvent) => {
+      const { songId, position, playing } = event.detail;
+      setActiveSongId(songId);
+      setLastPlayedPosition(position);
+      setIsPlaying(playing);
+    };
+
+    document.addEventListener('playback-changed', handlePlaybackChange as EventListener);
+    
+    return () => {
+      document.removeEventListener('playback-changed', handlePlaybackChange as EventListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -191,7 +282,7 @@ const App = () => {
                   <Route path="/playlist/:id" element={<PlaylistView />} />
                   <Route path="/liked" element={authenticated ? <LikedSongs /> : <Navigate to="/auth" />} />
                   <Route path="/settings" element={authenticated ? <UserSettings /> : <Navigate to="/auth" />} />
-                  <Route path="/reels" element={<Reels />} />
+                  <Route path="/live" element={<Live />} />
                   <Route path="/admin" element={<Admin />} />
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/auth" element={authenticated ? <Navigate to="/" /> : <Auth />} />

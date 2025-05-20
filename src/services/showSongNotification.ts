@@ -22,13 +22,17 @@ export const showSongNotification = (
     return null; // We can't return a Notification object from Android native
   }
 
-  // Fall back to web notification
-  return showNotification(title, {
-    body: artist,
+  // Fall back to web notification with enhanced visibility
+  return showNotification(`Now Playing: ${title}`, {
+    body: `By ${artist}`,
     icon: imageUrl,
-    silent: !isMobileDevice(),
+    silent: false, // Always play a sound for better visibility
     tag: 'now-playing',
-    requireInteraction: isMobileDevice(),
+    requireInteraction: true, // Always require interaction for better visibility
     vibrate: isMobileDevice() ? [200, 100, 200] : undefined,
+    actions: [
+      { action: 'play', title: isPlaying ? 'Pause' : 'Play' },
+      { action: 'next', title: 'Next' }
+    ]
   });
 };

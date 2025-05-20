@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, ListMusic, Settings } from "lucide-react";
+import { Home, Search, ListMusic, Settings, Radio } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdmin } from "@/context/AdminContext";
 
@@ -24,6 +24,11 @@ const Navbar = () => {
       name: "Playlists",
       path: "/playlists",
       icon: ListMusic
+    },
+    {
+      name: "Live",
+      path: "/live",
+      icon: Radio
     },
     ...(isAdmin ? [{
       name: "Admin",

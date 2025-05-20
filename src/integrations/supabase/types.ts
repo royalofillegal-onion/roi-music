@@ -54,6 +54,145 @@ export type Database = {
         }
         Relationships: []
       }
+      live_chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          is_pinned: boolean | null
+          message: string
+          pinned_at: string | null
+          pinned_by: string | null
+          user_id: string | null
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_pinned?: boolean | null
+          message: string
+          pinned_at?: string | null
+          pinned_by?: string | null
+          user_id?: string | null
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_pinned?: boolean | null
+          message?: string
+          pinned_at?: string | null
+          pinned_by?: string | null
+          user_id?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
+      live_comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          live_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          live_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          live_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_comments_live_id_fkey"
+            columns: ["live_id"]
+            isOneToOne: false
+            referencedRelation: "lives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          live_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          live_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          live_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_likes_live_id_fkey"
+            columns: ["live_id"]
+            isOneToOne: false
+            referencedRelation: "lives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lives: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          ends_at: string | null
+          id: string
+          is_active: boolean | null
+          scheduled_at: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+          video_url: string
+          views: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          scheduled_at: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+          video_url: string
+          views?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          scheduled_at?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+          video_url?: string
+          views?: number | null
+        }
+        Relationships: []
+      }
       playlist_songs: {
         Row: {
           created_at: string | null
@@ -161,6 +300,39 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_videos: {
+        Row: {
+          added_by: string | null
+          created_at: string | null
+          id: string
+          scheduled_for: string
+          status: string
+          thumbnail_url: string | null
+          title: string
+          url: string
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string | null
+          id?: string
+          scheduled_for: string
+          status?: string
+          thumbnail_url?: string | null
+          title: string
+          url: string
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string | null
+          id?: string
+          scheduled_for?: string
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           assistant_name: string | null
@@ -197,29 +369,59 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
+          active_song_id: string | null
+          active_song_position: number | null
           avatar_url: string | null
           created_at: string
           id: string
+          is_playing: boolean | null
           name: string | null
           theme: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          active_song_id?: string | null
+          active_song_position?: number | null
           avatar_url?: string | null
           created_at?: string
           id?: string
+          is_playing?: boolean | null
           name?: string | null
           theme?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          active_song_id?: string | null
+          active_song_position?: number | null
           avatar_url?: string | null
           created_at?: string
           id?: string
+          is_playing?: boolean | null
           name?: string | null
           theme?: string | null
           updated_at?: string
@@ -232,10 +434,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -350,6 +555,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

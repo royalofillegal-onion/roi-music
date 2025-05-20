@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Settings, User as UserIcon, LogOut, Heart, Music2, Loader2, Film } from "lucide-react";
+import { Settings, User as UserIcon, LogOut, Heart, Music2, Loader2, Radio } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -184,11 +184,11 @@ const UserProfile = () => {
     navigate('/liked');
   };
 
-  const navigateToReels = () => {
-    navigate('/reels');
+  const navigateToLive = () => {
+    navigate('/live');
   };
 
-  // Enhanced profile picture upload with better error handling
+  // Enhanced profile picture upload with better error handling and user-uploads bucket
   const handleProfilePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -211,23 +211,11 @@ const UserProfile = () => {
       
       // Create a unique file name for this upload
       const fileExt = file.name.split('.').pop();
-      const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
-      
-      // Ensure avatars bucket exists
-      const { data: bucketData } = await supabase.storage.getBucket('avatars');
-      if (!bucketData) {
-        // Create bucket if it doesn't exist
-        const { error: bucketError } = await supabase.storage.createBucket('avatars', { public: true });
-        if (bucketError) {
-          console.error("Error creating bucket:", bucketError);
-          toast.error("Error creating storage for avatars");
-          return;
-        }
-      }
+      const fileName = `avatars/${session.user.id}/${Date.now()}.${fileExt}`;
       
       // Upload the file to Supabase Storage with improved error handling
       const { data, error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from('user-uploads')
         .upload(fileName, file, {
           cacheControl: '3600',
           upsert: true
@@ -241,7 +229,7 @@ const UserProfile = () => {
       
       // Get the public URL for the uploaded file
       const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
+        .from('user-uploads')
         .getPublicUrl(fileName);
       
       // Allow time for storage processing
@@ -361,10 +349,10 @@ const UserProfile = () => {
               
               <DropdownMenuItem 
                 className="flex items-center cursor-pointer"
-                onClick={navigateToReels}
+                onClick={navigateToLive}
               >
-                <Film className="mr-2 h-4 w-4" />
-                <span>Reels</span>
+                <Radio className="mr-2 h-4 w-4" />
+                <span>Live</span>
               </DropdownMenuItem>
               
               <DropdownMenuItem 
