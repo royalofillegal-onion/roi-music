@@ -1,4 +1,3 @@
-
 // Add AndroidInterface to Window interface
 declare global {
   interface Window {
@@ -34,7 +33,7 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
         imageUrl || '',
         isPlaying === true ? 1 : 0
       );
-      console.log('Android native notification sent with media info');
+      console.log('Android native notification sent with media info', { title, isPlaying });
     } catch (e) {
       console.error('Error calling AndroidInterface:', e);
     }

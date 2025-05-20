@@ -29,10 +29,7 @@ export const showSongNotification = (
     silent: false, // Always play a sound for better visibility
     tag: 'now-playing',
     requireInteraction: true, // Always require interaction for better visibility
-    vibrate: isMobileDevice() ? [200, 100, 200] : undefined,
-    actions: [
-      { action: 'play', title: isPlaying ? 'Pause' : 'Play' },
-      { action: 'next', title: 'Next' }
-    ]
+    vibrate: isMobileDevice() ? [200, 100, 200] : undefined
+    // Removed the 'actions' property as it's not supported in the CustomNotificationOptions type
   });
 };

@@ -77,6 +77,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Audio element reference
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
+  // Add a ref to track page visibility
+  const wasPlayingBeforeHidden = useRef(false);
+  
   // Initialize audio element and load songs
   useEffect(() => {
     audioRef.current = new Audio();
@@ -124,8 +127,14 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
     }, 200);
 
-    // Add visibility change listener for Android background detection
+    // Add visibility change listener for background playback handling
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Restore playback state when the app is reopened
+    if (document.visibilityState === 'visible') {
+      console.log("App is visible on initial load, restoring playback state");
+      restorePlaybackState();
+    }
     
     // Check for Android background playback status
     if (isAndroidWebView()) {
@@ -160,35 +169,121 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, []);
 
-  // Handle visibility change for Android background detection
+  // Improved visibility change handler that saves/restores playback state
   const handleVisibilityChange = () => {
     const isHidden = document.hidden;
     console.log("Visibility changed, hidden:", isHidden);
     setAppInBackground(isHidden);
     
     if (isHidden) {
-      // App going to background
-      if (isPlaying && currentSong) {
-        // Update notification with current playback state
+      // App going to background - save current state
+      wasPlayingBeforeHidden.current = isPlaying;
+      console.log("Saving playback state before background:", isPlaying);
+      
+      // Update notification with current playback state for background controls
+      if (currentSong) {
         showSongNotification(
-          `Now Playing: ${currentSong.title}`,
-          `By ${currentSong.artist}`,
+          currentSong.title,
+          currentSong.artist,
           currentSong.imageUrl,
-          true
+          isPlaying
         );
+      }
+      
+      // Save current song position to database
+      savePlaybackState();
+    } else {
+      // App coming back to foreground - restore state
+      console.log("App is visible again, restoring playback");
+      restorePlaybackState();
+      
+      // If it was playing before going to background, resume
+      if (wasPlayingBeforeHidden.current && currentSong) {
+        console.log("Was playing before hidden, resuming playback");
+        if (audioRef.current && !isPlaying) {
+          setIsPlaying(true);
+        }
       }
     }
   };
-
-  // Force next song when forceNextSong is true
-  useEffect(() => {
-    if (forceNextSong && !transitionInProgressRef.current) {
-      console.log("Forcing next song due to time detection");
-      transitionInProgressRef.current = true;
-      handleSongEnd();
-      setForceNextSong(false);
+  
+  // Save current playback state to the database
+  const savePlaybackState = async () => {
+    if (!currentSong) return;
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({
+          active_song_id: currentSong.id,
+          active_song_position: audioRef.current?.currentTime || 0,
+          is_playing: isPlaying
+        })
+        .eq('user_id', session.user.id);
+        
+      if (error) throw error;
+      console.log("Playback state saved successfully");
+    } catch (error) {
+      console.error('Error saving playback state:', error);
     }
-  }, [forceNextSong]);
+  };
+  
+  // Restore playback from the database
+  const restorePlaybackState = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('active_song_id, active_song_position, is_playing')
+        .eq('user_id', session.user.id)
+        .single();
+        
+      if (error) throw error;
+      
+      if (data && data.active_song_id) {
+        console.log("Restoring playback:", data);
+        
+        // Find the song in available songs
+        if (availableSongs.length > 0) {
+          const songToPlay = availableSongs.find(song => song.id === data.active_song_id);
+          
+          if (songToPlay) {
+            console.log("Found song to restore:", songToPlay.title);
+            
+            // Set current song without auto-playing yet
+            setCurrentSong(songToPlay);
+            
+            // If we have a position, seek to it after the audio loads
+            if (data.active_song_position && audioRef.current) {
+              const position = data.active_song_position;
+              
+              // Use a timeout to ensure the audio has loaded
+              setTimeout(() => {
+                if (audioRef.current) {
+                  console.log("Seeking to position:", position);
+                  audioRef.current.currentTime = position;
+                  setCurrentTime(position);
+                  
+                  // Start playing if it was playing before
+                  if (data.is_playing) {
+                    console.log("Resuming playback");
+                    setIsPlaying(true);
+                  }
+                }
+              }, 500);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error restoring playback state:', error);
+    }
+  };
 
   // Load user's liked songs
   useEffect(() => {
@@ -428,7 +523,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
   
-  // Play a specific song
+  // Play a specific song with enhanced state saving
   const playSong = (song: Song) => {
     // Add current song to recently played if it exists
     if (currentSong) {
@@ -444,6 +539,10 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsPlaying(true);
     setSongEndedByUser(false);
     transitionInProgressRef.current = false;
+    
+    // Save the playback state to database after a small delay
+    // to ensure the song has started playing
+    setTimeout(() => savePlaybackState(), 1000);
   };
   
   // Pause current song
@@ -451,7 +550,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsPlaying(false);
   };
   
-  // Toggle play/pause with notification update
+  // Override the togglePlayPause function to save state changes
   const togglePlayPause = () => {
     const newPlayingState = !isPlaying;
     setIsPlaying(newPlayingState);
@@ -460,6 +559,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (currentSong && isAndroidWebView()) {
       updateAndroidPlaybackState(newPlayingState);
     }
+    
+    // Save state change to database
+    setTimeout(() => savePlaybackState(), 300);
   };
   
   // Enhanced nextSong function for circular linked list approach
@@ -530,7 +632,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setVolume(newVolume);
   };
   
-  // Seek to specific time
+  // Override seekTo to save position changes
   const seekTo = (time: number) => {
     if (audioRef.current) {
       audioRef.current.currentTime = time;
@@ -540,6 +642,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (time < duration - 1) {
         setSongEndedByUser(false);
       }
+      
+      // Save the new position after seeking
+      setTimeout(() => savePlaybackState(), 300);
     }
   };
   
