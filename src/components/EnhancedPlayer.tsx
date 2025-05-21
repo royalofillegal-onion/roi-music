@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Player from './Player';
 import { usePlayer } from '@/context/PlayerContext';
-import { updateAndroidPlaybackState, requestBackgroundPlayback, getBackgroundPlaybackEnabled, keepDeviceAwake } from '@/services/androidNotification';
+import { 
+  updateAndroidPlaybackState, 
+  requestBackgroundPlayback, 
+  getBackgroundPlaybackEnabled, 
+  keepDeviceAwake,
+  initContinuousPlayback,
+  startForegroundService
+} from '@/services/androidNotification';
 import { toast } from "sonner";
 
 interface EnhancedPlayerProps {
@@ -13,20 +20,45 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
   const [backgroundPlaybackConfirmed, setBackgroundPlaybackConfirmed] = useState(false);
   const backgroundPlaybackRequested = useRef(false);
   const wakeLockRequested = useRef(false);
+  const continuousPlaybackInitialized = useRef(false);
+  
+  // Track background state
+  const [isInBackground, setIsInBackground] = useState(false);
+  
+  // Timer for periodic status checks
+  const statusCheckTimerRef = useRef<number | null>(null);
+  const periodicWakeLockTimerRef = useRef<number | null>(null);
 
-  // Request background playback permission when component mounts or when playback starts
+  // Initialize and request background playback immediately and aggressively
   useEffect(() => {
-    // Request Android background playback permission immediately and when playback starts
-    if (typeof window !== 'undefined' && window.AndroidInterface) {
-      if (!backgroundPlaybackRequested.current) {
-        requestBackgroundPlayback();
-        console.log('Background playback requested from Android on mount');
-        backgroundPlaybackRequested.current = true;
+    // Initialize everything necessary for continuous background playback
+    const initializeBackgroundPlayback = () => {
+      if (typeof window !== 'undefined' && window.AndroidInterface) {
+        console.log('Initializing continuous playback service');
+        
+        // Initialize continuous playback service
+        if (!continuousPlaybackInitialized.current) {
+          initContinuousPlayback();
+          continuousPlaybackInitialized.current = true;
+          console.log('Continuous playback service initialized');
+        }
+        
+        // Request background playback permission
+        if (!backgroundPlaybackRequested.current) {
+          requestBackgroundPlayback();
+          console.log('Background playback requested from Android on mount');
+          backgroundPlaybackRequested.current = true;
+        }
+        
+        // Start foreground service
+        startForegroundService();
+        console.log('Foreground service started');
         
         // Keep device awake if playing to ensure continuous playback
-        if (isPlaying) {
+        if (isPlaying && !wakeLockRequested.current) {
           keepDeviceAwake();
           wakeLockRequested.current = true;
+          console.log('Wake lock requested');
         }
         
         // Confirm background playback was enabled and show toast notification
@@ -38,38 +70,193 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
             });
             setBackgroundPlaybackConfirmed(true);
           } else {
-            toast.error("Background playback not enabled", {
-              duration: 3000,
-              description: "Playback may stop when app is closed"
-            });
+            console.warn("Background playback not enabled, retrying...");
             
-            // Try requesting again after a moment if it failed
-            setTimeout(() => {
-              requestBackgroundPlayback();
-              console.log('Retrying background playback request');
-            }, 2000);
+            // Retry aggressively with escalating timing
+            [100, 500, 1000, 2000, 5000].forEach(delay => {
+              setTimeout(() => {
+                requestBackgroundPlayback();
+                console.log(`Background playback re-requested after ${delay}ms`);
+                
+                // Check if it worked after a short delay
+                if (delay === 5000) {
+                  setTimeout(() => {
+                    if (getBackgroundPlaybackEnabled()) {
+                      toast.success("Background playback enabled", {
+                        duration: 3000,
+                        description: "Music will continue even when app is closed"
+                      });
+                      setBackgroundPlaybackConfirmed(true);
+                    } else {
+                      toast.error("Background playback not enabled", {
+                        duration: 5000,
+                        description: "Music may stop when app is closed"
+                      });
+                    }
+                  }, 1000);
+                }
+              }, delay);
+            });
           }
         }, 1000);
       }
-    }
+    };
+    
+    // Call initialization immediately
+    initializeBackgroundPlayback();
+    
+    // Set up periodic status check and wake lock renewal
+    statusCheckTimerRef.current = window.setInterval(() => {
+      if (typeof window !== 'undefined' && window.AndroidInterface) {
+        // Re-initialize if needed
+        if (!continuousPlaybackInitialized.current) {
+          initContinuousPlayback();
+          continuousPlaybackInitialized.current = true;
+        }
+        
+        // Re-request background playback
+        requestBackgroundPlayback();
+        
+        // Start foreground service
+        if (isPlaying) {
+          startForegroundService();
+        }
+        
+        console.log('Periodic background playback check completed');
+      }
+    }, 30000); // Every 30 seconds
+    
+    // Set up even more frequent wake lock renewal when playing
+    periodicWakeLockTimerRef.current = window.setInterval(() => {
+      if (typeof window !== 'undefined' && window.AndroidInterface && isPlaying) {
+        keepDeviceAwake();
+        console.log('Periodic wake lock refresh');
+      }
+    }, 15000); // Every 15 seconds
+    
+    // Clean up timers on unmount
+    return () => {
+      if (statusCheckTimerRef.current !== null) {
+        clearInterval(statusCheckTimerRef.current);
+      }
+      if (periodicWakeLockTimerRef.current !== null) {
+        clearInterval(periodicWakeLockTimerRef.current);
+      }
+    };
   }, []);
+
+  // Handle visibility changes with more aggressive background handling
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const wasVisible = !isInBackground;
+      const isVisible = document.visibilityState === 'visible';
+      const isHidden = !isVisible;
+      
+      console.log(`Visibility changed: ${wasVisible ? 'visible' : 'hidden'} -> ${isVisible ? 'visible' : 'hidden'}`);
+      setIsInBackground(isHidden);
+      
+      if (isHidden) {
+        // App going to background - ensure background playback
+        if (typeof window !== 'undefined' && window.AndroidInterface) {
+          console.log('App going to background, reinforcing background playback');
+          
+          // Initialize if not already
+          if (!continuousPlaybackInitialized.current) {
+            initContinuousPlayback();
+            continuousPlaybackInitialized.current = true;
+          }
+          
+          // Multiple aggressive background playback requests
+          requestBackgroundPlayback();
+          
+          // Start foreground service
+          startForegroundService();
+          
+          // Keep device awake if playing
+          if (isPlaying) {
+            keepDeviceAwake();
+          }
+          
+          // Schedule multiple follow-up requests to ensure it stays enabled
+          [500, 1500, 3000, 10000].forEach(delay => {
+            setTimeout(() => {
+              if (typeof window !== 'undefined' && window.AndroidInterface) {
+                requestBackgroundPlayback();
+                console.log(`Background follow-up request after ${delay}ms`);
+                if (isPlaying) {
+                  keepDeviceAwake();
+                  startForegroundService();
+                }
+              }
+            }, delay);
+          });
+        }
+      } else {
+        // App coming to foreground - check background playback status
+        if (typeof window !== 'undefined' && window.AndroidInterface) {
+          const isEnabled = getBackgroundPlaybackEnabled();
+          console.log(`App returning to foreground, background playback enabled: ${isEnabled}`);
+          
+          // If not enabled, try to enable it
+          if (!isEnabled) {
+            console.log('Background playback not enabled, requesting again');
+            if (!continuousPlaybackInitialized.current) {
+              initContinuousPlayback();
+              continuousPlaybackInitialized.current = true;
+            }
+            requestBackgroundPlayback();
+          }
+        }
+      }
+    };
+    
+    // Set up visibility change listener
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Initial check
+    handleVisibilityChange();
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isPlaying, isInBackground]);
 
   // Request background playback again when playback state changes to ensure it's maintained
   useEffect(() => {
-    if (isPlaying && typeof window !== 'undefined' && window.AndroidInterface) {
-      // Re-request background playback when playing starts/resumes
-      requestBackgroundPlayback();
-      console.log('Background playback re-requested due to playback starting');
+    if (typeof window !== 'undefined' && window.AndroidInterface) {
+      // Update Android notification with play state
+      if (currentSong) {
+        updateAndroidPlaybackState(isPlaying);
+      }
       
-      // Keep device awake when playing
-      if (!wakeLockRequested.current) {
-        keepDeviceAwake();
-        wakeLockRequested.current = true;
+      if (isPlaying) {
+        console.log('Playback started/resumed, reinforcing background playback');
+        
+        // Initialize if not already
+        if (!continuousPlaybackInitialized.current) {
+          initContinuousPlayback();
+          continuousPlaybackInitialized.current = true;
+        }
+        
+        // Re-request background playback when playing starts/resumes
+        requestBackgroundPlayback();
+        
+        // Start foreground service
+        startForegroundService();
+        
+        // Keep device awake when playing
+        if (!wakeLockRequested.current) {
+          keepDeviceAwake();
+          wakeLockRequested.current = true;
+        } else {
+          // Refresh wake lock anyway
+          keepDeviceAwake();
+        }
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, currentSong]);
 
-  // Listen for media control events from Android
+  // Listen for media control events from Android and service worker
   useEffect(() => {
     const handleMediaControl = (event: Event) => {
       const customEvent = event as CustomEvent;
@@ -79,7 +266,12 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
         // Re-request background playback when receiving media controls
         // to ensure continuous playback
         if (typeof window !== 'undefined' && window.AndroidInterface) {
+          if (!continuousPlaybackInitialized.current) {
+            initContinuousPlayback();
+            continuousPlaybackInitialized.current = true;
+          }
           requestBackgroundPlayback();
+          startForegroundService();
         }
         
         switch (customEvent.detail.action) {
@@ -109,55 +301,29 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
       }
     };
 
-    // Listen for both native Android events and service worker events
+    // Listen for Android events, service worker events, and broadcast events
     document.addEventListener('android-media-control', handleMediaControl);
     document.addEventListener('media-control', handleMediaControl);
-
-    // Auto-request background playback periodically to ensure it stays enabled
-    const backgroundPlaybackInterval = setInterval(() => {
-      if (isPlaying && typeof window !== 'undefined' && window.AndroidInterface) {
-        requestBackgroundPlayback();
-        console.log('Periodic background playback check');
+    
+    // Listen for background app restart events (used when app is killed but service continues)
+    const handleBackgroundRestart = () => {
+      console.log('Received background restart signal');
+      if (!continuousPlaybackInitialized.current) {
+        initContinuousPlayback();
+        continuousPlaybackInitialized.current = true;
       }
-    }, 30000); // Check every 30 seconds
+      requestBackgroundPlayback();
+      startForegroundService();
+    };
+    
+    document.addEventListener('app-background-restart', handleBackgroundRestart);
 
     return () => {
       document.removeEventListener('android-media-control', handleMediaControl);
       document.removeEventListener('media-control', handleMediaControl);
-      clearInterval(backgroundPlaybackInterval);
+      document.removeEventListener('app-background-restart', handleBackgroundRestart);
     };
   }, [isPlaying, togglePlayPause, setVolume]);
-
-  // Update Android notification when play state changes
-  useEffect(() => {
-    if (currentSong) {
-      updateAndroidPlaybackState(isPlaying);
-      
-      // Re-request background playback when song changes
-      if (typeof window !== 'undefined' && window.AndroidInterface) {
-        requestBackgroundPlayback();
-      }
-    }
-  }, [isPlaying, currentSong]);
-
-  // Handle app visibility changes
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && isPlaying) {
-        // App going to background while playing - ensure background playback
-        if (typeof window !== 'undefined' && window.AndroidInterface) {
-          requestBackgroundPlayback();
-          console.log('Background playback re-requested when app hidden');
-        }
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [isPlaying]);
 
   // Restore initial play state if provided and different from current
   useEffect(() => {
