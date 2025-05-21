@@ -1,4 +1,3 @@
-
 // Add AndroidInterface to Window interface
 declare global {
   interface Window {
@@ -14,6 +13,7 @@ declare global {
       allowSleep: () => void;
       startForegroundService: () => void;
       initContinuousPlayback: () => void;
+      restartPlayback: () => void; // Add new method for restarting playback
     };
   }
 }
@@ -28,16 +28,24 @@ export const isOneSignalAvailable = (): boolean => {
   return typeof window !== 'undefined' && typeof window.OneSignal !== 'undefined';
 };
 
-// Call Android native to show notification
+// Call Android native to show notification with super aggressive approach
 export const showAndroidNotification = (title: string, body?: string, imageUrl?: string, isPlaying?: boolean) => {
   if (isAndroidWebView()) {
     try {
       // First ensure background playback is enabled with more aggressive approach
       initContinuousPlayback();
+      
+      // Multiple background playback requests to ensure it's registered
       requestBackgroundPlayback();
+      setTimeout(() => requestBackgroundPlayback(), 500);
+      setTimeout(() => requestBackgroundPlayback(), 1500);
       
       // Start foreground service to ensure playback continues
       startForegroundService();
+      setTimeout(() => startForegroundService(), 1000);
+      
+      // Keep device awake for playback
+      keepDeviceAwake();
       
       // Pass image URL and playing state to Android for rich notifications
       window.AndroidInterface?.showNotification(
@@ -46,9 +54,40 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
         imageUrl || '',
         isPlaying === true ? 1 : 0
       );
-      console.log('Android native notification sent with media info', { title, isPlaying });
+      
+      // Redundant notification call after a delay to ensure it's showing
+      setTimeout(() => {
+        if (window.AndroidInterface) {
+          window.AndroidInterface.showNotification(
+            title, 
+            body || '', 
+            imageUrl || '',
+            isPlaying === true ? 1 : 0
+          );
+        }
+      }, 1000);
+      
+      console.log('Android native notification sent with ultra-aggressive approach', { title, isPlaying });
     } catch (e) {
       console.error('Error calling AndroidInterface:', e);
+      // Try again after a delay
+      setTimeout(() => {
+        try {
+          if (window.AndroidInterface) {
+            initContinuousPlayback();
+            requestBackgroundPlayback();
+            startForegroundService();
+            window.AndroidInterface.showNotification(
+              title, 
+              body || '', 
+              imageUrl || '',
+              isPlaying === true ? 1 : 0
+            );
+          }
+        } catch (innerError) {
+          console.error('Retry error:', innerError);
+        }
+      }, 2000);
     }
   }
 };
@@ -65,63 +104,133 @@ export const cancelAndroidNotification = () => {
   }
 };
 
-// Update notification playback state (play/pause) without recreating notification
+// Update notification playback state (play/pause) with extreme redundancy
 export const updateAndroidPlaybackState = (isPlaying: boolean) => {
   if (isAndroidWebView()) {
     try {
       // Always ensure continuous playback is initialized
       initContinuousPlayback();
       
-      // Always request background playback regardless of playing state
-      // to ensure continuous playback capability
+      // Always request background playback multiple times
       requestBackgroundPlayback();
+      setTimeout(() => requestBackgroundPlayback(), 500);
+      setTimeout(() => requestBackgroundPlayback(), 1500);
       
       // Start foreground service if playing
       if (isPlaying) {
         startForegroundService();
+        setTimeout(() => startForegroundService(), 1000);
         keepDeviceAwake();
       }
       
       window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
-      console.log('Android playback state updated:', isPlaying);
+      
+      // Redundant state updates
+      setTimeout(() => {
+        if (window.AndroidInterface) {
+          window.AndroidInterface.updatePlaybackState(isPlaying ? 1 : 0);
+        }
+      }, 500);
+      
+      setTimeout(() => {
+        if (window.AndroidInterface) {
+          window.AndroidInterface.updatePlaybackState(isPlaying ? 1 : 0);
+        }
+      }, 2000);
+      
+      console.log('Android playback state updated with extreme redundancy:', isPlaying);
     } catch (e) {
       console.error('Error updating Android playback state:', e);
+      // Retry after error
+      setTimeout(() => {
+        try {
+          if (window.AndroidInterface) {
+            window.AndroidInterface.updatePlaybackState(isPlaying ? 1 : 0);
+          }
+        } catch (innerError) {
+          console.error('Retry error:', innerError);
+        }
+      }, 1000);
     }
   }
 };
 
-// Initialize continuous playback service
+// Initialize continuous playback service with extreme redundancy
 export const initContinuousPlayback = () => {
   if (isAndroidWebView() && window.AndroidInterface?.initContinuousPlayback) {
     try {
       window.AndroidInterface.initContinuousPlayback();
       console.log('Continuous playback initialized');
       
-      // Additional redundant call to ensure it's properly initialized
-      setTimeout(() => {
-        if (window.AndroidInterface?.initContinuousPlayback) {
-          window.AndroidInterface.initContinuousPlayback();
-        }
-      }, 500);
+      // Additional redundant calls to ensure it's properly initialized
+      const initTimes = [100, 300, 500, 1000, 3000, 5000];
+      initTimes.forEach(time => {
+        setTimeout(() => {
+          if (window.AndroidInterface?.initContinuousPlayback) {
+            window.AndroidInterface.initContinuousPlayback();
+            console.log(`Redundant init after ${time}ms`);
+          }
+        }, time);
+      });
     } catch (e) {
       console.error('Error initializing continuous playback:', e);
+      // Retry initialization
+      setTimeout(() => {
+        if (window.AndroidInterface?.initContinuousPlayback) {
+          try {
+            window.AndroidInterface.initContinuousPlayback();
+          } catch (innerError) {
+            console.error('Retry error:', innerError);
+          }
+        }
+      }, 1000);
     }
   }
 };
 
-// Start foreground service for persistent playback
+// Start foreground service for persistent playback with redundancy
 export const startForegroundService = () => {
   if (isAndroidWebView() && window.AndroidInterface?.startForegroundService) {
     try {
       window.AndroidInterface.startForegroundService();
       console.log('Foreground service started');
+      
+      // Redundant calls to start foreground service
+      setTimeout(() => {
+        if (window.AndroidInterface?.startForegroundService) {
+          window.AndroidInterface.startForegroundService();
+          console.log('Foreground service start reinforced');
+        }
+      }, 2000);
     } catch (e) {
       console.error('Error starting foreground service:', e);
+      // Retry
+      setTimeout(() => {
+        try {
+          if (window.AndroidInterface?.startForegroundService) {
+            window.AndroidInterface.startForegroundService();
+          }
+        } catch (innerError) {
+          console.error('Retry error:', innerError);
+        }
+      }, 1000);
     }
   }
 };
 
-// Notify Android that a song has completed (for background handling)
+// Force restart playback (new helper function)
+export const restartAndroidPlayback = () => {
+  if (isAndroidWebView() && window.AndroidInterface?.restartPlayback) {
+    try {
+      console.log('Attempting to restart Android playback');
+      window.AndroidInterface.restartPlayback();
+    } catch (e) {
+      console.error('Error restarting playback:', e);
+    }
+  }
+};
+
+// Notify Android that a song has completed with ultra-redundancy
 export const notifySongCompleted = () => {
   if (isAndroidWebView()) {
     try {
@@ -129,11 +238,35 @@ export const notifySongCompleted = () => {
       initContinuousPlayback();
       requestBackgroundPlayback();
       startForegroundService();
+      keepDeviceAwake();
       
       window.AndroidInterface?.onSongCompleted();
       console.log('Android notified of song completion');
+      
+      // Redundant notification of song completion
+      setTimeout(() => {
+        if (window.AndroidInterface) {
+          window.AndroidInterface?.onSongCompleted();
+          console.log('Song completion notification reinforced');
+          
+          // Also try to restart playback after completion
+          if (window.AndroidInterface.restartPlayback) {
+            window.AndroidInterface.restartPlayback();
+          }
+        }
+      }, 500);
     } catch (e) {
       console.error('Error notifying song completion:', e);
+      // Retry notification
+      setTimeout(() => {
+        try {
+          if (window.AndroidInterface) {
+            window.AndroidInterface.onSongCompleted();
+          }
+        } catch (innerError) {
+          console.error('Retry error:', innerError);
+        }
+      }, 1000);
     }
   }
 };
@@ -152,15 +285,15 @@ export const getBackgroundPlaybackEnabled = (): boolean => {
   return false; // Default to false on non-Android platforms to ensure explicit enabling
 };
 
-// Request background playback permission with even more aggressive approach
+// Request background playback permission with ultra-aggressive approach
 export const requestBackgroundPlayback = () => {
   if (isAndroidWebView()) {
     try {
       window.AndroidInterface?.requestBackgroundPlayback();
       console.log('Background playback requested from Android');
       
-      // Force multiple requests with different timing to ensure it's registered
-      const requestTimes = [100, 500, 1500, 5000];
+      // Ultra-aggressive multiple requests with different timing
+      const requestTimes = [100, 300, 500, 1000, 1500, 2000, 3000, 5000, 10000];
       requestTimes.forEach(time => {
         setTimeout(() => {
           try {
@@ -177,6 +310,16 @@ export const requestBackgroundPlayback = () => {
       return true;
     } catch (e) {
       console.error('Error requesting background playback:', e);
+      // Retry request
+      setTimeout(() => {
+        try {
+          if (window.AndroidInterface) {
+            window.AndroidInterface.requestBackgroundPlayback();
+          }
+        } catch (innerError) {
+          console.error('Retry error:', innerError);
+        }
+      }, 1000);
       return false;
     }
   }
@@ -195,14 +338,14 @@ export const disableBackgroundPlayback = () => {
   }
 };
 
-// Keep device awake during playback - more aggressive approach
+// Keep device awake during playback - ultra-aggressive approach
 export const keepDeviceAwake = () => {
   if (isAndroidWebView() && window.AndroidInterface?.keepAwake) {
     try {
       window.AndroidInterface.keepAwake();
       console.log('Requested device to stay awake during playback');
       
-      // Re-request wake lock very frequently to ensure it stays active
+      // Re-request wake lock ultra frequently to ensure it stays active
       const wakeInterval = setInterval(() => {
         try {
           if (window.AndroidInterface?.keepAwake) {
@@ -215,11 +358,35 @@ export const keepDeviceAwake = () => {
           console.error('Error refreshing wake lock:', e);
           clearInterval(wakeInterval);
         }
-      }, 15000); // Refresh every 15 seconds
+      }, 10000); // Refresh every 10 seconds
+      
+      // Additional aggressive wake lock requests
+      [500, 1000, 5000, 15000].forEach(time => {
+        setTimeout(() => {
+          try {
+            if (window.AndroidInterface?.keepAwake) {
+              window.AndroidInterface.keepAwake();
+              console.log(`Additional wake lock at ${time}ms`);
+            }
+          } catch (e) {
+            console.error(`Error in delayed wake lock request (${time}ms):`, e);
+          }
+        }, time);
+      });
       
       return wakeInterval;
     } catch (e) {
       console.error('Error keeping device awake:', e);
+      // Retry wake lock request
+      setTimeout(() => {
+        try {
+          if (window.AndroidInterface?.keepAwake) {
+            window.AndroidInterface.keepAwake();
+          }
+        } catch (innerError) {
+          console.error('Retry error:', innerError);
+        }
+      }, 1000);
     }
   }
   return null;

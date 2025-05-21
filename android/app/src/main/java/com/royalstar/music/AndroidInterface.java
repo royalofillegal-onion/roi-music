@@ -1,3 +1,4 @@
+
 package com.royalstar.music;
 
 import android.app.ActivityManager;
@@ -197,6 +198,34 @@ public class AndroidInterface {
                 mediaService.onSongCompleted();
             }
         }
+    }
+    
+    // New method to forcibly restart playback when it might have stopped
+    @JavascriptInterface
+    public void restartPlayback() {
+        Log.d(TAG, "restartPlayback called - attempting to force continuation of playback");
+        
+        // Ensure service is running with full initialization
+        initContinuousPlayback();
+        startForegroundService();
+        
+        // Broadcast to app to restart playback
+        Intent restartIntent = new Intent("MEDIA_CONTROL_EVENT");
+        restartIntent.putExtra("action", "restart_playback");
+        restartIntent.setPackage(context.getPackageName());
+        context.sendBroadcast(restartIntent);
+        
+        // Also try to tell WebView to continue playback
+        mainHandler.post(() -> {
+            if (callback != null) {
+                callback.onMediaControl("play");
+            }
+        });
+        
+        // Send broadcast to MainActivity
+        Intent mainActivityIntent = new Intent("APP_BACKGROUND_RESTART");
+        mainActivityIntent.setPackage(context.getPackageName());
+        context.sendBroadcast(mainActivityIntent);
     }
 
     @JavascriptInterface

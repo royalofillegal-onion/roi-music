@@ -16,7 +16,9 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -48,9 +50,19 @@ public class MediaNotificationService extends Service {
     private boolean isPlaying = false;
     private Bitmap albumArt = null;
     private PowerManager.WakeLock serviceLock;
+    private Handler mainHandler;
+    
+    // Service heartbeat
+    private Handler heartbeatHandler;
+    private Runnable heartbeatRunnable;
     
     // Media control broadcast receiver
     private BroadcastReceiver mediaControlReceiver;
+    
+    // Restart timer for auto-restart if killed
+    private static final long RESTART_INTERVAL = 60000; // 1 minute
+    private Handler restartHandler;
+    private Runnable restartRunnable;
     
     // Binder for service connection
     private final IBinder binder = new LocalBinder();
@@ -69,6 +81,13 @@ public class MediaNotificationService extends Service {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         executorService = Executors.newSingleThreadExecutor();
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mainHandler = new Handler(Looper.getMainLooper());
+        
+        // Create heartbeat handler
+        heartbeatHandler = new Handler(Looper.getMainLooper());
+        
+        // Create restart handler
+        restartHandler = new Handler(Looper.getMainLooper());
         
         createNotificationChannel();
         
@@ -91,6 +110,56 @@ public class MediaNotificationService extends Service {
         
         // Start as foreground service immediately
         startForegroundWithEmptyNotification();
+        
+        // Start heartbeat to keep service alive
+        startHeartbeat();
+        
+        // Schedule periodic attempts to restart if service is killed
+        scheduleRestartChecks();
+    }
+    
+    private void scheduleRestartChecks() {
+        restartRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "Periodic restart check running");
+                if (isPlaying) {
+                    // Send event to app to check if it's still playing
+                    Intent restartIntent = new Intent("MEDIA_CONTROL_EVENT");
+                    restartIntent.putExtra("action", "check_playback");
+                    restartIntent.setPackage(getPackageName());
+                    sendBroadcast(restartIntent);
+                    
+                    // Schedule next check
+                    restartHandler.postDelayed(this, RESTART_INTERVAL);
+                }
+            }
+        };
+        
+        // Start the periodic checks
+        restartHandler.postDelayed(restartRunnable, RESTART_INTERVAL);
+    }
+    
+    private void startHeartbeat() {
+        heartbeatRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "Service heartbeat tick - ensuring service stays alive");
+                
+                // Ensure we stay in foreground
+                if (isPlaying) {
+                    updateNotificationControls();
+                } else {
+                    startForegroundWithEmptyNotification();
+                }
+                
+                // Schedule next heartbeat
+                heartbeatHandler.postDelayed(this, 10000); // Every 10 seconds
+            }
+        };
+        
+        // Start the heartbeat
+        heartbeatHandler.postDelayed(heartbeatRunnable, 10000);
     }
     
     private void startForegroundWithEmptyNotification() {
@@ -138,9 +207,19 @@ public class MediaNotificationService extends Service {
         if ("ACTION_PLAY".equals(action)) {
             isPlaying = true;
             updateNotificationControls();
+            
+            // Acquire wake lock when playing
+            if (!serviceLock.isHeld()) {
+                serviceLock.acquire(8 * 60 * 60 * 1000L);
+            }
         } else if ("ACTION_PAUSE".equals(action)) {
             isPlaying = false;
             updateNotificationControls();
+        } else if ("ACTION_NEXT".equals(action) || "ACTION_PREVIOUS".equals(action)) {
+            // Ensure we're still in foreground mode after changing tracks
+            mainHandler.postDelayed(() -> {
+                startForeground(NOTIFICATION_ID, showNotification());
+            }, 500);
         }
     }
     
@@ -262,6 +341,15 @@ public class MediaNotificationService extends Service {
         }
         
         updateNotificationControls();
+        
+        // Reset restart timer if playing changed
+        if (playing) {
+            // Restart the restart checks
+            if (restartHandler != null && restartRunnable != null) {
+                restartHandler.removeCallbacks(restartRunnable);
+                restartHandler.postDelayed(restartRunnable, RESTART_INTERVAL);
+            }
+        }
     }
     
     public void onSongCompleted() {
@@ -272,6 +360,19 @@ public class MediaNotificationService extends Service {
         mainActivityIntent.putExtra("action", "next");
         mainActivityIntent.setPackage(getPackageName());
         sendBroadcast(mainActivityIntent);
+        
+        // Also send a backup broadcast for better reliability
+        mainActivityIntent = new Intent("APP_BACKGROUND_RESTART");
+        mainActivityIntent.setPackage(getPackageName());
+        sendBroadcast(mainActivityIntent);
+        
+        // And send another with a delay for extra reliability
+        mainHandler.postDelayed(() -> {
+            Intent delayedIntent = new Intent("MEDIA_CONTROL_EVENT");
+            delayedIntent.putExtra("action", "next");
+            delayedIntent.setPackage(getPackageName());
+            sendBroadcast(delayedIntent);
+        }, 500);
     }
     
     private void updateNotificationControls() {
@@ -279,7 +380,7 @@ public class MediaNotificationService extends Service {
         showNotification();
     }
 
-    private void showNotification() {
+    private Notification showNotification() {
         // Create intent for when user taps notification
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -338,6 +439,8 @@ public class MediaNotificationService extends Service {
         
         // Always running as foreground service for reliable background playback
         startForeground(NOTIFICATION_ID, notification);
+        
+        return notification;
     }
     
     public void cancelNotification() {
@@ -378,6 +481,23 @@ public class MediaNotificationService extends Service {
                 } else {
                     showNotification();
                 }
+            } else if ("RESTART_SERVICE".equals(action)) {
+                // Handle service restart
+                if (isPlaying) {
+                    Log.d(TAG, "Restarting service and notifying app");
+                    
+                    // Notify app that service has restarted
+                    Intent restartIntent = new Intent("APP_BACKGROUND_RESTART");
+                    restartIntent.setPackage(getPackageName());
+                    sendBroadcast(restartIntent);
+                    
+                    // Ensure we're running in foreground
+                    if (currentTitle.isEmpty()) {
+                        startForegroundWithEmptyNotification();
+                    } else {
+                        showNotification();
+                    }
+                }
             }
         }
         
@@ -394,6 +514,15 @@ public class MediaNotificationService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy - attempting to restart service");
+        
+        // Clean up resources
+        if (heartbeatHandler != null && heartbeatRunnable != null) {
+            heartbeatHandler.removeCallbacks(heartbeatRunnable);
+        }
+        
+        if (restartHandler != null && restartRunnable != null) {
+            restartHandler.removeCallbacks(restartRunnable);
+        }
         
         super.onDestroy();
         
@@ -451,6 +580,13 @@ public class MediaNotificationService extends Service {
             Intent appRestartIntent = new Intent("APP_BACKGROUND_RESTART");
             appRestartIntent.setPackage(getPackageName());
             sendBroadcast(appRestartIntent);
+            
+            // Also send a second broadcast with a delay to improve reliability
+            mainHandler.postDelayed(() -> {
+                Intent delayedRestartIntent = new Intent("APP_BACKGROUND_RESTART");
+                delayedRestartIntent.setPackage(getPackageName());
+                sendBroadcast(delayedRestartIntent);
+            }, 1000);
         }
     }
     
@@ -473,6 +609,21 @@ public class MediaNotificationService extends Service {
                     );
                 }
                 Log.d(TAG, "Service restart scheduled via AlarmManager");
+                
+                // Schedule multiple restarts for better reliability
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager.setExactAndAllowWhileIdle(
+                            android.app.AlarmManager.RTC_WAKEUP,
+                            System.currentTimeMillis() + 5000,
+                            intent
+                    );
+                    
+                    alarmManager.setExactAndAllowWhileIdle(
+                            android.app.AlarmManager.RTC_WAKEUP,
+                            System.currentTimeMillis() + 15000,
+                            intent
+                    );
+                }
             }
         }
     }
