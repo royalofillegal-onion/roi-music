@@ -62,12 +62,13 @@ export const cancelAndroidNotification = () => {
 export const updateAndroidPlaybackState = (isPlaying: boolean) => {
   if (isAndroidWebView()) {
     try {
-      // If playing, request background playback and keep device awake
+      // Always request background playback regardless of playing state
+      // to ensure continuous playback capability
+      requestBackgroundPlayback();
+      
+      // If playing, keep device awake
       if (isPlaying) {
-        requestBackgroundPlayback();
         keepDeviceAwake();
-      } else {
-        allowDeviceSleep();
       }
       
       window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
@@ -82,7 +83,7 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
 export const notifySongCompleted = () => {
   if (isAndroidWebView()) {
     try {
-      // Ensure background playback is enabled for continuous playback
+      // Always ensure background playback is enabled for continuous playback
       requestBackgroundPlayback();
       
       window.AndroidInterface?.onSongCompleted();
@@ -97,24 +98,40 @@ export const notifySongCompleted = () => {
 export const getBackgroundPlaybackEnabled = (): boolean => {
   if (isAndroidWebView()) {
     try {
-      return window.AndroidInterface?.isBackgroundPlaybackEnabled() === 1;
+      const isEnabled = window.AndroidInterface?.isBackgroundPlaybackEnabled() === 1;
+      console.log('Background playback enabled status:', isEnabled);
+      return isEnabled;
     } catch (e) {
       console.error('Error checking background playback status:', e);
     }
   }
-  return true; // Default to true on non-Android platforms
+  return false; // Default to false on non-Android platforms to ensure explicit enabling
 };
 
-// Request background playback permission
+// Request background playback permission with more aggressive approach
 export const requestBackgroundPlayback = () => {
   if (isAndroidWebView()) {
     try {
       window.AndroidInterface?.requestBackgroundPlayback();
       console.log('Background playback requested from Android');
+      
+      // Force a second request after a small delay to ensure it's registered
+      setTimeout(() => {
+        try {
+          window.AndroidInterface?.requestBackgroundPlayback();
+          console.log('Background playback re-requested to ensure activation');
+        } catch (e) {
+          console.error('Error in delayed background playback request:', e);
+        }
+      }, 500);
+      
+      return true;
     } catch (e) {
       console.error('Error requesting background playback:', e);
+      return false;
     }
   }
+  return false;
 };
 
 // Disable background playback
@@ -129,16 +146,30 @@ export const disableBackgroundPlayback = () => {
   }
 };
 
-// Keep device awake during playback
+// Keep device awake during playback - more aggressive approach
 export const keepDeviceAwake = () => {
   if (isAndroidWebView() && window.AndroidInterface?.keepAwake) {
     try {
       window.AndroidInterface.keepAwake();
       console.log('Requested device to stay awake during playback');
+      
+      // Re-request wake lock periodically to ensure it stays active
+      const wakeInterval = setInterval(() => {
+        try {
+          window.AndroidInterface?.keepAwake();
+          console.log('Wake lock refreshed');
+        } catch (e) {
+          console.error('Error refreshing wake lock:', e);
+          clearInterval(wakeInterval);
+        }
+      }, 60000); // Refresh every minute
+      
+      return wakeInterval;
     } catch (e) {
       console.error('Error keeping device awake:', e);
     }
   }
+  return null;
 };
 
 // Allow device to sleep
