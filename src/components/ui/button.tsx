@@ -19,15 +19,16 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // New variant for player controls to ensure they always show
-        playerControl: "bg-white text-black rounded-full hover:bg-gray-200 transition z-50",
+        // Player control buttons with higher visibility and priority
+        playerControl: "bg-white text-black rounded-full hover:bg-gray-200 transition z-50 visible opacity-100",
+        playButton: "bg-white text-black rounded-full hover:bg-gray-200 transition z-50 visible opacity-100",
+        pauseButton: "bg-white text-black rounded-full hover:bg-gray-200 transition z-50 visible opacity-100",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
-        // New size for player control icons
         playerIcon: "h-8 w-8 p-1",
       },
     },

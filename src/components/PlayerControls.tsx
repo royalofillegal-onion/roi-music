@@ -1,0 +1,67 @@
+
+import React from 'react';
+import { Button } from "@/components/ui/button";
+import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { usePlayer } from '@/context/PlayerContext';
+import { updateAndroidPlaybackState } from '@/services/androidNotification';
+
+export const PlayerControls = () => {
+  const { isPlaying, togglePlayPause, nextSong, previousSong } = usePlayer();
+
+  const handlePlayPause = () => {
+    togglePlayPause();
+    
+    // Update Android notification with new play state
+    if (typeof window !== 'undefined' && window.AndroidInterface) {
+      updateAndroidPlaybackState(!isPlaying);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center gap-4">
+      <Button 
+        variant="playerControl" 
+        size="playerIcon" 
+        onClick={previousSong}
+        aria-label="Previous song"
+      >
+        <SkipBack />
+      </Button>
+
+      {isPlaying ? (
+        <Button 
+          variant="pauseButton" 
+          size="playerIcon" 
+          onClick={handlePlayPause}
+          aria-label="Pause"
+          className="visible opacity-100"
+        >
+          <Pause />
+        </Button>
+      ) : (
+        <Button 
+          variant="playButton" 
+          size="playerIcon" 
+          onClick={handlePlayPause}
+          aria-label="Play"
+          className="visible opacity-100"
+        >
+          <Play />
+        </Button>
+      )}
+
+      <Button 
+        variant="playerControl" 
+        size="playerIcon" 
+        onClick={nextSong}
+        aria-label="Next song"
+      >
+        <SkipForward />
+      </Button>
+      
+      <Volume2 className="text-white" />
+    </div>
+  );
+};
+
+export default PlayerControls;
