@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Repeat, Shuffle, ListMusic, Maximize2, Minimize2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
 
 const Player = () => {
   const {
@@ -219,17 +221,20 @@ const Player = () => {
             )}
             
             <div className="flex justify-center items-center space-x-8">
-              <button
+              <Button
                 onClick={previousSong}
+                variant="ghost"
                 className="text-white"
                 aria-label="Previous song"
               >
                 <SkipBack className="h-8 w-8" />
-              </button>
+              </Button>
               
-              <button
+              <Button
                 onClick={togglePlayPause}
-                className="bg-white text-black rounded-full p-4 hover:bg-gray-200 transition"
+                variant="playerControl"
+                size="playerIcon"
+                className="p-4"
                 aria-label={isPlaying ? "Pause" : "Play"}
               >
                 {isPlaying ? (
@@ -237,15 +242,16 @@ const Player = () => {
                 ) : (
                   <Play className="h-8 w-8" />
                 )}
-              </button>
+              </Button>
               
-              <button
+              <Button
                 onClick={nextSong}
+                variant="ghost"
                 className="text-white"
                 aria-label="Next song"
               >
                 <SkipForward className="h-8 w-8" />
-              </button>
+              </Button>
             </div>
             
             <div className="flex justify-center items-center space-x-6">
@@ -331,17 +337,21 @@ const Player = () => {
         
         {/* Player controls - visible on all screens */}
         <div className="flex items-center justify-center flex-1 md:w-1/3">
-          <button
+          <Button
             onClick={previousSong}
+            variant="ghost"
+            size="icon"
             className="text-gray-400 hover:text-white mr-2 md:mr-6"
             aria-label="Previous song"
           >
             <SkipBack className="h-4 w-4 md:h-5 md:w-5" />
-          </button>
+          </Button>
           
-          <button
+          <Button
             onClick={togglePlayPause}
-            className="bg-white text-black rounded-full p-1 hover:bg-gray-200 transition mx-2"
+            variant="playerControl"
+            size="playerIcon"
+            className="mx-2"
             aria-label={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
@@ -349,15 +359,17 @@ const Player = () => {
             ) : (
               <Play className="h-5 w-5 md:h-6 md:w-6" />
             )}
-          </button>
+          </Button>
           
-          <button
+          <Button
             onClick={nextSong}
+            variant="ghost"
+            size="icon"
             className="text-gray-400 hover:text-white ml-2 md:ml-6"
             aria-label="Next song"
           >
             <SkipForward className="h-4 w-4 md:h-5 md:w-5" />
-          </button>
+          </Button>
           
           <Tooltip>
             <TooltipTrigger asChild>

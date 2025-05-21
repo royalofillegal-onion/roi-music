@@ -32,6 +32,8 @@ export const isOneSignalAvailable = (): boolean => {
 export const showAndroidNotification = (title: string, body?: string, imageUrl?: string, isPlaying?: boolean) => {
   if (isAndroidWebView()) {
     try {
+      console.log("Android native notification with playback state:", isPlaying);
+      
       // First ensure background playback is enabled with more aggressive approach
       initContinuousPlayback();
       
@@ -48,26 +50,35 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
       keepDeviceAwake();
       
       // Pass image URL and playing state to Android for rich notifications
+      // CRITICAL: Make sure isPlaying is properly converted to number (0 or 1)
+      const playingValue = isPlaying === true ? 1 : 0;
+      console.log("Setting notification play state to:", playingValue);
+      
       window.AndroidInterface?.showNotification(
         title, 
         body || '', 
         imageUrl || '',
-        isPlaying === true ? 1 : 0
+        playingValue
       );
       
       // Redundant notification call after a delay to ensure it's showing
       setTimeout(() => {
         if (window.AndroidInterface) {
+          console.log("Reinforcing notification with play state:", playingValue);
           window.AndroidInterface.showNotification(
             title, 
             body || '', 
             imageUrl || '',
-            isPlaying === true ? 1 : 0
+            playingValue
           );
         }
       }, 1000);
       
-      console.log('Android native notification sent with ultra-aggressive approach', { title, isPlaying });
+      // Also update playback state separately to ensure controls are correctly shown
+      if (typeof isPlaying === 'boolean') {
+        updateAndroidPlaybackState(isPlaying);
+      }
+      
     } catch (e) {
       console.error('Error calling AndroidInterface:', e);
       // Try again after a delay
@@ -123,22 +134,24 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
         keepDeviceAwake();
       }
       
+      console.log("Updating Android playback state to:", isPlaying ? "PLAYING(1)" : "PAUSED(0)");
       window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
       
-      // Redundant state updates
+      // Redundant state updates with logging
       setTimeout(() => {
         if (window.AndroidInterface) {
+          console.log("Reinforcing playback state update to:", isPlaying ? "PLAYING(1)" : "PAUSED(0)");
           window.AndroidInterface.updatePlaybackState(isPlaying ? 1 : 0);
         }
       }, 500);
       
       setTimeout(() => {
         if (window.AndroidInterface) {
+          console.log("Second reinforcement of playback state:", isPlaying ? "PLAYING(1)" : "PAUSED(0)");
           window.AndroidInterface.updatePlaybackState(isPlaying ? 1 : 0);
         }
       }, 2000);
       
-      console.log('Android playback state updated with extreme redundancy:', isPlaying);
     } catch (e) {
       console.error('Error updating Android playback state:', e);
       // Retry after error

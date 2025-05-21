@@ -9,16 +9,29 @@ export const showSongNotification = (
   imageUrl?: string,
   isPlaying?: boolean
 ): Notification | null => {
-  // Try OneSignal first if available
+  // Try OneSignal first if available - critical for persistent playback
   if (isOneSignalAvailable()) {
+    console.log('Using OneSignal notification for robust playback control');
     showOneSignalSongNotification(title, artist, imageUrl, isPlaying);
     return null;
   }
   
-  // Fall back to Android native notification
+  // Fall back to Android native notification with enhanced controls
   if (isAndroidWebView()) {
+    // Ensure we always show proper play/pause state in notification
+    console.log('Using Android native notification with playback state:', isPlaying);
+    
     // Use Android native notification with rich media info
     showAndroidNotification(title, artist, imageUrl, isPlaying);
+    
+    // Make additional call to ensure play state is correctly registered
+    setTimeout(() => {
+      if (typeof isPlaying === 'boolean') {
+        console.log('Reinforcing Android notification state:', isPlaying);
+        showAndroidNotification(title, artist, imageUrl, isPlaying);
+      }
+    }, 500);
+    
     return null; // We can't return a Notification object from Android native
   }
 
@@ -30,6 +43,5 @@ export const showSongNotification = (
     tag: 'now-playing',
     requireInteraction: true, // Always require interaction for better visibility
     vibrate: isMobileDevice() ? [200, 100, 200] : undefined
-    // Removed the 'actions' property as it's not supported in the CustomNotificationOptions type
   });
 };
