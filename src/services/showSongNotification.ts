@@ -9,17 +9,25 @@ export const showSongNotification = (
   imageUrl?: string,
   isPlaying?: boolean
 ): Notification | null => {
-  // For Android WebView, use native notifications with aggressive background playback
+  // For Android WebView, use native notifications with super aggressive background playback
   if (isAndroidWebView()) {
     console.log('Using Android native notification for playback:', isPlaying ? 'playing' : 'paused');
-    // Use an immediate timeout to ensure this runs even if the JS thread is blocked
+    
+    // Use multiple immediate timeouts to ensure this runs even if the JS thread is blocked
     setTimeout(() => {
       showAndroidNotification(title, artist, imageUrl, isPlaying);
-      // Make a second attempt for better reliability
-      setTimeout(() => {
-        showAndroidNotification(title, artist, imageUrl, isPlaying);
-      }, 300);
     }, 0);
+    
+    // Make a second attempt for better reliability
+    setTimeout(() => {
+      showAndroidNotification(title, artist, imageUrl, isPlaying);
+    }, 300);
+    
+    // Make a third attempt after a longer delay
+    setTimeout(() => {
+      showAndroidNotification(title, artist, imageUrl, isPlaying);
+    }, 1000);
+    
     return null;
   }
 
@@ -30,7 +38,7 @@ export const showSongNotification = (
     return null;
   }
 
-  // Fall back to web notification
+  // Fall back to web notification with improved visibility
   return showNotification(`Now Playing: ${title}`, {
     body: `By ${artist}`,
     icon: imageUrl,

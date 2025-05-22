@@ -1,3 +1,4 @@
+
 // Add AndroidInterface to Window interface
 declare global {
   interface Window {
@@ -28,11 +29,11 @@ export const isOneSignalAvailable = (): boolean => {
   return typeof window !== 'undefined' && typeof window.OneSignal !== 'undefined';
 };
 
-// Show Android notification with playback controls - with enhanced background setup
+// Show Android notification with playback controls - with super aggressive background setup
 export const showAndroidNotification = (title: string, body?: string, imageUrl?: string, isPlaying?: boolean) => {
   if (isAndroidWebView()) {
     try {
-      // Initialize aggressive continuous playback sequence
+      // Initialize super aggressive continuous playback sequence
       initContinuousPlayback();
       startForegroundService();
       requestBackgroundPlayback();
@@ -54,13 +55,24 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
       // Also update playback state
       updateAndroidPlaybackState(isPlaying === true);
       
-      // Make additional attempts for better reliability
+      // Make multiple aggressive attempts for better reliability
       setTimeout(() => {
+        initContinuousPlayback();
         startForegroundService();
         if (isPlaying) {
+          keepDeviceAwake();
           updateAndroidPlaybackState(true);
         }
-      }, 500);
+      }, 300);
+      
+      setTimeout(() => {
+        initContinuousPlayback();
+        startForegroundService();
+        if (isPlaying) {
+          keepDeviceAwake();
+          updateAndroidPlaybackState(true);
+        }
+      }, 1000);
       
     } catch (e) {
       console.error('Error showing Android notification:', e);
@@ -79,7 +91,7 @@ export const cancelAndroidNotification = () => {
   }
 };
 
-// Update notification playback state with enhanced background services
+// Update notification playback state with super aggressive background services
 export const updateAndroidPlaybackState = (isPlaying: boolean) => {
   if (isAndroidWebView()) {
     try {
@@ -90,7 +102,7 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
       if (isPlaying) {
         keepDeviceAwake();
         
-        // Make multiple attempts to ensure continuous playback
+        // Make multiple aggressive attempts to ensure continuous playback
         initContinuousPlayback();
         requestBackgroundPlayback();
       }
@@ -98,10 +110,22 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
       // Update playback state in notification
       window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
       
-      // Make a second attempt after a short delay for better reliability
+      // Make multiple attempts after delays for better reliability
       setTimeout(() => {
         window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
-      }, 300);
+        if (isPlaying) {
+          initContinuousPlayback();
+          requestBackgroundPlayback();
+        }
+      }, 200);
+      
+      setTimeout(() => {
+        window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
+        if (isPlaying) {
+          initContinuousPlayback();
+          startForegroundService();
+        }
+      }, 800);
       
     } catch (e) {
       console.error('Error updating playback state:', e);
@@ -113,8 +137,17 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
 export const initContinuousPlayback = () => {
   if (isAndroidWebView() && window.AndroidInterface?.initContinuousPlayback) {
     try {
-      console.log("Initializing continuous playback");
+      console.log("Initializing continuous playback with super aggressive mode");
       window.AndroidInterface.initContinuousPlayback();
+      
+      // Make multiple attempts for better reliability
+      setTimeout(() => {
+        window.AndroidInterface?.initContinuousPlayback();
+      }, 300);
+      
+      setTimeout(() => {
+        window.AndroidInterface?.initContinuousPlayback();
+      }, 1500);
     } catch (e) {
       console.error('Error initializing continuous playback:', e);
     }
@@ -127,6 +160,11 @@ export const startForegroundService = () => {
     try {
       console.log("Starting foreground service for continuous playback");
       window.AndroidInterface.startForegroundService();
+      
+      // Make multiple attempts for better reliability
+      setTimeout(() => {
+        window.AndroidInterface?.startForegroundService();
+      }, 500);
     } catch (e) {
       console.error('Error starting foreground service:', e);
     }
@@ -137,22 +175,35 @@ export const startForegroundService = () => {
 export const restartAndroidPlayback = () => {
   if (isAndroidWebView() && window.AndroidInterface?.restartPlayback) {
     try {
-      console.log("Restarting playback");
+      console.log("Restarting playback with super aggressive mode");
       // Attempt to start foreground service first
       startForegroundService();
+      
+      // Initialize continuous playback
+      initContinuousPlayback();
+      
+      // Request background playback
+      requestBackgroundPlayback();
+      
       // Then restart playback
       window.AndroidInterface.restartPlayback();
+      
+      // Make a second attempt after a short delay
+      setTimeout(() => {
+        startForegroundService();
+        window.AndroidInterface?.restartPlayback();
+      }, 500);
     } catch (e) {
       console.error('Error restarting playback:', e);
     }
   }
 };
 
-// Notify song completed with enhanced reliability
+// Notify song completed with super aggressive reliability
 export const notifySongCompleted = () => {
   if (isAndroidWebView()) {
     try {
-      console.log("Song completed, notifying Android");
+      console.log("Song completed, notifying Android with super aggressive mode");
       // First ensure continuous playback is initialized
       initContinuousPlayback();
       requestBackgroundPlayback();
@@ -161,10 +212,21 @@ export const notifySongCompleted = () => {
       // Then notify song completed
       window.AndroidInterface?.onSongCompleted();
       
-      // Make a second attempt after a short delay
+      // Make multiple attempts after delays for better reliability
       setTimeout(() => {
+        initContinuousPlayback();
         window.AndroidInterface?.onSongCompleted();
       }, 200);
+      
+      setTimeout(() => {
+        startForegroundService();
+        window.AndroidInterface?.onSongCompleted();
+      }, 600);
+      
+      // Force restart playback after song completed for better continuity
+      setTimeout(() => {
+        restartAndroidPlayback();
+      }, 1000);
     } catch (e) {
       console.error('Error notifying song completion:', e);
     }
@@ -175,13 +237,17 @@ export const notifySongCompleted = () => {
 export const requestBackgroundPlayback = () => {
   if (isAndroidWebView()) {
     try {
-      console.log("Requesting background playback permission");
+      console.log("Requesting background playback permission with super aggressive mode");
       window.AndroidInterface?.requestBackgroundPlayback();
       
-      // Make a second attempt after a short delay
+      // Make multiple attempts after delays for better reliability
       setTimeout(() => {
         window.AndroidInterface?.requestBackgroundPlayback();
       }, 300);
+      
+      setTimeout(() => {
+        window.AndroidInterface?.requestBackgroundPlayback();
+      }, 1000);
       
       return true;
     } catch (e) {
@@ -196,13 +262,17 @@ export const requestBackgroundPlayback = () => {
 export const keepDeviceAwake = () => {
   if (isAndroidWebView() && window.AndroidInterface?.keepAwake) {
     try {
-      console.log("Keeping device awake for playback");
+      console.log("Keeping device awake for playback with super aggressive mode");
       window.AndroidInterface.keepAwake();
       
-      // Make a second attempt after a short delay
+      // Make multiple attempts for better reliability
       setTimeout(() => {
         window.AndroidInterface?.keepAwake();
       }, 300);
+      
+      setTimeout(() => {
+        window.AndroidInterface?.keepAwake();
+      }, 1500);
     } catch (e) {
       console.error('Error keeping device awake:', e);
     }

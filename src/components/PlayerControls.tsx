@@ -12,6 +12,11 @@ export const PlayerControls = () => {
     // Ensure the play state is properly synchronized with Android notifications
     if (typeof window !== 'undefined' && window.AndroidInterface) {
       updateAndroidPlaybackState(isPlaying);
+      
+      // Make an additional attempt after a delay for better reliability
+      setTimeout(() => {
+        updateAndroidPlaybackState(isPlaying);
+      }, 300);
     }
   }, [isPlaying]);
 
@@ -21,6 +26,11 @@ export const PlayerControls = () => {
     // Update Android notification with new play state
     if (typeof window !== 'undefined' && window.AndroidInterface) {
       updateAndroidPlaybackState(!isPlaying);
+      
+      // Make an additional attempt after a delay for better reliability
+      setTimeout(() => {
+        updateAndroidPlaybackState(!isPlaying);
+      }, 300);
     }
   };
 
@@ -40,9 +50,9 @@ export const PlayerControls = () => {
         size="playerIcon" 
         onClick={handlePlayPause}
         aria-label={isPlaying ? "Pause" : "Play"}
-        className="visible opacity-100"
+        className="visible opacity-100 z-50"
       >
-        {isPlaying ? <Pause /> : <Play />}
+        {isPlaying ? <Pause className="opacity-100" /> : <Play className="opacity-100" />}
       </Button>
 
       <Button 
