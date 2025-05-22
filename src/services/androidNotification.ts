@@ -256,11 +256,11 @@ export const startForegroundService = () => {
   }
 };
 
-// Restart playback with enhanced reliability
+// Restart playback with enhanced reliability for continuous playback
 export const restartAndroidPlayback = () => {
   if (isAndroidWebView() && window.AndroidInterface?.restartPlayback) {
     try {
-      console.log("🔄 RESTARTING ANDROID PLAYBACK");
+      console.log("🔄 RESTARTING ANDROID PLAYBACK FOR CONTINUOUS PLAYBACK");
       
       // First ensure full initialization
       startForegroundService();
@@ -272,45 +272,44 @@ export const restartAndroidPlayback = () => {
       window.AndroidInterface.restartPlayback();
       
       // Make multiple attempts with delays
-      const delays = [200, 500, 1000, 2000, 5000, 10000];
+      const delays = [100, 300, 800, 2000, 5000, 15000];
       delays.forEach(delay => {
         setTimeout(() => {
+          // Keep service active
           startForegroundService();
           window.AndroidInterface?.restartPlayback();
           keepDeviceAwake();
           initContinuousPlayback();
+          
+          // For medium delays, send additional signals
+          if (delay >= 800 && delay < 3000) {
+            // Also send a broadcast event to notify MainActivity
+            const restartIntent = new CustomEvent('android-media-control', { 
+              detail: { action: 'restart_playback' } 
+            });
+            document.dispatchEvent(restartIntent);
+          }
+          
+          // For longer delays, send app restart signal
+          if (delay >= 3000) {
+            const appRestartIntent = new CustomEvent('app-background-restart', {});
+            document.dispatchEvent(appRestartIntent);
+          }
         }, delay);
       });
       
-      // Also send a broadcast event to notify MainActivity
-      setTimeout(() => {
-        const restartIntent = new CustomEvent('android-media-control', { 
-          detail: { action: 'restart_playback' } 
-        });
-        document.dispatchEvent(restartIntent);
-      }, 300);
-      
-      // Send additional events at intervals for better reliability
-      setTimeout(() => {
-        const nextIntent = new CustomEvent('media-control', { 
-          detail: { action: 'restart_playback' } 
-        });
-        document.dispatchEvent(nextIntent);
-      }, 1500);
-      
-      setTimeout(() => {
-        const appRestartIntent = new CustomEvent('app-background-restart', {});
-        document.dispatchEvent(appRestartIntent);
-      }, 3000);
-      
-      // Set up periodic restart checks to ensure continuous playback
+      // Set up more frequent restart checks to ensure continuous playback
       const intervalId = setInterval(() => {
         window.AndroidInterface?.restartPlayback();
+        startForegroundService();
+        keepDeviceAwake();
+        
+        // Also check playback status
         const checkIntent = new CustomEvent('media-control', { 
           detail: { action: 'check_playback' } 
         });
         document.dispatchEvent(checkIntent);
-      }, 60000); // Check every minute
+      }, 30000); // Check every 30 seconds
       
       // Clear interval after 4 hours to prevent memory leaks
       setTimeout(() => clearInterval(intervalId), 4 * 60 * 60 * 1000);
@@ -323,10 +322,13 @@ export const restartAndroidPlayback = () => {
         try {
           initContinuousPlayback();
           startForegroundService();
+          // Send app restart event as last resort
+          const appRestartIntent = new CustomEvent('app-background-restart', {});
+          document.dispatchEvent(appRestartIntent);
         } catch (error) {
           console.error('Recovery attempt failed:', error);
         }
-      }, 1000);
+      }, 500);
     }
   }
 };
@@ -335,7 +337,7 @@ export const restartAndroidPlayback = () => {
 export const notifySongCompleted = () => {
   if (isAndroidWebView()) {
     try {
-      console.log("🎵 SONG COMPLETED - NOTIFYING ANDROID");
+      console.log("🎵 SONG COMPLETED - TRIGGERING NEXT SONG");
       
       // First ensure continuous playback is initialized
       initContinuousPlayback();
@@ -346,57 +348,68 @@ export const notifySongCompleted = () => {
       // Then notify song completed with multiple attempts
       window.AndroidInterface?.onSongCompleted();
       
-      // Make multiple attempts with increasing delays
-      const delays = [100, 300, 800, 1500, 3000, 7000];
-      delays.forEach(delay => {
-        setTimeout(() => {
-          initContinuousPlayback();
-          window.AndroidInterface?.onSongCompleted();
-          startForegroundService();
-          
-          // Also fire next song events for redundancy
-          if (delay > 500) {
-            const nextIntent = new CustomEvent('android-media-control', { 
-              detail: { action: 'next' } 
-            });
-            document.dispatchEvent(nextIntent);
-          }
-        }, delay);
-      });
-      
-      // Also broadcast events to ensure next song plays
+      // Fire next song events IMMEDIATELY for maximum responsiveness
       const nextIntent = new CustomEvent('android-media-control', { 
         detail: { action: 'next' } 
       });
       document.dispatchEvent(nextIntent);
       
-      // Send additional events with delay to improve reliability
-      setTimeout(() => {
-        const nextIntent2 = new CustomEvent('media-control', { 
-          detail: { action: 'next' } 
-        });
-        document.dispatchEvent(nextIntent2);
-      }, 500);
+      // Send additional events for redundancy
+      const nextIntent2 = new CustomEvent('media-control', { 
+        detail: { action: 'next' } 
+      });
+      document.dispatchEvent(nextIntent2);
+      
+      // Make multiple attempts with increasing delays
+      const delays = [50, 150, 400, 1000, 2500];
+      delays.forEach(delay => {
+        setTimeout(() => {
+          // Multiple ways to trigger next song
+          window.AndroidInterface?.onSongCompleted();
+          
+          // Fire additional next events for redundancy
+          const nextIntent = new CustomEvent('android-media-control', { 
+            detail: { action: 'next' } 
+          });
+          document.dispatchEvent(nextIntent);
+          
+          // For longer delays, also ensure service is active
+          if (delay > 300) {
+            initContinuousPlayback();
+            startForegroundService();
+            keepDeviceAwake();
+          }
+        }, delay);
+      });
       
       // Force restart playback after song completed for better continuity
       setTimeout(() => {
         restartAndroidPlayback();
-      }, 800);
+      }, 500);
       
       // Send app restart event as backup
       setTimeout(() => {
         const appRestartIntent = new CustomEvent('app-background-restart', {});
         document.dispatchEvent(appRestartIntent);
-      }, 1200);
+      }, 800);
       
-      // Another round of events for extra reliability
+      // Another round of next events for extra reliability
       setTimeout(() => {
         const nextIntent3 = new CustomEvent('media-control', { 
           detail: { action: 'next' } 
         });
         document.dispatchEvent(nextIntent3);
         restartAndroidPlayback();
-      }, 3000);
+      }, 1500);
+      
+      // Final attempt with long delay as safety net
+      setTimeout(() => {
+        const lastAttemptEvent = new CustomEvent('media-control', { 
+          detail: { action: 'next' } 
+        });
+        document.dispatchEvent(lastAttemptEvent);
+        restartAndroidPlayback();
+      }, 4000);
       
     } catch (e) {
       console.error('Error notifying song completion:', e);
@@ -412,7 +425,7 @@ export const notifySongCompleted = () => {
         // Also try to restart playback
         setTimeout(() => {
           restartAndroidPlayback();
-        }, 1000);
+        }, 500);
         
       } catch (recoveryError) {
         console.error('Recovery attempt failed:', recoveryError);

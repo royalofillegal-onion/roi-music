@@ -1,4 +1,3 @@
-
 import { isAndroidWebView, showAndroidNotification } from './androidNotification';
 import { showNotification, isMobileDevice } from './NotificationService';
 import { showOneSignalSongNotification } from './OneSignalService';
@@ -13,23 +12,29 @@ export const showSongNotification = (
   if (isAndroidWebView()) {
     console.log('Using Android native notification for playback:', isPlaying ? 'playing' : 'paused');
     
+    // Immediate first notification to ensure quick response
+    showAndroidNotification(title, artist, imageUrl, isPlaying);
+    
     // Use multiple immediate timeouts for maximum reliability with different timing
-    setTimeout(() => {
-      showAndroidNotification(title, artist, imageUrl, isPlaying);
-    }, 0);
+    // Each with slightly different timing to maximize chances of success
+    const delays = [10, 50, 200, 600, 1500, 5000];
+    delays.forEach(delay => {
+      setTimeout(() => {
+        showAndroidNotification(title, artist, imageUrl, isPlaying);
+      }, delay);
+    });
     
-    setTimeout(() => {
-      showAndroidNotification(title, artist, imageUrl, isPlaying);
-    }, 100);
-    
-    setTimeout(() => {
-      showAndroidNotification(title, artist, imageUrl, isPlaying);
-    }, 500);
-    
-    // Make additional attempts to ensure notification service stays active
-    setTimeout(() => {
-      showAndroidNotification(title, artist, imageUrl, isPlaying);
-    }, 1500);
+    // Set up recurring notification updates to ensure service stays active
+    // This is crucial for keeping playback alive in the background
+    if (isPlaying) {
+      const intervalId = setInterval(() => {
+        console.log("Refreshing notification to maintain playback");
+        showAndroidNotification(title, artist, imageUrl, true);
+      }, 25000); // Every 25 seconds
+      
+      // Clear interval after 6 hours to prevent memory leaks
+      setTimeout(() => clearInterval(intervalId), 6 * 60 * 60 * 1000);
+    }
     
     // Add extra continuous playback support even after notification
     setTimeout(() => {
@@ -39,8 +44,12 @@ export const showSongNotification = (
           detail: { action: 'ensure_continuous_playback' } 
         });
         document.dispatchEvent(playEvent);
+        
+        // Also dispatch a playback restart event
+        const restartEvent = new CustomEvent('app-background-restart', {});
+        document.dispatchEvent(restartEvent);
       }
-    }, 2000);
+    }, 1000);
     
     return null;
   }

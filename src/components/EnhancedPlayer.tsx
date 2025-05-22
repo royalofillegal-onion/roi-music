@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Player from './Player';
 import { usePlayer } from '@/context/PlayerContext';
 import { 
@@ -17,11 +16,12 @@ interface EnhancedPlayerProps {
 
 const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) => {
   const { isPlaying, togglePlayPause, currentSong, nextSong } = usePlayer();
+  const backgroundCheckIntervalRef = useRef<number | null>(null);
 
   // Super aggressive initialization of background playback
   useEffect(() => {
     if (typeof window !== 'undefined' && window.AndroidInterface) {
-      console.log('➡️ INITIALIZING AGGRESSIVE CONTINUOUS PLAYBACK SYSTEM ⬅️');
+      console.log('➡️ INITIALIZING CONTINUOUS PLAYBACK SYSTEM ⬅️');
       
       // First wave - immediate initialization
       initContinuousPlayback();
@@ -30,10 +30,10 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
       keepDeviceAwake();
       
       // Multiple waves of initialization attempts at different intervals
-      const intervals = [300, 800, 2000, 5000, 10000, 30000];
+      const intervals = [100, 300, 800, 2000, 5000, 15000];
       intervals.forEach(delay => {
         setTimeout(() => {
-          console.log(`Aggressive initialization attempt at ${delay}ms`);
+          console.log(`Continuous playback initialization at ${delay}ms`);
           initContinuousPlayback();
           startForegroundService();
           requestBackgroundPlayback();
@@ -47,18 +47,28 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
         }, delay);
       });
       
-      // Set up periodic checks to ensure playback continues
-      const checkInterval = setInterval(() => {
-        console.log("Periodic playback check");
+      // Set up aggressive periodic checks to ensure playback continues
+      if (backgroundCheckIntervalRef.current) {
+        clearInterval(backgroundCheckIntervalRef.current);
+      }
+      
+      backgroundCheckIntervalRef.current = window.setInterval(() => {
+        console.log("Continuous playback system check");
         if (isPlaying && currentSong) {
           initContinuousPlayback();
           startForegroundService();
           keepDeviceAwake();
           updateAndroidPlaybackState(true);
+          restartAndroidPlayback();
         }
-      }, 20000); // Every 20 seconds
+      }, 15000); // Check every 15 seconds - critical for background playback
       
-      return () => clearInterval(checkInterval);
+      return () => {
+        if (backgroundCheckIntervalRef.current) {
+          clearInterval(backgroundCheckIntervalRef.current);
+          backgroundCheckIntervalRef.current = null;
+        }
+      };
     }
   }, []);
 
@@ -72,38 +82,62 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
       startForegroundService();
       updateAndroidPlaybackState(isPlaying);
       
-      // Make an additional attempt to update state for better reliability
-      setTimeout(() => {
-        updateAndroidPlaybackState(isPlaying);
-      }, 300);
+      // Make multiple attempts to update state for better reliability
+      const delays = [50, 200, 600, 1500, 4000];
+      delays.forEach(delay => {
+        setTimeout(() => {
+          updateAndroidPlaybackState(isPlaying);
+          if (isPlaying) {
+            keepDeviceAwake();
+            startForegroundService();
+            
+            // For longer delays, also restart playback
+            if (delay > 1000) {
+              restartAndroidPlayback();
+            }
+          }
+        }, delay);
+      });
       
       // Ensure we keep device awake when playing
       if (isPlaying) {
         keepDeviceAwake();
         
-        // Multiple attempts to ensure wake lock is acquired
-        setTimeout(() => {
-          keepDeviceAwake();
-          updateAndroidPlaybackState(true);
-          startForegroundService();
-        }, 500);
+        // Restart playback to ensure it's active
+        restartAndroidPlayback();
         
-        setTimeout(() => {
-          keepDeviceAwake();
-          updateAndroidPlaybackState(true);
-        }, 2000);
-      }
-      
-      // Restart playback if playing to ensure it's active
-      if (isPlaying) {
-        setTimeout(() => {
-          restartAndroidPlayback();
-        }, 200);
+        // Setup or reset interval for continuous checks
+        if (backgroundCheckIntervalRef.current) {
+          clearInterval(backgroundCheckIntervalRef.current);
+        }
+        
+        backgroundCheckIntervalRef.current = window.setInterval(() => {
+          if (isPlaying && currentSong) {
+            console.log("Continuous playback maintenance check");
+            updateAndroidPlaybackState(true);
+            keepDeviceAwake();
+            startForegroundService();
+            restartAndroidPlayback();
+          }
+        }, 15000);
+      } else {
+        // Clear interval when paused
+        if (backgroundCheckIntervalRef.current) {
+          clearInterval(backgroundCheckIntervalRef.current);
+          backgroundCheckIntervalRef.current = null;
+        }
       }
     }
+    
+    return () => {
+      if (backgroundCheckIntervalRef.current) {
+        clearInterval(backgroundCheckIntervalRef.current);
+        backgroundCheckIntervalRef.current = null;
+      }
+    };
   }, [isPlaying, currentSong]);
 
-  // Enhanced media control listener with improved reliability
+  // Enhanced media control listener with improved reliability for continuous playback
   useEffect(() => {
     const handleMediaControl = (event: Event) => {
       const customEvent = event as CustomEvent;
@@ -124,7 +158,13 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
               if (!isPlaying && currentSong) {
                 togglePlayPause();
               }
-            }, 500);
+              
+              // Also trigger restart for Android
+              if (typeof window !== 'undefined' && window.AndroidInterface) {
+                updateAndroidPlaybackState(true);
+                restartAndroidPlayback();
+              }
+            }, 300);
             break;
           case 'previous':
             document.dispatchEvent(new CustomEvent('media-control', { 
@@ -135,13 +175,19 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
             // Respond to Android service check
             if (isPlaying && currentSong) {
               console.log('Responding to playback check - PLAYING STATE');
-              updateAndroidPlaybackState(true);
               
-              // Make multiple attempts to ensure the service knows we're playing
-              setTimeout(() => {
+              if (typeof window !== 'undefined' && window.AndroidInterface) {
                 updateAndroidPlaybackState(true);
                 keepDeviceAwake();
-              }, 300);
+                restartAndroidPlayback();
+                
+                // Make multiple attempts
+                setTimeout(() => {
+                  updateAndroidPlaybackState(true);
+                  keepDeviceAwake();
+                  restartAndroidPlayback();
+                }, 200);
+              }
             }
             break;
           case 'restart_playback':
@@ -150,10 +196,27 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
               console.log('Force restarting playback');
               if (!isPlaying) {
                 togglePlayPause();
-              } else {
+              } else if (typeof window !== 'undefined' && window.AndroidInterface) {
                 // Force update state with Android
                 updateAndroidPlaybackState(true);
+                keepDeviceAwake();
                 restartAndroidPlayback();
+                
+                // Multiple attempts
+                setTimeout(() => {
+                  updateAndroidPlaybackState(true);
+                  restartAndroidPlayback();
+                }, 300);
+                
+                setTimeout(() => {
+                  updateAndroidPlaybackState(true);
+                  restartAndroidPlayback();
+                }, 1000);
+                
+                setTimeout(() => {
+                  updateAndroidPlaybackState(true);
+                  restartAndroidPlayback();
+                }, 3000);
               }
             }
             break;
@@ -161,7 +224,7 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
       }
     };
 
-    // Listen for Android media control events with multiple event types for better reliability
+    // Listen for media control events with multiple event types for better reliability
     document.addEventListener('android-media-control', handleMediaControl);
     document.addEventListener('media-control', handleMediaControl);
     
@@ -180,20 +243,27 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
         // Force playback to continue
         if (!isPlaying) {
           togglePlayPause();
-        } else {
+        } else if (typeof window !== 'undefined' && window.AndroidInterface) {
           // Force update state and restart playback
           updateAndroidPlaybackState(true);
           restartAndroidPlayback();
-        }
-        
-        // Make multiple attempts to ensure playback continues
-        setTimeout(() => {
-          if (!isPlaying) togglePlayPause();
-          else {
+          
+          // Multiple attempts
+          setTimeout(() => {
             updateAndroidPlaybackState(true);
             restartAndroidPlayback();
-          }
-        }, 1000);
+          }, 300);
+          
+          setTimeout(() => {
+            updateAndroidPlaybackState(true);
+            restartAndroidPlayback();
+          }, 1000);
+          
+          setTimeout(() => {
+            updateAndroidPlaybackState(true);
+            restartAndroidPlayback();
+          }, 3000);
+        }
       }
     };
     
@@ -223,9 +293,23 @@ const EnhancedPlayer = ({ isPlaying: initialPlayState }: EnhancedPlayerProps) =>
             if (typeof window !== 'undefined' && window.AndroidInterface) {
               updateAndroidPlaybackState(true);
               keepDeviceAwake();
+              restartAndroidPlayback();
             }
           }
-        }, 1000);
+        }, 500);
+        
+        setTimeout(() => {
+          if (!isPlaying && currentSong) {
+            console.log('Final attempt to restore play state');
+            togglePlayPause();
+            
+            if (typeof window !== 'undefined' && window.AndroidInterface) {
+              updateAndroidPlaybackState(true);
+              keepDeviceAwake();
+              restartAndroidPlayback();
+            }
+          }
+        }, 1500);
       }
     }
   }, [initialPlayState]);
