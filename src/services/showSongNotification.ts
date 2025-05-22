@@ -13,20 +13,23 @@ export const showSongNotification = (
   if (isAndroidWebView()) {
     console.log('Using Android native notification for playback:', isPlaying ? 'playing' : 'paused');
     
-    // Use multiple immediate timeouts to ensure this runs even if the JS thread is blocked
+    // Use multiple immediate timeouts for maximum reliability with different timing
     setTimeout(() => {
       showAndroidNotification(title, artist, imageUrl, isPlaying);
     }, 0);
     
-    // Make a second attempt for better reliability
     setTimeout(() => {
       showAndroidNotification(title, artist, imageUrl, isPlaying);
-    }, 300);
+    }, 100);
     
-    // Make a third attempt after a longer delay
     setTimeout(() => {
       showAndroidNotification(title, artist, imageUrl, isPlaying);
-    }, 1000);
+    }, 500);
+    
+    // Make additional attempts to ensure notification service stays active
+    setTimeout(() => {
+      showAndroidNotification(title, artist, imageUrl, isPlaying);
+    }, 1500);
     
     return null;
   }
