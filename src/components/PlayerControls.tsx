@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
 import { usePlayer } from '@/context/PlayerContext';
@@ -7,6 +7,13 @@ import { updateAndroidPlaybackState } from '@/services/androidNotification';
 
 export const PlayerControls = () => {
   const { isPlaying, togglePlayPause, nextSong, previousSong } = usePlayer();
+
+  useEffect(() => {
+    // Ensure the play state is properly synchronized with Android notifications
+    if (typeof window !== 'undefined' && window.AndroidInterface) {
+      updateAndroidPlaybackState(isPlaying);
+    }
+  }, [isPlaying]);
 
   const handlePlayPause = () => {
     togglePlayPause();
@@ -28,27 +35,15 @@ export const PlayerControls = () => {
         <SkipBack />
       </Button>
 
-      {isPlaying ? (
-        <Button 
-          variant="pauseButton" 
-          size="playerIcon" 
-          onClick={handlePlayPause}
-          aria-label="Pause"
-          className="visible opacity-100"
-        >
-          <Pause />
-        </Button>
-      ) : (
-        <Button 
-          variant="playButton" 
-          size="playerIcon" 
-          onClick={handlePlayPause}
-          aria-label="Play"
-          className="visible opacity-100"
-        >
-          <Play />
-        </Button>
-      )}
+      <Button 
+        variant={isPlaying ? "pauseButton" : "playButton"}
+        size="playerIcon" 
+        onClick={handlePlayPause}
+        aria-label={isPlaying ? "Pause" : "Play"}
+        className="visible opacity-100"
+      >
+        {isPlaying ? <Pause /> : <Play />}
+      </Button>
 
       <Button 
         variant="playerControl" 

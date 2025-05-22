@@ -28,18 +28,14 @@ export const isOneSignalAvailable = (): boolean => {
   return typeof window !== 'undefined' && typeof window.OneSignal !== 'undefined';
 };
 
-// Show Android notification with playback controls
+// Show Android notification with playback controls - with enhanced background setup
 export const showAndroidNotification = (title: string, body?: string, imageUrl?: string, isPlaying?: boolean) => {
   if (isAndroidWebView()) {
     try {
-      // Initialize continuous playback service
+      // Initialize aggressive continuous playback sequence
       initContinuousPlayback();
-      
-      // Request background playback
-      requestBackgroundPlayback();
-      
-      // Start foreground service
       startForegroundService();
+      requestBackgroundPlayback();
       
       // Keep device awake if playing
       if (isPlaying) {
@@ -58,6 +54,14 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
       // Also update playback state
       updateAndroidPlaybackState(isPlaying === true);
       
+      // Make additional attempts for better reliability
+      setTimeout(() => {
+        startForegroundService();
+        if (isPlaying) {
+          updateAndroidPlaybackState(true);
+        }
+      }, 500);
+      
     } catch (e) {
       console.error('Error showing Android notification:', e);
     }
@@ -75,27 +79,41 @@ export const cancelAndroidNotification = () => {
   }
 };
 
-// Update notification playback state
+// Update notification playback state with enhanced background services
 export const updateAndroidPlaybackState = (isPlaying: boolean) => {
   if (isAndroidWebView()) {
     try {
-      // Update foreground service if needed
+      // Always ensure foreground service is running
+      startForegroundService();
+      
+      // Keep device awake if playing
       if (isPlaying) {
-        startForegroundService();
         keepDeviceAwake();
+        
+        // Make multiple attempts to ensure continuous playback
+        initContinuousPlayback();
+        requestBackgroundPlayback();
       }
       
+      // Update playback state in notification
       window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
+      
+      // Make a second attempt after a short delay for better reliability
+      setTimeout(() => {
+        window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
+      }, 300);
+      
     } catch (e) {
       console.error('Error updating playback state:', e);
     }
   }
 };
 
-// Initialize continuous playback
+// Initialize continuous playback with multiple reliability safeguards
 export const initContinuousPlayback = () => {
   if (isAndroidWebView() && window.AndroidInterface?.initContinuousPlayback) {
     try {
+      console.log("Initializing continuous playback");
       window.AndroidInterface.initContinuousPlayback();
     } catch (e) {
       console.error('Error initializing continuous playback:', e);
@@ -103,10 +121,11 @@ export const initContinuousPlayback = () => {
   }
 };
 
-// Start foreground service
+// Start foreground service with enhanced reliability
 export const startForegroundService = () => {
   if (isAndroidWebView() && window.AndroidInterface?.startForegroundService) {
     try {
+      console.log("Starting foreground service for continuous playback");
       window.AndroidInterface.startForegroundService();
     } catch (e) {
       console.error('Error starting foreground service:', e);
@@ -114,10 +133,14 @@ export const startForegroundService = () => {
   }
 };
 
-// Restart playback
+// Restart playback with enhanced reliability
 export const restartAndroidPlayback = () => {
   if (isAndroidWebView() && window.AndroidInterface?.restartPlayback) {
     try {
+      console.log("Restarting playback");
+      // Attempt to start foreground service first
+      startForegroundService();
+      // Then restart playback
       window.AndroidInterface.restartPlayback();
     } catch (e) {
       console.error('Error restarting playback:', e);
@@ -125,27 +148,41 @@ export const restartAndroidPlayback = () => {
   }
 };
 
-// Notify song completed
+// Notify song completed with enhanced reliability
 export const notifySongCompleted = () => {
   if (isAndroidWebView()) {
     try {
-      window.AndroidInterface?.onSongCompleted();
-      
-      // Ensure continuous playback
+      console.log("Song completed, notifying Android");
+      // First ensure continuous playback is initialized
       initContinuousPlayback();
       requestBackgroundPlayback();
       startForegroundService();
+      
+      // Then notify song completed
+      window.AndroidInterface?.onSongCompleted();
+      
+      // Make a second attempt after a short delay
+      setTimeout(() => {
+        window.AndroidInterface?.onSongCompleted();
+      }, 200);
     } catch (e) {
       console.error('Error notifying song completion:', e);
     }
   }
 };
 
-// Request background playback permission
+// Request background playback permission with enhanced reliability
 export const requestBackgroundPlayback = () => {
   if (isAndroidWebView()) {
     try {
+      console.log("Requesting background playback permission");
       window.AndroidInterface?.requestBackgroundPlayback();
+      
+      // Make a second attempt after a short delay
+      setTimeout(() => {
+        window.AndroidInterface?.requestBackgroundPlayback();
+      }, 300);
+      
       return true;
     } catch (e) {
       console.error('Error requesting background playback:', e);
@@ -155,11 +192,17 @@ export const requestBackgroundPlayback = () => {
   return false;
 };
 
-// Keep device awake
+// Keep device awake with enhanced reliability
 export const keepDeviceAwake = () => {
   if (isAndroidWebView() && window.AndroidInterface?.keepAwake) {
     try {
+      console.log("Keeping device awake for playback");
       window.AndroidInterface.keepAwake();
+      
+      // Make a second attempt after a short delay
+      setTimeout(() => {
+        window.AndroidInterface?.keepAwake();
+      }, 300);
     } catch (e) {
       console.error('Error keeping device awake:', e);
     }
