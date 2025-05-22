@@ -31,6 +31,17 @@ export const showSongNotification = (
       showAndroidNotification(title, artist, imageUrl, isPlaying);
     }, 1500);
     
+    // Add extra continuous playback support even after notification
+    setTimeout(() => {
+      if (isPlaying) {
+        // Send extra signal to ensure continuous playback
+        const playEvent = new CustomEvent('media-control', { 
+          detail: { action: 'ensure_continuous_playback' } 
+        });
+        document.dispatchEvent(playEvent);
+      }
+    }, 2000);
+    
     return null;
   }
 

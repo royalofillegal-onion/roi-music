@@ -7,11 +7,12 @@ import {
   updateAndroidPlaybackState, 
   initContinuousPlayback, 
   startForegroundService,
-  keepDeviceAwake
+  keepDeviceAwake,
+  restartAndroidPlayback
 } from '@/services/androidNotification';
 
 export const PlayerControls = () => {
-  const { isPlaying, togglePlayPause, nextSong, previousSong } = usePlayer();
+  const { isPlaying, togglePlayPause, nextSong, previousSong, currentSong } = usePlayer();
 
   // Super reliable Android playback state synchronization
   useEffect(() => {
@@ -26,20 +27,68 @@ export const PlayerControls = () => {
         initContinuousPlayback();
         startForegroundService();
         keepDeviceAwake();
+        
+        // Also restart playback to ensure it's active
+        if (currentSong) {
+          restartAndroidPlayback();
+        }
       }
       
       // Additional attempts with delays for better reliability
-      const delays = [200, 500, 1500];
+      const delays = [200, 500, 1500, 3000, 7000];
       delays.forEach(delay => {
         setTimeout(() => {
           updateAndroidPlaybackState(isPlaying);
           if (isPlaying) {
             keepDeviceAwake();
             startForegroundService();
+            if (currentSong && delay > 1000) {
+              // For longer delays, ensure playback is still active
+              restartAndroidPlayback();
+            }
           }
         }, delay);
       });
+      
+      // Setup recurring check to ensure playback continues
+      const playbackCheckInterval = setInterval(() => {
+        if (isPlaying && currentSong) {
+          console.log("Ensuring continuous playback is active");
+          updateAndroidPlaybackState(true);
+          initContinuousPlayback();
+          startForegroundService();
+          keepDeviceAwake();
+          
+          // Every 30 seconds, force restart playback to ensure it's active
+          restartAndroidPlayback();
+        }
+      }, 30000);
+      
+      return () => clearInterval(playbackCheckInterval);
     }
+  }, [isPlaying, currentSong]);
+
+  // Enhanced media control listener
+  useEffect(() => {
+    const handleContinuousPlayback = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail?.action === 'ensure_continuous_playback' && isPlaying) {
+        console.log("🔥 Received ensure_continuous_playback signal");
+        // Force ensure playback is active
+        if (typeof window !== 'undefined' && window.AndroidInterface) {
+          updateAndroidPlaybackState(true);
+          startForegroundService();
+          keepDeviceAwake();
+          restartAndroidPlayback();
+        }
+      }
+    };
+    
+    document.addEventListener('media-control', handleContinuousPlayback);
+    
+    return () => {
+      document.removeEventListener('media-control', handleContinuousPlayback);
+    };
   }, [isPlaying]);
 
   // Handle play/pause with maximum reliability
@@ -58,16 +107,22 @@ export const PlayerControls = () => {
       
       if (newPlayState) {
         keepDeviceAwake();
+        // Also restart playback to ensure it's active
+        restartAndroidPlayback();
       }
       
       // Additional attempts with delays
-      setTimeout(() => {
-        updateAndroidPlaybackState(newPlayState);
-        if (newPlayState) {
-          keepDeviceAwake();
-          startForegroundService();
-        }
-      }, 300);
+      const delays = [300, 1000, 3000];
+      delays.forEach(delay => {
+        setTimeout(() => {
+          updateAndroidPlaybackState(newPlayState);
+          if (newPlayState) {
+            keepDeviceAwake();
+            startForegroundService();
+            restartAndroidPlayback();
+          }
+        }, delay);
+      });
     }
   };
 

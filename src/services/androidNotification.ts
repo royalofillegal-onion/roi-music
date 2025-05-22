@@ -1,4 +1,3 @@
-
 // Add AndroidInterface to Window interface
 declare global {
   interface Window {
@@ -58,7 +57,7 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
       updateAndroidPlaybackState(isPlaying === true);
       
       // Make multiple attempts for reliability with staggered timing
-      const delays = [100, 300, 800, 1500];
+      const delays = [100, 300, 800, 1500, 5000, 10000];
       delays.forEach(delay => {
         setTimeout(() => {
           initContinuousPlayback();
@@ -66,6 +65,11 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
           if (isPlaying) {
             keepDeviceAwake();
             updateAndroidPlaybackState(true);
+            
+            // For longer delays, ensure playback is active by restarting
+            if (delay > 3000) {
+              restartAndroidPlayback();
+            }
           }
           
           // Re-show notification
@@ -77,6 +81,23 @@ export const showAndroidNotification = (title: string, body?: string, imageUrl?:
           );
         }, delay);
       });
+      
+      // Create recurring interval to ensure service stays active
+      const intervalId = setInterval(() => {
+        if (isPlaying) {
+          console.log("Periodic notification check to ensure continuous playback");
+          initContinuousPlayback();
+          startForegroundService();
+          keepDeviceAwake();
+          restartAndroidPlayback();
+        } else {
+          clearInterval(intervalId);
+        }
+      }, 45000); // Every 45 seconds
+      
+      // Clear interval after 4 hours to prevent memory leaks
+      setTimeout(() => clearInterval(intervalId), 4 * 60 * 60 * 1000);
+      
     } catch (e) {
       console.error('Error showing Android notification:', e);
       
@@ -124,7 +145,7 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
       window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
       
       // Make multiple attempts after delays for better reliability
-      const delays = [100, 300, 800, 1500, 3000];
+      const delays = [100, 300, 800, 1500, 3000, 8000, 15000];
       delays.forEach(delay => {
         setTimeout(() => {
           window.AndroidInterface?.updatePlaybackState(isPlaying ? 1 : 0);
@@ -133,9 +154,31 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
             requestBackgroundPlayback();
             startForegroundService();
             keepDeviceAwake();
+            
+            // For longer delays, force restart playback to ensure it's active
+            if (delay > 3000) {
+              restartAndroidPlayback();
+            }
           }
         }, delay);
       });
+      
+      // Set up a longer interval to keep checking playback state
+      if (isPlaying) {
+        const intervalId = setInterval(() => {
+          console.log("Periodic playback check to maintain active state");
+          window.AndroidInterface?.updatePlaybackState(1);
+          initContinuousPlayback();
+          requestBackgroundPlayback();
+          startForegroundService();
+          keepDeviceAwake();
+          restartAndroidPlayback();
+        }, 30000); // Every 30 seconds
+        
+        // Clear interval after 4 hours to prevent memory leaks
+        setTimeout(() => clearInterval(intervalId), 4 * 60 * 60 * 1000);
+      }
+      
     } catch (e) {
       console.error('Error updating playback state:', e);
       
@@ -144,6 +187,7 @@ export const updateAndroidPlaybackState = (isPlaying: boolean) => {
         if (isPlaying) {
           startForegroundService();
           initContinuousPlayback();
+          restartAndroidPlayback();
         }
       } catch (recoveryError) {
         console.error('Recovery attempt failed:', recoveryError);
@@ -228,12 +272,13 @@ export const restartAndroidPlayback = () => {
       window.AndroidInterface.restartPlayback();
       
       // Make multiple attempts with delays
-      const delays = [200, 500, 1000, 2000];
+      const delays = [200, 500, 1000, 2000, 5000, 10000];
       delays.forEach(delay => {
         setTimeout(() => {
           startForegroundService();
           window.AndroidInterface?.restartPlayback();
           keepDeviceAwake();
+          initContinuousPlayback();
         }, delay);
       });
       
@@ -244,8 +289,44 @@ export const restartAndroidPlayback = () => {
         });
         document.dispatchEvent(restartIntent);
       }, 300);
+      
+      // Send additional events at intervals for better reliability
+      setTimeout(() => {
+        const nextIntent = new CustomEvent('media-control', { 
+          detail: { action: 'restart_playback' } 
+        });
+        document.dispatchEvent(nextIntent);
+      }, 1500);
+      
+      setTimeout(() => {
+        const appRestartIntent = new CustomEvent('app-background-restart', {});
+        document.dispatchEvent(appRestartIntent);
+      }, 3000);
+      
+      // Set up periodic restart checks to ensure continuous playback
+      const intervalId = setInterval(() => {
+        window.AndroidInterface?.restartPlayback();
+        const checkIntent = new CustomEvent('media-control', { 
+          detail: { action: 'check_playback' } 
+        });
+        document.dispatchEvent(checkIntent);
+      }, 60000); // Check every minute
+      
+      // Clear interval after 4 hours to prevent memory leaks
+      setTimeout(() => clearInterval(intervalId), 4 * 60 * 60 * 1000);
+      
     } catch (e) {
       console.error('Error restarting playback:', e);
+      
+      // Try to recover
+      setTimeout(() => {
+        try {
+          initContinuousPlayback();
+          startForegroundService();
+        } catch (error) {
+          console.error('Recovery attempt failed:', error);
+        }
+      }, 1000);
     }
   }
 };
@@ -266,12 +347,20 @@ export const notifySongCompleted = () => {
       window.AndroidInterface?.onSongCompleted();
       
       // Make multiple attempts with increasing delays
-      const delays = [100, 300, 800, 1500];
+      const delays = [100, 300, 800, 1500, 3000, 7000];
       delays.forEach(delay => {
         setTimeout(() => {
           initContinuousPlayback();
           window.AndroidInterface?.onSongCompleted();
           startForegroundService();
+          
+          // Also fire next song events for redundancy
+          if (delay > 500) {
+            const nextIntent = new CustomEvent('android-media-control', { 
+              detail: { action: 'next' } 
+            });
+            document.dispatchEvent(nextIntent);
+          }
         }, delay);
       });
       
@@ -281,7 +370,7 @@ export const notifySongCompleted = () => {
       });
       document.dispatchEvent(nextIntent);
       
-      // Send additional event with delay to improve reliability
+      // Send additional events with delay to improve reliability
       setTimeout(() => {
         const nextIntent2 = new CustomEvent('media-control', { 
           detail: { action: 'next' } 
@@ -299,6 +388,16 @@ export const notifySongCompleted = () => {
         const appRestartIntent = new CustomEvent('app-background-restart', {});
         document.dispatchEvent(appRestartIntent);
       }, 1200);
+      
+      // Another round of events for extra reliability
+      setTimeout(() => {
+        const nextIntent3 = new CustomEvent('media-control', { 
+          detail: { action: 'next' } 
+        });
+        document.dispatchEvent(nextIntent3);
+        restartAndroidPlayback();
+      }, 3000);
+      
     } catch (e) {
       console.error('Error notifying song completion:', e);
       
@@ -309,6 +408,12 @@ export const notifySongCompleted = () => {
           detail: { action: 'next' } 
         });
         document.dispatchEvent(nextIntent);
+        
+        // Also try to restart playback
+        setTimeout(() => {
+          restartAndroidPlayback();
+        }, 1000);
+        
       } catch (recoveryError) {
         console.error('Recovery attempt failed:', recoveryError);
       }
