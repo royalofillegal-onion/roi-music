@@ -3,7 +3,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { toast } from "sonner";
-import { Plus, Heart, MessageCircle, Share2, Loader2, Calendar, Clock } from "lucide-react";
+import { 
+  Plus, 
+  Heart, 
+  MessageCircle, 
+  Share2, 
+  Loader2, 
+  Calendar, 
+  Clock, 
+  Maximize,
+  Minimize,
+  Send,
+  Users
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -46,17 +58,16 @@ interface Comment {
 }
 
 const Live = () => {
-  const [lives, setLives] = useState<Live[]>([]);
-  const [currentLiveIndex, setCurrentLiveIndex] = useState(0);
-  const [isUploading, setIsUploading] = useState(false);
+  const [currentLive, setCurrentLive] = useState<Live | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [currentLiveId, setCurrentLiveId] = useState<string | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [showComments, setShowComments] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [viewerCount, setViewerCount] = useState(0);
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [newLive, setNewLive] = useState({
     title: "",
     description: "",
@@ -64,13 +75,13 @@ const Live = () => {
     thumbnail_url: "",
     scheduled_at: new Date().toISOString().slice(0, 16),
   });
+
   const { toast: uiToast } = useToast();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const commentsRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
-  const commentsRef = useRef<HTMLDivElement>(null);
-  const livesContainerRef = useRef<HTMLDivElement>(null);
-  const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
   const isMobile = useIsMobile();
   const { currentSong } = usePlayer();
   
@@ -102,14 +113,14 @@ const Live = () => {
     };
   }, []);
   
-  // Fetch lives
+  // Fetch current 24-hour live stream
   useEffect(() => {
-    fetchLives();
+    fetchCurrentLive();
   }, [userId]);
 
   // Subscribe to new comments for current live
   useEffect(() => {
-    if (!currentLiveId) return;
+    if (!currentLive?.id) return;
 
     const subscription = supabase
       .channel('public:live_comments')
@@ -117,135 +128,154 @@ const Live = () => {
         event: 'INSERT',
         schema: 'public',
         table: 'live_comments',
-        filter: `live_id=eq.${currentLiveId}`
+        filter: `live_id=eq.${currentLive.id}`
       }, payload => {
-        fetchComments(currentLiveId);
+        fetchComments(currentLive.id);
+      })
+      .on('postgres_changes', {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'live_comments',
+        filter: `live_id=eq.${currentLive.id}`
+      }, payload => {
+        fetchComments(currentLive.id);
       })
       .subscribe();
 
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [currentLiveId]);
-  
-  // Handle live scrolling and video playback
+  }, [currentLive?.id]);
+
+  // Auto-delete comments older than 24 hours
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          const video = entry.target as HTMLVideoElement;
-          
-          if (entry.isIntersecting) {
-            video.play().catch(err => console.error("Error playing video:", err));
-            
-            // Update current live index
-            const liveId = video.getAttribute('data-live-id');
-            if (liveId) {
-              const index = lives.findIndex(live => live.id === liveId);
-              if (index >= 0) {
-                setCurrentLiveIndex(index);
-                setCurrentLiveId(liveId);
-                // Fetch comments for this live
-                fetchComments(liveId);
-              }
-            }
-          } else {
-            video.pause();
-          }
-        });
-      },
-      {
-        threshold: 0.7, // At least 70% of the element should be visible
-        root: livesContainerRef.current
+    const deleteOldComments = async () => {
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      
+      try {
+        await supabase
+          .from('live_comments')
+          .delete()
+          .lt('created_at', twentyFourHoursAgo);
+      } catch (error) {
+        console.error('Error deleting old comments:', error);
       }
-    );
-    
-    // Observe all video elements
-    videoRefs.current.forEach(video => {
-      observer.observe(video);
-    });
-    
-    return () => {
-      videoRefs.current.forEach(video => {
-        observer.unobserve(video);
-      });
     };
-  }, [lives]);
+
+    // Delete old comments every hour
+    const interval = setInterval(deleteOldComments, 60 * 60 * 1000);
+    
+    // Run once on component mount
+    deleteOldComments();
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Real-time viewer count tracking
+  useEffect(() => {
+    if (!currentLive?.id) return;
+
+    const channel = supabase.channel(`live_${currentLive.id}`)
+      .on('presence', { event: 'sync' }, () => {
+        const state = channel.presenceState();
+        setViewerCount(Object.keys(state).length);
+      })
+      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+        console.log('User joined:', key);
+      })
+      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+        console.log('User left:', key);
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await channel.track({
+            user_id: userId || 'anonymous',
+            online_at: new Date().toISOString(),
+          });
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentLive?.id, userId]);
   
-  // Fetch lives from server
-  const fetchLives = async () => {
+  // Fetch current active live stream
+  const fetchCurrentLive = async () => {
     setIsLoading(true);
     try {
-      // Get all scheduled lives
-      const { data: livesData, error } = await supabase
+      const now = new Date().toISOString();
+      
+      // Get the current active live stream (within 24 hours)
+      const { data: liveData, error } = await supabase
         .from('lives')
         .select('*')
-        .order('scheduled_at', { ascending: true });
+        .eq('is_active', true)
+        .gte('scheduled_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+        .order('scheduled_at', { ascending: false })
+        .limit(1)
+        .single();
       
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         throw error;
       }
       
-      // Get user details for each live
-      const livesWithUserDetails = await Promise.all(
-        livesData.map(async (live) => {
-          // Get user name and avatar
-          const { data: userData } = await supabase
-            .from('users')
-            .select('name, avatar_url')
-            .eq('user_id', live.user_id)
+      if (liveData) {
+        // Get user details for the live
+        const { data: userData } = await supabase
+          .from('users')
+          .select('name, avatar_url')
+          .eq('user_id', liveData.user_id)
+          .single();
+        
+        // Get likes count
+        const { count: likesCount } = await supabase
+          .from('live_likes')
+          .select('*', { count: 'exact', head: true })
+          .eq('live_id', liveData.id);
+        
+        // Get comments count
+        const { count: commentsCount } = await supabase
+          .from('live_comments')
+          .select('*', { count: 'exact', head: true })
+          .eq('live_id', liveData.id);
+        
+        // Check if user has liked this live
+        let likedByUser = false;
+        if (userId) {
+          const { data: likeData } = await supabase
+            .from('live_likes')
+            .select('id')
+            .eq('live_id', liveData.id)
+            .eq('user_id', userId)
             .single();
           
-          // Get likes count
-          const { count: likesCount } = await supabase
-            .from('live_likes')
-            .select('*', { count: 'exact', head: true })
-            .eq('live_id', live.id);
-          
-          // Get comments count
-          const { count: commentsCount } = await supabase
-            .from('live_comments')
-            .select('*', { count: 'exact', head: true })
-            .eq('live_id', live.id);
-          
-          // Check if user has liked this live
-          let likedByUser = false;
-          if (userId) {
-            const { data: likeData } = await supabase
-              .from('live_likes')
-              .select('id')
-              .eq('live_id', live.id)
-              .eq('user_id', userId)
-              .single();
-            
-            likedByUser = !!likeData;
-          }
-          
-          return {
-            ...live,
-            user_name: userData?.name || 'Unknown User',
-            avatar_url: userData?.avatar_url,
-            likes_count: likesCount || 0,
-            comments_count: commentsCount || 0,
-            liked_by_user: likedByUser
-          };
-        })
-      );
-      
-      setLives(livesWithUserDetails);
-      if (livesWithUserDetails.length > 0) {
-        setCurrentLiveId(livesWithUserDetails[0].id);
-        fetchComments(livesWithUserDetails[0].id);
+          likedByUser = !!likeData;
+        }
+        
+        const liveWithDetails = {
+          ...liveData,
+          user_name: userData?.name || 'Unknown User',
+          avatar_url: userData?.avatar_url,
+          likes_count: likesCount || 0,
+          comments_count: commentsCount || 0,
+          liked_by_user: likedByUser
+        };
+        
+        setCurrentLive(liveWithDetails);
+        fetchComments(liveData.id);
+      } else {
+        setCurrentLive(null);
       }
     } catch (error) {
-      console.error('Error fetching lives:', error);
-      toast.error('Failed to load lives');
+      console.error('Error fetching current live:', error);
+      toast.error('Failed to load live stream');
     } finally {
       setIsLoading(false);
     }
   };
   
-  // Fetch comments for a live
+  // Fetch comments for the live
   const fetchComments = async (liveId: string) => {
     try {
       const { data: commentsData, error } = await supabase
@@ -276,6 +306,13 @@ const Live = () => {
       );
       
       setComments(commentsWithUserDetails);
+      
+      // Auto-scroll to bottom
+      setTimeout(() => {
+        if (commentsRef.current) {
+          commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
+        }
+      }, 100);
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
@@ -288,7 +325,7 @@ const Live = () => {
       return;
     }
     
-    if (!newComment.trim() || !currentLiveId) {
+    if (!newComment.trim() || !currentLive?.id) {
       return;
     }
     
@@ -296,7 +333,7 @@ const Live = () => {
       const { error } = await supabase
         .from('live_comments')
         .insert({
-          live_id: currentLiveId,
+          live_id: currentLive.id,
           user_id: userId,
           content: newComment.trim()
         });
@@ -305,80 +342,67 @@ const Live = () => {
         throw error;
       }
       
-      // Clear comment input
       setNewComment('');
-      
-      // Scroll to bottom of comments
-      if (commentsRef.current) {
-        commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
-      }
     } catch (error) {
       console.error('Error adding comment:', error);
       toast.error('Failed to add comment');
     }
   };
   
-  // Toggle like on a live
-  const toggleLike = async (liveId: string) => {
-    if (!isLoggedIn) {
-      toast.error('Please sign in to like lives');
+  // Toggle like on the live
+  const toggleLike = async () => {
+    if (!isLoggedIn || !currentLive) {
+      toast.error('Please sign in to like the live stream');
       return;
     }
     
-    // Update UI optimistically
-    setLives(currentLives => 
-      currentLives.map(live => {
-        if (live.id === liveId) {
-          const wasLiked = live.liked_by_user;
-          return {
-            ...live,
-            likes_count: wasLiked ? live.likes_count - 1 : live.likes_count + 1,
-            liked_by_user: !wasLiked
-          };
-        }
-        return live;
-      })
-    );
-    
     try {
-      const live = lives.find(l => l.id === liveId);
-      if (!live) return;
-      
-      if (live.liked_by_user) {
+      if (currentLive.liked_by_user) {
         // Unlike
         const { error } = await supabase
           .from('live_likes')
           .delete()
-          .eq('live_id', liveId)
+          .eq('live_id', currentLive.id)
           .eq('user_id', userId);
         
         if (error) throw error;
+        
+        setCurrentLive({
+          ...currentLive,
+          likes_count: currentLive.likes_count - 1,
+          liked_by_user: false
+        });
       } else {
         // Like
         const { error } = await supabase
           .from('live_likes')
           .insert({
-            live_id: liveId,
+            live_id: currentLive.id,
             user_id: userId
           });
         
         if (error) throw error;
+        
+        setCurrentLive({
+          ...currentLive,
+          likes_count: currentLive.likes_count + 1,
+          liked_by_user: true
+        });
       }
     } catch (error) {
       console.error('Error toggling like:', error);
       toast.error('Failed to update like');
-      
-      // Revert UI change on error
-      fetchLives();
     }
   };
   
   // Share live
-  const shareLive = (live: Live) => {
+  const shareLive = () => {
+    if (!currentLive) return;
+    
     if (navigator.share) {
       navigator.share({
-        title: live.title,
-        text: live.description || 'Check out this live stream!',
+        title: currentLive.title,
+        text: currentLive.description || 'Check out this live stream!',
         url: window.location.href,
       }).catch(err => console.error('Error sharing:', err));
     } else {
@@ -386,50 +410,32 @@ const Live = () => {
     }
   };
   
-  // Handle file upload for new live
-  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Thumbnail size too large (max 5MB)");
-      return;
-    }
-    
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `thumbnails/${userId}/${fileName}`;
-      
-      const { error } = await supabase.storage
-        .from('user-uploads')
-        .upload(filePath, file);
-        
-      if (error) throw error;
-      
-      const { data } = supabase.storage
-        .from('user-uploads')
-        .getPublicUrl(filePath);
-        
-      setNewLive({
-        ...newLive,
-        thumbnail_url: data.publicUrl
-      });
-      
-      toast.success("Thumbnail uploaded successfully");
-    } catch (error) {
-      console.error('Error uploading thumbnail:', error);
-      toast.error("Failed to upload thumbnail");
+  // Toggle fullscreen
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullScreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullScreen(false);
     }
   };
-  
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
   // Handle video upload for new live
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    // Check file size (max 100MB)
     if (file.size > 100 * 1024 * 1024) {
       toast.error("Video size too large (max 100MB)");
       return;
@@ -464,6 +470,43 @@ const Live = () => {
       setIsUploading(false);
     }
   };
+
+  // Handle thumbnail upload
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Thumbnail size too large (max 5MB)");
+      return;
+    }
+    
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `thumbnails/${userId}/${fileName}`;
+      
+      const { error } = await supabase.storage
+        .from('user-uploads')
+        .upload(filePath, file);
+        
+      if (error) throw error;
+      
+      const { data } = supabase.storage
+        .from('user-uploads')
+        .getPublicUrl(filePath);
+        
+      setNewLive({
+        ...newLive,
+        thumbnail_url: data.publicUrl
+      });
+      
+      toast.success("Thumbnail uploaded successfully");
+    } catch (error) {
+      console.error('Error uploading thumbnail:', error);
+      toast.error("Failed to upload thumbnail");
+    }
+  };
   
   // Submit new live
   const submitNewLive = async () => {
@@ -487,6 +530,7 @@ const Live = () => {
           video_url: newLive.video_url,
           thumbnail_url: newLive.thumbnail_url,
           scheduled_at: new Date(newLive.scheduled_at).toISOString(),
+          is_active: true,
         });
         
       if (error) throw error;
@@ -494,7 +538,6 @@ const Live = () => {
       toast.success('Live created successfully');
       setUploadOpen(false);
       
-      // Reset form
       setNewLive({
         title: "",
         description: "",
@@ -503,27 +546,18 @@ const Live = () => {
         scheduled_at: new Date().toISOString().slice(0, 16),
       });
       
-      // Refresh lives
-      fetchLives();
+      fetchCurrentLive();
     } catch (error) {
       console.error('Error creating live:', error);
       toast.error('Failed to create live');
     }
   };
   
-  // Register video ref
-  const setVideoRef = (liveId: string, element: HTMLVideoElement | null) => {
-    if (element) {
-      videoRefs.current.set(liveId, element);
-    } else {
-      videoRefs.current.delete(liveId);
-    }
-  };
-  
   return (
-    <div className="flex flex-col h-full pt-16 md:pt-0 md:ml-16 md:mb-20">
+    <div className={`flex flex-col h-full pt-16 md:pt-0 md:ml-16 md:mb-20 ${isFullScreen ? 'fixed inset-0 z-50 bg-black' : ''}`}>
+      {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
-        <h1 className="text-2xl font-bold">Live</h1>
+        <h1 className="text-2xl font-bold">Live Stream</h1>
         <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
           <DialogTrigger asChild>
             <Button 
@@ -536,7 +570,7 @@ const Live = () => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Create New Live</DialogTitle>
+              <DialogTitle>Start New Live Stream</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
@@ -560,7 +594,7 @@ const Live = () => {
               </div>
               
               <div className="grid gap-2">
-                <Label htmlFor="scheduled_at">Scheduled Time *</Label>
+                <Label htmlFor="scheduled_at">Start Time *</Label>
                 <Input 
                   id="scheduled_at"
                   type="datetime-local"
@@ -626,197 +660,199 @@ const Live = () => {
                 onClick={submitNewLive}
                 disabled={!newLive.title || !newLive.video_url || !newLive.scheduled_at}
               >
-                Create Live
+                Start Live Stream
               </Button>
             </div>
           </DialogContent>
         </Dialog>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleVideoUpload}
-          accept="video/*"
-          className="hidden"
-        />
       </div>
       
       {isLoading ? (
         <div className="flex-1 flex items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-music-accent" />
         </div>
-      ) : lives.length === 0 ? (
+      ) : !currentLive ? (
         <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
-          <h2 className="text-xl font-medium mb-2">No lives yet</h2>
-          <p className="text-gray-400 mb-4">Be the first to create a live!</p>
+          <h2 className="text-xl font-medium mb-2">No live stream active</h2>
+          <p className="text-gray-400 mb-4">Start the first 24-hour live stream!</p>
           {isLoggedIn ? (
             <Button 
               variant="default" 
               onClick={() => setUploadOpen(true)}
               disabled={isUploading}
             >
-              Create a Live
+              Start Live Stream
             </Button>
           ) : (
-            <Button variant="default" onClick={() => toast.info("Please sign in to create a live")}>
-              Sign in to create
+            <Button variant="default" onClick={() => toast.info("Please sign in to start a live stream")}>
+              Sign in to start
             </Button>
           )}
         </div>
       ) : (
-        <div 
-          ref={livesContainerRef}
-          className="flex-1 overflow-y-auto snap-y snap-mandatory"
-        >
-          {lives.map((live, index) => (
-            <div 
-              key={live.id}
-              className="h-full w-full snap-start snap-always flex flex-col"
-            >
-              <div className="relative flex-1 bg-black">
-                <video
-                  ref={el => setVideoRef(live.id, el)}
-                  src={live.video_url}
-                  className="h-full w-full object-contain"
-                  loop
-                  muted
-                  playsInline
-                  poster={live.thumbnail_url || undefined}
-                  data-live-id={live.id}
-                />
-                
-                {/* Scheduled info */}
-                <div className="absolute top-4 left-4 flex items-center bg-black bg-opacity-50 p-2 rounded">
-                  <Calendar className="h-4 w-4 mr-2 text-music-accent" />
-                  <span className="text-sm">
-                    {format(new Date(live.scheduled_at), "MMM d, yyyy h:mm a")}
-                  </span>
-                </div>
-                
-                {/* User info */}
-                <div className="absolute bottom-16 left-4 flex items-center">
-                  <img 
-                    src={live.avatar_url || 'https://via.placeholder.com/40'} 
-                    alt={live.user_name}
-                    className="h-10 w-10 rounded-full border-2 border-white"
-                  />
-                  <div className="ml-2">
-                    <p className="font-semibold">{live.user_name}</p>
-                    <p className="text-sm text-gray-300">
-                      {new Date(live.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Caption */}
-                <div className="absolute bottom-4 left-4 right-12 bg-black bg-opacity-50 p-2 rounded">
-                  <h3 className="font-bold">{live.title}</h3>
-                  {live.description && <p className="text-sm mt-1">{live.description}</p>}
-                </div>
-                
-                {/* Actions */}
-                <div className="absolute right-4 bottom-16 flex flex-col items-center space-y-6">
-                  <button 
-                    className="flex flex-col items-center"
-                    onClick={() => toggleLike(live.id)}
-                  >
-                    <Heart className={`h-8 w-8 ${live.liked_by_user ? 'text-red-500 fill-red-500' : 'text-white'}`} />
-                    <span className="text-xs mt-1">{live.likes_count}</span>
-                  </button>
-                  
-                  <button 
-                    className="flex flex-col items-center"
-                    onClick={() => setShowComments(!showComments)}
-                  >
-                    <MessageCircle className="h-8 w-8" />
-                    <span className="text-xs mt-1">{live.comments_count}</span>
-                  </button>
-                  
-                  <button 
-                    className="flex flex-col items-center"
-                    onClick={() => shareLive(live)}
-                  >
-                    <Share2 className="h-8 w-8" />
-                    <span className="text-xs mt-1">Share</span>
-                  </button>
-                </div>
-                
-                {/* Progress indicator */}
-                <div className="absolute top-4 right-0 left-0 flex justify-center space-x-1">
-                  {lives.map((_, i) => (
-                    <div 
-                      key={i}
-                      className={`h-1 rounded-full ${i === currentLiveIndex ? 'bg-music-accent w-6' : 'bg-gray-500 w-4'}`}
-                    />
-                  ))}
-                </div>
-                
-                {/* Comments panel */}
-                {showComments && (
-                  <div className="absolute inset-0 bg-black bg-opacity-80 flex flex-col">
-                    <div className="flex justify-between items-center p-4 border-b border-gray-800">
-                      <h3 className="font-bold">Comments ({comments.length})</h3>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => setShowComments(false)}
-                      >
-                        ✕
-                      </Button>
-                    </div>
-                    
-                    <ScrollArea 
-                      ref={commentsRef} 
-                      className="flex-1 p-4"
-                    >
-                      {comments.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-center">
-                          <p className="text-gray-400">No comments yet</p>
-                          <p className="text-gray-500 text-sm mt-2">Be the first to comment!</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {comments.map(comment => (
-                            <div key={comment.id} className="flex">
-                              <img 
-                                src={comment.avatar_url || 'https://via.placeholder.com/32'} 
-                                alt={comment.user_name}
-                                className="h-8 w-8 rounded-full mr-3 flex-shrink-0"
-                              />
-                              <div className="bg-gray-800 rounded-lg px-3 py-2 flex-1">
-                                <div className="flex justify-between items-center mb-1">
-                                  <p className="font-medium text-sm">{comment.user_name}</p>
-                                  <span className="text-gray-500 text-xs">
-                                    {format(new Date(comment.created_at), "h:mm a")}
-                                  </span>
-                                </div>
-                                <p className="text-sm">{comment.content}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </ScrollArea>
-                    
-                    <div className="p-4 border-t border-gray-800 flex gap-2">
-                      <Input
-                        className="flex-1"
-                        placeholder="Add a comment..."
-                        value={newComment}
-                        onChange={e => setNewComment(e.target.value)}
-                        onKeyPress={e => e.key === 'Enter' && addComment()}
+        <div className={`flex-1 ${isFullScreen ? 'flex flex-col' : 'grid grid-cols-1 lg:grid-cols-3 gap-4 p-4'}`}>
+          {/* Video Player */}
+          <div className={`${isFullScreen ? 'flex-1' : 'lg:col-span-2'} relative`}>
+            <div className="relative bg-black rounded-lg overflow-hidden">
+              <video
+                ref={videoRef}
+                src={currentLive.video_url}
+                className="w-full h-full object-contain"
+                controls
+                autoPlay
+                loop
+                poster={currentLive.thumbnail_url || undefined}
+              />
+              
+              {/* Video Controls Overlay */}
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                <Badge variant="destructive" className="bg-red-600">
+                  LIVE
+                </Badge>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  onClick={toggleFullScreen}
+                  className="bg-black bg-opacity-50 hover:bg-opacity-70"
+                >
+                  {isFullScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+                </Button>
+              </div>
+              
+              {/* Live Info Overlay */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <div className="bg-black bg-opacity-50 p-3 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <img 
+                        src={currentLive.avatar_url || 'https://via.placeholder.com/32'} 
+                        alt={currentLive.user_name}
+                        className="h-8 w-8 rounded-full"
                       />
-                      <Button 
-                        disabled={!newComment.trim() || !isLoggedIn}
-                        onClick={addComment}
-                      >
-                        Send
-                      </Button>
+                      <div>
+                        <p className="font-semibold text-sm">{currentLive.user_name}</p>
+                        <p className="text-xs text-gray-300">
+                          Started {format(new Date(currentLive.scheduled_at), "MMM d, h:mm a")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 text-sm">
+                      <Users className="h-4 w-4" />
+                      <span>{viewerCount}</span>
                     </div>
                   </div>
+                  <h3 className="font-bold text-lg">{currentLive.title}</h3>
+                  {currentLive.description && (
+                    <p className="text-sm text-gray-300 mt-1">{currentLive.description}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* Video Actions */}
+            {!isFullScreen && (
+              <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center gap-4">
+                  <button 
+                    className="flex items-center gap-2 hover:text-music-accent transition-colors"
+                    onClick={toggleLike}
+                  >
+                    <Heart className={`h-6 w-6 ${currentLive.liked_by_user ? 'text-red-500 fill-red-500' : ''}`} />
+                    <span>{currentLive.likes_count}</span>
+                  </button>
+                  
+                  <button 
+                    className="flex items-center gap-2 hover:text-music-accent transition-colors"
+                    onClick={shareLive}
+                  >
+                    <Share2 className="h-6 w-6" />
+                    <span>Share</span>
+                  </button>
+                </div>
+                
+                <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <MessageCircle className="h-4 w-4" />
+                  <span>{comments.length} comments</span>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Chat Section */}
+          {!isFullScreen && (
+            <div className="flex flex-col h-[600px] bg-gray-900 rounded-lg">
+              {/* Chat Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-800">
+                <h3 className="font-bold">Live Chat</h3>
+                <div className="flex items-center gap-1 text-sm text-gray-400">
+                  <Users className="h-4 w-4" />
+                  <span>{viewerCount} viewers</span>
+                </div>
+              </div>
+              
+              {/* Comments */}
+              <ScrollArea 
+                ref={commentsRef} 
+                className="flex-1 p-4"
+              >
+                {comments.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center">
+                    <MessageCircle className="h-12 w-12 text-gray-600 mb-2" />
+                    <p className="text-gray-400">No messages yet</p>
+                    <p className="text-gray-500 text-sm mt-1">Be the first to say something!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {comments.map(comment => (
+                      <div key={comment.id} className="flex gap-3">
+                        <img 
+                          src={comment.avatar_url || 'https://via.placeholder.com/24'} 
+                          alt={comment.user_name}
+                          className="h-6 w-6 rounded-full flex-shrink-0 mt-1"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-medium text-sm text-music-accent">
+                              {comment.user_name}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {format(new Date(comment.created_at), "h:mm a")}
+                            </span>
+                          </div>
+                          <p className="text-sm break-words">{comment.content}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+              
+              {/* Comment Input */}
+              <div className="p-4 border-t border-gray-800">
+                <div className="flex gap-2">
+                  <Input
+                    className="flex-1"
+                    placeholder={isLoggedIn ? "Say something..." : "Sign in to chat"}
+                    value={newComment}
+                    onChange={e => setNewComment(e.target.value)}
+                    onKeyPress={e => e.key === 'Enter' && addComment()}
+                    disabled={!isLoggedIn}
+                    maxLength={500}
+                  />
+                  <Button 
+                    size="icon"
+                    disabled={!newComment.trim() || !isLoggedIn}
+                    onClick={addComment}
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+                {!isLoggedIn && (
+                  <p className="text-xs text-gray-500 mt-2">Sign in to participate in live chat</p>
                 )}
               </div>
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>
