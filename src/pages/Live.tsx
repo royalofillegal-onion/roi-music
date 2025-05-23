@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { useLiveAdmin } from "@/context/LiveAdminContext";
 
 interface Live {
   id: string;
@@ -66,7 +67,6 @@ const Live = () => {
   const [viewerCount, setViewerCount] = useState(0);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
@@ -83,10 +83,7 @@ const Live = () => {
   const commentsRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const { currentSong } = usePlayer();
-  
-  // Admin credentials
-  const ADMIN_USERNAME = "royalofillegal$$";
-  const ADMIN_PASSWORD = "$$royalstarofillegal";
+  const { isAdmin, login } = useLiveAdmin();
   
   // Check if user is logged in
   useEffect(() => {
@@ -150,7 +147,7 @@ const Live = () => {
     };
   }, [currentLive?.id]);
 
-  // Real-time video synchronization
+  // Real-time video synchronization - enhanced to better sync across all users
   useEffect(() => {
     if (!currentLive?.id || !videoRef.current) return;
 
@@ -165,6 +162,25 @@ const Live = () => {
         }
       })
       .subscribe();
+
+    // Request current time when joining
+    setTimeout(() => {
+      channel.send({
+        type: 'broadcast',
+        event: 'request_current_time'
+      });
+    }, 1000);
+
+    // Listen for time requests and respond with current time
+    channel.on('broadcast', { event: 'request_current_time' }, () => {
+      if (videoRef.current && !videoRef.current.paused) {
+        channel.send({
+          type: 'broadcast',
+          event: 'video_time_sync',
+          current_time: videoRef.current.currentTime
+        });
+      }
+    });
 
     // Broadcast current time every 5 seconds
     const syncInterval = setInterval(() => {
@@ -212,12 +228,6 @@ const Live = () => {
       .on('presence', { event: 'sync' }, () => {
         const state = channel.presenceState();
         setViewerCount(Object.keys(state).length);
-      })
-      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log('User joined:', key);
-      })
-      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log('User left:', key);
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
@@ -396,13 +406,9 @@ const Live = () => {
   
   // Admin login
   const handleAdminLogin = () => {
-    if (adminCredentials.username === ADMIN_USERNAME && adminCredentials.password === ADMIN_PASSWORD) {
-      setIsAdmin(true);
+    if (login(adminCredentials.username, adminCredentials.password)) {
       setShowAdminLogin(false);
       setUploadOpen(true);
-      toast.success('Admin access granted');
-    } else {
-      toast.error('Invalid admin credentials');
     }
   };
   
@@ -459,7 +465,6 @@ const Live = () => {
       
       toast.success('Live created successfully');
       setUploadOpen(false);
-      setIsAdmin(false);
       
       setNewLive({
         title: "",
@@ -595,27 +600,31 @@ const Live = () => {
           </Button>
         </div>
       ) : (
-        <div className={`flex-1 ${isFullScreen ? 'flex flex-col' : isMobile ? 'flex flex-col' : 'grid grid-cols-1 lg:grid-cols-3 gap-4 p-4'}`}>
-          {/* Video Player */}
-          <div className={`${isFullScreen ? 'flex-1' : isMobile ? 'w-full' : 'lg:col-span-2'} relative`}>
-            <div className="relative bg-black rounded-lg overflow-hidden">
+        <div className={`flex flex-col flex-1 ${isFullScreen ? 'h-screen' : ''}`}>
+          {/* Video Player with improved mobile layout */}
+          <div className="relative bg-black w-full">
+            <div className="relative bg-black overflow-hidden">
               {isYouTubeUrl(currentLive.video_url) ? (
-                <iframe
-                  src={currentLive.video_url}
-                  className="w-full h-full min-h-[300px] md:min-h-[400px]"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+                <div className={`relative ${isMobile ? 'pt-[56.25%]' : 'min-h-[300px] md:min-h-[450px]'}`}>
+                  <iframe
+                    src={currentLive.video_url}
+                    className={`${isMobile ? 'absolute inset-0 w-full h-full' : 'w-full h-full'}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
               ) : (
-                <video
-                  ref={videoRef}
-                  src={currentLive.video_url}
-                  className="w-full h-full min-h-[300px] md:min-h-[400px] object-contain"
-                  controls={!isMobile}
-                  autoPlay
-                  loop
-                  poster={currentLive.thumbnail_url || undefined}
-                />
+                <div className={`relative ${isMobile ? 'pt-[56.25%]' : 'min-h-[300px] md:min-h-[450px]'}`}>
+                  <video
+                    ref={videoRef}
+                    src={currentLive.video_url}
+                    className={`${isMobile ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-full object-contain'}`}
+                    controls={!isMobile}
+                    autoPlay
+                    loop
+                    poster={currentLive.thumbnail_url || undefined}
+                  />
+                </div>
               )}
               
               {/* Video Controls Overlay */}
@@ -634,53 +643,53 @@ const Live = () => {
                   </Button>
                 )}
               </div>
+            </div>
+            
+            {/* Live Info - YouTube-style at the bottom */}
+            <div className={`p-4 border-b border-gray-800 ${isMobile ? 'bg-gray-900' : ''}`}>
+              <h3 className="font-bold text-xl mb-1">{currentLive.title}</h3>
               
-              {/* Live Info Overlay */}
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-black bg-opacity-50 p-3 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src={currentLive.avatar_url || 'https://via.placeholder.com/32'} 
-                        alt={currentLive.user_name}
-                        className="h-8 w-8 rounded-full"
-                      />
-                      <div>
-                        <p className="font-semibold text-sm">{currentLive.user_name}</p>
-                        <p className="text-xs text-gray-300">
-                          Started {format(new Date(currentLive.scheduled_at), "MMM d, h:mm a")}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1 text-sm">
-                      <Users className="h-4 w-4" />
-                      <span>{viewerCount}</span>
-                    </div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <img 
+                    src={currentLive.avatar_url || 'https://via.placeholder.com/32'} 
+                    alt={currentLive.user_name}
+                    className="h-8 w-8 rounded-full"
+                  />
+                  <div>
+                    <p className="font-semibold text-sm">{currentLive.user_name}</p>
+                    <p className="text-xs text-gray-300">
+                      Started {format(new Date(currentLive.scheduled_at), "MMM d, h:mm a")}
+                    </p>
                   </div>
-                  <h3 className="font-bold text-lg">{currentLive.title}</h3>
-                  {currentLive.description && (
-                    <p className="text-sm text-gray-300 mt-1">{currentLive.description}</p>
-                  )}
+                </div>
+                <div className="flex items-center gap-1 text-sm">
+                  <Users className="h-4 w-4" />
+                  <span>{viewerCount} watching</span>
                 </div>
               </div>
+              
+              {currentLive.description && (
+                <p className="text-sm text-gray-300 mt-2 line-clamp-3 md:line-clamp-none">{currentLive.description}</p>
+              )}
             </div>
           </div>
           
-          {/* Chat Section */}
-          <div className={`${isFullScreen ? 'hidden' : isMobile ? 'w-full mt-4' : ''} flex flex-col h-[400px] md:h-[600px] bg-gray-900 rounded-lg`}>
+          {/* Chat Section with YouTube-style layout */}
+          <div className={`${isFullScreen ? 'hidden' : ''} flex-1 bg-gray-900 ${isMobile ? 'h-[50vh]' : ''}`}>
             {/* Chat Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-800">
+            <div className="flex items-center justify-between p-3 border-b border-gray-800">
               <h3 className="font-bold">Live Chat</h3>
               <div className="flex items-center gap-1 text-sm text-gray-400">
                 <Users className="h-4 w-4" />
-                <span>{viewerCount} viewers</span>
+                <span>{viewerCount}</span>
               </div>
             </div>
             
             {/* Comments */}
             <ScrollArea 
               ref={commentsRef} 
-              className="flex-1 p-4"
+              className={`${isMobile ? 'h-[calc(50vh-120px)]' : 'h-[400px]'} p-3`}
             >
               {comments.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
@@ -697,11 +706,11 @@ const Live = () => {
                         className="h-6 w-6 rounded-full flex-shrink-0 mt-1"
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-start gap-2">
                           <span className="font-medium text-sm text-music-accent">
                             {comment.user_name}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 mt-0.5">
                             {format(new Date(comment.created_at), "h:mm a")}
                           </span>
                         </div>
@@ -714,7 +723,7 @@ const Live = () => {
             </ScrollArea>
             
             {/* Comment Input */}
-            <div className="p-4 border-t border-gray-800">
+            <div className="p-3 border-t border-gray-800">
               <div className="flex gap-2">
                 <Input
                   className="flex-1"
