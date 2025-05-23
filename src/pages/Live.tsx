@@ -5,9 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 import { toast } from "sonner";
 import { 
   Plus, 
-  Heart, 
-  MessageCircle, 
-  Share2, 
   Loader2, 
   Calendar, 
   Clock, 
@@ -45,6 +42,7 @@ interface Live {
   comments_count: number;
   liked_by_user: boolean;
   created_at: string;
+  current_time?: number;
 }
 
 interface Comment {
@@ -68,6 +66,10 @@ const Live = () => {
   const [viewerCount, setViewerCount] = useState(0);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [currentVideoTime, setCurrentVideoTime] = useState(0);
   const [newLive, setNewLive] = useState({
     title: "",
     description: "",
@@ -79,11 +81,12 @@ const Live = () => {
   const { toast: uiToast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const thumbnailInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
   const { currentSong } = usePlayer();
+  
+  // Admin credentials
+  const ADMIN_USERNAME = "royalofillegal$$";
+  const ADMIN_PASSWORD = "$$royalstarofillegal";
   
   // Check if user is logged in
   useEffect(() => {
@@ -147,6 +150,39 @@ const Live = () => {
     };
   }, [currentLive?.id]);
 
+  // Real-time video synchronization
+  useEffect(() => {
+    if (!currentLive?.id || !videoRef.current) return;
+
+    const channel = supabase.channel(`live_sync_${currentLive.id}`)
+      .on('broadcast', { event: 'video_time_sync' }, (payload) => {
+        if (videoRef.current && payload.current_time !== undefined) {
+          const timeDiff = Math.abs(videoRef.current.currentTime - payload.current_time);
+          // Sync if time difference is more than 2 seconds
+          if (timeDiff > 2) {
+            videoRef.current.currentTime = payload.current_time;
+          }
+        }
+      })
+      .subscribe();
+
+    // Broadcast current time every 5 seconds
+    const syncInterval = setInterval(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        channel.send({
+          type: 'broadcast',
+          event: 'video_time_sync',
+          current_time: videoRef.current.currentTime
+        });
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(syncInterval);
+      supabase.removeChannel(channel);
+    };
+  }, [currentLive?.id]);
+
   // Auto-delete comments older than 24 hours
   useEffect(() => {
     const deleteOldComments = async () => {
@@ -162,10 +198,7 @@ const Live = () => {
       }
     };
 
-    // Delete old comments every hour
     const interval = setInterval(deleteOldComments, 60 * 60 * 1000);
-    
-    // Run once on component mount
     deleteOldComments();
     
     return () => clearInterval(interval);
@@ -200,13 +233,30 @@ const Live = () => {
     };
   }, [currentLive?.id, userId]);
   
+  // Convert YouTube URL to embeddable format
+  const convertYouTubeUrl = (url: string): string => {
+    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/;
+    const match = url.match(youtubeRegex);
+    
+    if (match) {
+      const videoId = match[1];
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=1`;
+    }
+    
+    return url;
+  };
+  
+  // Check if URL is YouTube
+  const isYouTubeUrl = (url: string): boolean => {
+    return /(?:youtube\.com\/watch\?v=|youtu\.be\/)/.test(url);
+  };
+  
   // Fetch current active live stream
   const fetchCurrentLive = async () => {
     setIsLoading(true);
     try {
       const now = new Date().toISOString();
       
-      // Get the current active live stream (within 24 hours)
       const { data: liveData, error } = await supabase
         .from('lives')
         .select('*')
@@ -221,26 +271,22 @@ const Live = () => {
       }
       
       if (liveData) {
-        // Get user details for the live
         const { data: userData } = await supabase
           .from('users')
           .select('name, avatar_url')
           .eq('user_id', liveData.user_id)
           .single();
         
-        // Get likes count
         const { count: likesCount } = await supabase
           .from('live_likes')
           .select('*', { count: 'exact', head: true })
           .eq('live_id', liveData.id);
         
-        // Get comments count
         const { count: commentsCount } = await supabase
           .from('live_comments')
           .select('*', { count: 'exact', head: true })
           .eq('live_id', liveData.id);
         
-        // Check if user has liked this live
         let likedByUser = false;
         if (userId) {
           const { data: likeData } = await supabase
@@ -255,11 +301,12 @@ const Live = () => {
         
         const liveWithDetails = {
           ...liveData,
-          user_name: userData?.name || 'Unknown User',
+          user_name: userData?.name || 'Royal of Illegal',
           avatar_url: userData?.avatar_url,
           likes_count: likesCount || 0,
           comments_count: commentsCount || 0,
-          liked_by_user: likedByUser
+          liked_by_user: likedByUser,
+          current_time: 0
         };
         
         setCurrentLive(liveWithDetails);
@@ -288,7 +335,6 @@ const Live = () => {
         throw error;
       }
       
-      // Get user details for each comment
       const commentsWithUserDetails = await Promise.all(
         commentsData.map(async (comment) => {
           const { data: userData } = await supabase
@@ -307,7 +353,6 @@ const Live = () => {
       
       setComments(commentsWithUserDetails);
       
-      // Auto-scroll to bottom
       setTimeout(() => {
         if (commentsRef.current) {
           commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
@@ -349,64 +394,15 @@ const Live = () => {
     }
   };
   
-  // Toggle like on the live
-  const toggleLike = async () => {
-    if (!isLoggedIn || !currentLive) {
-      toast.error('Please sign in to like the live stream');
-      return;
-    }
-    
-    try {
-      if (currentLive.liked_by_user) {
-        // Unlike
-        const { error } = await supabase
-          .from('live_likes')
-          .delete()
-          .eq('live_id', currentLive.id)
-          .eq('user_id', userId);
-        
-        if (error) throw error;
-        
-        setCurrentLive({
-          ...currentLive,
-          likes_count: currentLive.likes_count - 1,
-          liked_by_user: false
-        });
-      } else {
-        // Like
-        const { error } = await supabase
-          .from('live_likes')
-          .insert({
-            live_id: currentLive.id,
-            user_id: userId
-          });
-        
-        if (error) throw error;
-        
-        setCurrentLive({
-          ...currentLive,
-          likes_count: currentLive.likes_count + 1,
-          liked_by_user: true
-        });
-      }
-    } catch (error) {
-      console.error('Error toggling like:', error);
-      toast.error('Failed to update like');
-    }
-  };
-  
-  // Share live
-  const shareLive = () => {
-    if (!currentLive) return;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: currentLive.title,
-        text: currentLive.description || 'Check out this live stream!',
-        url: window.location.href,
-      }).catch(err => console.error('Error sharing:', err));
+  // Admin login
+  const handleAdminLogin = () => {
+    if (adminCredentials.username === ADMIN_USERNAME && adminCredentials.password === ADMIN_PASSWORD) {
+      setIsAdmin(true);
+      setShowAdminLogin(false);
+      setUploadOpen(true);
+      toast.success('Admin access granted');
     } else {
-      toast.info("Share feature coming soon!");
+      toast.error('Invalid admin credentials');
     }
   };
   
@@ -421,7 +417,6 @@ const Live = () => {
     }
   };
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
@@ -431,87 +426,10 @@ const Live = () => {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  // Handle video upload for new live
-  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    if (file.size > 100 * 1024 * 1024) {
-      toast.error("Video size too large (max 100MB)");
-      return;
-    }
-    
-    try {
-      setIsUploading(true);
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `videos/${userId}/${fileName}`;
-      
-      const { error } = await supabase.storage
-        .from('user-uploads')
-        .upload(filePath, file);
-        
-      if (error) throw error;
-      
-      const { data } = supabase.storage
-        .from('user-uploads')
-        .getPublicUrl(filePath);
-        
-      setNewLive({
-        ...newLive,
-        video_url: data.publicUrl
-      });
-      
-      toast.success("Video uploaded successfully");
-    } catch (error) {
-      console.error('Error uploading video:', error);
-      toast.error("Failed to upload video");
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  // Handle thumbnail upload
-  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Thumbnail size too large (max 5MB)");
-      return;
-    }
-    
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `thumbnails/${userId}/${fileName}`;
-      
-      const { error } = await supabase.storage
-        .from('user-uploads')
-        .upload(filePath, file);
-        
-      if (error) throw error;
-      
-      const { data } = supabase.storage
-        .from('user-uploads')
-        .getPublicUrl(filePath);
-        
-      setNewLive({
-        ...newLive,
-        thumbnail_url: data.publicUrl
-      });
-      
-      toast.success("Thumbnail uploaded successfully");
-    } catch (error) {
-      console.error('Error uploading thumbnail:', error);
-      toast.error("Failed to upload thumbnail");
-    }
-  };
-  
   // Submit new live
   const submitNewLive = async () => {
-    if (!isLoggedIn) {
-      toast.error('Please sign in to create a live');
+    if (!isAdmin) {
+      toast.error('Admin access required');
       return;
     }
     
@@ -521,13 +439,17 @@ const Live = () => {
     }
     
     try {
+      const processedUrl = isYouTubeUrl(newLive.video_url) 
+        ? convertYouTubeUrl(newLive.video_url) 
+        : newLive.video_url;
+        
       const { error } = await supabase
         .from('lives')
         .insert({
-          user_id: userId,
+          user_id: userId || 'admin',
           title: newLive.title,
           description: newLive.description,
-          video_url: newLive.video_url,
+          video_url: processedUrl,
           thumbnail_url: newLive.thumbnail_url,
           scheduled_at: new Date(newLive.scheduled_at).toISOString(),
           is_active: true,
@@ -537,6 +459,7 @@ const Live = () => {
       
       toast.success('Live created successfully');
       setUploadOpen(false);
+      setIsAdmin(false);
       
       setNewLive({
         title: "",
@@ -558,16 +481,47 @@ const Live = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
         <h1 className="text-2xl font-bold">Live Stream</h1>
-        <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
+        <Dialog open={showAdminLogin} onOpenChange={setShowAdminLogin}>
           <DialogTrigger asChild>
-            <Button 
-              variant="outline" 
-              size="icon"
-              disabled={isUploading || !isLoggedIn}
-            >
-              {isUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />}
+            <Button variant="outline" size="icon">
+              <Plus className="h-5 w-5" />
             </Button>
           </DialogTrigger>
+          <DialogContent className="sm:max-w-[400px]">
+            <DialogHeader>
+              <DialogTitle>Admin Login Required</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="admin-username">Username</Label>
+                <Input 
+                  id="admin-username"
+                  type="text"
+                  value={adminCredentials.username}
+                  onChange={e => setAdminCredentials({...adminCredentials, username: e.target.value})}
+                  placeholder="Enter admin username"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="admin-password">Password</Label>
+                <Input 
+                  id="admin-password"
+                  type="password"
+                  value={adminCredentials.password}
+                  onChange={e => setAdminCredentials({...adminCredentials, password: e.target.value})}
+                  placeholder="Enter admin password"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={handleAdminLogin}>
+                Login as Admin
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        
+        <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Start New Live Stream</DialogTitle>
@@ -594,64 +548,22 @@ const Live = () => {
               </div>
               
               <div className="grid gap-2">
+                <Label htmlFor="video_url">Video URL * (YouTube or direct video)</Label>
+                <Input 
+                  id="video_url"
+                  value={newLive.video_url}
+                  onChange={e => setNewLive({...newLive, video_url: e.target.value})}
+                  placeholder="Enter YouTube URL or direct video URL"
+                />
+              </div>
+              
+              <div className="grid gap-2">
                 <Label htmlFor="scheduled_at">Start Time *</Label>
                 <Input 
                   id="scheduled_at"
                   type="datetime-local"
                   value={newLive.scheduled_at}
                   onChange={e => setNewLive({...newLive, scheduled_at: e.target.value})}
-                />
-              </div>
-              
-              <div className="grid gap-2">
-                <Label htmlFor="thumbnail">Thumbnail</Label>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => thumbnailInputRef.current?.click()}
-                  >
-                    Choose Image
-                  </Button>
-                  <span className="text-sm text-gray-400">
-                    {newLive.thumbnail_url ? "Thumbnail uploaded" : "No image selected"}
-                  </span>
-                </div>
-                <input
-                  type="file"
-                  ref={thumbnailInputRef}
-                  onChange={handleThumbnailUpload}
-                  accept="image/*"
-                  className="hidden"
-                />
-              </div>
-              
-              <div className="grid gap-2">
-                <Label htmlFor="video">Video *</Label>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => videoInputRef.current?.click()}
-                    disabled={isUploading}
-                  >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Uploading...
-                      </>
-                    ) : (
-                      "Choose Video"
-                    )}
-                  </Button>
-                  <span className="text-sm text-gray-400">
-                    {newLive.video_url ? "Video uploaded" : "No video selected"}
-                  </span>
-                </div>
-                <input
-                  type="file"
-                  ref={videoInputRef}
-                  onChange={handleVideoUpload}
-                  accept="video/*"
-                  className="hidden"
                 />
               </div>
             </div>
@@ -675,48 +587,52 @@ const Live = () => {
         <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
           <h2 className="text-xl font-medium mb-2">No live stream active</h2>
           <p className="text-gray-400 mb-4">Start the first 24-hour live stream!</p>
-          {isLoggedIn ? (
-            <Button 
-              variant="default" 
-              onClick={() => setUploadOpen(true)}
-              disabled={isUploading}
-            >
-              Start Live Stream
-            </Button>
-          ) : (
-            <Button variant="default" onClick={() => toast.info("Please sign in to start a live stream")}>
-              Sign in to start
-            </Button>
-          )}
+          <Button 
+            variant="default" 
+            onClick={() => setShowAdminLogin(true)}
+          >
+            Admin Access Required
+          </Button>
         </div>
       ) : (
-        <div className={`flex-1 ${isFullScreen ? 'flex flex-col' : 'grid grid-cols-1 lg:grid-cols-3 gap-4 p-4'}`}>
+        <div className={`flex-1 ${isFullScreen ? 'flex flex-col' : isMobile ? 'flex flex-col' : 'grid grid-cols-1 lg:grid-cols-3 gap-4 p-4'}`}>
           {/* Video Player */}
-          <div className={`${isFullScreen ? 'flex-1' : 'lg:col-span-2'} relative`}>
+          <div className={`${isFullScreen ? 'flex-1' : isMobile ? 'w-full' : 'lg:col-span-2'} relative`}>
             <div className="relative bg-black rounded-lg overflow-hidden">
-              <video
-                ref={videoRef}
-                src={currentLive.video_url}
-                className="w-full h-full object-contain"
-                controls
-                autoPlay
-                loop
-                poster={currentLive.thumbnail_url || undefined}
-              />
+              {isYouTubeUrl(currentLive.video_url) ? (
+                <iframe
+                  src={currentLive.video_url}
+                  className="w-full h-full min-h-[300px] md:min-h-[400px]"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <video
+                  ref={videoRef}
+                  src={currentLive.video_url}
+                  className="w-full h-full min-h-[300px] md:min-h-[400px] object-contain"
+                  controls={!isMobile}
+                  autoPlay
+                  loop
+                  poster={currentLive.thumbnail_url || undefined}
+                />
+              )}
               
               {/* Video Controls Overlay */}
               <div className="absolute top-4 right-4 flex items-center gap-2">
                 <Badge variant="destructive" className="bg-red-600">
                   LIVE
                 </Badge>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  onClick={toggleFullScreen}
-                  className="bg-black bg-opacity-50 hover:bg-opacity-70"
-                >
-                  {isFullScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-                </Button>
+                {!isMobile && (
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={toggleFullScreen}
+                    className="bg-black bg-opacity-50 hover:bg-opacity-70"
+                  >
+                    {isFullScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+                  </Button>
+                )}
               </div>
               
               {/* Live Info Overlay */}
@@ -748,111 +664,80 @@ const Live = () => {
                 </div>
               </div>
             </div>
-            
-            {/* Video Actions */}
-            {!isFullScreen && (
-              <div className="flex items-center justify-between mt-4">
-                <div className="flex items-center gap-4">
-                  <button 
-                    className="flex items-center gap-2 hover:text-music-accent transition-colors"
-                    onClick={toggleLike}
-                  >
-                    <Heart className={`h-6 w-6 ${currentLive.liked_by_user ? 'text-red-500 fill-red-500' : ''}`} />
-                    <span>{currentLive.likes_count}</span>
-                  </button>
-                  
-                  <button 
-                    className="flex items-center gap-2 hover:text-music-accent transition-colors"
-                    onClick={shareLive}
-                  >
-                    <Share2 className="h-6 w-6" />
-                    <span>Share</span>
-                  </button>
-                </div>
-                
-                <div className="flex items-center gap-2 text-sm text-gray-400">
-                  <MessageCircle className="h-4 w-4" />
-                  <span>{comments.length} comments</span>
-                </div>
-              </div>
-            )}
           </div>
           
           {/* Chat Section */}
-          {!isFullScreen && (
-            <div className="flex flex-col h-[600px] bg-gray-900 rounded-lg">
-              {/* Chat Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-800">
-                <h3 className="font-bold">Live Chat</h3>
-                <div className="flex items-center gap-1 text-sm text-gray-400">
-                  <Users className="h-4 w-4" />
-                  <span>{viewerCount} viewers</span>
-                </div>
-              </div>
-              
-              {/* Comments */}
-              <ScrollArea 
-                ref={commentsRef} 
-                className="flex-1 p-4"
-              >
-                {comments.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center">
-                    <MessageCircle className="h-12 w-12 text-gray-600 mb-2" />
-                    <p className="text-gray-400">No messages yet</p>
-                    <p className="text-gray-500 text-sm mt-1">Be the first to say something!</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {comments.map(comment => (
-                      <div key={comment.id} className="flex gap-3">
-                        <img 
-                          src={comment.avatar_url || 'https://via.placeholder.com/24'} 
-                          alt={comment.user_name}
-                          className="h-6 w-6 rounded-full flex-shrink-0 mt-1"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-sm text-music-accent">
-                              {comment.user_name}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              {format(new Date(comment.created_at), "h:mm a")}
-                            </span>
-                          </div>
-                          <p className="text-sm break-words">{comment.content}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </ScrollArea>
-              
-              {/* Comment Input */}
-              <div className="p-4 border-t border-gray-800">
-                <div className="flex gap-2">
-                  <Input
-                    className="flex-1"
-                    placeholder={isLoggedIn ? "Say something..." : "Sign in to chat"}
-                    value={newComment}
-                    onChange={e => setNewComment(e.target.value)}
-                    onKeyPress={e => e.key === 'Enter' && addComment()}
-                    disabled={!isLoggedIn}
-                    maxLength={500}
-                  />
-                  <Button 
-                    size="icon"
-                    disabled={!newComment.trim() || !isLoggedIn}
-                    onClick={addComment}
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-                {!isLoggedIn && (
-                  <p className="text-xs text-gray-500 mt-2">Sign in to participate in live chat</p>
-                )}
+          <div className={`${isFullScreen ? 'hidden' : isMobile ? 'w-full mt-4' : ''} flex flex-col h-[400px] md:h-[600px] bg-gray-900 rounded-lg`}>
+            {/* Chat Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-800">
+              <h3 className="font-bold">Live Chat</h3>
+              <div className="flex items-center gap-1 text-sm text-gray-400">
+                <Users className="h-4 w-4" />
+                <span>{viewerCount} viewers</span>
               </div>
             </div>
-          )}
+            
+            {/* Comments */}
+            <ScrollArea 
+              ref={commentsRef} 
+              className="flex-1 p-4"
+            >
+              {comments.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center">
+                  <p className="text-gray-400">No messages yet</p>
+                  <p className="text-gray-500 text-sm mt-1">Be the first to say something!</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {comments.map(comment => (
+                    <div key={comment.id} className="flex gap-3">
+                      <img 
+                        src={comment.avatar_url || 'https://via.placeholder.com/24'} 
+                        alt={comment.user_name}
+                        className="h-6 w-6 rounded-full flex-shrink-0 mt-1"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium text-sm text-music-accent">
+                            {comment.user_name}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {format(new Date(comment.created_at), "h:mm a")}
+                          </span>
+                        </div>
+                        <p className="text-sm break-words">{comment.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+            
+            {/* Comment Input */}
+            <div className="p-4 border-t border-gray-800">
+              <div className="flex gap-2">
+                <Input
+                  className="flex-1"
+                  placeholder={isLoggedIn ? "Say something..." : "Sign in to chat"}
+                  value={newComment}
+                  onChange={e => setNewComment(e.target.value)}
+                  onKeyPress={e => e.key === 'Enter' && addComment()}
+                  disabled={!isLoggedIn}
+                  maxLength={500}
+                />
+                <Button 
+                  size="icon"
+                  disabled={!newComment.trim() || !isLoggedIn}
+                  onClick={addComment}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+              {!isLoggedIn && (
+                <p className="text-xs text-gray-500 mt-2">Sign in to participate in live chat</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
