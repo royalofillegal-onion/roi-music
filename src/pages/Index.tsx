@@ -52,7 +52,7 @@ const Index = () => {
         </div>
       </SliderRow>
       
-      <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "400ms"}}>
+      <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "400ms"}">
         <div className="flex gap-4">
           {newReleases.map((song) => (
             <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />

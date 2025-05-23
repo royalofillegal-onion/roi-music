@@ -171,7 +171,7 @@ const Live = () => {
     };
   }, [currentLive?.id]);
 
-  // Real-time video synchronization - continuous playback for all users
+  // Real-time video synchronization with audio enabled
   useEffect(() => {
     if (!currentLive?.id || !videoRef.current) return;
 
@@ -182,10 +182,11 @@ const Live = () => {
     const now = Date.now();
     const elapsedSeconds = (now - startTime) / 1000;
     
-    // Set video to current time and play
+    // Set video to current time and play with audio
     if (video.duration && elapsedSeconds > 0) {
       const currentTime = elapsedSeconds % video.duration;
       video.currentTime = currentTime;
+      video.muted = false; // Enable audio
       video.play().catch(console.error);
     }
 
@@ -271,7 +272,7 @@ const Live = () => {
     
     if (match) {
       const videoId = match[1];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=${videoId}`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=1&loop=1&playlist=${videoId}`;
     }
     
     return url;
@@ -625,9 +626,9 @@ const Live = () => {
           </Button>
         </div>
       ) : (
-        <div className={`flex flex-col flex-1 ${isFullScreen ? 'h-screen' : ''}`}>
-          {/* Video Player with continuous playback */}
-          <div className="relative bg-black w-full">
+        <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} flex-1 ${isFullScreen ? 'h-screen' : ''}`}>
+          {/* Video Player Section */}
+          <div className={`${isMobile ? 'w-full' : 'flex-1'} bg-black`}>
             <div className="relative bg-black overflow-hidden">
               {isYouTubeUrl(currentLive.video_url) ? (
                 <div className={`relative ${isMobile ? 'pt-[56.25%]' : 'min-h-[300px] md:min-h-[450px]'}`}>
@@ -644,10 +645,9 @@ const Live = () => {
                     ref={videoRef}
                     src={currentLive.video_url}
                     className={`${isMobile ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-full object-contain'}`}
-                    controls={false}
+                    controls={true}
                     autoPlay
                     loop
-                    muted
                     poster={currentLive.thumbnail_url || undefined}
                   />
                 </div>
@@ -671,7 +671,7 @@ const Live = () => {
               </div>
             </div>
             
-            {/* Live Info - moved to bottom for mobile like YouTube */}
+            {/* Live Info */}
             <div className="p-4 bg-gray-900 border-b border-gray-800">
               <h3 className="font-bold text-xl mb-2">{currentLive.title}</h3>
               
@@ -703,10 +703,10 @@ const Live = () => {
             </div>
           </div>
           
-          {/* Chat Section - YouTube-style */}
-          <div className={`${isFullScreen ? 'hidden' : ''} flex-1 bg-gray-900 ${isMobile ? 'h-[40vh]' : ''}`}>
+          {/* Chat Section - Improved mobile layout */}
+          <div className={`${isFullScreen ? 'hidden' : ''} ${isMobile ? 'w-full h-[50vh] flex flex-col' : 'w-80 flex flex-col'} bg-gray-900 border-l border-gray-800`}>
             {/* Chat Header */}
-            <div className="flex items-center justify-between p-3 border-b border-gray-800">
+            <div className="flex items-center justify-between p-3 border-b border-gray-800 flex-shrink-0">
               <h3 className="font-bold">Live Chat</h3>
               <div className="flex items-center gap-1 text-sm text-gray-400">
                 <Users className="h-4 w-4" />
@@ -714,10 +714,10 @@ const Live = () => {
               </div>
             </div>
             
-            {/* Comments */}
+            {/* Comments - Fixed mobile height */}
             <ScrollArea 
               ref={commentsRef} 
-              className={`${isMobile ? 'h-[calc(40vh-120px)]' : 'h-[300px]'} p-3`}
+              className="flex-1 p-3"
             >
               {comments.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
@@ -750,8 +750,8 @@ const Live = () => {
               )}
             </ScrollArea>
             
-            {/* Comment Input */}
-            <div className="p-3 border-t border-gray-800">
+            {/* Comment Input - Fixed at bottom */}
+            <div className={`p-3 border-t border-gray-800 flex-shrink-0 ${isMobile ? 'sticky bottom-0 bg-gray-900' : ''}`}>
               <div className="flex gap-2">
                 <Input
                   className="flex-1"
