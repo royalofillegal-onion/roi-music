@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -25,6 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { useLiveAdmin } from "@/context/LiveAdminContext";
+import UserProfile from "@/components/UserProfile";
 
 interface Live {
   id: string;
@@ -61,6 +61,7 @@ const Live = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>('Guest User');
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -85,25 +86,48 @@ const Live = () => {
   const { currentSong } = usePlayer();
   const { isAdmin, login } = useLiveAdmin();
   
-  // Check if user is logged in
+  // Check if user is logged in and get user profile
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsLoggedIn(!!session);
       if (session) {
         setUserId(session.user.id);
+        
+        // Fetch user profile
+        const { data: profile } = await supabase
+          .from('users')
+          .select('name')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        if (profile) {
+          setUserName(profile.name || 'Music Lover');
+        }
       }
     };
     
     checkAuth();
     
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setIsLoggedIn(!!session);
         if (session) {
           setUserId(session.user.id);
+          
+          // Fetch user profile
+          const { data: profile } = await supabase
+            .from('users')
+            .select('name')
+            .eq('user_id', session.user.id)
+            .single();
+          
+          if (profile) {
+            setUserName(profile.name || 'Music Lover');
+          }
         } else {
           setUserId(null);
+          setUserName('Guest User');
         }
       }
     );
@@ -147,51 +171,47 @@ const Live = () => {
     };
   }, [currentLive?.id]);
 
-  // Real-time video synchronization - enhanced to better sync across all users
+  // Real-time video synchronization - continuous playback for all users
   useEffect(() => {
     if (!currentLive?.id || !videoRef.current) return;
 
+    const video = videoRef.current;
+    
+    // Calculate the current time based on when the stream started
+    const startTime = new Date(currentLive.scheduled_at).getTime();
+    const now = Date.now();
+    const elapsedSeconds = (now - startTime) / 1000;
+    
+    // Set video to current time and play
+    if (video.duration && elapsedSeconds > 0) {
+      const currentTime = elapsedSeconds % video.duration;
+      video.currentTime = currentTime;
+      video.play().catch(console.error);
+    }
+
+    // Sync with other users periodically
     const channel = supabase.channel(`live_sync_${currentLive.id}`)
-      .on('broadcast', { event: 'video_time_sync' }, (payload) => {
-        if (videoRef.current && payload.current_time !== undefined) {
-          const timeDiff = Math.abs(videoRef.current.currentTime - payload.current_time);
-          // Sync if time difference is more than 2 seconds
-          if (timeDiff > 2) {
-            videoRef.current.currentTime = payload.current_time;
+      .on('broadcast', { event: 'video_sync' }, (payload) => {
+        if (payload.current_time !== undefined && video) {
+          const timeDiff = Math.abs(video.currentTime - payload.current_time);
+          // Only sync if time difference is significant (more than 3 seconds)
+          if (timeDiff > 3) {
+            video.currentTime = payload.current_time;
           }
         }
       })
       .subscribe();
 
-    // Request current time when joining
-    setTimeout(() => {
-      channel.send({
-        type: 'broadcast',
-        event: 'request_current_time'
-      });
-    }, 1000);
-
-    // Listen for time requests and respond with current time
-    channel.on('broadcast', { event: 'request_current_time' }, () => {
-      if (videoRef.current && !videoRef.current.paused) {
-        channel.send({
-          type: 'broadcast',
-          event: 'video_time_sync',
-          current_time: videoRef.current.currentTime
-        });
-      }
-    });
-
-    // Broadcast current time every 5 seconds
+    // Broadcast current time every 10 seconds to keep all users in sync
     const syncInterval = setInterval(() => {
-      if (videoRef.current && !videoRef.current.paused) {
+      if (video && !video.paused) {
         channel.send({
           type: 'broadcast',
-          event: 'video_time_sync',
-          current_time: videoRef.current.currentTime
+          event: 'video_sync',
+          current_time: video.currentTime
         });
       }
-    }, 5000);
+    }, 10000);
 
     return () => {
       clearInterval(syncInterval);
@@ -233,6 +253,7 @@ const Live = () => {
         if (status === 'SUBSCRIBED') {
           await channel.track({
             user_id: userId || 'anonymous',
+            user_name: userName,
             online_at: new Date().toISOString(),
           });
         }
@@ -241,7 +262,7 @@ const Live = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentLive?.id, userId]);
+  }, [currentLive?.id, userId, userName]);
   
   // Convert YouTube URL to embeddable format
   const convertYouTubeUrl = (url: string): string => {
@@ -250,7 +271,7 @@ const Live = () => {
     
     if (match) {
       const videoId = match[1];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=1`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=${videoId}`;
     }
     
     return url;
@@ -483,49 +504,53 @@ const Live = () => {
   
   return (
     <div className={`flex flex-col h-full pt-16 md:pt-0 md:ml-16 md:mb-20 ${isFullScreen ? 'fixed inset-0 z-50 bg-black' : ''}`}>
-      {/* Header */}
+      {/* Header with User Profile */}
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
         <h1 className="text-2xl font-bold">Live Stream</h1>
-        <Dialog open={showAdminLogin} onOpenChange={setShowAdminLogin}>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Plus className="h-5 w-5" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[400px]">
-            <DialogHeader>
-              <DialogTitle>Admin Login Required</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="admin-username">Username</Label>
-                <Input 
-                  id="admin-username"
-                  type="text"
-                  value={adminCredentials.username}
-                  onChange={e => setAdminCredentials({...adminCredentials, username: e.target.value})}
-                  placeholder="Enter admin username"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="admin-password">Password</Label>
-                <Input 
-                  id="admin-password"
-                  type="password"
-                  value={adminCredentials.password}
-                  onChange={e => setAdminCredentials({...adminCredentials, password: e.target.value})}
-                  placeholder="Enter admin password"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <Button onClick={handleAdminLogin}>
-                Login as Admin
+        <div className="flex items-center gap-4">
+          <UserProfile />
+          <Dialog open={showAdminLogin} onOpenChange={setShowAdminLogin}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Plus className="h-5 w-5" />
               </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[400px]">
+              <DialogHeader>
+                <DialogTitle>Admin Login Required</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="admin-username">Username</Label>
+                  <Input 
+                    id="admin-username"
+                    type="text"
+                    value={adminCredentials.username}
+                    onChange={e => setAdminCredentials({...adminCredentials, username: e.target.value})}
+                    placeholder="Enter admin username"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="admin-password">Password</Label>
+                  <Input 
+                    id="admin-password"
+                    type="password"
+                    value={adminCredentials.password}
+                    onChange={e => setAdminCredentials({...adminCredentials, password: e.target.value})}
+                    placeholder="Enter admin password"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <Button onClick={handleAdminLogin}>
+                  Login as Admin
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         
+        {/* Dialog for upload */}
         <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -601,7 +626,7 @@ const Live = () => {
         </div>
       ) : (
         <div className={`flex flex-col flex-1 ${isFullScreen ? 'h-screen' : ''}`}>
-          {/* Video Player with improved mobile layout */}
+          {/* Video Player with continuous playback */}
           <div className="relative bg-black w-full">
             <div className="relative bg-black overflow-hidden">
               {isYouTubeUrl(currentLive.video_url) ? (
@@ -619,9 +644,10 @@ const Live = () => {
                     ref={videoRef}
                     src={currentLive.video_url}
                     className={`${isMobile ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-full object-contain'}`}
-                    controls={!isMobile}
+                    controls={false}
                     autoPlay
                     loop
+                    muted
                     poster={currentLive.thumbnail_url || undefined}
                   />
                 </div>
@@ -645,38 +671,40 @@ const Live = () => {
               </div>
             </div>
             
-            {/* Live Info - YouTube-style at the bottom */}
-            <div className={`p-4 border-b border-gray-800 ${isMobile ? 'bg-gray-900' : ''}`}>
-              <h3 className="font-bold text-xl mb-1">{currentLive.title}</h3>
+            {/* Live Info - moved to bottom for mobile like YouTube */}
+            <div className="p-4 bg-gray-900 border-b border-gray-800">
+              <h3 className="font-bold text-xl mb-2">{currentLive.title}</h3>
               
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
                   <img 
-                    src={currentLive.avatar_url || 'https://via.placeholder.com/32'} 
+                    src={currentLive.avatar_url || 'https://via.placeholder.com/40'} 
                     alt={currentLive.user_name}
-                    className="h-8 w-8 rounded-full"
+                    className="h-10 w-10 rounded-full"
                   />
                   <div>
-                    <p className="font-semibold text-sm">{currentLive.user_name}</p>
-                    <p className="text-xs text-gray-300">
+                    <p className="font-semibold">{currentLive.user_name}</p>
+                    <p className="text-sm text-gray-400">
                       Started {format(new Date(currentLive.scheduled_at), "MMM d, h:mm a")}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 text-sm">
+                <div className="flex items-center gap-2 text-sm">
                   <Users className="h-4 w-4" />
                   <span>{viewerCount} watching</span>
                 </div>
               </div>
               
               {currentLive.description && (
-                <p className="text-sm text-gray-300 mt-2 line-clamp-3 md:line-clamp-none">{currentLive.description}</p>
+                <div className="bg-gray-800 rounded-lg p-3">
+                  <p className="text-sm text-gray-300">{currentLive.description}</p>
+                </div>
               )}
             </div>
           </div>
           
-          {/* Chat Section with YouTube-style layout */}
-          <div className={`${isFullScreen ? 'hidden' : ''} flex-1 bg-gray-900 ${isMobile ? 'h-[50vh]' : ''}`}>
+          {/* Chat Section - YouTube-style */}
+          <div className={`${isFullScreen ? 'hidden' : ''} flex-1 bg-gray-900 ${isMobile ? 'h-[40vh]' : ''}`}>
             {/* Chat Header */}
             <div className="flex items-center justify-between p-3 border-b border-gray-800">
               <h3 className="font-bold">Live Chat</h3>
@@ -689,7 +717,7 @@ const Live = () => {
             {/* Comments */}
             <ScrollArea 
               ref={commentsRef} 
-              className={`${isMobile ? 'h-[calc(50vh-120px)]' : 'h-[400px]'} p-3`}
+              className={`${isMobile ? 'h-[calc(40vh-120px)]' : 'h-[300px]'} p-3`}
             >
               {comments.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
@@ -727,7 +755,7 @@ const Live = () => {
               <div className="flex gap-2">
                 <Input
                   className="flex-1"
-                  placeholder={isLoggedIn ? "Say something..." : "Sign in to chat"}
+                  placeholder={isLoggedIn ? `Say something as ${userName}...` : "Sign in to chat"}
                   value={newComment}
                   onChange={e => setNewComment(e.target.value)}
                   onKeyPress={e => e.key === 'Enter' && addComment()}
