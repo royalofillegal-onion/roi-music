@@ -6,21 +6,25 @@ import SpotifyLikeSection from "@/components/SpotifyLikeSection";
 import MusicVisualizer from "@/components/MusicVisualizer";
 import GlowingButton from "@/components/GlowingButton";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
+import WelcomePopup from "@/components/WelcomePopup";
 import { trendingSongs, popularSongs, newReleases } from "@/data/songs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { useWelcomePopup } from "@/hooks/useWelcomePopup";
 import UserProfile from "@/components/UserProfile";
 import AnimatedHeader from "@/components/AnimatedHeader";
 import { Play, Shuffle, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { showNotification } from "@/utils/notificationUtils";
 
 const Index = () => {
   const { recentlyPlayed, playSong } = usePlayer();
   const navigate = useNavigate();
   const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
+  const { showWelcome, handleCloseWelcome } = useWelcomePopup();
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
@@ -67,13 +71,14 @@ const Index = () => {
     const allSongs = [...trendingSongs, ...popularSongs, ...newReleases];
     const randomSong = allSongs[Math.floor(Math.random() * allSongs.length)];
     playSong(randomSong);
-    toast.success("Shuffling all songs!");
+    showNotification.nowPlaying(randomSong.title, randomSong.artist);
+    showNotification.shuffleMode();
   };
 
   const playTrendingPlaylist = () => {
     if (trendingSongs.length > 0) {
       playSong(trendingSongs[0]);
-      toast.success("Playing trending hits!");
+      showNotification.nowPlaying(trendingSongs[0].title, trendingSongs[0].artist);
     }
   };
 
@@ -82,6 +87,11 @@ const Index = () => {
   return (
     <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
       <MusicVisualizer />
+      
+      {/* Welcome Popup for first-time visitors */}
+      {showWelcome && !isLoggedIn && (
+        <WelcomePopup onClose={handleCloseWelcome} />
+      )}
       
       {/* Time-based Banner */}
       {timeBasedBanner && (

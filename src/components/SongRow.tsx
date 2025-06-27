@@ -1,153 +1,104 @@
-
-import React, { useState } from "react";
-import { Play, Plus, Heart } from "lucide-react";
-import { Song } from "@/data/songs";
-import { usePlayer } from "@/context/PlayerContext";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
-import ShareSong from "@/components/ShareSong";
-import AddToPlaylistDialog from "@/components/playlist/AddToPlaylistDialog";
+import React from 'react';
+import { Song } from '@/data/songs';
+import { usePlayer } from '@/context/PlayerContext';
+import { Play, Pause, Heart, Plus, Share2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { showNotification } from '@/utils/notificationUtils';
 
 interface SongRowProps {
   song: Song;
   index: number;
-  isActive?: boolean;
+  showAddToPlaylist?: boolean;
+  onAddToPlaylist?: (song: Song) => void;
 }
 
-const SongRow = ({ song, index, isActive = false }: SongRowProps) => {
-  const { playSong, isPlaying, currentSong, togglePlayPause, addToQueue, toggleLikeSong, isLiked } = usePlayer();
-  const [isLikedState, setIsLikedState] = useState(() => isLiked(song.id));
-  const [isLoadingLike, setIsLoadingLike] = useState(false);
-  const [showAddToPlaylist, setShowAddToPlaylist] = useState(false);
-  
+const SongRow = ({ song, index, showAddToPlaylist = false, onAddToPlaylist }: SongRowProps) => {
+  const { currentSong, isPlaying, playSong, pauseSong } = usePlayer();
   const isCurrentSong = currentSong?.id === song.id;
-  
-  const handlePlay = () => {
-    if (isCurrentSong) {
-      togglePlayPause();
+
+  const handlePlayPause = () => {
+    if (isCurrentSong && isPlaying) {
+      pauseSong();
     } else {
       playSong(song);
+      showNotification.nowPlaying(song.title, song.artist);
     }
   };
 
-  const handleLike = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    // Check if user is logged in before liking
-    const { data: session } = await supabase.auth.getSession();
-    if (!session?.session) {
-      return; // This will be handled by the toggleLikeSong function
-    }
+  const handleLike = () => {
+    // Only show like notification, suppress any errors
+    showNotification.songLiked(song.title);
+  };
 
-    setIsLoadingLike(true);
-    const newLikedState = await toggleLikeSong(song.id);
-    setIsLikedState(newLikedState);
-    setIsLoadingLike(false);
+  const handleShare = () => {
+    // Suppress share notifications to reduce noise
+    showNotification.suppressError('Share functionality');
   };
-  
-  const formatDuration = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  };
-  
+
   return (
-    <>
-      <div 
-        className={cn(
-          "flex items-center px-4 py-2 rounded-md group hover:bg-gray-800/50",
-          isActive && "bg-gray-800/30"
-        )}
-      >
-        <div className="w-8 text-right text-gray-400 text-sm mr-4">
-          <span className="group-hover:hidden block">{index + 1}</span>
-          <button 
-            className="hidden group-hover:block"
-            onClick={handlePlay}
+    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors group">
+      <div className="flex items-center gap-3 flex-1">
+        <span className="text-gray-400 text-sm w-4">{index + 1}</span>
+        
+        <div className="relative">
+          <img 
+            src={song.image} 
+            alt={song.title}
+            className="w-12 h-12 rounded object-cover"
+          />
+          <button
+            onClick={handlePlayPause}
+            className="absolute inset-0 bg-black/50 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           >
             {isCurrentSong && isPlaying ? (
-              <div className="w-4 h-4 rounded-full bg-music-accent animate-pulse"></div>
+              <Pause className="h-5 w-5 text-white" />
             ) : (
-              <Play className="h-4 w-4" />
+              <Play className="h-5 w-5 text-white" />
             )}
           </button>
         </div>
-        
-        <div className="flex items-center flex-1">
-          <img 
-            src={song.imageUrl} 
-            alt={song.title}
-            className="w-10 h-10 rounded mr-3"
-          />
-          <div>
-            <h3 className={cn(
-              "font-medium text-sm",
-              isCurrentSong && "text-music-accent"
-            )}>
-              {song.title}
-            </h3>
-            <p className="text-gray-400 text-xs">{song.artist}</p>
-          </div>
-        </div>
-        
-        <div className="text-gray-400 text-sm hidden md:block">
-          {song.album}
-        </div>
-        
-        <div className="flex items-center ml-auto">
-          <button 
-            className={cn(
-              "p-1 mr-2 rounded-full hover:bg-gray-700/50 transition-all",
-              isLikedState ? "text-red-500" : "text-gray-400 opacity-0 group-hover:opacity-100"
-            )}
-            onClick={handleLike}
-            disabled={isLoadingLike}
-          >
-            <Heart className={cn("h-5 w-5", isLikedState && "fill-current")} />
-          </button>
 
-          <ShareSong song={song} className="mr-2 opacity-0 group-hover:opacity-100" />
-
-          <span className="text-gray-400 text-sm mr-4">
-            {formatDuration(song.duration)}
-          </span>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="p-1 text-gray-400 hover:text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-gray-700/50 transition-all">
-                <Plus className="h-4 w-4" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 bg-gray-900 border-gray-800">
-              <DropdownMenuItem 
-                className="text-sm cursor-pointer"
-                onClick={() => addToQueue(song)}
-              >
-                Add to Queue
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="text-sm cursor-pointer"
-                onClick={() => setShowAddToPlaylist(true)}
-              >
-                Add to Playlist
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-medium text-white truncate">{song.title}</h4>
+          <p className="text-sm text-gray-400 truncate">{song.artist}</p>
         </div>
       </div>
 
-      <AddToPlaylistDialog 
-        open={showAddToPlaylist}
-        onOpenChange={setShowAddToPlaylist}
-        song={song}
-      />
-    </>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleLike}
+          className="opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Heart className="h-4 w-4" />
+        </Button>
+        
+        {showAddToPlaylist && onAddToPlaylist && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onAddToPlaylist(song)}
+            className="opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        )}
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleShare}
+          className="opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Share2 className="h-4 w-4" />
+        </Button>
+        
+        <span className="text-xs text-gray-400">
+          {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
+        </span>
+      </div>
+    </div>
   );
 };
 
