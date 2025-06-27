@@ -303,6 +303,120 @@ export type Database = {
         }
         Relationships: []
       }
+      song_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      song_category_relations: {
+        Row: {
+          category_id: string | null
+          id: string
+          song_id: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          id?: string
+          song_id?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          id?: string
+          song_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "song_category_relations_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "song_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "song_category_relations_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      songs: {
+        Row: {
+          album: string | null
+          approved_by: string | null
+          approved_date: string | null
+          artist: string
+          audio_url: string
+          download_count: number | null
+          duration: number
+          genre: string | null
+          id: string
+          image_url: string | null
+          lyrics: string | null
+          play_count: number | null
+          status: string
+          title: string
+          upload_date: string
+          uploaded_by: string
+          year: number | null
+        }
+        Insert: {
+          album?: string | null
+          approved_by?: string | null
+          approved_date?: string | null
+          artist: string
+          audio_url: string
+          download_count?: number | null
+          duration: number
+          genre?: string | null
+          id?: string
+          image_url?: string | null
+          lyrics?: string | null
+          play_count?: number | null
+          status?: string
+          title: string
+          upload_date?: string
+          uploaded_by: string
+          year?: number | null
+        }
+        Update: {
+          album?: string | null
+          approved_by?: string | null
+          approved_date?: string | null
+          artist?: string
+          audio_url?: string
+          download_count?: number | null
+          duration?: number
+          genre?: string | null
+          id?: string
+          image_url?: string | null
+          lyrics?: string | null
+          play_count?: number | null
+          status?: string
+          title?: string
+          upload_date?: string
+          uploaded_by?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           assistant_name: string | null
@@ -395,8 +509,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_trending_songs: {
+        Args: { limit_count?: number }
+        Returns: {
+          id: string
+          title: string
+          artist: string
+          album: string
+          genre: string
+          duration: number
+          image_url: string
+          audio_url: string
+          play_count: number
+          upload_date: string
+        }[]
+      }
       increment_click_count: {
         Args: { hash_code: string }
+        Returns: undefined
+      }
+      increment_play_count: {
+        Args: { song_id: string }
         Returns: undefined
       }
       is_admin: {
