@@ -12,10 +12,13 @@ import { toast } from 'sonner';
 
 interface TimeBasedContent {
   id: string;
-  time_period: 'morning' | 'afternoon' | 'evening' | 'night';
-  content_type: 'featured_songs' | 'featured_playlists' | 'banner';
+  time_period: string;
+  content_type: string;
   content_data: any;
   is_active: boolean;
+  created_at: string;
+  created_by: string;
+  updated_at: string;
 }
 
 const TimeBasedContentManager = () => {
@@ -26,10 +29,10 @@ const TimeBasedContentManager = () => {
   const [bannerText, setBannerText] = useState('');
 
   const timePeriods = [
-    { value: 'morning', label: 'Morning (5AM - 11AM)', icon: <Sunrise className="h-4 w-4" /> },
-    { value: 'afternoon', label: 'Afternoon (12PM - 5PM)', icon: <Sun className="h-4 w-4" /> },
-    { value: 'evening', label: 'Evening (6PM - 9PM)', icon: <Sunset className="h-4 w-4" /> },
-    { value: 'night', label: 'Night (10PM - 4AM)', icon: <Moon className="h-4 w-4" /> }
+    { value: 'morning' as const, label: 'Morning (5AM - 11AM)', icon: <Sunrise className="h-4 w-4" /> },
+    { value: 'afternoon' as const, label: 'Afternoon (12PM - 5PM)', icon: <Sun className="h-4 w-4" /> },
+    { value: 'evening' as const, label: 'Evening (6PM - 9PM)', icon: <Sunset className="h-4 w-4" /> },
+    { value: 'night' as const, label: 'Night (10PM - 4AM)', icon: <Moon className="h-4 w-4" /> }
   ];
 
   useEffect(() => {

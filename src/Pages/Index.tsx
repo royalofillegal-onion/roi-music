@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import SliderRow from "@/components/SliderRow";
 import SongCard from "@/components/SongCard";
@@ -53,8 +52,8 @@ const Index = () => {
         if (error) throw error;
         
         const currentBanner = data?.find((item: any) => item.is_current_period);
-        if (currentBanner?.content_data?.message) {
-          setTimeBasedBanner(currentBanner.content_data.message);
+        if (currentBanner?.content_data && typeof currentBanner.content_data === 'object' && 'message' in currentBanner.content_data) {
+          setTimeBasedBanner(currentBanner.content_data.message as string);
         }
       } catch (error) {
         console.error('Error fetching time-based content:', error);
