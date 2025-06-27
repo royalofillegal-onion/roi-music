@@ -417,6 +417,69 @@ export type Database = {
         }
         Relationships: []
       }
+      time_based_content: {
+        Row: {
+          content_data: Json
+          content_type: string
+          created_at: string
+          created_by: string
+          id: string
+          is_active: boolean
+          time_period: string
+          updated_at: string
+        }
+        Insert: {
+          content_data?: Json
+          content_type: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_active?: boolean
+          time_period: string
+          updated_at?: string
+        }
+        Update: {
+          content_data?: Json
+          content_type?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_active?: boolean
+          time_period?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_onboarding: {
+        Row: {
+          completed: boolean
+          created_at: string
+          id: string
+          preferences: Json | null
+          updated_at: string
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          id?: string
+          preferences?: Json | null
+          updated_at?: string
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          id?: string
+          preferences?: Json | null
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           assistant_name: string | null
@@ -509,6 +572,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_current_time_period: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_time_based_content: {
+        Args: { content_type_param?: string }
+        Returns: {
+          id: string
+          time_period: string
+          content_type: string
+          content_data: Json
+          is_current_period: boolean
+        }[]
+      }
       get_trending_songs: {
         Args: { limit_count?: number }
         Returns: {

@@ -1,23 +1,68 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SliderRow from "@/components/SliderRow";
 import SongCard from "@/components/SongCard";
 import PlaylistCard from "@/components/PlaylistCard";
 import SpotifyLikeSection from "@/components/SpotifyLikeSection";
 import MusicVisualizer from "@/components/MusicVisualizer";
 import GlowingButton from "@/components/GlowingButton";
+import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import { trendingSongs, popularSongs, newReleases } from "@/data/songs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import UserProfile from "@/components/UserProfile";
 import AnimatedHeader from "@/components/AnimatedHeader";
 import { Play, Shuffle, Heart } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const { recentlyPlayed, playSong } = usePlayer();
   const navigate = useNavigate();
+  const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
+  const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  useEffect(() => {
+    // Check auth status
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+    };
+    
+    checkAuth();
+    
+    // Set up auth listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsLoggedIn(!!session);
+    });
+    
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    // Fetch time-based banner content
+    const fetchTimeBasedContent = async () => {
+      try {
+        const { data, error } = await supabase.rpc('get_time_based_content', {
+          content_type_param: 'banner'
+        });
+        
+        if (error) throw error;
+        
+        const currentBanner = data?.find((item: any) => item.is_current_period);
+        if (currentBanner?.content_data?.message) {
+          setTimeBasedBanner(currentBanner.content_data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching time-based content:', error);
+      }
+    };
+    
+    fetchTimeBasedContent();
+  }, []);
   
   const shuffleAllSongs = () => {
     const allSongs = [...trendingSongs, ...popularSongs, ...newReleases];
@@ -32,10 +77,21 @@ const Index = () => {
       toast.success("Playing trending hits!");
     }
   };
+
+  const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
     <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
       <MusicVisualizer />
+      
+      {/* Time-based Banner */}
+      {timeBasedBanner && (
+        <div className="mb-6 p-4 bg-gradient-to-r from-music-accent/20 to-purple-600/20 rounded-lg border border-music-accent/30">
+          <p className="text-center text-sm md:text-base font-medium text-music-accent">
+            {timeBasedBanner}
+          </p>
+        </div>
+      )}
       
       <div className="flex flex-col md:flex-row items-start justify-between mb-8">
         <AnimatedHeader />
@@ -101,6 +157,11 @@ const Index = () => {
           </div>
         </SliderRow>
       </div>
+
+      {/* Onboarding Flow */}
+      {!onboardingLoading && showOnboarding && (
+        <OnboardingFlow onComplete={markOnboardingComplete} />
+      )}
     </div>
   );
 };
