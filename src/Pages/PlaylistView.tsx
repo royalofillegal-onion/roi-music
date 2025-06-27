@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, Play } from "lucide-react";
@@ -128,7 +129,6 @@ const PlaylistView = () => {
                 key={song.id} 
                 song={song} 
                 index={index}
-                isActive={currentSong?.id === song.id} 
               />
             ))
           )}

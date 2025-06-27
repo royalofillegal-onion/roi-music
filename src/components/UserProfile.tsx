@@ -39,7 +39,7 @@ const UserProfile = () => {
           setIsLoggedIn(true);
           // Get user profile in a separate function to avoid deadlock
           setTimeout(() => {
-            fetchUserProfile(session.user.id);
+            fetchUserProfile(session.user);
             fetchLikedSongsCount(session.user.id);
           }, 0);
         } else if (event === 'SIGNED_OUT') {
@@ -58,7 +58,7 @@ const UserProfile = () => {
         
         if (session) {
           setIsLoggedIn(true);
-          await fetchUserProfile(session.user.id);
+          await fetchUserProfile(session.user);
           await fetchLikedSongsCount(session.user.id);
         }
       } catch (error) {
@@ -73,25 +73,46 @@ const UserProfile = () => {
     };
   }, []);
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (user: any) => {
     try {
-      // Try to get user profile from Supabase
+      // First try to get user profile from the users table
       const { data: profile, error } = await supabase
         .from('users')
         .select('name, avatar_url')
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .single();
       
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         console.error("Error fetching profile:", error);
-        return;
       }
         
-      if (profile) {
-        setUserName(profile.name || 'Music Lover');
+      if (profile && profile.name) {
+        setUserName(profile.name);
         setAvatarUrl(profile.avatar_url || '');
       } else {
-        setUserName('Music Lover');
+        // Fallback to auth metadata or email
+        const displayName = user.user_metadata?.name || 
+                           user.user_metadata?.full_name || 
+                           user.email?.split('@')[0] || 
+                           'Music Lover';
+        setUserName(displayName);
+        
+        // Create or update the user profile
+        const { error: upsertError } = await supabase
+          .from('users')
+          .upsert({ 
+            user_id: user.id,
+            name: displayName,
+            avatar_url: user.user_metadata?.avatar_url || ''
+          }, {
+            onConflict: 'user_id'
+          });
+          
+        if (upsertError) {
+          console.error("Error creating user profile:", upsertError);
+        } else {
+          setAvatarUrl(user.user_metadata?.avatar_url || '');
+        }
       }
     } catch (error) {
       console.error("Error fetching profile:", error);

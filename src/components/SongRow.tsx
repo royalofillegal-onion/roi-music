@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { Song } from '@/data/songs';
 import { usePlayer } from '@/context/PlayerContext';
 import { Play, Pause, Heart, Plus, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { showNotification } from '@/utils/notificationUtils';
+import AddToPlaylistDialog from '@/components/playlist/AddToPlaylistDialog';
 
 interface SongRowProps {
   song: Song;
@@ -42,7 +44,7 @@ const SongRow = ({ song, index, showAddToPlaylist = false, onAddToPlaylist }: So
         
         <div className="relative">
           <img 
-            src={song.image} 
+            src={song.imageUrl} 
             alt={song.title}
             className="w-12 h-12 rounded object-cover"
           />
@@ -74,16 +76,7 @@ const SongRow = ({ song, index, showAddToPlaylist = false, onAddToPlaylist }: So
           <Heart className="h-4 w-4" />
         </Button>
         
-        {showAddToPlaylist && onAddToPlaylist && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onAddToPlaylist(song)}
-            className="opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        )}
+        <AddToPlaylistDialog song={song} />
         
         <Button
           variant="ghost"

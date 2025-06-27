@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { playlists } from "@/data/playlists";
 import { supabase } from "@/integrations/supabase/client";
 import ShareSong from "@/components/ShareSong";
+import QuickAddToPlaylist from "@/components/QuickAddToPlaylist";
 
 interface SongCardProps {
   song: Song;
@@ -121,7 +122,7 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
   return (
     <div 
       className={cn(
-        "flex flex-col w-full aspect-square group transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-md cursor-pointer",
+        "flex flex-col w-full aspect-square group transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-md cursor-pointer relative",
         className
       )}
       onClick={handlePlay}
@@ -154,6 +155,12 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
         <ShareSong 
           song={song} 
           className="absolute top-2 left-2 p-2 rounded-full bg-black/50 hover:bg-black/70 opacity-0 group-hover:opacity-100" 
+        />
+
+        {/* Quick Add to Playlist - Bottom right corner */}
+        <QuickAddToPlaylist 
+          song={song}
+          className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
         />
       </div>
       <div className="mt-1 flex items-start justify-between">
