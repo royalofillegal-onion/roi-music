@@ -1,64 +1,95 @@
 
+import { Suspense, lazy, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { PlayerProvider } from "@/context/PlayerContext";
-import Index from "./Pages/Index";
-import Search from "./Pages/Search";
-import LikedSongs from "./Pages/LikedSongs";
-import Playlists from "./Pages/Playlists";
-import PlaylistView from "./Pages/PlaylistView";
-import Artists from "./Pages/Artists";
-import Settings from "./Pages/Settings";
-import Auth from "./Pages/Auth";
-import UserSettings from "./Pages/UserSettings";
-import Live from "./Pages/Live";
-import Admin from "./Pages/Admin";
-import AdminLogin from "./Pages/AdminLogin";
-import AdminLive from "./Pages/AdminLive";
-import Feedback from "./Pages/Feedback";
-import TermsAndConditions from "./Pages/TermsAndConditions";
-import NotFound from "./Pages/NotFound";
-import SharedSong from "./Pages/SharedSong";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { PlayerProvider } from "./context/PlayerContext";
+import { AdminProvider } from "./context/AdminContext";
+import { LiveAdminProvider } from "./context/LiveAdminContext";
+import Navbar from "./components/Navbar";
+import Player from "./components/Player";
+import SplashScreen from "./components/SplashScreen";
+
+// Lazy load pages
+const Index = lazy(() => import("./Pages/Index"));
+const Search = lazy(() => import("./Pages/Search"));
+const PlaylistView = lazy(() => import("./Pages/PlaylistView"));
+const Playlists = lazy(() => import("./Pages/Playlists"));
+const LikedSongs = lazy(() => import("./Pages/LikedSongs"));
+const Artists = lazy(() => import("./Pages/Artists"));
+const Live = lazy(() => import("./Pages/Live"));
+const Auth = lazy(() => import("./Pages/Auth"));
+const Settings = lazy(() => import("./Pages/Settings"));
+const UserSettings = lazy(() => import("./Pages/UserSettings"));
+const Feedback = lazy(() => import("./Pages/Feedback"));
+const TermsAndConditions = lazy(() => import("./Pages/TermsAndConditions"));
+const Admin = lazy(() => import("./Pages/Admin"));
+const AdminLogin = lazy(() => import("./Pages/AdminLogin"));
+const AdminLive = lazy(() => import("./Pages/AdminLive"));
+const SharedSong = lazy(() => import("./Pages/SharedSong"));
+const NotFound = lazy(() => import("./Pages/NotFound"));
 
 const queryClient = new QueryClient();
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  const handleSplashFinish = () => {
+    setShowSplash(false);
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <BrowserRouter>
-          <PlayerProvider>
-            <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/liked" element={<LikedSongs />} />
-                <Route path="/playlists" element={<Playlists />} />
-                <Route path="/playlist/:id" element={<PlaylistView />} />
-                <Route path="/artists" element={<Artists />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/user-settings" element={<UserSettings />} />
-                <Route path="/live" element={<Live />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin-login" element={<AdminLogin />} />
-                <Route path="/admin-live" element={<AdminLive />} />
-                <Route path="/feedback" element={<Feedback />} />
-                <Route path="/terms" element={<TermsAndConditions />} />
-                <Route path="/share/:hashCode" element={<SharedSong />} />
-                <Route path="/s/:hashCode" element={<SharedSong />} />
-                <Route path="/song/:hashCode" element={<SharedSong />} />
-                <Route path="/shared/:hashCode" element={<SharedSong />} />
-                <Route path="/music/:hashCode" element={<SharedSong />} />
-                <Route path="/track/:hashCode" element={<SharedSong />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </div>
-            <Toaster />
-          </PlayerProvider>
-        </BrowserRouter>
+        <PlayerProvider>
+          <BrowserRouter>
+            <AdminProvider>
+              <LiveAdminProvider>
+                <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+                  {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+                  <Navbar />
+                  <main className="flex-1">
+                    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/search" element={<Search />} />
+                        <Route path="/playlists" element={<Playlists />} />
+                        <Route path="/playlist/:id" element={<PlaylistView />} />
+                        <Route path="/liked" element={<LikedSongs />} />
+                        <Route path="/artists" element={<Artists />} />
+                        <Route path="/live" element={<Live />} />
+                        <Route path="/auth" element={<Auth />} />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/user-settings" element={<UserSettings />} />
+                        <Route path="/feedback" element={<Feedback />} />
+                        <Route path="/terms" element={<TermsAndConditions />} />
+                        <Route path="/admin" element={<Admin />} />
+                        <Route path="/admin/login" element={<AdminLogin />} />
+                        <Route path="/admin/live/royal" element={<AdminLive />} />
+                        
+                        {/* Enhanced song sharing routes */}
+                        <Route path="/share/:hashCode" element={<SharedSong />} />
+                        <Route path="/song/:songId" element={<SharedSong />} />
+                        <Route path="/s/:hashCode" element={<SharedSong />} />
+                        
+                        {/* Fallback routes for better sharing compatibility */}
+                        <Route path="/shared/:hashCode" element={<SharedSong />} />
+                        <Route path="/music/:hashCode" element={<SharedSong />} />
+                        <Route path="/track/:hashCode" element={<SharedSong />} />
+                        
+                        {/* Catch-all route */}
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Suspense>
+                  </main>
+                  <Player />
+                </div>
+                <Toaster />
+              </LiveAdminProvider>
+            </AdminProvider>
+          </BrowserRouter>
+        </PlayerProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
