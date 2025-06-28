@@ -68,12 +68,10 @@ function App() {
                         <Route path="/admin/login" element={<AdminLogin />} />
                         <Route path="/admin/live/royal" element={<AdminLive />} />
                         
-                        {/* Enhanced song sharing routes */}
+                        {/* Enhanced song sharing routes for universal accessibility */}
                         <Route path="/share/:hashCode" element={<SharedSong />} />
                         <Route path="/song/:songId" element={<SharedSong />} />
                         <Route path="/s/:hashCode" element={<SharedSong />} />
-                        
-                        {/* Fallback routes for better sharing compatibility */}
                         <Route path="/shared/:hashCode" element={<SharedSong />} />
                         <Route path="/music/:hashCode" element={<SharedSong />} />
                         <Route path="/track/:hashCode" element={<SharedSong />} />

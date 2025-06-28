@@ -11,13 +11,19 @@ import { toast } from 'sonner';
 
 interface CreatePlaylistDialogProps {
   onPlaylistCreated: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-const CreatePlaylistDialog = ({ onPlaylistCreated }: CreatePlaylistDialogProps) => {
-  const [open, setOpen] = useState(false);
+const CreatePlaylistDialog = ({ onPlaylistCreated, open, onOpenChange }: CreatePlaylistDialogProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+
+  // Use external state if provided, otherwise use internal state
+  const isOpen = open !== undefined ? open : internalOpen;
+  const setIsOpen = onOpenChange || setInternalOpen;
 
   const handleCreatePlaylist = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +56,7 @@ const CreatePlaylistDialog = ({ onPlaylistCreated }: CreatePlaylistDialogProps) 
       toast.success('Playlist created successfully');
       setName('');
       setDescription('');
-      setOpen(false);
+      setIsOpen(false);
       onPlaylistCreated();
     } catch (error) {
       console.error('Error creating playlist:', error);
@@ -61,7 +67,7 @@ const CreatePlaylistDialog = ({ onPlaylistCreated }: CreatePlaylistDialogProps) 
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="bg-music-accent hover:bg-music-accent/90 text-black">
           <Plus className="h-4 w-4 mr-2" />
@@ -105,7 +111,7 @@ const CreatePlaylistDialog = ({ onPlaylistCreated }: CreatePlaylistDialogProps) 
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => setIsOpen(false)}
               disabled={isCreating}
             >
               Cancel
