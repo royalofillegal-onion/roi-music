@@ -1,0 +1,24 @@
+
+{
+  "name": "RoyalStar Music - Pro Advanced Edition",
+  "short_name": "RoyalStar Music",
+  "description": "Pro Advanced Music Platform with Offline Support",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "categories": ["music", "entertainment"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
