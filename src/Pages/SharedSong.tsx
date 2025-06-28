@@ -17,6 +17,7 @@ const SharedSong = () => {
   const [song, setSong] = useState<Song | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
 
   // Extract hash code from different possible URL patterns
   const hashCode = params.hashCode || params.songId;
@@ -55,14 +56,15 @@ const SharedSong = () => {
         setSong(foundSong);
         setIsLoading(false);
         
-        // Auto-play the song after a short delay
-        setTimeout(() => {
+        // Auto-play the song immediately when found
+        if (!hasAutoPlayed) {
           console.log('🎵 Auto-playing shared song:', foundSong.title);
           playSong(foundSong);
+          setHasAutoPlayed(true);
           toast.success(`Now playing: ${foundSong.title}`, {
-            description: `By ${foundSong.artist} - Shared song started`
+            description: `By ${foundSong.artist} - Shared song started automatically`
           });
-        }, 1000);
+        }
 
       } catch (error) {
         console.error('💥 Error loading shared song:', error);
@@ -72,12 +74,28 @@ const SharedSong = () => {
     };
 
     loadSharedSong();
-  }, [hashCode, playSong]);
+  }, [hashCode, playSong, hasAutoPlayed]);
 
   useEffect(() => {
     if (song) {
-      // Update page metadata
+      // Update page metadata for better sharing
       document.title = `${song.title} by ${song.artist} - RoyalStar Music`;
+      
+      // Add meta tags for social sharing
+      const updateMetaTag = (property: string, content: string) => {
+        let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('property', property);
+          document.head.appendChild(meta);
+        }
+        meta.content = content;
+      };
+
+      updateMetaTag('og:title', `${song.title} - ${song.artist}`);
+      updateMetaTag('og:description', `Listen to ${song.title} by ${song.artist} on RoyalStar Music`);
+      updateMetaTag('og:image', song.imageUrl);
+      updateMetaTag('og:url', window.location.href);
       
       // Update liked state
       setIsLikedState(isLiked(song.id));
@@ -118,8 +136,8 @@ const SharedSong = () => {
       <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16 flex flex-col items-center justify-center min-h-screen">
         <div className="text-center">
           <Loader2 className="h-16 w-16 text-green-400 mx-auto mb-4 animate-spin" />
-          <h1 className="text-2xl font-bold mb-2">Loading Shared Song...</h1>
-          <p className="text-gray-400 mb-2">Finding your music...</p>
+          <h1 className="text-2xl font-bold mb-2">Loading Your Music...</h1>
+          <p className="text-gray-400 mb-2">Preparing to play automatically...</p>
           <div className="bg-gray-800/50 rounded-lg p-3 mt-4">
             <p className="text-gray-500 text-xs">Song Hash: {hashCode}</p>
             <p className="text-gray-500 text-xs">Platform: {window.location.host}</p>
@@ -203,12 +221,12 @@ const SharedSong = () => {
         <div className="flex items-center justify-center space-x-2 text-green-400 mb-6">
           <Play className="h-5 w-5" />
           <span>
-            {isCurrentlyPlaying ? 'Now Playing' : 'Ready to Play'}
+            {isCurrentlyPlaying ? 'Now Playing Automatically' : 'Auto-Play Ready'}
           </span>
         </div>
         
         <p className="text-gray-400 text-sm mb-8">
-          🎵 This song was shared with you on RoyalStar Music
+          🎵 This song was shared with you and will play automatically
         </p>
 
         {/* Action Buttons */}
@@ -218,7 +236,7 @@ const SharedSong = () => {
             className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2"
           >
             <Play className="h-5 w-5" />
-            <span>{isCurrentlyPlaying ? 'Playing' : 'Play Now'}</span>
+            <span>{isCurrentlyPlaying ? 'Playing' : 'Play Again'}</span>
           </Button>
           
           <Button
@@ -257,7 +275,7 @@ const SharedSong = () => {
           </div>
           <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-700">
             <p className="text-xs text-gray-500">
-              ✅ Works on all platforms
+              ✅ Auto-plays when shared
             </p>
             <div className="flex items-center text-xs text-gray-500">
               <ExternalLink className="h-3 w-3 mr-1" />

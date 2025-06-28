@@ -10,6 +10,7 @@ import { LiveAdminProvider } from "./context/LiveAdminContext";
 import Navbar from "./components/Navbar";
 import Player from "./components/Player";
 import SplashScreen from "./components/SplashScreen";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Lazy load pages
 const Index = lazy(() => import("./Pages/Index"));
@@ -30,7 +31,14 @@ const AdminLive = lazy(() => import("./Pages/AdminLive"));
 const SharedSong = lazy(() => import("./Pages/SharedSong"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -39,57 +47,68 @@ function App() {
     setShowSplash(false);
   };
 
+  const LoadingFallback = () => (
+    <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
+        <p>Loading RoyalStar Music...</p>
+      </div>
+    </div>
+  );
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <PlayerProvider>
-          <BrowserRouter>
-            <AdminProvider>
-              <LiveAdminProvider>
-                <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-                  {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-                  <Navbar />
-                  <main className="flex-1">
-                    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/search" element={<Search />} />
-                        <Route path="/playlists" element={<Playlists />} />
-                        <Route path="/playlist/:id" element={<PlaylistView />} />
-                        <Route path="/liked" element={<LikedSongs />} />
-                        <Route path="/artists" element={<Artists />} />
-                        <Route path="/live" element={<Live />} />
-                        <Route path="/auth" element={<Auth />} />
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="/user-settings" element={<UserSettings />} />
-                        <Route path="/feedback" element={<Feedback />} />
-                        <Route path="/terms" element={<TermsAndConditions />} />
-                        <Route path="/admin" element={<Admin />} />
-                        <Route path="/admin/login" element={<AdminLogin />} />
-                        <Route path="/admin/live/royal" element={<AdminLive />} />
-                        
-                        {/* Enhanced song sharing routes for universal accessibility */}
-                        <Route path="/share/:hashCode" element={<SharedSong />} />
-                        <Route path="/song/:songId" element={<SharedSong />} />
-                        <Route path="/s/:hashCode" element={<SharedSong />} />
-                        <Route path="/shared/:hashCode" element={<SharedSong />} />
-                        <Route path="/music/:hashCode" element={<SharedSong />} />
-                        <Route path="/track/:hashCode" element={<SharedSong />} />
-                        
-                        {/* Catch-all route */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </Suspense>
-                  </main>
-                  <Player />
-                </div>
-                <Toaster />
-              </LiveAdminProvider>
-            </AdminProvider>
-          </BrowserRouter>
-        </PlayerProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <PlayerProvider>
+            <BrowserRouter>
+              <AdminProvider>
+                <LiveAdminProvider>
+                  <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+                    {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+                    <Navbar />
+                    <main className="flex-1">
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Routes>
+                          <Route path="/" element={<Index />} />
+                          <Route path="/search" element={<Search />} />
+                          <Route path="/playlists" element={<Playlists />} />
+                          <Route path="/playlist/:id" element={<PlaylistView />} />
+                          <Route path="/liked" element={<LikedSongs />} />
+                          <Route path="/artists" element={<Artists />} />
+                          <Route path="/live" element={<Live />} />
+                          <Route path="/auth" element={<Auth />} />
+                          <Route path="/settings" element={<Settings />} />
+                          <Route path="/user-settings" element={<UserSettings />} />
+                          <Route path="/feedback" element={<Feedback />} />
+                          <Route path="/terms" element={<TermsAndConditions />} />
+                          <Route path="/admin" element={<Admin />} />
+                          <Route path="/admin/login" element={<AdminLogin />} />
+                          <Route path="/admin/live/royal" element={<AdminLive />} />
+                          
+                          {/* Enhanced song sharing routes for universal accessibility */}
+                          <Route path="/share/:hashCode" element={<SharedSong />} />
+                          <Route path="/song/:songId" element={<SharedSong />} />
+                          <Route path="/s/:hashCode" element={<SharedSong />} />
+                          <Route path="/shared/:hashCode" element={<SharedSong />} />
+                          <Route path="/music/:hashCode" element={<SharedSong />} />
+                          <Route path="/track/:hashCode" element={<SharedSong />} />
+                          
+                          {/* Catch-all route */}
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </Suspense>
+                    </main>
+                    <Player />
+                  </div>
+                  <Toaster />
+                </LiveAdminProvider>
+              </AdminProvider>
+            </BrowserRouter>
+          </PlayerProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
