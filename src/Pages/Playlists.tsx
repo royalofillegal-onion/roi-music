@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Play, Heart, MoreHorizontal, Star, Music } from "lucide-react";
 import PlaylistCard from "@/components/PlaylistCard";
-import { CreatePlaylistDialog } from "@/components/playlist/CreatePlaylistDialog";
+import CreatePlaylistDialog from "@/components/playlist/CreatePlaylistDialog";
 import { usePlayer } from "@/context/PlayerContext";
 import { playlists } from "@/data/playlists";
 import { getUserPlaylists } from "@/data/playlists";
