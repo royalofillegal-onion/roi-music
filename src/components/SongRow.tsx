@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { Song } from '@/data/songs';
 import { usePlayer } from '@/context/PlayerContext';
-import { Play, Pause, Heart, Plus, Share2 } from 'lucide-react';
+import { Play, Pause, Heart, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { showNotification } from '@/utils/notificationUtils';
 import AddToPlaylistDialog from '@/components/playlist/AddToPlaylistDialog';
+import ShareSong from '@/components/ShareSong';
 
 interface SongRowProps {
   song: Song;
@@ -31,11 +32,6 @@ const SongRow = ({ song, index, showAddToPlaylist = false, onAddToPlaylist }: So
   const handleLike = () => {
     // Only show like notification, suppress any errors
     showNotification.songLiked(song.title);
-  };
-
-  const handleShare = () => {
-    // Suppress share notifications to reduce noise
-    showNotification.suppressError('Share functionality');
   };
 
   return (
@@ -86,14 +82,10 @@ const SongRow = ({ song, index, showAddToPlaylist = false, onAddToPlaylist }: So
           <Plus className="h-4 w-4" />
         </Button>
         
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleShare}
-          className="opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <Share2 className="h-4 w-4" />
-        </Button>
+        <ShareSong 
+          song={song} 
+          className="opacity-0 group-hover:opacity-100 transition-opacity" 
+        />
         
         <span className="text-xs text-gray-400">
           {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
