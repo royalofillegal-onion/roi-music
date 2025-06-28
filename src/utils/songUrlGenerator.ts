@@ -22,42 +22,6 @@ export class SongUrlGenerator {
   }
 
   /**
-   * Get platform information for debugging and display
-   */
-  static getPlatformInfo() {
-    if (typeof window === 'undefined') {
-      return {
-        platform: 'Server',
-        hostname: 'unknown',
-        isSecure: false
-      };
-    }
-
-    const hostname = window.location.hostname;
-    let platform = 'Unknown';
-    
-    if (hostname.includes('vercel.app')) {
-      platform = 'Vercel';
-    } else if (hostname.includes('netlify.app')) {
-      platform = 'Netlify';
-    } else if (hostname.includes('lovable.app')) {
-      platform = 'Lovable';
-    } else if (hostname.includes('github.io')) {
-      platform = 'GitHub Pages';
-    } else if (hostname === 'localhost') {
-      platform = 'Local Development';
-    } else {
-      platform = 'Custom Domain';
-    }
-
-    return {
-      platform,
-      hostname,
-      isSecure: window.location.protocol === 'https:'
-    };
-  }
-
-  /**
    * Generate a simple, deterministic hash code for a song
    * This ensures the same song always gets the same hash across all platforms
    */
@@ -124,26 +88,6 @@ export class SongUrlGenerator {
 
     console.log(`❌ No song found for hash: ${hashCode}`);
     return null;
-  }
-
-  /**
-   * Increment click count for analytics (placeholder - could be implemented with database)
-   */
-  static async incrementClickCount(hashCode: string): Promise<void> {
-    try {
-      // This is a placeholder for analytics tracking
-      // In a real app, this would update a database
-      console.log(`📊 Click tracked for hash: ${hashCode}`);
-      
-      // Store in localStorage for basic tracking
-      if (typeof window !== 'undefined') {
-        const clicks = JSON.parse(localStorage.getItem('song_clicks') || '{}');
-        clicks[hashCode] = (clicks[hashCode] || 0) + 1;
-        localStorage.setItem('song_clicks', JSON.stringify(clicks));
-      }
-    } catch (error) {
-      console.error('Error tracking click:', error);
-    }
   }
 
   static async getSongUrlData(song: Song): Promise<SongUrlData> {

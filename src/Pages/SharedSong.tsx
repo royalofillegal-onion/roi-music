@@ -10,7 +10,7 @@ import { SongUrlGenerator } from '@/utils/songUrlGenerator';
 import { Song } from '@/data/songs';
 
 const SharedSong = () => {
-  const { hashCode } = useParams<{ hashCode?: string }>();
+  const params = useParams();
   const { playSong, currentSong, isPlaying, toggleLikeSong, isLiked } = usePlayer();
   const navigate = useNavigate();
   const [isLikedState, setIsLikedState] = useState(false);
@@ -18,9 +18,13 @@ const SharedSong = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Extract hash code from different possible URL patterns
+  const hashCode = params.hashCode || params.songId;
+
   useEffect(() => {
     console.log('🔍 SharedSong component mounted');
-    console.log('🔑 Hash code from URL:', hashCode);
+    console.log('📍 URL params:', params);
+    console.log('🔑 Extracted hashCode:', hashCode);
     console.log('🌐 Current URL:', window.location.href);
     
     const loadSharedSong = async () => {
@@ -51,16 +55,6 @@ const SharedSong = () => {
         setSong(foundSong);
         setIsLoading(false);
         
-        // Update page metadata
-        document.title = `${foundSong.title} by ${foundSong.artist} - RoyalStar Music`;
-        
-        // Increment click count for analytics
-        try {
-          await SongUrlGenerator.incrementClickCount(hashCode);
-        } catch (clickError) {
-          console.log('Could not track click:', clickError);
-        }
-        
         // Auto-play the song after a short delay
         setTimeout(() => {
           console.log('🎵 Auto-playing shared song:', foundSong.title);
@@ -82,6 +76,9 @@ const SharedSong = () => {
 
   useEffect(() => {
     if (song) {
+      // Update page metadata
+      document.title = `${song.title} by ${song.artist} - RoyalStar Music`;
+      
       // Update liked state
       setIsLikedState(isLiked(song.id));
     }
