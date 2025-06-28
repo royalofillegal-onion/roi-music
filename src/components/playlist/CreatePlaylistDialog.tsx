@@ -1,21 +1,20 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2 } from 'lucide-react';
+import { Plus, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface CreatePlaylistDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   onPlaylistCreated: () => void;
 }
 
-const CreatePlaylistDialog = ({ open, onOpenChange, onPlaylistCreated }: CreatePlaylistDialogProps) => {
+const CreatePlaylistDialog = ({ onPlaylistCreated }: CreatePlaylistDialogProps) => {
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isCreating, setIsCreating] = useState(false);
@@ -51,7 +50,7 @@ const CreatePlaylistDialog = ({ open, onOpenChange, onPlaylistCreated }: CreateP
       toast.success('Playlist created successfully');
       setName('');
       setDescription('');
-      onOpenChange(false);
+      setOpen(false);
       onPlaylistCreated();
     } catch (error) {
       console.error('Error creating playlist:', error);
@@ -62,7 +61,14 @@ const CreatePlaylistDialog = ({ open, onOpenChange, onPlaylistCreated }: CreateP
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>      
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="bg-music-accent hover:bg-music-accent/90 text-black">
+          <Plus className="h-4 w-4 mr-2" />
+          Create Playlist
+        </Button>
+      </DialogTrigger>
+      
       <DialogContent className="bg-gray-900 border-gray-800">
         <DialogHeader>
           <DialogTitle>Create New Playlist</DialogTitle>
@@ -99,7 +105,7 @@ const CreatePlaylistDialog = ({ open, onOpenChange, onPlaylistCreated }: CreateP
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => setOpen(false)}
               disabled={isCreating}
             >
               Cancel
