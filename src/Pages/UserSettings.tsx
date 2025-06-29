@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Save, Upload } from "lucide-react";
+import { Loader2, Save, Upload, Camera } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 const UserSettings = () => {
@@ -249,36 +249,50 @@ const UserSettings = () => {
   }
 
   return (
-    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
-      <h1 className="text-3xl font-bold mb-6 mt-2">User Settings</h1>
+    <div className="pt-4 md:pt-6 pb-20 md:pb-32 lg:pb-40 px-3 md:px-4 lg:px-8 md:ml-16">
+      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-2">User Settings</h1>
       
-      <Tabs defaultValue="profile" className="w-full max-w-3xl">
-        <TabsList className="mb-6">
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="preferences">Preferences</TabsTrigger>
-          <TabsTrigger value="account">Account</TabsTrigger>
+      <Tabs defaultValue="profile" className="w-full max-w-4xl">
+        <TabsList className="mb-4 md:mb-6 w-full md:w-auto">
+          <TabsTrigger value="profile" className="text-xs md:text-sm">Profile</TabsTrigger>
+          <TabsTrigger value="preferences" className="text-xs md:text-sm">Preferences</TabsTrigger>
+          <TabsTrigger value="account" className="text-xs md:text-sm">Account</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="profile" className="space-y-6">
-          <div className="bg-gray-900/50 rounded-lg p-6 space-y-6">
-            <h2 className="text-xl font-medium">Profile Information</h2>
+        <TabsContent value="profile" className="space-y-4 md:space-y-6">
+          <div className="bg-gray-900/50 rounded-lg p-4 md:p-6 space-y-4 md:space-y-6">
+            <h2 className="text-lg md:text-xl font-medium">Profile Information</h2>
             <Separator className="bg-gray-800" />
             
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="flex flex-col items-center space-y-4">
-                <Avatar className="h-32 w-32">
-                  {previewUrl ? (
-                    <AvatarImage src={previewUrl} alt={name} />
-                  ) : (
-                    <AvatarFallback className="bg-music-accent text-black text-3xl">
-                      {getInitials(name || "User")}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
+            <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+              <div className="flex flex-col items-center space-y-3 md:space-y-4">
+                <div className="relative">
+                  <Avatar className="h-24 w-24 md:h-32 md:w-32">
+                    {uploading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full z-10">
+                        <Loader2 className="h-6 w-6 animate-spin text-white" />
+                      </div>
+                    )}
+                    {previewUrl ? (
+                      <AvatarImage src={previewUrl} alt={name} />
+                    ) : (
+                      <AvatarFallback className="bg-music-accent text-black text-2xl md:text-3xl">
+                        {getInitials(name || "User")}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <button
+                    onClick={triggerFileInput}
+                    disabled={uploading}
+                    className="absolute -bottom-1 -right-1 bg-music-accent hover:bg-music-accent/90 text-black rounded-full p-2 shadow-lg transition-colors disabled:opacity-50"
+                  >
+                    <Camera className="h-4 w-4" />
+                  </button>
+                </div>
                 
                 <Button 
                   variant="outline" 
-                  className="relative"
+                  className="relative text-xs md:text-sm"
                   onClick={triggerFileInput}
                   disabled={uploading}
                 >
@@ -303,23 +317,23 @@ const UserSettings = () => {
               
               <div className="flex-1 space-y-4">
                 <div>
-                  <Label htmlFor="name">Display Name</Label>
+                  <Label htmlFor="name" className="text-sm md:text-base">Display Name</Label>
                   <Input
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="bg-gray-800 border-gray-700 mt-1"
+                    className="bg-gray-800 border-gray-700 mt-1 text-sm md:text-base"
                   />
                 </div>
                 
                 <div>
-                  <Label>Theme Preference</Label>
+                  <Label className="text-sm md:text-base">Theme Preference</Label>
                   <div className="flex items-center mt-2">
                     <Switch
                       checked={theme === "dark"}
                       onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
                     />
-                    <span className="ml-2">{theme === "dark" ? "Dark mode" : "Light mode"}</span>
+                    <span className="ml-2 text-sm md:text-base">{theme === "dark" ? "Dark mode" : "Light mode"}</span>
                   </div>
                 </div>
               </div>
@@ -329,7 +343,7 @@ const UserSettings = () => {
           <div className="flex justify-end">
             <Button 
               onClick={saveProfile}
-              className="bg-music-accent hover:bg-music-accent/90 text-black"
+              className="bg-music-accent hover:bg-music-accent/90 text-black w-full md:w-auto"
               disabled={saving}
             >
               {saving ? (
