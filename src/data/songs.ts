@@ -2371,7 +2371,7 @@ export const songs: Song[] = [
     "title": "Garuda Gamana Tava",
     "artist": " Madhuri Dasagrandhi, Revathi Mannava, Pallavi Ananthoju",
     "imageUrl": "https://a10.gaanacdn.com/images/albums/48/1639248/crop_480x480_1639248.jpg",
-    "audioUrl": "https://res.cloudinary.com/drjk3ubz8/video/upload/v1749260829/iSongs.info_01_-_Garuda_Gamana_Tava_Maha_Vishnu_Stotram_hy54i6.mp3",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1751168004/garuda-gamana-tava_rxfxen.mp3",
     "duration": 217,
     "album": " Devotional",
     "year": 2025,
