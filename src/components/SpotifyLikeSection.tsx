@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,28 +5,24 @@ import { Play, Clock, TrendingUp, Heart } from 'lucide-react';
 import { usePlayer } from '@/context/PlayerContext';
 import { songs } from '@/data/songs';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { getDailyRotatedSongs, getTimeBasedGreeting } from '@/utils/dailyRotation';
 
 const SpotifyLikeSection = () => {
   const { playSong, recentlyPlayed } = usePlayer();
   const isMobile = useIsMobile();
 
-  // Use actual recently played songs from player context, fallback to first 6 songs
-  const recentSongs = recentlyPlayed.length > 0 ? recentlyPlayed.slice(0, 6) : songs.slice(0, 6);
+  // Use daily rotated songs for quick picks
+  const quickPicks = getDailyRotatedSongs(4);
+  
+  // Use actual recently played songs from player context, fallback to next 6 songs after daily picks
+  const recentSongs = recentlyPlayed.length > 0 ? recentlyPlayed.slice(0, 6) : songs.slice(4, 10);
   const trending = songs.slice(6, 12);
-  const quickPicks = songs.slice(0, 4);
-
-  const timeBasedGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
 
   return (
     <div className="space-y-6 md:space-y-8">
       {/* Greeting and Quick Picks */}
       <div className="space-y-3 md:space-y-4">
-        <h2 className="text-2xl md:text-3xl font-bold">{timeBasedGreeting()}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold">{getTimeBasedGreeting()}</h2>
         {isMobile ? (
           // Mobile: Small square grid layout
           <div className="grid grid-cols-2 gap-2">
