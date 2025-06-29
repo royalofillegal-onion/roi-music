@@ -16,7 +16,7 @@ const UserSettings = () => {
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [theme, setTheme] useState("dark");
+  const [theme, setTheme] = useState("dark");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
   const [uploading, setUploading] = useState(false);
