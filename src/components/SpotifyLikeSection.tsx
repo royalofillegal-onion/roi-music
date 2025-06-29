@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,14 +5,16 @@ import { Play, Clock, TrendingUp, Heart } from 'lucide-react';
 import { usePlayer } from '@/context/PlayerContext';
 import { songs } from '@/data/songs';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSongDisplayCounts } from '@/hooks/useSongDisplayCounts';
 
 const SpotifyLikeSection = () => {
   const { playSong, recentlyPlayed } = usePlayer();
   const isMobile = useIsMobile();
+  const songCounts = useSongDisplayCounts();
 
   // Use actual recently played songs from player context, fallback to first 6 songs
   const recentSongs = recentlyPlayed.length > 0 ? recentlyPlayed.slice(0, 6) : songs.slice(0, 6);
-  const trending = songs.slice(6, 12);
+  const trending = songs.slice(6, 6 + songCounts.trending);
   const quickPicks = songs.slice(0, 4);
 
   const timeBasedGreeting = () => {

@@ -3,14 +3,16 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/context/AdminContext";
-import { LogOut, Music, Plus, Radio, Users } from "lucide-react";
+import { LogOut, Music, Plus, Radio, Users, Settings } from "lucide-react";
 import AdminSongForm from "@/components/admin/AdminSongForm";
+import SongDisplaySettings from "@/components/admin/SongDisplaySettings";
 import { songs, Song } from "@/data/songs";
 
 const Admin = () => {
   const { isAdmin, logout } = useAdmin();
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
+  const [activeTab, setActiveTab] = useState<'songs' | 'display'>('songs');
 
   // Redirect if not admin
   useEffect(() => {
@@ -26,7 +28,7 @@ const Admin = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Admin Panel</h1>
-          <p className="text-gray-400">Manage songs and playlists</p>
+          <p className="text-gray-400">Manage songs, playlists, and display settings</p>
         </div>
         <Button variant="ghost" onClick={logout} className="flex items-center gap-2">
           <LogOut size={16} />
@@ -34,58 +36,86 @@ const Admin = () => {
         </Button>
       </div>
 
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Songs Management</h2>
-          <Button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2">
-            {showForm ? "Cancel" : <><Plus size={16} /> Add New Song</>}
-          </Button>
-        </div>
-
-        {showForm && (
-          <div className="bg-gray-800 rounded-lg p-6 mb-6">
-            <AdminSongForm onComplete={() => setShowForm(false)} />
-          </div>
-        )}
-
-        <div className="bg-gray-800 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-700">
-                <tr>
-                  <th className="py-3 px-4 text-left">Title</th>
-                  <th className="py-3 px-4 text-left">Artist</th>
-                  <th className="py-3 px-4 text-left">Album</th>
-                  <th className="py-3 px-4 text-left">Genre</th>
-                  <th className="py-3 px-4 text-left">Duration</th>
-                  <th className="py-3 px-4 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {songs.map((song) => (
-                  <tr key={song.id} className="border-t border-gray-700 hover:bg-gray-700/50">
-                    <td className="py-3 px-4 flex items-center gap-3">
-                      <div className="h-10 w-10 rounded overflow-hidden flex-shrink-0">
-                        <img src={song.imageUrl} alt={song.title} className="h-full w-full object-cover" />
-                      </div>
-                      {song.title}
-                    </td>
-                    <td className="py-3 px-4">{song.artist}</td>
-                    <td className="py-3 px-4">{song.album || "-"}</td>
-                    <td className="py-3 px-4">{song.genre || "-"}</td>
-                    <td className="py-3 px-4">
-                      {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
-                    </td>
-                    <td className="py-3 px-4">
-                      <Button variant="ghost" size="sm">Edit</Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      {/* Tab Navigation */}
+      <div className="flex gap-2 mb-8">
+        <Button
+          variant={activeTab === 'songs' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('songs')}
+          className="flex items-center gap-2"
+        >
+          <Music size={16} />
+          Songs Management
+        </Button>
+        <Button
+          variant={activeTab === 'display' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('display')}
+          className="flex items-center gap-2"
+        >
+          <Settings size={16} />
+          Display Settings
+        </Button>
       </div>
+
+      {activeTab === 'display' && (
+        <div className="mb-8">
+          <SongDisplaySettings />
+        </div>
+      )}
+
+      {activeTab === 'songs' && (
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Songs Management</h2>
+            <Button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2">
+              {showForm ? "Cancel" : <><Plus size={16} /> Add New Song</>}
+            </Button>
+          </div>
+
+          {showForm && (
+            <div className="bg-gray-800 rounded-lg p-6 mb-6">
+              <AdminSongForm onComplete={() => setShowForm(false)} />
+            </div>
+          )}
+
+          <div className="bg-gray-800 rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-700">
+                  <tr>
+                    <th className="py-3 px-4 text-left">Title</th>
+                    <th className="py-3 px-4 text-left">Artist</th>
+                    <th className="py-3 px-4 text-left">Album</th>
+                    <th className="py-3 px-4 text-left">Genre</th>
+                    <th className="py-3 px-4 text-left">Duration</th>
+                    <th className="py-3 px-4 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {songs.map((song) => (
+                    <tr key={song.id} className="border-t border-gray-700 hover:bg-gray-700/50">
+                      <td className="py-3 px-4 flex items-center gap-3">
+                        <div className="h-10 w-10 rounded overflow-hidden flex-shrink-0">
+                          <img src={song.imageUrl} alt={song.title} className="h-full w-full object-cover" />
+                        </div>
+                        {song.title}
+                      </td>
+                      <td className="py-3 px-4">{song.artist}</td>
+                      <td className="py-3 px-4">{song.album || "-"}</td>
+                      <td className="py-3 px-4">{song.genre || "-"}</td>
+                      <td className="py-3 px-4">
+                        {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
+                      </td>
+                      <td className="py-3 px-4">
+                        <Button variant="ghost" size="sm">Edit</Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
