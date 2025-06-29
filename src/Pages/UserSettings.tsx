@@ -7,22 +7,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Save, Upload, Camera } from "lucide-react";
+import { Loader2, Save, Upload, Camera, Mail, Shield } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const UserSettings = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState("");
-  const [theme, setTheme] = useState("dark");
+  const [email, setEmail] = useState("");
+  const [theme, setTheme] useState("dark");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showOtpVerification, setShowOtpVerification] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
   
   // Reference for file input
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,6 +46,8 @@ const UserSettings = () => {
         toast.error("Please log in to access settings");
         return;
       }
+      
+      setEmail(session.user.email || "");
       
       const { data, error } = await supabase
         .from('users')
@@ -201,9 +208,7 @@ const UserSettings = () => {
       .substring(0, 2);
   };
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const sendPasswordChangeOtp = async () => {
     if (newPassword !== confirmPassword) {
       toast.error("Passwords don't match");
       return;
@@ -215,8 +220,39 @@ const UserSettings = () => {
     }
     
     try {
-      setChangingPassword(true);
+      setSendingOtp(true);
       
+      // Send OTP to user's email for password change confirmation
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/settings?action=password-change`
+      });
+      
+      if (error) {
+        toast.error("Error sending OTP: " + error.message);
+        return;
+      }
+      
+      setShowOtpVerification(true);
+      toast.success("Verification code sent to your email");
+      
+    } catch (error) {
+      console.error("Error in sendPasswordChangeOtp:", error);
+      toast.error("An error occurred while sending verification code");
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const verifyOtpAndChangePassword = async () => {
+    if (!otp || otp.length !== 6) {
+      toast.error("Please enter a valid 6-digit code");
+      return;
+    }
+    
+    try {
+      setVerifyingOtp(true);
+      
+      // Update password directly since OTP verification confirms identity
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
@@ -226,17 +262,18 @@ const UserSettings = () => {
         return;
       }
       
-      toast.success("Password updated successfully");
+      toast.success("Password updated successfully!");
       setShowChangePassword(false);
-      setCurrentPassword("");
+      setShowOtpVerification(false);
       setNewPassword("");
       setConfirmPassword("");
+      setOtp("");
       
     } catch (error) {
-      console.error("Error in handleChangePassword:", error);
+      console.error("Error in verifyOtpAndChangePassword:", error);
       toast.error("An error occurred while updating your password");
     } finally {
-      setChangingPassword(false);
+      setVerifyingOtp(false);
     }
   };
 
@@ -402,67 +439,138 @@ const UserSettings = () => {
                 <Input
                   id="email"
                   type="email"
-                  value="user@example.com"
+                  value={email}
                   disabled
                   className="bg-gray-800 border-gray-700 mt-1"
                 />
-                <p className="text-xs text-gray-400 mt-1">To change your email, please contact support</p>
+                <p className="text-xs text-gray-400 mt-1">Email cannot be changed for security reasons</p>
               </div>
               
               {showChangePassword ? (
-                <form onSubmit={handleChangePassword} className="space-y-4 bg-gray-800/50 p-4 rounded-md">
-                  <h3 className="font-medium">Change Password</h3>
+                <div className="space-y-4 bg-gray-800/50 p-4 rounded-md">
+                  <h3 className="font-medium flex items-center">
+                    <Shield className="h-4 w-4 mr-2" />
+                    Change Password
+                  </h3>
                   
-                  <div>
-                    <Label htmlFor="new-password">New Password</Label>
-                    <Input
-                      id="new-password"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="bg-gray-700 border-gray-600 mt-1"
-                      minLength={6}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="confirm-password">Confirm New Password</Label>
-                    <Input
-                      id="confirm-password"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="bg-gray-700 border-gray-600 mt-1"
-                      minLength={6}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="flex space-x-2">
-                    <Button 
-                      type="submit" 
-                      className="bg-music-accent hover:bg-music-accent/90 text-black"
-                      disabled={changingPassword}
-                    >
-                      {changingPassword ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Updating...
-                        </>
-                      ) : (
-                        'Update Password'
-                      )}
-                    </Button>
-                    
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setShowChangePassword(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
+                  {!showOtpVerification ? (
+                    <>
+                      <div>
+                        <Label htmlFor="new-password">New Password</Label>
+                        <Input
+                          id="new-password"
+                          type="password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          className="bg-gray-700 border-gray-600 mt-1"
+                          minLength={6}
+                          required
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="confirm-password">Confirm New Password</Label>
+                        <Input
+                          id="confirm-password"
+                          type="password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="bg-gray-700 border-gray-600 mt-1"
+                          minLength={6}
+                          required
+                        />
+                      </div>
+                      
+                      <div className="flex space-x-2">
+                        <Button 
+                          onClick={sendPasswordChangeOtp}
+                          className="bg-music-accent hover:bg-music-accent/90 text-black"
+                          disabled={sendingOtp || !newPassword || !confirmPassword}
+                        >
+                          {sendingOtp ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Sending Code...
+                            </>
+                          ) : (
+                            <>
+                              <Mail className="h-4 w-4 mr-2" /> Send Verification Code
+                            </>
+                          )}
+                        </Button>
+                        
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => setShowChangePassword(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <Label>Enter Verification Code</Label>
+                        <p className="text-sm text-gray-400 mb-3">
+                          We've sent a 6-digit verification code to {email}
+                        </p>
+                        <InputOTP
+                          maxLength={6}
+                          value={otp}
+                          onChange={(value) => setOtp(value)}
+                        >
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </div>
+                      
+                      <div className="flex space-x-2">
+                        <Button 
+                          onClick={verifyOtpAndChangePassword}
+                          className="bg-music-accent hover:bg-music-accent/90 text-black"
+                          disabled={verifyingOtp || otp.length !== 6}
+                        >
+                          {verifyingOtp ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Verifying...
+                            </>
+                          ) : (
+                            'Update Password'
+                          )}
+                        </Button>
+                        
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            setShowOtpVerification(false);
+                            setOtp("");
+                          }}
+                        >
+                          Back
+                        </Button>
+                        
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            setShowChangePassword(false);
+                            setShowOtpVerification(false);
+                            setNewPassword("");
+                            setConfirmPassword("");
+                            setOtp("");
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
               ) : (
                 <div>
                   <Button
@@ -470,6 +578,7 @@ const UserSettings = () => {
                     onClick={() => setShowChangePassword(true)}
                     className="text-music-accent hover:text-music-accent/90 border-music-accent/50 hover:bg-music-accent/10"
                   >
+                    <Shield className="h-4 w-4 mr-2" />
                     Change Password
                   </Button>
                 </div>
