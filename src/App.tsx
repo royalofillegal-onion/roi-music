@@ -1,4 +1,3 @@
-
 import { Suspense, lazy, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,7 +21,6 @@ const Artists = lazy(() => import("./Pages/Artists"));
 const Live = lazy(() => import("./Pages/Live"));
 const Auth = lazy(() => import("./Pages/Auth"));
 const Settings = lazy(() => import("./Pages/Settings"));
-const UserSettings = lazy(() => import("./Pages/UserSettings"));
 const Feedback = lazy(() => import("./Pages/Feedback"));
 const TermsAndConditions = lazy(() => import("./Pages/TermsAndConditions"));
 const Admin = lazy(() => import("./Pages/Admin"));
@@ -79,7 +77,6 @@ function App() {
                           <Route path="/live" element={<Live />} />
                           <Route path="/auth" element={<Auth />} />
                           <Route path="/settings" element={<Settings />} />
-                          <Route path="/user-settings" element={<UserSettings />} />
                           <Route path="/feedback" element={<Feedback />} />
                           <Route path="/terms" element={<TermsAndConditions />} />
                           <Route path="/admin" element={<Admin />} />
