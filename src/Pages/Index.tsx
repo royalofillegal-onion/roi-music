@@ -8,29 +8,24 @@ import MusicVisualizer from "@/components/MusicVisualizer";
 import GlowingButton from "@/components/GlowingButton";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
-import VoiceSettings from "@/components/VoiceSettings";
 import { trendingSongs, popularSongs, newReleases } from "@/data/songs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/hooks/useOnboarding";
-import { useSongDisplayCounts } from "@/hooks/useSongDisplayCounts";
 import UserProfile from "@/components/UserProfile";
 import AnimatedHeader from "@/components/AnimatedHeader";
-import { Play, Shuffle, Heart, Volume2 } from "lucide-react";
+import { Play, Shuffle, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { showNotification } from "@/utils/notificationUtils";
-import { VoiceGreetingService } from "@/services/VoiceGreetingService";
 
 const Index = () => {
   const { recentlyPlayed, playSong } = usePlayer();
   const navigate = useNavigate();
   const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
-  const songCounts = useSongDisplayCounts();
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   
   useEffect(() => {
     // Check auth status
@@ -47,22 +42,6 @@ const Index = () => {
     });
     
     return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    // Play voice greeting on first load
-    const playGreeting = async () => {
-      try {
-        // Small delay to ensure page is loaded
-        setTimeout(() => {
-          VoiceGreetingService.playGreeting();
-        }, 1500);
-      } catch (error) {
-        console.error('Error with voice greeting:', error);
-      }
-    };
-
-    playGreeting();
   }, []);
 
   useEffect(() => {
@@ -112,23 +91,6 @@ const Index = () => {
       {/* Floating Music Info Component */}
       <FloatingMusicInfo />
       
-      {/* Voice Settings Toggle */}
-      <div className="fixed top-20 right-4 z-50">
-        <button
-          onClick={() => setShowVoiceSettings(!showVoiceSettings)}
-          className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full border border-gray-600 transition-colors"
-          title="Voice Settings"
-        >
-          <Volume2 className="h-4 w-4 text-gray-400" />
-        </button>
-        
-        {showVoiceSettings && (
-          <div className="absolute right-0 top-12 w-80">
-            <VoiceSettings />
-          </div>
-        )}
-      </div>
-      
       {/* Time-based Banner */}
       {timeBasedBanner && (
         <div className="mb-6 p-4 bg-gradient-to-r from-music-accent/20 to-purple-600/20 rounded-lg border border-music-accent/30">
@@ -176,11 +138,11 @@ const Index = () => {
       {/* Spotify-like main section */}
       <SpotifyLikeSection />
       
-      {/* Original sections with dynamic counts */}
+      {/* Original sections with improved spacing */}
       <div className="mt-12 space-y-8">
         <SliderRow title="Featured Playlists" className="animate-slide-up" style={{animationDelay: "200ms"}}>
           <div className="flex gap-4">
-            {playlists.slice(0, songCounts.playlists).map((playlist) => (
+            {playlists.map((playlist) => (
               <PlaylistCard key={playlist.id} playlist={playlist} className="min-w-[180px] w-[180px]" />
             ))}
           </div>
@@ -188,7 +150,7 @@ const Index = () => {
         
         <SliderRow title="Popular Songs" className="animate-slide-up" style={{animationDelay: "300ms"}}>
           <div className="flex gap-4">
-            {popularSongs.slice(0, songCounts.popular).map((song) => (
+            {popularSongs.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
             ))}
           </div>
@@ -196,7 +158,7 @@ const Index = () => {
         
         <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "400ms"}}>
           <div className="flex gap-4">
-            {newReleases.slice(0, songCounts.newReleases).map((song) => (
+            {newReleases.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
             ))}
           </div>
