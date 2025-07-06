@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Play, Plus, Heart } from "lucide-react";
 import { 
@@ -14,6 +13,7 @@ import { playlists } from "@/data/playlists";
 import { supabase } from "@/integrations/supabase/client";
 import ShareSong from "@/components/ShareSong";
 import QuickAddToPlaylist from "@/components/QuickAddToPlaylist";
+import GlobalLikeSystem from "@/components/GlobalLikeSystem";
 
 interface SongCardProps {
   song: Song;
@@ -69,16 +69,7 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
           <p className="text-gray-400 text-xs truncate">{song.artist}</p>
         </div>
 
-        <button 
-          className={cn(
-            "p-1 rounded-full hover:bg-gray-700/50 transition-all",
-            isLikedState ? "text-red-500" : "text-gray-400 opacity-0 group-hover:opacity-100"
-          )}
-          onClick={handleLike}
-          disabled={isLoadingLike}
-        >
-          <Heart className={cn("h-4 w-4", isLikedState && "fill-current")} />
-        </button>
+        <GlobalLikeSystem song={song} variant="compact" />
 
         <ShareSong song={song} className="ml-1 opacity-0 group-hover:opacity-100" />
 
@@ -141,16 +132,10 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
           </div>
         </div>
 
-        <button 
-          className={cn(
-            "absolute top-2 right-2 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-all",
-            isLikedState ? "text-red-500" : "text-white opacity-0 group-hover:opacity-100"
-          )}
-          onClick={handleLike}
-          disabled={isLoadingLike}
-        >
-          <Heart className={cn("h-4 w-4", isLikedState && "fill-current")} />
-        </button>
+        {/* Global Like System in top right */}
+        <div className="absolute top-2 right-2" onClick={(e) => e.stopPropagation()}>
+          <GlobalLikeSystem song={song} variant="compact" />
+        </div>
 
         <ShareSong 
           song={song} 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +17,8 @@ import {
   BarChart3
 } from 'lucide-react';
 import { toast } from 'sonner';
+import GlobalLikeSystem from '@/components/GlobalLikeSystem';
+import { songs } from '@/data/songs';
 
 interface UserFeedback {
   id: string;
@@ -197,6 +198,9 @@ const OwnerDashboard = () => {
           <TabsTrigger value="feedback" className="data-[state=active]:bg-green-600">
             User Feedback
           </TabsTrigger>
+          <TabsTrigger value="analytics" className="data-[state=active]:bg-green-600">
+            Like Analytics
+          </TabsTrigger>
           <TabsTrigger value="schedule" className="data-[state=active]:bg-green-600">
             Content Schedule
           </TabsTrigger>
@@ -278,6 +282,46 @@ const OwnerDashboard = () => {
                     </div>
                     <p className="text-gray-300 mb-2">{feedback.message}</p>
                     <p className="text-xs text-gray-500">{feedback.timestamp}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          <Card className="bg-gray-800/50 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-green-400 flex items-center gap-2">
+                <Star className="h-5 w-5" />
+                Song Like Analytics
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <p className="text-gray-400 text-sm mb-4">
+                  Track which songs are most popular with global like counts and see who liked them
+                </p>
+                
+                {songs.slice(0, 5).map((song) => (
+                  <div key={song.id} className="border border-gray-700 rounded-lg p-4">
+                    <div className="flex items-center gap-4 mb-4">
+                      <img 
+                        src={song.imageUrl} 
+                        alt={song.title}
+                        className="w-16 h-16 rounded-lg object-cover"
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-white">{song.title}</h4>
+                        <p className="text-gray-400">{song.artist}</p>
+                      </div>
+                    </div>
+                    
+                    <GlobalLikeSystem 
+                      song={song} 
+                      variant="full" 
+                      showLikers={true} 
+                    />
                   </div>
                 ))}
               </div>
