@@ -302,7 +302,7 @@ const OwnerDashboard = () => {
                         <p className="text-gray-400">{song.artist}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-xs">
-                            {song.category || 'General'}
+                            Music
                           </Badge>
                           <span className="text-xs text-gray-500">•</span>
                           <span className="text-xs text-gray-500">
