@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -302,7 +301,7 @@ const OwnerDashboard = () => {
                         <p className="text-gray-400">{song.artist}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-xs">
-                            Music
+                            {song.category || 'Music'}
                           </Badge>
                           <span className="text-xs text-gray-500">•</span>
                           <span className="text-xs text-gray-500">
