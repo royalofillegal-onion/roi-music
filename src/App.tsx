@@ -28,6 +28,8 @@ const AdminLogin = lazy(() => import("./Pages/AdminLogin"));
 const AdminLive = lazy(() => import("./Pages/AdminLive"));
 const SharedSong = lazy(() => import("./Pages/SharedSong"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
+const UserDashboard = lazy(() => import("./Pages/UserDashboard"));
+const OwnerDashboardPage = lazy(() => import("./Pages/OwnerDashboard"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -82,6 +84,10 @@ function App() {
                           <Route path="/admin" element={<Admin />} />
                           <Route path="/admin/login" element={<AdminLogin />} />
                           <Route path="/admin/live/royal" element={<AdminLive />} />
+                          
+                          {/* New dashboard routes */}
+                          <Route path="/dashboard" element={<UserDashboard />} />
+                          <Route path="/owner/dashboard" element={<OwnerDashboardPage />} />
                           
                           {/* Enhanced song sharing routes for universal accessibility */}
                           <Route path="/share/:hashCode" element={<SharedSong />} />
