@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Play, Plus, Heart } from "lucide-react";
 import { 
@@ -69,7 +70,9 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
           <p className="text-gray-400 text-xs truncate">{song.artist}</p>
         </div>
 
-        <GlobalLikeSystem song={song} variant="compact" />
+        <div onClick={(e) => e.stopPropagation()}>
+          <GlobalLikeSystem song={song} variant="compact" />
+        </div>
 
         <ShareSong song={song} className="ml-1 opacity-0 group-hover:opacity-100" />
 
