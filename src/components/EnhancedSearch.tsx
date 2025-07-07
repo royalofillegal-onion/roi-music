@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -32,11 +33,33 @@ const EnhancedSearch = () => {
   const [searchResults, setSearchResults] = useState<Song[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
+  // Show all songs when component loads (no search query)
   useEffect(() => {
-    if (query || selectedCategories.length > 0 || selectedMoods.length > 0) {
-      performSearch();
+    if (!query && selectedCategories.length === 0 && selectedMoods.length === 0) {
+      // Convert all enhanced songs to Song format and combine with original songs
+      const convertedEnhancedSongs: Song[] = enhancedSongs.map(song => ({
+        id: song.id,
+        title: song.title,
+        artist: song.artist,
+        imageUrl: song.imageUrl,
+        audioUrl: song.audioUrl,
+        duration: song.duration,
+        category: song.category,
+        mood: song.mood,
+        tags: song.tags,
+        album: song.album,
+        genre: song.genre
+      }));
+
+      // Combine all songs and remove duplicates
+      const allSongs = [...songs, ...convertedEnhancedSongs];
+      const uniqueResults = allSongs.filter((song, index, self) => 
+        index === self.findIndex(s => s.id === song.id)
+      );
+      
+      setSearchResults(uniqueResults);
     } else {
-      setSearchResults([]);
+      performSearch();
     }
   }, [query, selectedCategories, selectedMoods]);
 
@@ -72,7 +95,7 @@ const EnhancedSearch = () => {
       );
     }
 
-    // Convert enhanced songs to Song format, preserving all original data
+    // Convert enhanced songs to Song format
     const convertedEnhancedResults: Song[] = enhancedResults.map(song => ({
       id: song.id,
       title: song.title,
@@ -83,11 +106,11 @@ const EnhancedSearch = () => {
       category: song.category,
       mood: song.mood,
       tags: song.tags,
-      album: song.album || undefined,
-      genre: song.genre || undefined
+      album: song.album,
+      genre: song.genre
     }));
 
-    // Combine results, prioritizing original songs data when there are duplicates
+    // Combine results and remove duplicates
     const allResults = [...originalResults, ...convertedEnhancedResults];
     const uniqueResults = allResults.filter((song, index, self) => 
       index === self.findIndex(s => s.id === song.id)
@@ -229,21 +252,22 @@ const EnhancedSearch = () => {
       )}
 
       {/* Search Results */}
-      {searchResults.length > 0 && (
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Search Results ({searchResults.length} songs from both collections)
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {searchResults.map((song) => (
-              <SongCard key={song.id} song={song} />
-            ))}
-          </div>
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-4">
+          {query || selectedCategories.length > 0 || selectedMoods.length > 0 
+            ? `Search Results (${searchResults.length} songs found)`
+            : `All Songs (${searchResults.length} songs available)`
+          }
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          {searchResults.map((song) => (
+            <SongCard key={song.id} song={song} />
+          ))}
         </div>
-      )}
+      </div>
 
       {/* No Results */}
-      {(query || selectedCategories.length > 0 || selectedMoods.length > 0) && searchResults.length === 0 && (
+      {searchResults.length === 0 && (query || selectedCategories.length > 0 || selectedMoods.length > 0) && (
         <div className="text-center py-12">
           <Search className="h-16 w-16 text-gray-600 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-white mb-2">No songs found</h3>

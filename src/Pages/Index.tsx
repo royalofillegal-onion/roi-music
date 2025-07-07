@@ -27,8 +27,8 @@ const Index = () => {
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Combine songs from both collections
-  const allSongs = [...songs, ...enhancedSongs.map(song => ({
+  // Combine and convert all songs to uniform format
+  const convertedEnhancedSongs = enhancedSongs.map(song => ({
     id: song.id,
     title: song.title,
     artist: song.artist,
@@ -38,11 +38,12 @@ const Index = () => {
     category: song.category,
     mood: song.mood,
     tags: song.tags,
-    album: song.album || undefined,
-    genre: song.genre || undefined
-  }))];
+    album: song.album,
+    genre: song.genre
+  }));
 
-  // Filter unique songs (remove duplicates by id)
+  // Combine all songs and remove duplicates
+  const allSongs = [...songs, ...convertedEnhancedSongs];
   const uniqueSongs = allSongs.filter((song, index, self) => 
     index === self.findIndex(s => s.id === song.id)
   );
@@ -53,10 +54,26 @@ const Index = () => {
   ).slice(0, 12);
 
   const combinedPopular = uniqueSongs.filter(song => 
-    (song.tags && song.tags.includes('popular')) || song.category === 'love' || song.mood === 'energetic'
+    (song.tags && song.tags.includes('popular')) || 
+    song.category === 'love' || 
+    song.mood === 'energetic' ||
+    song.category === 'party'
   ).slice(0, 12);
 
   const combinedNewReleases = uniqueSongs.slice(-12); // Get the last 12 songs as new releases
+
+  // Additional collections showing songs from enhanced collection
+  const devotionalSongs = uniqueSongs.filter(song => 
+    song.category === 'devotional' || song.category === 'god' || song.mood === 'spiritual'
+  ).slice(0, 8);
+
+  const workoutSongs = uniqueSongs.filter(song => 
+    song.category === 'workout' || (song.tags && song.tags.includes('workout'))
+  ).slice(0, 8);
+
+  const chillSongs = uniqueSongs.filter(song => 
+    song.category === 'chill' || song.mood === 'peaceful'
+  ).slice(0, 8);
 
   useEffect(() => {
     // Check auth status
@@ -191,8 +208,38 @@ const Index = () => {
             ))}
           </div>
         </SliderRow>
+
+        {devotionalSongs.length > 0 && (
+          <SliderRow title={`Devotional & Spiritual (${devotionalSongs.length})`} className="animate-slide-up" style={{animationDelay: "450ms"}}>
+            <div className="flex gap-4">
+              {devotionalSongs.map((song) => (
+                <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
+              ))}
+            </div>
+          </SliderRow>
+        )}
+
+        {workoutSongs.length > 0 && (
+          <SliderRow title={`Workout & Energy (${workoutSongs.length})`} className="animate-slide-up" style={{animationDelay: "475ms"}}>
+            <div className="flex gap-4">
+              {workoutSongs.map((song) => (
+                <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
+              ))}
+            </div>
+          </SliderRow>
+        )}
+
+        {chillSongs.length > 0 && (
+          <SliderRow title={`Chill & Peaceful (${chillSongs.length})`} className="animate-slide-up" style={{animationDelay: "500ms"}}>
+            <div className="flex gap-4">
+              {chillSongs.map((song) => (
+                <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
+              ))}
+            </div>
+          </SliderRow>
+        )}
         
-        <SliderRow title={`New Releases (${combinedNewReleases.length})`} className="animate-slide-up" style={{animationDelay: "500ms"}}>
+        <SliderRow title={`New Releases (${combinedNewReleases.length})`} className="animate-slide-up" style={{animationDelay: "525ms"}}>
           <div className="flex gap-4">
             {combinedNewReleases.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
