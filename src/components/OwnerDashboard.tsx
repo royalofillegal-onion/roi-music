@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,13 +15,9 @@ import {
   Star,
   Plus,
   Settings,
-  BarChart3,
-  Heart,
-  Activity
+  BarChart3
 } from 'lucide-react';
 import { toast } from 'sonner';
-import GlobalLikeSystem from '@/components/GlobalLikeSystem';
-import { songs } from '@/data/songs';
 
 interface UserFeedback {
   id: string;
@@ -44,8 +41,6 @@ interface PlatformStats {
   activeUsers: number;
   totalSongs: number;
   totalPlays: number;
-  totalLikes: number;
-  engagementRate: string;
 }
 
 const OwnerDashboard = () => {
@@ -53,30 +48,28 @@ const OwnerDashboard = () => {
     totalUsers: 1247,
     activeUsers: 892,
     totalSongs: 156,
-    totalPlays: 25891,
-    totalLikes: 3456,
-    engagementRate: '87.2%'
+    totalPlays: 25891
   });
 
   const [feedbacks] = useState<UserFeedback[]>([
     {
       id: '1',
       user: 'MusicLover123',
-      message: 'Amazing platform! Love the new like system and community features.',
+      message: 'Amazing platform! Love the daily rotation feature.',
       timestamp: '2 hours ago',
       rating: 5
     },
     {
       id: '2',
       user: 'RockFan88',
-      message: 'The song discovery is fantastic! Found so many new favorites.',
+      message: 'Could use more rock songs, but overall great!',
       timestamp: '5 hours ago',
       rating: 4
     },
     {
       id: '3',
       user: 'PopQueen',
-      message: 'Love how I can see what others are enjoying without feeling pressured.',
+      message: 'The sharing feature is fantastic!',
       timestamp: '1 day ago',
       rating: 5
     }
@@ -140,8 +133,8 @@ const OwnerDashboard = () => {
         </Button>
       </div>
 
-      {/* Enhanced Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -193,40 +186,11 @@ const OwnerDashboard = () => {
             <p className="text-xs text-green-400 mt-2">↗ +156 today</p>
           </CardContent>
         </Card>
-
-        <Card className="bg-gray-800/50 border-gray-700">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Total Likes</p>
-                <p className="text-2xl font-bold text-white">{stats.totalLikes.toLocaleString()}</p>
-              </div>
-              <Heart className="h-8 w-8 text-red-400" />
-            </div>
-            <p className="text-xs text-green-400 mt-2">↗ +89 today</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-800/50 border-gray-700">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Engagement</p>
-                <p className="text-2xl font-bold text-white">{stats.engagementRate}</p>
-              </div>
-              <Activity className="h-8 w-8 text-cyan-400" />
-            </div>
-            <p className="text-xs text-green-400 mt-2">↗ +2.1% this week</p>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs defaultValue="analytics" className="space-y-6">
+      <Tabs defaultValue="requests" className="space-y-6">
         <TabsList className="bg-gray-800 border-gray-700">
-          <TabsTrigger value="analytics" className="data-[state=active]:bg-green-600">
-            Advanced Analytics
-          </TabsTrigger>
           <TabsTrigger value="requests" className="data-[state=active]:bg-green-600">
             Song Requests
           </TabsTrigger>
@@ -237,92 +201,6 @@ const OwnerDashboard = () => {
             Content Schedule
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="analytics">
-          <Card className="bg-gray-800/50 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-green-400 flex items-center gap-2">
-                <Star className="h-5 w-5" />
-                Advanced Song Analytics & Engagement Insights
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <Card className="bg-gray-700/50 border-gray-600">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Heart className="h-5 w-5 text-red-400" />
-                        <span className="font-semibold text-white">Like Engagement</span>
-                      </div>
-                      <p className="text-2xl font-bold text-red-400">89.2%</p>
-                      <p className="text-xs text-gray-400">Average engagement rate</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-gray-700/50 border-gray-600">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingUp className="h-5 w-5 text-green-400" />
-                        <span className="font-semibold text-white">Trending Factor</span>
-                      </div>
-                      <p className="text-2xl font-bold text-green-400">+347%</p>
-                      <p className="text-xs text-gray-400">Compared to last week</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-gray-700/50 border-gray-600">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Activity className="h-5 w-5 text-blue-400" />
-                        <span className="font-semibold text-white">User Retention</span>
-                      </div>
-                      <p className="text-2xl font-bold text-blue-400">94.7%</p>
-                      <p className="text-xs text-gray-400">Users returning daily</p>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <p className="text-gray-400 text-sm mb-4">
-                  Track detailed engagement metrics, user behavior patterns, and song performance analytics. 
-                  The privacy-focused like system shows engagement without revealing specific counts to users.
-                </p>
-                
-                {songs.slice(0, 5).map((song) => (
-                  <div key={song.id} className="border border-gray-700 rounded-lg p-4">
-                    <div className="flex items-center gap-4 mb-4">
-                      <img 
-                        src={song.imageUrl} 
-                        alt={song.title}
-                        className="w-16 h-16 rounded-lg object-cover"
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-white">{song.title}</h4>
-                        <p className="text-gray-400">{song.artist}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-xs">
-                            {song.category || 'Music'}
-                          </Badge>
-                          <span className="text-xs text-gray-500">•</span>
-                          <span className="text-xs text-gray-500">
-                            {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <GlobalLikeSystem 
-                      song={song} 
-                      variant="full" 
-                      showLikers={true}
-                      showOwnerInsights={true}
-                    />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         <TabsContent value="requests">
           <Card className="bg-gray-800/50 border-gray-700">
@@ -380,7 +258,7 @@ const OwnerDashboard = () => {
             <CardHeader>
               <CardTitle className="text-green-400 flex items-center gap-2">
                 <MessageSquare className="h-5 w-5" />
-                User Feedback & Community Insights
+                User Feedback
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -412,19 +290,17 @@ const OwnerDashboard = () => {
             <CardHeader>
               <CardTitle className="text-green-400 flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
-                Smart Content Scheduling
+                Content Schedule
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
                 <Calendar className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Intelligent Content Management</h3>
-                <p className="text-gray-400 mb-4">
-                  Plan daily rotations, feature trending songs, and optimize engagement based on user behavior patterns
-                </p>
+                <h3 className="text-xl font-semibold text-white mb-2">Schedule Content</h3>
+                <p className="text-gray-400 mb-4">Plan daily rotations, featured songs, and special playlists</p>
                 <Button className="bg-green-600 hover:bg-green-700">
                   <Plus className="h-4 w-4 mr-2" />
-                  Create Smart Schedule
+                  Create Schedule
                 </Button>
               </div>
             </CardContent>
