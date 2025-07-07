@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import SliderRow from "@/components/SliderRow";
 import SongCard from "@/components/SongCard";
@@ -8,7 +7,8 @@ import MusicVisualizer from "@/components/MusicVisualizer";
 import GlowingButton from "@/components/GlowingButton";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
-import { trendingSongs, popularSongs, newReleases } from "@/data/songs";
+import { trendingSongs, popularSongs, newReleases, songs } from "@/data/songs";
+import { enhancedSongs } from "@/data/songsData";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,38 @@ const Index = () => {
   const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+
+  // Combine songs from both collections
+  const allSongs = [...songs, ...enhancedSongs.map(song => ({
+    id: song.id,
+    title: song.title,
+    artist: song.artist,
+    imageUrl: song.imageUrl,
+    audioUrl: song.audioUrl,
+    duration: song.duration,
+    category: song.category,
+    mood: song.mood,
+    tags: song.tags,
+    album: song.album || undefined,
+    genre: song.genre || undefined
+  }))];
+
+  // Filter unique songs (remove duplicates by id)
+  const uniqueSongs = allSongs.filter((song, index, self) => 
+    index === self.findIndex(s => s.id === song.id)
+  );
+
+  // Create enhanced collections from combined songs
+  const combinedTrending = uniqueSongs.filter(song => 
+    song.category === 'trending' || song.tags?.includes('trending')
+  ).slice(0, 12);
+
+  const combinedPopular = uniqueSongs.filter(song => 
+    song.tags?.includes('popular') || song.category === 'love' || song.mood === 'energetic'
+  ).slice(0, 12);
+
+  const combinedNewReleases = uniqueSongs.slice(-12); // Get the last 12 songs as new releases
+
   useEffect(() => {
     // Check auth status
     const checkAuth = async () => {
@@ -67,21 +98,19 @@ const Index = () => {
   }, []);
   
   const shuffleAllSongs = () => {
-    const allSongs = [...trendingSongs, ...popularSongs, ...newReleases];
-    const randomSong = allSongs[Math.floor(Math.random() * allSongs.length)];
+    const randomSong = uniqueSongs[Math.floor(Math.random() * uniqueSongs.length)];
     playSong(randomSong);
     showNotification.nowPlaying(randomSong.title, randomSong.artist);
     showNotification.shuffleMode();
   };
 
   const playTrendingPlaylist = () => {
-    if (trendingSongs.length > 0) {
-      playSong(trendingSongs[0]);
-      showNotification.nowPlaying(trendingSongs[0].title, trendingSongs[0].artist);
+    if (combinedTrending.length > 0) {
+      playSong(combinedTrending[0]);
+      showNotification.nowPlaying(combinedTrending[0].title, combinedTrending[0].artist);
     }
   };
 
-  // Only show onboarding for logged-in users who haven't completed it
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
@@ -113,7 +142,7 @@ const Index = () => {
           className="flex items-center gap-2"
         >
           <Shuffle className="h-4 w-4" />
-          Shuffle All
+          Shuffle All ({uniqueSongs.length} songs)
         </GlowingButton>
         
         <GlowingButton 
@@ -135,10 +164,9 @@ const Index = () => {
         </GlowingButton>
       </div>
       
-      {/* Spotify-like main section */}
       <SpotifyLikeSection />
       
-      {/* Original sections with improved spacing */}
+      {/* Enhanced sections with combined songs */}
       <div className="mt-12 space-y-8">
         <SliderRow title="Featured Playlists" className="animate-slide-up" style={{animationDelay: "200ms"}}>
           <div className="flex gap-4">
@@ -148,24 +176,31 @@ const Index = () => {
           </div>
         </SliderRow>
         
-        <SliderRow title="Popular Songs" className="animate-slide-up" style={{animationDelay: "300ms"}}>
+        <SliderRow title={`Trending Songs (${combinedTrending.length})`} className="animate-slide-up" style={{animationDelay: "300ms"}}>
           <div className="flex gap-4">
-            {popularSongs.map((song) => (
+            {combinedTrending.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
             ))}
           </div>
         </SliderRow>
         
-        <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "400ms"}}>
+        <SliderRow title={`Popular Songs (${combinedPopular.length})`} className="animate-slide-up" style={{animationDelay: "400ms"}}>
           <div className="flex gap-4">
-            {newReleases.map((song) => (
+            {combinedPopular.map((song) => (
+              <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
+            ))}
+          </div>
+        </SliderRow>
+        
+        <SliderRow title={`New Releases (${combinedNewReleases.length})`} className="animate-slide-up" style={{animationDelay: "500ms"}}>
+          <div className="flex gap-4">
+            {combinedNewReleases.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
             ))}
           </div>
         </SliderRow>
       </div>
 
-      {/* Onboarding Flow - Only show for logged-in users */}
       {!onboardingLoading && showOnboarding && (
         <OnboardingFlow onComplete={markOnboardingComplete} />
       )}

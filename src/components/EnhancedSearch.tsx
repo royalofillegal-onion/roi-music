@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { enhancedSongs, searchSongsByQuery as searchEnhancedSongs, searchSongsByCategory as searchEnhancedByCategory } from '@/data/songsData';
+import { enhancedSongs, searchSongsByQuery as searchEnhancedSongs } from '@/data/songsData';
 import { songs, Song } from '@/data/songs';
 import SongCard from '@/components/SongCard';
 
@@ -20,15 +20,9 @@ const searchOriginalSongsByQuery = (query: string): Song[] => {
     song.artist.toLowerCase().includes(lowerQuery) ||
     (song.category && song.category.toLowerCase().includes(lowerQuery)) ||
     (song.mood && song.mood.toLowerCase().includes(lowerQuery)) ||
-    (song.tags && song.tags.some(tag => tag.toLowerCase().includes(lowerQuery)))
-  );
-};
-
-const searchOriginalSongsByCategory = (category: string): Song[] => {
-  return songs.filter(song => 
-    (song.category && song.category.toLowerCase().includes(category.toLowerCase())) ||
-    (song.mood && song.mood.toLowerCase().includes(category.toLowerCase())) ||
-    (song.tags && song.tags.some(tag => tag.toLowerCase().includes(category.toLowerCase())))
+    (song.tags && song.tags.some(tag => tag.toLowerCase().includes(lowerQuery))) ||
+    (song.album && song.album.toLowerCase().includes(lowerQuery)) ||
+    (song.genre && song.genre.toLowerCase().includes(lowerQuery))
   );
 };
 
@@ -79,20 +73,22 @@ const EnhancedSearch = () => {
       );
     }
 
-    // Convert enhanced songs to Song format and combine results
+    // Convert enhanced songs to Song format, preserving all original data
     const convertedEnhancedResults: Song[] = enhancedResults.map(song => ({
       id: song.id,
       title: song.title,
       artist: song.artist,
-      imageUrl: song.imageUrl,
-      audioUrl: song.audioUrl,
+      imageUrl: song.imageUrl, // Preserve original image URL
+      audioUrl: song.audioUrl, // Preserve original audio URL
       duration: song.duration,
       category: song.category,
       mood: song.mood,
-      tags: song.tags
+      tags: song.tags,
+      album: song.album || undefined,
+      genre: song.genre || undefined
     }));
 
-    // Combine and deduplicate results (in case there are duplicates by ID)
+    // Combine results, prioritizing original songs data when there are duplicates
     const allResults = [...originalResults, ...convertedEnhancedResults];
     const uniqueResults = allResults.filter((song, index, self) => 
       index === self.findIndex(s => s.id === song.id)
@@ -132,7 +128,7 @@ const EnhancedSearch = () => {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by song, artist, category, mood, or tags..."
+            placeholder="Search by song, artist, album, genre, category, mood, or tags..."
             className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-400"
           />
         </div>
@@ -237,7 +233,7 @@ const EnhancedSearch = () => {
       {searchResults.length > 0 && (
         <div>
           <h2 className="text-2xl font-bold text-white mb-4">
-            Search Results ({searchResults.length})
+            Search Results ({searchResults.length} songs from both collections)
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {searchResults.map((song) => (

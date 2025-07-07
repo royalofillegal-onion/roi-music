@@ -9,6 +9,8 @@ export interface EnhancedSong {
   category: 'trending' | 'god' | 'sad' | 'love' | 'party' | 'workout' | 'chill' | 'devotional';
   mood: 'happy' | 'sad' | 'energetic' | 'peaceful' | 'romantic' | 'spiritual' | 'motivational';
   tags: string[];
+  album?: string;
+  genre?: string;
 }
 
 export const enhancedSongs: EnhancedSong[] = [
@@ -21,7 +23,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 200,
     category: 'trending',
     mood: 'energetic',
-    tags: ['pop', 'synth', 'dance', 'trending', 'popular']
+    tags: ['pop', 'synth', 'dance', 'trending', 'popular'],
+    album: "After Hours",
+    genre: "Pop"
   },
   {
     id: "2",
@@ -32,7 +36,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 285,
     category: 'sad',
     mood: 'sad',
-    tags: ['ballad', 'emotional', 'heartbreak', 'piano', 'sad']
+    tags: ['ballad', 'emotional', 'heartbreak', 'piano', 'sad'],
+    album: "21",
+    genre: "Pop Ballad"
   },
   {
     id: "3",
@@ -43,7 +49,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 263,
     category: 'love',
     mood: 'romantic',
-    tags: ['romantic', 'wedding', 'acoustic', 'love', 'guitar']
+    tags: ['romantic', 'wedding', 'acoustic', 'love', 'guitar'],
+    album: "÷ (Divide)",
+    genre: "Pop Folk"
   },
   {
     id: "4",
@@ -54,7 +62,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 240,
     category: 'god',
     mood: 'spiritual',
-    tags: ['spiritual', 'hymn', 'worship', 'god', 'traditional']
+    tags: ['spiritual', 'hymn', 'worship', 'god', 'traditional'],
+    album: "Traditional Hymns",
+    genre: "Gospel"
   },
   {
     id: "5",
@@ -65,7 +75,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 270,
     category: 'party',
     mood: 'energetic',
-    tags: ['funk', 'party', 'dance', 'upbeat', 'fun']
+    tags: ['funk', 'party', 'dance', 'upbeat', 'fun'],
+    album: "Uptown Special",
+    genre: "Funk Pop"
   },
   {
     id: "6",
@@ -76,7 +88,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 246,
     category: 'workout',
     mood: 'motivational',
-    tags: ['rock', 'workout', 'motivation', 'energy', 'classic']
+    tags: ['rock', 'workout', 'motivation', 'energy', 'classic'],
+    album: "Eye of the Tiger",
+    genre: "Rock"
   },
   {
     id: "7",
@@ -87,7 +101,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 485,
     category: 'chill',
     mood: 'peaceful',
-    tags: ['ambient', 'relaxing', 'meditation', 'chill', 'peaceful']
+    tags: ['ambient', 'relaxing', 'meditation', 'chill', 'peaceful'],
+    album: "Weightless",
+    genre: "Ambient"
   },
   {
     id: "8",
@@ -98,7 +114,9 @@ export const enhancedSongs: EnhancedSong[] = [
     duration: 290,
     category: 'devotional',
     mood: 'spiritual',
-    tags: ['worship', 'hymn', 'devotional', 'god', 'praise']
+    tags: ['worship', 'hymn', 'devotional', 'god', 'praise'],
+    album: "How Great Thou Art: Gospel Favorites",
+    genre: "Gospel"
   }
 ];
 
@@ -114,9 +132,11 @@ export const searchSongsByQuery = (query: string): EnhancedSong[] => {
   const lowerQuery = query.toLowerCase();
   return enhancedSongs.filter(song =>
     song.title.toLowerCase().includes(lowerQuery) ||
-    song.artist.toLowerCase().includes(lowerQuery) ||
+    song.artist.toLowerCase().includes(lowerQuery) ||  
     song.category.toLowerCase().includes(lowerQuery) ||
     song.mood.toLowerCase().includes(lowerQuery) ||
-    song.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+    song.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
+    (song.album && song.album.toLowerCase().includes(lowerQuery)) ||
+    (song.genre && song.genre.toLowerCase().includes(lowerQuery))
   );
 };
