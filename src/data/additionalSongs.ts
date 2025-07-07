@@ -8,9 +8,7 @@ export interface Song {
   imageUrl: string;
   audioUrl: string;
   duration: number;
-  category?: string;
-  mood?: string;
-  tags?: string[];
+  year?: number;
 }
 
 export const additionalSongs: Song[] = [
@@ -23,9 +21,7 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-1.mp3",
     duration: 245,
-    category: "chill",
-    mood: "relaxed",
-    tags: ["electronic", "ambient", "night"]
+    year: 2023
   },
   {
     id: "add-002",
@@ -36,9 +32,7 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-2.mp3",
     duration: 198,
-    category: "party",
-    mood: "happy",
-    tags: ["pop", "summer", "upbeat"]
+    year: 2023
   },
   {
     id: "add-003",
@@ -49,9 +43,7 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-3.mp3",
     duration: 267,
-    category: "workout",
-    mood: "energetic",
-    tags: ["rock", "adventure", "motivation"]
+    year: 2022
   },
   {
     id: "add-004",
@@ -62,9 +54,7 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-4.mp3",
     duration: 312,
-    category: "chill",
-    mood: "peaceful",
-    tags: ["ambient", "sunset", "meditation"]
+    year: 2023
   },
   {
     id: "add-005",
@@ -75,9 +65,7 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-5.mp3",
     duration: 223,
-    category: "party",
-    mood: "energetic",
-    tags: ["hip-hop", "urban", "night"]
+    year: 2023
   },
   {
     id: "add-006",
@@ -88,9 +76,7 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-6.mp3",
     duration: 456,
-    category: "sad",
-    mood: "melancholic",
-    tags: ["classical", "emotional", "orchestral"]
+    year: 2022
   },
   {
     id: "add-007",
@@ -101,9 +87,7 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-7.mp3",
     duration: 389,
-    category: "devotional",
-    mood: "spiritual",
-    tags: ["devotional", "sacred", "prayer"]
+    year: 2023
   },
   {
     id: "add-008",
@@ -114,8 +98,6 @@ export const additionalSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-8.mp3",
     duration: 234,
-    category: "love",
-    mood: "romantic",
-    tags: ["r&b", "love", "romantic"]
+    year: 2023
   }
 ];

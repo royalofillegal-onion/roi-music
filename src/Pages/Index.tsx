@@ -137,7 +137,7 @@ const Index = () => {
       {/* Spotify-like main section */}
       <SpotifyLikeSection />
       
-      {/* Original sections with improved spacing */}
+      {/* Original sections with improved spacing - Only showing songs from songs.ts */}
       <div className="mt-12 space-y-8">
         <SliderRow title="Featured Playlists" className="animate-slide-up" style={{animationDelay: "200ms"}}>
           <div className="flex gap-4">

@@ -59,16 +59,13 @@ const Search = () => {
     
     const query = searchQuery.toLowerCase();
     
-    // Filter songs from all collections
+    // Filter songs from all collections - only basic properties
     const matchingSongs = uniqueSongs.filter(
       (song) =>
         song.title.toLowerCase().includes(query) ||
         song.artist.toLowerCase().includes(query) ||
         (song.album && song.album.toLowerCase().includes(query)) ||
-        (song.genre && song.genre.toLowerCase().includes(query)) ||
-        (song.category && song.category.toLowerCase().includes(query)) ||
-        (song.mood && song.mood.toLowerCase().includes(query)) ||
-        (song.tags && song.tags.some(tag => tag.toLowerCase().includes(query)))
+        (song.genre && song.genre.toLowerCase().includes(query))
     );
     setFilteredSongs(matchingSongs);
     
