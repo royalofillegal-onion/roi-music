@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -78,8 +77,8 @@ const EnhancedSearch = () => {
       id: song.id,
       title: song.title,
       artist: song.artist,
-      imageUrl: song.imageUrl, // Preserve original image URL
-      audioUrl: song.audioUrl, // Preserve original audio URL
+      imageUrl: song.imageUrl,
+      audioUrl: song.audioUrl,
       duration: song.duration,
       category: song.category,
       mood: song.mood,

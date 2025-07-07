@@ -7,7 +7,7 @@ import MusicVisualizer from "@/components/MusicVisualizer";
 import GlowingButton from "@/components/GlowingButton";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
-import { trendingSongs, popularSongs, newReleases, songs } from "@/data/songs";
+import { songs } from "@/data/songs";
 import { enhancedSongs } from "@/data/songsData";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
@@ -49,11 +49,11 @@ const Index = () => {
 
   // Create enhanced collections from combined songs
   const combinedTrending = uniqueSongs.filter(song => 
-    song.category === 'trending' || song.tags?.includes('trending')
+    song.category === 'trending' || (song.tags && song.tags.includes('trending'))
   ).slice(0, 12);
 
   const combinedPopular = uniqueSongs.filter(song => 
-    song.tags?.includes('popular') || song.category === 'love' || song.mood === 'energetic'
+    (song.tags && song.tags.includes('popular')) || song.category === 'love' || song.mood === 'energetic'
   ).slice(0, 12);
 
   const combinedNewReleases = uniqueSongs.slice(-12); // Get the last 12 songs as new releases
