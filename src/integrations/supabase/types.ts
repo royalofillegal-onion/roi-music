@@ -33,6 +33,30 @@ export type Database = {
         }
         Relationships: []
       }
+      global_likes: {
+        Row: {
+          created_at: string
+          id: string
+          song_id: string
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          song_id: string
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          song_id?: string
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
       liked_songs: {
         Row: {
           created_at: string
@@ -364,14 +388,17 @@ export type Database = {
           approved_date: string | null
           artist: string
           audio_url: string
+          category: string | null
           download_count: number | null
           duration: number
           genre: string | null
           id: string
           image_url: string | null
           lyrics: string | null
+          mood: string | null
           play_count: number | null
           status: string
+          tags: string[] | null
           title: string
           upload_date: string
           uploaded_by: string
@@ -383,14 +410,17 @@ export type Database = {
           approved_date?: string | null
           artist: string
           audio_url: string
+          category?: string | null
           download_count?: number | null
           duration: number
           genre?: string | null
           id?: string
           image_url?: string | null
           lyrics?: string | null
+          mood?: string | null
           play_count?: number | null
           status?: string
+          tags?: string[] | null
           title: string
           upload_date?: string
           uploaded_by: string
@@ -402,14 +432,17 @@ export type Database = {
           approved_date?: string | null
           artist?: string
           audio_url?: string
+          category?: string | null
           download_count?: number | null
           duration?: number
           genre?: string | null
           id?: string
           image_url?: string | null
           lyrics?: string | null
+          mood?: string | null
           play_count?: number | null
           status?: string
+          tags?: string[] | null
           title?: string
           upload_date?: string
           uploaded_by?: string
@@ -575,6 +608,18 @@ export type Database = {
       get_current_time_period: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_song_like_count: {
+        Args: { song_id_param: string }
+        Returns: number
+      }
+      get_song_likers: {
+        Args: { song_id_param: string }
+        Returns: {
+          user_id: string
+          username: string
+          created_at: string
+        }[]
       }
       get_time_based_content: {
         Args: { content_type_param?: string }

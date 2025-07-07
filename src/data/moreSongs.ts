@@ -1,0 +1,121 @@
+
+export interface Song {
+  id: string;
+  title: string;
+  artist: string;
+  album?: string;
+  genre?: string;
+  imageUrl: string;
+  audioUrl: string;
+  duration: number;
+  category?: string;
+  mood?: string;
+  tags?: string[];
+}
+
+export const moreSongs: Song[] = [
+  {
+    id: "more-001",
+    title: "Thunder Storm",
+    artist: "Electric Pulse",
+    album: "Storm Series",
+    genre: "Electronic Rock",
+    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-9.mp3",
+    duration: 278,
+    category: "workout",
+    mood: "intense",
+    tags: ["rock", "electronic", "energy"]
+  },
+  {
+    id: "more-002",
+    title: "Gentle Rain",
+    artist: "Nature Sounds",
+    album: "Weather Moods",
+    genre: "Ambient",
+    imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-10.mp3",
+    duration: 345,
+    category: "chill",
+    mood: "calm",
+    tags: ["ambient", "nature", "rain"]
+  },
+  {
+    id: "more-003",
+    title: "Dance Floor Fire",
+    artist: "Party Masters",
+    album: "Club Hits",
+    genre: "Dance",
+    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-11.mp3",
+    duration: 189,
+    category: "party",
+    mood: "energetic",
+    tags: ["dance", "club", "party"]
+  },
+  {
+    id: "more-004",
+    title: "Broken Wings",
+    artist: "Melancholy Soul",
+    album: "Sad Stories",
+    genre: "Alternative",
+    imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-12.mp3",
+    duration: 267,
+    category: "sad",
+    mood: "melancholic",
+    tags: ["alternative", "emotional", "sad"]
+  },
+  {
+    id: "more-005",
+    title: "Morning Prayer",
+    artist: "Divine Harmony",
+    album: "Sacred Moments",
+    genre: "Devotional",
+    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-13.mp3",
+    duration: 412,
+    category: "devotional",
+    mood: "peaceful",
+    tags: ["devotional", "prayer", "morning"]
+  },
+  {
+    id: "more-006",
+    title: "Workout Beast",
+    artist: "Fitness Motivation",
+    album: "Gym Anthems",
+    genre: "Hip Hop",
+    imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-14.mp3",
+    duration: 198,
+    category: "workout",
+    mood: "motivational",
+    tags: ["hip-hop", "workout", "motivation"]
+  },
+  {
+    id: "more-007",
+    title: "Sweet Romance",
+    artist: "Love Ballads",
+    album: "Heart Songs",
+    genre: "Pop Ballad",
+    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-15.mp3",
+    duration: 256,
+    category: "love",
+    mood: "romantic",
+    tags: ["pop", "ballad", "romance"]
+  },
+  {
+    id: "more-008",
+    title: "Trending Waves",
+    artist: "Current Hits",
+    album: "Now Playing",
+    genre: "Pop",
+    imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
+    audioUrl: "https://www.soundjay.com/misc/sounds-16.mp3",
+    duration: 223,
+    category: "trending",
+    mood: "upbeat",
+    tags: ["pop", "trending", "current"]
+  }
+];

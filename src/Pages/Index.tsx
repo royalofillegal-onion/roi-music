@@ -8,7 +8,7 @@ import MusicVisualizer from "@/components/MusicVisualizer";
 import GlowingButton from "@/components/GlowingButton";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
-import { trendingSongs, popularSongs, newReleases } from "@/data/songs";
+import { trendingSongs, popularSongs, newReleases, uniqueSongs } from "@/data/allSongs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
@@ -67,8 +67,7 @@ const Index = () => {
   }, []);
   
   const shuffleAllSongs = () => {
-    const allSongs = [...trendingSongs, ...popularSongs, ...newReleases];
-    const randomSong = allSongs[Math.floor(Math.random() * allSongs.length)];
+    const randomSong = uniqueSongs[Math.floor(Math.random() * uniqueSongs.length)];
     playSong(randomSong);
     showNotification.nowPlaying(randomSong.title, randomSong.artist);
     showNotification.shuffleMode();
@@ -113,7 +112,7 @@ const Index = () => {
           className="flex items-center gap-2"
         >
           <Shuffle className="h-4 w-4" />
-          Shuffle All
+          Shuffle All ({uniqueSongs.length})
         </GlowingButton>
         
         <GlowingButton 
