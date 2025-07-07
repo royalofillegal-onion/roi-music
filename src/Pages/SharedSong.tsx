@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { usePlayer } from '@/context/PlayerContext';
@@ -214,7 +213,7 @@ const SharedSong = () => {
           
           <h1 className="text-3xl font-bold mb-2 text-white">{song.title}</h1>
           <p className="text-gray-400 text-xl mb-2">{song.artist}</p>
-          <p className="text-gray-500 text-sm">{song.album}</p>
+          <p className="text-gray-500 text-sm">{song.album || 'Unknown Album'}</p>
         </div>
         
         {/* Playing Status */}

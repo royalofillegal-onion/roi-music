@@ -6,6 +6,8 @@ export interface Song {
   imageUrl: string;
   audioUrl: string;
   duration: number;
+  album?: string;
+  genre?: string;
   category?: 'trending' | 'god' | 'sad' | 'love' | 'party' | 'workout' | 'chill' | 'devotional';
   mood?: 'happy' | 'sad' | 'energetic' | 'peaceful' | 'romantic' | 'spiritual' | 'motivational';
   tags?: string[];
@@ -19,6 +21,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/shape-of-you.mp3",
     duration: 263,
+    album: "÷ (Divide)",
+    genre: "Pop",
     category: 'love',
     mood: 'romantic',
     tags: ['pop', 'romantic', 'guitar', 'love']
@@ -30,6 +34,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/blinding-lights.mp3",
     duration: 200,
+    album: "After Hours",
+    genre: "Pop",
     category: 'trending',
     mood: 'energetic',
     tags: ['pop', 'synth', 'dance', 'trending']
@@ -41,6 +47,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/someone-like-you.mp3",
     duration: 285,
+    album: "21",
+    genre: "Soul",
     category: 'sad',
     mood: 'sad',
     tags: ['ballad', 'emotional', 'piano', 'heartbreak']
@@ -52,6 +60,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/uptown-funk.mp3",
     duration: 270,
+    album: "Uptown Special",
+    genre: "Funk",
     category: 'party',
     mood: 'energetic',
     tags: ['funk', 'party', 'dance', 'upbeat']
@@ -63,6 +73,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300", 
     audioUrl: "/audio/amazing-grace.mp3",
     duration: 240,
+    album: "Traditional Hymns",
+    genre: "Gospel",
     category: 'god',
     mood: 'spiritual',
     tags: ['hymn', 'worship', 'spiritual', 'traditional']
@@ -74,6 +86,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/eye-of-the-tiger.mp3", 
     duration: 246,
+    album: "Eye of the Tiger",
+    genre: "Rock",
     category: 'workout',
     mood: 'motivational',
     tags: ['rock', 'motivation', 'workout', 'classic']
@@ -85,6 +99,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/perfect.mp3",
     duration: 263,
+    album: "÷ (Divide)",
+    genre: "Pop",
     category: 'love',
     mood: 'romantic', 
     tags: ['romantic', 'wedding', 'acoustic', 'guitar']
@@ -96,6 +112,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/weightless.mp3",
     duration: 485,
+    album: "Weightless",
+    genre: "Ambient",
     category: 'chill',
     mood: 'peaceful',
     tags: ['ambient', 'relaxing', 'meditation', 'peaceful']
@@ -107,6 +125,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/how-great-thou-art.mp3",
     duration: 290,
+    album: "My Savior",
+    genre: "Gospel",
     category: 'devotional',
     mood: 'spiritual',
     tags: ['worship', 'hymn', 'praise', 'devotional']
@@ -118,6 +138,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/cant-stop-the-feeling.mp3",
     duration: 236,
+    album: "Trolls Soundtrack",
+    genre: "Pop",
     category: 'party',
     mood: 'happy',
     tags: ['pop', 'happy', 'dance', 'upbeat']
@@ -129,6 +151,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/hallelujah.mp3",
     duration: 312,
+    album: "Various Positions",
+    genre: "Folk",
     category: 'god',
     mood: 'spiritual',
     tags: ['spiritual', 'classic', 'worship', 'emotional']
@@ -140,6 +164,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/stronger.mp3",
     duration: 222,
+    album: "Stronger",
+    genre: "Pop",
     category: 'workout',
     mood: 'motivational',
     tags: ['motivational', 'pop', 'empowerment', 'workout']
@@ -151,6 +177,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/the-night-we-met.mp3",
     duration: 278,
+    album: "Strange Trails",
+    genre: "Indie Folk",
     category: 'sad',
     mood: 'sad',
     tags: ['indie', 'melancholy', 'acoustic', 'heartbreak']
@@ -162,6 +190,8 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/all-of-me.mp3",
     duration: 269,
+    album: "Love in the Future",
+    genre: "R&B",
     category: 'love',
     mood: 'romantic',
     tags: ['romantic', 'piano', 'wedding', 'soulful']
@@ -173,8 +203,15 @@ export const songs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=300&h=300",
     audioUrl: "/audio/ocean-waves.mp3",
     duration: 600,
+    album: "Nature Collection",
+    genre: "Ambient",
     category: 'chill',
     mood: 'peaceful',
     tags: ['nature', 'relaxing', 'meditation', 'ambient']
   }
 ];
+
+// Export categorized song arrays
+export const trendingSongs = songs.filter(song => song.category === 'trending' || song.tags?.includes('trending'));
+export const popularSongs = songs.filter(song => song.mood === 'happy' || song.mood === 'energetic');
+export const newReleases = songs.slice(0, 8); // First 8 songs as new releases
