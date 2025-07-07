@@ -5,55 +5,30 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { enhancedSongs, searchSongsByQuery as searchEnhancedSongs } from '@/data/songsData';
+import { enhancedSongs, searchSongsByQuery as searchEnhancedSongs, searchSongsByCategory as searchEnhancedByCategory } from '@/data/songsData';
 import { songs, Song } from '@/data/songs';
 import SongCard from '@/components/SongCard';
 
 const categories = ['trending', 'god', 'sad', 'love', 'party', 'workout', 'chill', 'devotional'];
 const moods = ['happy', 'sad', 'energetic', 'peaceful', 'romantic', 'spiritual', 'motivational'];
 
-// Convert enhanced songs to Song format to unify the data structure
-const convertEnhancedToSong = (enhancedSong: any): Song => ({
-  id: enhancedSong.id,
-  title: enhancedSong.title,
-  artist: enhancedSong.artist,
-  imageUrl: enhancedSong.imageUrl,
-  audioUrl: enhancedSong.audioUrl,
-  duration: enhancedSong.duration,
-  category: enhancedSong.category,
-  mood: enhancedSong.mood,
-  tags: enhancedSong.tags,
-  album: enhancedSong.album || 'Unknown Album',
-  genre: enhancedSong.genre || 'Unknown Genre'
-});
-
-// Get all songs from both sources
-const getAllSongs = (): Song[] => {
-  const originalSongs = songs;
-  const convertedEnhancedSongs = enhancedSongs.map(convertEnhancedToSong);
-  
-  // Combine and deduplicate by ID
-  const allSongs = [...originalSongs, ...convertedEnhancedSongs];
-  const uniqueSongs = allSongs.filter((song, index, self) => 
-    index === self.findIndex(s => s.id === song.id)
-  );
-  
-  return uniqueSongs;
-};
-
-// Search functions for all songs
-const searchAllSongsByQuery = (query: string): Song[] => {
-  const allSongs = getAllSongs();
+// Search functions for original songs
+const searchOriginalSongsByQuery = (query: string): Song[] => {
   const lowerQuery = query.toLowerCase();
-  
-  return allSongs.filter(song =>
+  return songs.filter(song =>
     song.title.toLowerCase().includes(lowerQuery) ||
     song.artist.toLowerCase().includes(lowerQuery) ||
     (song.category && song.category.toLowerCase().includes(lowerQuery)) ||
     (song.mood && song.mood.toLowerCase().includes(lowerQuery)) ||
-    (song.album && song.album.toLowerCase().includes(lowerQuery)) ||
-    (song.genre && song.genre.toLowerCase().includes(lowerQuery)) ||
     (song.tags && song.tags.some(tag => tag.toLowerCase().includes(lowerQuery)))
+  );
+};
+
+const searchOriginalSongsByCategory = (category: string): Song[] => {
+  return songs.filter(song => 
+    (song.category && song.category.toLowerCase().includes(category.toLowerCase())) ||
+    (song.mood && song.mood.toLowerCase().includes(category.toLowerCase())) ||
+    (song.tags && song.tags.some(tag => tag.toLowerCase().includes(category.toLowerCase())))
   );
 };
 
@@ -73,29 +48,57 @@ const EnhancedSearch = () => {
   }, [query, selectedCategories, selectedMoods]);
 
   const performSearch = () => {
-    let results = getAllSongs();
+    let originalResults = songs;
+    let enhancedResults = enhancedSongs;
 
     // Text search
     if (query) {
-      results = searchAllSongsByQuery(query);
+      originalResults = searchOriginalSongsByQuery(query);
+      enhancedResults = searchEnhancedSongs(query);
     }
 
     // Category filter
     if (selectedCategories.length > 0) {
-      results = results.filter(song => 
+      originalResults = originalResults.filter(song => 
         (song.category && selectedCategories.includes(song.category)) ||
         (song.tags && selectedCategories.some(cat => song.tags!.includes(cat)))
+      );
+      enhancedResults = enhancedResults.filter(song => 
+        selectedCategories.includes(song.category) ||
+        selectedCategories.some(cat => song.tags.includes(cat))
       );
     }
 
     // Mood filter
     if (selectedMoods.length > 0) {
-      results = results.filter(song => 
+      originalResults = originalResults.filter(song => 
         song.mood && selectedMoods.includes(song.mood)
+      );
+      enhancedResults = enhancedResults.filter(song => 
+        selectedMoods.includes(song.mood)
       );
     }
 
-    setSearchResults(results);
+    // Convert enhanced songs to Song format and combine results
+    const convertedEnhancedResults: Song[] = enhancedResults.map(song => ({
+      id: song.id,
+      title: song.title,
+      artist: song.artist,
+      imageUrl: song.imageUrl,
+      audioUrl: song.audioUrl,
+      duration: song.duration,
+      category: song.category,
+      mood: song.mood,
+      tags: song.tags
+    }));
+
+    // Combine and deduplicate results (in case there are duplicates by ID)
+    const allResults = [...originalResults, ...convertedEnhancedResults];
+    const uniqueResults = allResults.filter((song, index, self) => 
+      index === self.findIndex(s => s.id === song.id)
+    );
+
+    setSearchResults(uniqueResults);
   };
 
   const toggleCategory = (category: string) => {
@@ -129,7 +132,7 @@ const EnhancedSearch = () => {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by song, artist, album, genre, category, mood, or tags..."
+            placeholder="Search by song, artist, category, mood, or tags..."
             className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-400"
           />
         </div>
@@ -230,28 +233,11 @@ const EnhancedSearch = () => {
         </Card>
       )}
 
-      {/* Show total song count when no search */}
-      {!query && selectedCategories.length === 0 && selectedMoods.length === 0 && (
-        <div className="text-center py-8">
-          <h2 className="text-xl font-semibold text-white mb-2">
-            Browse All Music ({getAllSongs().length} songs available)
-          </h2>
-          <p className="text-gray-400">Use the search bar or filters to find specific songs</p>
-          
-          {/* Show a few random songs as preview */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-6">
-            {getAllSongs().slice(0, 12).map((song) => (
-              <SongCard key={song.id} song={song} />
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Search Results */}
       {searchResults.length > 0 && (
         <div>
           <h2 className="text-2xl font-bold text-white mb-4">
-            Search Results ({searchResults.length} songs found)
+            Search Results ({searchResults.length})
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {searchResults.map((song) => (
@@ -267,9 +253,6 @@ const EnhancedSearch = () => {
           <Search className="h-16 w-16 text-gray-600 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-white mb-2">No songs found</h3>
           <p className="text-gray-400">Try adjusting your search criteria or clearing some filters</p>
-          <p className="text-gray-500 text-sm mt-2">
-            Searched through {getAllSongs().length} songs from multiple sources
-          </p>
         </div>
       )}
     </div>
