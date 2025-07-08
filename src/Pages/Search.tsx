@@ -32,13 +32,13 @@ const Search = () => {
 
       recognitionInstance.onstart = () => {
         setIsListening(true);
-        toast.success("Listening... Speak now!");
+        // Reduced notification frequency
       };
 
       recognitionInstance.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setSearchQuery(transcript);
-        toast.success(`Searching for: "${transcript}"`);
+        // Only show result, not search notification
       };
 
       recognitionInstance.onerror = (event: any) => {
@@ -98,7 +98,7 @@ const Search = () => {
   
   const handlePlaySong = (song: any) => {
     playSong(song);
-    toast.success(`Now playing: ${song.title}`);
+    // Removed toast notification to reduce user interruption
   };
 
   const handleLikeSong = async (song: any, e: React.MouseEvent) => {
