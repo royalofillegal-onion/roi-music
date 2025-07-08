@@ -133,11 +133,27 @@ const Search = () => {
           ) : (
             <>
               {filteredPlaylists.length > 0 && (
-                <div className="mb-4 sm:mb-6">
-                  <h2 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3">Playlists</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+                <div className="mb-6">
+                  <h2 className="text-lg font-bold mb-3 text-white">Playlists</h2>
+                  <div className="space-y-2">
                     {filteredPlaylists.map((playlist) => (
-                      <PlaylistCard key={playlist.id} playlist={playlist} className="w-full min-w-0" />
+                      <div key={playlist.id} className="flex items-center p-3 bg-gray-900/50 rounded-lg hover:bg-gray-800/50 transition-colors">
+                        <div className="w-12 h-12 rounded-md overflow-hidden mr-3 flex-shrink-0">
+                          <img 
+                            src={playlist.coverImage} 
+                            alt={playlist.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="relative overflow-hidden">
+                            <h3 className="text-white font-medium text-sm whitespace-nowrap animate-marquee">
+                              {playlist.title}
+                            </h3>
+                          </div>
+                          <p className="text-gray-400 text-xs mt-1">{playlist.songs.length} songs</p>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -145,13 +161,35 @@ const Search = () => {
               
               {filteredSongs.length > 0 && (
                 <div className="w-full">
-                  <h2 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3">
-                    Songs ({filteredSongs.length})
-                  </h2>
-                  <div className="space-y-0.5 sm:space-y-1 bg-gray-900/30 rounded-lg overflow-hidden w-full">
+                  <h2 className="text-lg font-bold mb-3 text-white">Songs</h2>
+                  <div className="space-y-2">
                     {filteredSongs.map((song, index) => (
-                      <div key={`${song.id}-${index}`} className="w-full min-w-0">
-                        <SongRow song={song} index={index} />
+                      <div key={`${song.id}-${index}`} className="flex items-center p-3 bg-gray-900/50 rounded-lg hover:bg-gray-800/50 transition-colors">
+                        <div className="w-8 text-gray-400 text-sm font-medium mr-3 text-center flex-shrink-0">
+                          {index + 1}
+                        </div>
+                        <div className="w-12 h-12 rounded-md overflow-hidden mr-3 flex-shrink-0">
+                          <img 
+                            src={song.imageUrl || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
+                            alt={song.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0 mr-3">
+                          <div className="relative overflow-hidden">
+                            <h3 className="text-white font-medium text-sm whitespace-nowrap animate-marquee">
+                              {song.title}
+                            </h3>
+                          </div>
+                          <div className="relative overflow-hidden mt-1">
+                            <p className="text-gray-400 text-xs whitespace-nowrap animate-marquee">
+                              {song.artist}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-gray-400 text-xs flex-shrink-0">
+                          {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
+                        </div>
                       </div>
                     ))}
                   </div>

@@ -62,4 +62,19 @@
   ::selection {
     background: transparent;
   }
+
+  /* Marquee animation for long text */
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
+  .animate-marquee {
+    animation: marquee 8s linear infinite;
+    animation-play-state: paused;
+  }
+
+  .animate-marquee:hover {
+    animation-play-state: running;
+  }
 }
