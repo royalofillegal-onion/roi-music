@@ -112,7 +112,7 @@ const Index = () => {
           className="flex items-center gap-2"
         >
           <Shuffle className="h-4 w-4" />
-          Shuffle All ({uniqueSongs.length})
+          Shuffle All
         </GlowingButton>
         
         <GlowingButton 

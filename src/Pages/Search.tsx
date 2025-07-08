@@ -93,8 +93,8 @@ const Search = () => {
   };
   
   return (
-    <div className="pt-6 pb-32 md:pb-40 px-2 sm:px-4 md:px-8 md:ml-16">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 mt-2">Search</h1>
+    <div className="pt-4 pb-32 md:pb-40 px-3 sm:px-4 md:px-8 md:ml-16 min-h-screen">
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 md:mb-6 mt-1">Search</h1>
       
       <div className="relative mb-6 sm:mb-8 max-w-xl">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
@@ -122,9 +122,6 @@ const Search = () => {
           <SearchIcon className="mx-auto mb-3" size={40} />
           <p className="text-base sm:text-lg">Search for your favorite songs, artists or playlists</p>
           <p className="text-xs sm:text-sm mt-2">Use the microphone to search with your voice</p>
-          <p className="text-xs sm:text-sm mt-1 text-music-accent">
-            {uniqueSongs.length} songs available to search
-          </p>
         </div>
       ) : (
         <>
@@ -136,24 +133,26 @@ const Search = () => {
           ) : (
             <>
               {filteredPlaylists.length > 0 && (
-                <div className="mb-6 sm:mb-8">
-                  <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Playlists</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
+                <div className="mb-4 sm:mb-6">
+                  <h2 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3">Playlists</h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                     {filteredPlaylists.map((playlist) => (
-                      <PlaylistCard key={playlist.id} playlist={playlist} className="w-full" />
+                      <PlaylistCard key={playlist.id} playlist={playlist} className="w-full min-w-0" />
                     ))}
                   </div>
                 </div>
               )}
               
               {filteredSongs.length > 0 && (
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">
-                    Songs ({filteredSongs.length} results)
+                <div className="w-full">
+                  <h2 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3">
+                    Songs ({filteredSongs.length})
                   </h2>
-                  <div className="space-y-1 bg-gray-900/30 rounded-md overflow-hidden">
+                  <div className="space-y-0.5 sm:space-y-1 bg-gray-900/30 rounded-lg overflow-hidden w-full">
                     {filteredSongs.map((song, index) => (
-                      <SongRow key={`${song.id}-${index}`} song={song} index={index} />
+                      <div key={`${song.id}-${index}`} className="w-full min-w-0">
+                        <SongRow song={song} index={index} />
+                      </div>
                     ))}
                   </div>
                 </div>
