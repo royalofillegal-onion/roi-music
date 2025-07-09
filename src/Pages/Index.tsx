@@ -8,6 +8,7 @@ import MusicVisualizer from "@/components/MusicVisualizer";
 import GlowingButton from "@/components/GlowingButton";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
+import { Button } from "@/components/ui/button";
 import { trendingSongs, popularSongs, newReleases, uniqueSongs } from "@/data/allSongs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
@@ -26,6 +27,7 @@ const Index = () => {
   const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   
   useEffect(() => {
     // Check auth status
@@ -99,54 +101,80 @@ const Index = () => {
         </div>
       )}
       
-      {/* Welcome Message */}
-      <div className="text-center mb-6">
-        <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-music-accent to-purple-600 bg-clip-text text-transparent">
-          Welcome to ROI Music
-        </h1>
-      </div>
-
       <div className="flex flex-col md:flex-row items-start justify-between mb-8">
         <AnimatedHeader />
         <UserProfile />
       </div>
       
-      {/* Quick Action Buttons */}
-      <div className="flex flex-wrap gap-4 mb-8">
-        <GlowingButton 
-          variant="primary" 
-          onClick={shuffleAllSongs}
-          className="flex items-center gap-2"
+      {/* Toggle for Quick Actions */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold">Quick Actions</h3>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowQuickActions(!showQuickActions)}
+          className="text-gray-400 hover:text-white"
         >
-          <Shuffle className="h-4 w-4" />
-          Shuffle All
-        </GlowingButton>
-        
-        <GlowingButton 
-          variant="secondary" 
-          onClick={playTrendingPlaylist}
-          className="flex items-center gap-2"
-        >
-          <Play className="h-4 w-4" />
-          Play Trending
-        </GlowingButton>
-        
-        <GlowingButton 
-          variant="accent" 
-          onClick={() => navigate('/liked')}
-          className="flex items-center gap-2"
-        >
-          <Heart className="h-4 w-4" />
-          My Favorites
-        </GlowingButton>
+          {showQuickActions ? 'Hide' : 'Show'}
+        </Button>
       </div>
+
+      {/* Quick Action Buttons - Toggleable */}
+      {showQuickActions && (
+        <div className="flex flex-wrap gap-4 mb-8">
+          <GlowingButton 
+            variant="primary" 
+            onClick={shuffleAllSongs}
+            className="flex items-center gap-2"
+          >
+            <Shuffle className="h-4 w-4" />
+            Shuffle All
+          </GlowingButton>
+          
+          <GlowingButton 
+            variant="secondary" 
+            onClick={playTrendingPlaylist}
+            className="flex items-center gap-2"
+          >
+            <Play className="h-4 w-4" />
+            Play Trending
+          </GlowingButton>
+          
+          <GlowingButton 
+            variant="accent" 
+            onClick={() => navigate('/liked')}
+            className="flex items-center gap-2"
+          >
+            <Heart className="h-4 w-4" />
+            My Favorites
+          </GlowingButton>
+        </div>
+      )}
+
+      {/* Good Morning Section - Moved Higher */}
+      <SliderRow title="Good Morning" className="animate-slide-up mb-8" style={{animationDelay: "100ms"}}>
+        <div className="flex gap-4">
+          {popularSongs.slice(0, 4).map((song) => (
+            <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
+          ))}
+        </div>
+      </SliderRow>
       
       {/* Spotify-like main section */}
       <SpotifyLikeSection />
       
-      {/* Original sections with improved spacing - Only showing songs from songs.ts */}
+      {/* Trending Now Section */}
+      <SliderRow title="Trending Now" className="animate-slide-up mb-8" style={{animationDelay: "200ms"}}>
+        <div className="flex gap-4">
+          {trendingSongs.slice(0, 6).map((song) => (
+            <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
+          ))}
+        </div>
+      </SliderRow>
+
+      {/* Original sections with improved spacing */}
       <div className="mt-12 space-y-8">
-        <SliderRow title="Featured Playlists" className="animate-slide-up" style={{animationDelay: "200ms"}}>
+        <SliderRow title="Featured Playlists" className="animate-slide-up" style={{animationDelay: "300ms"}}>
           <div className="flex gap-4">
             {playlists.map((playlist) => (
               <PlaylistCard key={playlist.id} playlist={playlist} className="min-w-[180px] w-[180px]" />
@@ -154,7 +182,7 @@ const Index = () => {
           </div>
         </SliderRow>
         
-        <SliderRow title="Popular Songs" className="animate-slide-up" style={{animationDelay: "300ms"}}>
+        <SliderRow title="Popular Songs" className="animate-slide-up" style={{animationDelay: "400ms"}}>
           <div className="flex gap-4">
             {popularSongs.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
@@ -162,7 +190,7 @@ const Index = () => {
           </div>
         </SliderRow>
         
-        <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "400ms"}}>
+        <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "500ms"}}>
           <div className="flex gap-4">
             {newReleases.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
