@@ -99,6 +99,13 @@ const Index = () => {
         </div>
       )}
       
+      {/* Welcome Message */}
+      <div className="text-center mb-6">
+        <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-music-accent to-purple-600 bg-clip-text text-transparent">
+          Welcome to ROI Music
+        </h1>
+      </div>
+
       <div className="flex flex-col md:flex-row items-start justify-between mb-8">
         <AnimatedHeader />
         <UserProfile />

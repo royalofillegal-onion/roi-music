@@ -497,9 +497,9 @@ const Settings = () => {
             </CardContent>
           </Card>
 
-          {/* Sign In Prompt for Non-logged Users */}
+          {/* Sign In Prompt for Non-logged Users - Hidden on Mobile */}
           {!isLoggedIn && (
-            <Card className="bg-gray-900/50 border-gray-800 border-music-accent/30">
+            <Card className="bg-gray-900/50 border-gray-800 border-music-accent/30 hidden md:block">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="h-5 w-5 text-music-accent" />

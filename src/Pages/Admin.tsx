@@ -26,7 +26,7 @@ const Admin = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Admin Panel</h1>
-          <p className="text-gray-400">Manage songs and playlists</p>
+          <p className="text-gray-400">Manage songs, playlists, and homepage content</p>
         </div>
         <Button variant="ghost" onClick={logout} className="flex items-center gap-2">
           <LogOut size={16} />
@@ -34,9 +34,81 @@ const Admin = () => {
         </Button>
       </div>
 
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">Total Songs</h3>
+          <p className="text-2xl font-bold text-green-400">{songs.length}</p>
+        </div>
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">Trending Songs</h3>
+          <p className="text-2xl font-bold text-blue-400">6</p>
+        </div>
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">Good Morning</h3>
+          <p className="text-2xl font-bold text-purple-400">4</p>
+        </div>
+      </div>
+
+      {/* Homepage Content Management */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Homepage Content</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Good Morning Section */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 text-purple-400">Good Morning Songs</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-700 rounded">
+                <div>
+                  <p className="font-medium">song1 - Bommali</p>
+                  <p className="text-sm text-gray-400">Billa</p>
+                </div>
+                <Button size="sm" variant="ghost">Remove</Button>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-700 rounded">
+                <div>
+                  <p className="font-medium">song2 - Kanulu Chadire</p>
+                  <p className="text-sm text-gray-400">WWW</p>
+                </div>
+                <Button size="sm" variant="ghost">Remove</Button>
+              </div>
+            </div>
+            <Button className="w-full mt-4" size="sm">
+              <Plus size={16} className="mr-2" />
+              Add Good Morning Song
+            </Button>
+          </div>
+
+          {/* Trending Songs Section */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 text-blue-400">Trending Songs</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-700 rounded">
+                <div>
+                  <p className="font-medium">song3 - Mr Perfect</p>
+                  <p className="text-sm text-gray-400">Arya 2</p>
+                </div>
+                <Button size="sm" variant="ghost">Remove</Button>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-700 rounded">
+                <div>
+                  <p className="font-medium">song4 - Ga Eega Eega</p>
+                  <p className="text-sm text-gray-400">Ega</p>
+                </div>
+                <Button size="sm" variant="ghost">Remove</Button>
+              </div>
+            </div>
+            <Button className="w-full mt-4" size="sm">
+              <Plus size={16} className="mr-2" />
+              Add Trending Song
+            </Button>
+          </div>
+        </div>
+      </div>
+
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Songs Management</h2>
+          <h2 className="text-xl font-semibold">Songs Database</h2>
           <Button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2">
             {showForm ? "Cancel" : <><Plus size={16} /> Add New Song</>}
           </Button>
