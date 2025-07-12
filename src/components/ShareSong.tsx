@@ -135,7 +135,7 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
           <Share2 className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md">
+      <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md mx-4 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-green-400">Share Song</DialogTitle>
           <DialogDescription className="text-gray-400">
@@ -160,23 +160,33 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
           {/* Unique Share URL */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300">Unique Song URL</label>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <Input
                 value={isGenerating ? 'Generating unique URL...' : shareUrl}
                 readOnly
-                className="bg-gray-800 border-gray-600 text-white text-xs"
+                className="bg-gray-800 border-gray-600 text-white text-xs flex-1 min-w-0"
                 disabled={isGenerating}
               />
               <Button
                 onClick={handleCopyUrl}
                 size="sm"
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-green-600 hover:bg-green-700 shrink-0 w-full sm:w-auto"
                 disabled={isGenerating}
               >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    <span className="sm:hidden">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    <span className="sm:hidden">Copy URL</span>
+                  </>
+                )}
               </Button>
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 break-words">
               Anyone with this link can listen to this song on RoyalStar Music
             </p>
           </div>
@@ -198,64 +208,64 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
             )}
 
             {/* Social Media & Communication Options */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <Button
                 onClick={() => handleSocialShare('whatsapp')}
                 variant="outline"
-                className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white text-xs"
+                className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white text-xs justify-start"
                 disabled={isGenerating}
               >
-                <MessageCircle className="h-3 w-3 mr-1" />
+                <MessageCircle className="h-3 w-3 mr-2" />
                 WhatsApp
               </Button>
               
               <Button
                 onClick={() => handleSocialShare('telegram')}
                 variant="outline"
-                className="border-blue-400 text-blue-400 hover:bg-blue-600 hover:text-white text-xs"
+                className="border-blue-400 text-blue-400 hover:bg-blue-600 hover:text-white text-xs justify-start"
                 disabled={isGenerating}
               >
-                <Send className="h-3 w-3 mr-1" />
+                <Send className="h-3 w-3 mr-2" />
                 Telegram
               </Button>
               
               <Button
                 onClick={() => handleSocialShare('twitter')}
                 variant="outline"
-                className="border-blue-300 text-blue-300 hover:bg-blue-500 hover:text-white text-xs"
+                className="border-blue-300 text-blue-300 hover:bg-blue-500 hover:text-white text-xs justify-start"
                 disabled={isGenerating}
               >
-                <Share2 className="h-3 w-3 mr-1" />
+                <Share2 className="h-3 w-3 mr-2" />
                 Twitter
               </Button>
               
               <Button
                 onClick={() => handleSocialShare('facebook')}
                 variant="outline"
-                className="border-blue-500 text-blue-500 hover:bg-blue-600 hover:text-white text-xs"
+                className="border-blue-500 text-blue-500 hover:bg-blue-600 hover:text-white text-xs justify-start"
                 disabled={isGenerating}
               >
-                <Share2 className="h-3 w-3 mr-1" />
+                <Share2 className="h-3 w-3 mr-2" />
                 Facebook
               </Button>
 
               <Button
                 onClick={() => handleSocialShare('email')}
                 variant="outline"
-                className="border-purple-400 text-purple-400 hover:bg-purple-600 hover:text-white text-xs"
+                className="border-purple-400 text-purple-400 hover:bg-purple-600 hover:text-white text-xs justify-start"
                 disabled={isGenerating}
               >
-                <Mail className="h-3 w-3 mr-1" />
+                <Mail className="h-3 w-3 mr-2" />
                 Email
               </Button>
 
               <Button
                 onClick={() => handleSocialShare('sms')}
                 variant="outline"
-                className="border-orange-400 text-orange-400 hover:bg-orange-600 hover:text-white text-xs"
+                className="border-orange-400 text-orange-400 hover:bg-orange-600 hover:text-white text-xs justify-start"
                 disabled={isGenerating}
               >
-                <Smartphone className="h-3 w-3 mr-1" />
+                <Smartphone className="h-3 w-3 mr-2" />
                 SMS
               </Button>
             </div>

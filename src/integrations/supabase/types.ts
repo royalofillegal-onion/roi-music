@@ -62,6 +62,33 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_sections: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          section_name: string
+          song_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position?: number
+          section_name: string
+          song_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          section_name?: string
+          song_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       liked_songs: {
         Row: {
           created_at: string

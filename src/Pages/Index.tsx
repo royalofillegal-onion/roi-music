@@ -20,6 +20,7 @@ import { Play, Shuffle, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { showNotification } from "@/utils/notificationUtils";
+import { Song } from "@/data/songs";
 
 const Index = () => {
   const { recentlyPlayed, playSong } = usePlayer();
@@ -28,6 +29,13 @@ const Index = () => {
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
+  const [homepageSections, setHomepageSections] = useState<{
+    goodMorning: Song | null;
+    trendingNow: Song | null;
+  }>({
+    goodMorning: null,
+    trendingNow: null,
+  });
   
   useEffect(() => {
     // Check auth status
@@ -47,25 +55,53 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch time-based banner content
-    const fetchTimeBasedContent = async () => {
+    // Fetch time-based banner content and homepage sections
+    const fetchContent = async () => {
       try {
-        const { data, error } = await supabase.rpc('get_time_based_content', {
+        // Fetch time-based banner
+        const { data: bannerData, error: bannerError } = await supabase.rpc('get_time_based_content', {
           content_type_param: 'banner'
         });
         
-        if (error) throw error;
+        if (bannerError) throw bannerError;
         
-        const currentBanner = data?.find((item: any) => item.is_current_period);
+        const currentBanner = bannerData?.find((item: any) => item.is_current_period);
         if (currentBanner?.content_data && typeof currentBanner.content_data === 'object' && 'message' in currentBanner.content_data) {
           setTimeBasedBanner(currentBanner.content_data.message as string);
         }
+
+        // Fetch homepage sections
+        const { data: sectionsData, error: sectionsError } = await supabase
+          .from('homepage_sections')
+          .select('*')
+          .order('position');
+        
+        if (sectionsError) throw sectionsError;
+        
+        // Process sections data and find songs
+        const goodMorningSection = sectionsData?.find(section => section.section_name === 'Good Morning');
+        const trendingNowSection = sectionsData?.find(section => section.section_name === 'Trending Now');
+        
+        const findSongById = (songId: string): Song | null => {
+          return uniqueSongs.find(song => song.id === songId) || null;
+        };
+        
+        setHomepageSections({
+          goodMorning: goodMorningSection ? findSongById(goodMorningSection.song_id) : popularSongs[0] || null,
+          trendingNow: trendingNowSection ? findSongById(trendingNowSection.song_id) : trendingSongs[0] || null,
+        });
+        
       } catch (error) {
-        console.error('Error fetching time-based content:', error);
+        console.error('Error fetching content:', error);
+        // Set default songs on error
+        setHomepageSections({
+          goodMorning: popularSongs[0] || null,
+          trendingNow: trendingSongs[0] || null,
+        });
       }
     };
     
-    fetchTimeBasedContent();
+    fetchContent();
   }, []);
   
   const shuffleAllSongs = () => {
@@ -102,7 +138,14 @@ const Index = () => {
       )}
       
       <div className="flex flex-col md:flex-row items-start justify-between mb-8">
-        <AnimatedHeader />
+        <div>
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-music-accent via-purple-400 to-blue-400 bg-clip-text text-transparent mb-4 animate-slide-up">
+            Welcome to ROI Music
+          </h1>
+          <p className="text-lg text-gray-400 animate-slide-up" style={{animationDelay: "200ms"}}>
+            Discover your next favorite song
+          </p>
+        </div>
         <UserProfile />
       </div>
       
@@ -151,26 +194,34 @@ const Index = () => {
         </div>
       )}
 
-      {/* Good Morning Section - Moved Higher */}
-      <SliderRow title="Good Morning" className="animate-slide-up mb-8" style={{animationDelay: "100ms"}}>
-        <div className="flex gap-4">
-          {popularSongs.slice(0, 4).map((song) => (
-            <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
-          ))}
-        </div>
-      </SliderRow>
+      {/* Good Morning Section - Show only one song */}
+      {homepageSections.goodMorning && (
+        <SliderRow title="Good Morning" className="animate-slide-up mb-8" style={{animationDelay: "100ms"}}>
+          <div className="flex gap-4">
+            <SongCard 
+              key={homepageSections.goodMorning.id} 
+              song={homepageSections.goodMorning} 
+              className="min-w-[180px] w-[180px]" 
+            />
+          </div>
+        </SliderRow>
+      )}
       
       {/* Spotify-like main section */}
       <SpotifyLikeSection />
       
-      {/* Trending Now Section */}
-      <SliderRow title="Trending Now" className="animate-slide-up mb-8" style={{animationDelay: "200ms"}}>
-        <div className="flex gap-4">
-          {trendingSongs.slice(0, 6).map((song) => (
-            <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
-          ))}
-        </div>
-      </SliderRow>
+      {/* Trending Now Section - Show only one song */}
+      {homepageSections.trendingNow && (
+        <SliderRow title="Trending Now" className="animate-slide-up mb-8" style={{animationDelay: "200ms"}}>
+          <div className="flex gap-4">
+            <SongCard 
+              key={homepageSections.trendingNow.id} 
+              song={homepageSections.trendingNow} 
+              className="min-w-[180px] w-[180px]" 
+            />
+          </div>
+        </SliderRow>
+      )}
 
       {/* Original sections with improved spacing */}
       <div className="mt-12 space-y-8">
