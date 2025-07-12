@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/context/AdminContext";
-import { ArrowLeft, Plus, Trash2, Music, AlertCircle } from "lucide-react";
+import { ArrowLeft, Plus, Music, AlertCircle } from "lucide-react";
 import { uniqueSongs } from "@/data/allSongs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -101,7 +101,7 @@ const AdminHomepage = () => {
       if (selectedSection === 'Good Morning') {
         const goodMorningSongs = getSectionSongs('Good Morning');
         if (goodMorningSongs.length >= 1) {
-          toast.error('Good Morning section can only have 1 song. Please remove the existing song first.');
+          toast.error('Good Morning section can only have 1 song.');
           return;
         }
       }
@@ -131,22 +131,6 @@ const AdminHomepage = () => {
     }
   };
 
-  const removeSongFromSection = async (sectionId: string, sectionName: string, songTitle: string) => {
-    try {
-      const { error } = await supabase
-        .from('homepage_sections')
-        .delete()
-        .eq('id', sectionId);
-
-      if (error) throw error;
-
-      toast.success(`Removed "${songTitle}" from ${sectionName}`);
-      fetchSections();
-    } catch (error) {
-      console.error('Error removing song:', error);
-      toast.error('Failed to remove song from section');
-    }
-  };
 
   if (!isAdmin) return null;
 
@@ -273,14 +257,6 @@ const AdminHomepage = () => {
                       <p className="text-sm text-gray-400">{item.song?.artist}</p>
                     </div>
                   </div>
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
-                    className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                    onClick={() => removeSongFromSection(item.id, 'Good Morning', item.song?.title || '')}
-                  >
-                    <Trash2 size={16} />
-                  </Button>
                 </div>
               ))}
             </div>
@@ -320,14 +296,6 @@ const AdminHomepage = () => {
                       <p className="text-sm text-gray-400">{item.song?.artist}</p>
                     </div>
                   </div>
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
-                    className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                    onClick={() => removeSongFromSection(item.id, 'Trending Now', item.song?.title || '')}
-                  >
-                    <Trash2 size={16} />
-                  </Button>
                 </div>
               ))}
             </div>
@@ -342,7 +310,6 @@ const AdminHomepage = () => {
           <li>• <strong>Good Morning:</strong> Can only have 1 song (displays single card on homepage)</li>
           <li>• <strong>Trending Now:</strong> Can have multiple songs (displays multiple cards)</li>
           <li>• Changes are reflected immediately on the homepage</li>
-          <li>• Remove existing songs by clicking the trash icon</li>
         </ul>
       </div>
     </div>
