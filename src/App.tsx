@@ -24,6 +24,7 @@ const Settings = lazy(() => import("./Pages/Settings"));
 const Feedback = lazy(() => import("./Pages/Feedback"));
 const TermsAndConditions = lazy(() => import("./Pages/TermsAndConditions"));
 const Admin = lazy(() => import("./Pages/Admin"));
+const AdminHomepage = lazy(() => import("./Pages/AdminHomepage"));
 const AdminLogin = lazy(() => import("./Pages/AdminLogin"));
 const AdminLive = lazy(() => import("./Pages/AdminLive"));
 const SharedSong = lazy(() => import("./Pages/SharedSong"));
@@ -82,6 +83,7 @@ function App() {
                           <Route path="/feedback" element={<Feedback />} />
                           <Route path="/terms" element={<TermsAndConditions />} />
                           <Route path="/admin" element={<Admin />} />
+                          <Route path="/admin/homepage" element={<AdminHomepage />} />
                           <Route path="/admin/login" element={<AdminLogin />} />
                           <Route path="/admin/live/royal" element={<AdminLive />} />
                           

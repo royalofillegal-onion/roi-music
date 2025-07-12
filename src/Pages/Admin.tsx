@@ -52,82 +52,29 @@ const Admin = () => {
 
       {/* Homepage Content Management */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Homepage Content Management</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Good Morning Section */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h3 className="text-lg font-semibold mb-4 text-purple-400">Good Morning Songs</h3>
-            <div className="space-y-3 max-h-60 overflow-y-auto">
-              {songs.slice(0, 4).map((song) => (
-                <div key={song.id} className="flex items-center justify-between p-3 bg-gray-700 rounded">
-                  <div className="flex items-center gap-3">
-                    <img src={song.imageUrl} alt={song.title} className="w-10 h-10 rounded object-cover" />
-                    <div>
-                      <p className="font-medium">{song.title}</p>
-                      <p className="text-sm text-gray-400">{song.artist}</p>
-                    </div>
-                  </div>
-                  <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300">
-                    Remove
-                  </Button>
-                </div>
-              ))}
-            </div>
-            <Button className="w-full mt-4" size="sm" variant="outline">
-              <Plus size={16} className="mr-2" />
-              Add Song to Good Morning
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Homepage Content Management</h2>
+          <Link to="/admin/homepage">
+            <Button className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700">
+              <Music size={16} />
+              Manage Homepage Sections
             </Button>
-          </div>
-
-          {/* Trending Now Section */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h3 className="text-lg font-semibold mb-4 text-blue-400">Trending Now Songs</h3>
-            <div className="space-y-3 max-h-60 overflow-y-auto">
-              {songs.slice(4, 10).map((song) => (
-                <div key={song.id} className="flex items-center justify-between p-3 bg-gray-700 rounded">
-                  <div className="flex items-center gap-3">
-                    <img src={song.imageUrl} alt={song.title} className="w-10 h-10 rounded object-cover" />
-                    <div>
-                      <p className="font-medium">{song.title}</p>
-                      <p className="text-sm text-gray-400">{song.artist}</p>
-                    </div>
-                  </div>
-                  <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300">
-                    Remove
-                  </Button>
-                </div>
-              ))}
-            </div>
-            <Button className="w-full mt-4" size="sm" variant="outline">
-              <Plus size={16} className="mr-2" />
-              Add Song to Trending
-            </Button>
-          </div>
+          </Link>
         </div>
-
-        {/* Available Songs to Add */}
+        
         <div className="bg-gray-800 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4 text-green-400">Available Songs</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto">
-            {songs.map((song) => (
-              <div key={song.id} className="flex items-center justify-between p-2 bg-gray-700 rounded text-sm">
-                <div className="flex items-center gap-2">
-                  <img src={song.imageUrl} alt={song.title} className="w-8 h-8 rounded object-cover" />
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium truncate">{song.title}</p>
-                    <p className="text-xs text-gray-400 truncate">{song.artist}</p>
-                  </div>
-                </div>
-                <div className="flex gap-1">
-                  <Button size="sm" variant="ghost" className="p-1 h-6 w-6 text-purple-400" title="Add to Good Morning">
-                    📅
-                  </Button>
-                  <Button size="sm" variant="ghost" className="p-1 h-6 w-6 text-blue-400" title="Add to Trending">
-                    🔥
-                  </Button>
-                </div>
-              </div>
-            ))}
+          <p className="text-gray-400 mb-4">
+            Control which songs appear in the "Good Morning" and "Trending Now" sections on the homepage.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="bg-purple-900/20 border border-purple-500/30 rounded p-3">
+              <h4 className="font-medium text-purple-400 mb-1">Good Morning Section</h4>
+              <p className="text-gray-400">Shows 1 featured song for morning listeners</p>
+            </div>
+            <div className="bg-blue-900/20 border border-blue-500/30 rounded p-3">
+              <h4 className="font-medium text-blue-400 mb-1">Trending Now Section</h4>
+              <p className="text-gray-400">Shows multiple trending songs</p>
+            </div>
           </div>
         </div>
       </div>
