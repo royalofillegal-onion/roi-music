@@ -87,16 +87,16 @@ const Index = () => {
         };
         
         setHomepageSections({
-          goodMorning: goodMorningSection ? findSongById(goodMorningSection.song_id) : popularSongs[0] || null,
-          trendingNow: trendingNowSection ? findSongById(trendingNowSection.song_id) : trendingSongs[0] || null,
+          goodMorning: goodMorningSection ? findSongById(goodMorningSection.song_id) : null,
+          trendingNow: trendingNowSection ? findSongById(trendingNowSection.song_id) : null,
         });
         
       } catch (error) {
         console.error('Error fetching content:', error);
         // Set default songs on error
         setHomepageSections({
-          goodMorning: popularSongs[0] || null,
-          trendingNow: trendingSongs[0] || null,
+          goodMorning: null,
+          trendingNow: null,
         });
       }
     };

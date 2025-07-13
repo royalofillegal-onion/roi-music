@@ -29,25 +29,29 @@ const QuickAddToPlaylist = ({ song, className = '' }: QuickAddToPlaylistProps) =
 
   useEffect(() => {
     fetchUserPlaylists();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchUserPlaylists = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
-      if (!session) return;
+      if (!session) {
+        setPlaylists([]);
+        return;
+      }
 
       const { data, error } = await supabase
         .from('playlists')
         .select('id, name')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false })
-        .limit(5); // Show only the 5 most recent playlists
+        .limit(5);
 
       if (error) throw error;
       setPlaylists(data || []);
     } catch (error) {
       console.error('Error fetching playlists:', error);
+      setPlaylists([]);
     }
   };
 
@@ -61,7 +65,7 @@ const QuickAddToPlaylist = ({ song, className = '' }: QuickAddToPlaylistProps) =
         .select('id')
         .eq('playlist_id', playlistId)
         .eq('song_id', song.id)
-        .single();
+        .maybeSingle();
 
       if (existingSong) {
         toast.error('Song already in playlist');
@@ -75,7 +79,7 @@ const QuickAddToPlaylist = ({ song, className = '' }: QuickAddToPlaylistProps) =
         .eq('playlist_id', playlistId)
         .order('position', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       const nextPosition = (lastSong?.position || 0) + 1;
 
