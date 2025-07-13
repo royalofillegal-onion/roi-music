@@ -530,17 +530,17 @@ const Settings = () => {
                   About ROI Music
                 </CardTitle>
                 <CardDescription>
-                  Version 1.0.0 • Music streaming platform
+                  Version 2.1.0 • Music platform
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="text-sm text-gray-300 leading-relaxed">
                   <p>ROI Music is your ultimate destination for discovering and enjoying music.</p>
-                  <p className="mt-2">Experience high-quality streaming, personalized playlists, and discover new artists.</p>
+                  <p className="mt-2">Experience high-quality, personalized playlists.</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-2 py-1 bg-music-accent/20 text-music-accent text-xs rounded-full">
-                    Music Streaming
+                    Music 
                   </span>
                   <span className="px-2 py-1 bg-purple-400/20 text-purple-400 text-xs rounded-full">
                     Playlists
@@ -595,7 +595,7 @@ const Settings = () => {
                       </div>
                       <div>
                         <h3 className="font-bold text-lg">ROI Music</h3>
-                        <p className="text-sm text-gray-400">Royal of Illegal Music Platform</p>
+                        <p className="text-sm text-gray-400">Royal of Illegal Music</p>
                       </div>
                     </div>
                   </div>
@@ -607,11 +607,11 @@ const Settings = () => {
                         Global Platform
                       </span>
                       <span>•</span>
-                      <span>Made with ❤️</span>
+                      <span>Made with #444</span>
                     </div>
                     <div className="flex items-center gap-1 text-sm text-gray-500">
                       <Copyright className="h-4 w-4" />
-                      <span>2024 ROI Music. All rights reserved.</span>
+                      <span>2024 ROI Music.</span>
                     </div>
                   </div>
                 </div>
@@ -624,7 +624,7 @@ const Settings = () => {
                     <span>•</span>
                     <button className="hover:text-gray-300 transition-colors">Privacy Policy</button>
                     <span>•</span>
-                    <button className="hover:text-gray-300 transition-colors">DMCA</button>
+                    <button className="hover:text-gray-300 transition-colors">&$@#</button>
                     <span>•</span>
                     <button className="hover:text-gray-300 transition-colors">Contact Us</button>
                   </div>
