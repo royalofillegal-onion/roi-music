@@ -51,8 +51,9 @@ const SignUpForm = ({ loading, setLoading, onSuccess }: SignUpFormProps) => {
           console.error('Error creating profile:', profileError);
         }
         
-        toast.success('Account created successfully! Please check your email to verify your account.');
-        onSuccess();
+        toast.success('Account created successfully! You are now logged in.');
+        // Force page reload to ensure clean auth state
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('Error during signup:', error);
