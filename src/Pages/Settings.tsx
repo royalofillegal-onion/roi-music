@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
-import { Settings as SettingsIcon, User, Mail, Heart, MessageSquare, Music2, Users, FileText, ArrowLeft, Save, Loader2, Upload, Camera } from "lucide-react";
+import { Settings as SettingsIcon, User, Mail, Heart, MessageSquare, Music2, Users, FileText, ArrowLeft, Save, Loader2, Upload, Camera, Shield, Info, Globe, Copyright } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -519,7 +519,123 @@ const Settings = () => {
                 </Button>
               </CardContent>
             </Card>
-          )}
+           )}
+
+          {/* About & App Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="bg-gray-900/50 border-gray-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Info className="h-5 w-5 text-yellow-400" />
+                  About ROI Music
+                </CardTitle>
+                <CardDescription>
+                  Version 1.0.0 • Music streaming platform
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="text-sm text-gray-300 leading-relaxed">
+                  <p>ROI Music is your ultimate destination for discovering and enjoying music.</p>
+                  <p className="mt-2">Experience high-quality streaming, personalized playlists, and discover new artists.</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-music-accent/20 text-music-accent text-xs rounded-full">
+                    Music Streaming
+                  </span>
+                  <span className="px-2 py-1 bg-purple-400/20 text-purple-400 text-xs rounded-full">
+                    Playlists
+                  </span>
+                  <span className="px-2 py-1 bg-blue-400/20 text-blue-400 text-xs rounded-full">
+                    Discovery
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-900/50 border-gray-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-green-400" />
+                  Privacy & Security
+                </CardTitle>
+                <CardDescription>
+                  Your data is safe and secure with us
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="text-sm text-gray-300">
+                  <p>• End-to-end encryption for your data</p>
+                  <p>• No third-party data sharing</p>
+                  <p>• GDPR compliant privacy practices</p>
+                  <p>• Secure cloud storage</p>
+                </div>
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-green-500 text-green-400 hover:bg-green-600 hover:text-white"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Privacy Policy
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Footer & Copyright */}
+          <div className="mt-12 space-y-6">
+            <Separator className="bg-gray-800" />
+            
+            <Card className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 border-gray-700 backdrop-blur-sm">
+              <CardContent className="pt-6">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 bg-gradient-to-r from-music-accent to-purple-600 rounded-lg flex items-center justify-center">
+                        <Music2 className="h-6 w-6 text-black" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg">ROI Music</h3>
+                        <p className="text-sm text-gray-400">Royal of Illegal Music Platform</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col items-center md:items-end gap-2">
+                    <div className="flex items-center gap-4 text-sm text-gray-400">
+                      <span className="flex items-center gap-1">
+                        <Globe className="h-4 w-4" />
+                        Global Platform
+                      </span>
+                      <span>•</span>
+                      <span>Made with ❤️</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                      <Copyright className="h-4 w-4" />
+                      <span>2024 ROI Music. All rights reserved.</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <Separator className="bg-gray-700 my-4" />
+                
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button className="hover:text-gray-300 transition-colors">Terms of Service</button>
+                    <span>•</span>
+                    <button className="hover:text-gray-300 transition-colors">Privacy Policy</button>
+                    <span>•</span>
+                    <button className="hover:text-gray-300 transition-colors">DMCA</button>
+                    <span>•</span>
+                    <button className="hover:text-gray-300 transition-colors">Contact Us</button>
+                  </div>
+                  <div className="text-center md:text-right">
+                    <p>Powered by cutting-edge technology</p>
+                    <p>for the ultimate music experience</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
