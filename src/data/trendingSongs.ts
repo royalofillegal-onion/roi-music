@@ -4,13 +4,13 @@ import { Song } from './songs';
 export const trendingSongs: Song[] = [
   {
     id: "trending1",
-    title: "Premalo",
-    artist: "Court",
-    imageUrl: "https://example.com/premalo-poster.jpg", // Replace with actual image URL
-    audioUrl: "https://example.com/premalo-audio.mp3", // Replace with actual audio URL
-    duration: 245,
-    album: "Court",
-    year: 2023,
+    title: "Minnalvala",
+    artist: "Narivetta",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752507033/Minnalvala-From-Narivetta-Malayalam-2025-20250416150421-500x500_cixjbx.jpg", // Replace with actual image URL
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752507065/Minnalvala_qocusu.mp3", // Replace with actual audio URL
+    duration: 299,
+    album: "Love",
+    year: 2025,
     genre: "Romance"
   },
   {
