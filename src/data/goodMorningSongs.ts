@@ -3,15 +3,15 @@ import { Song } from './songs';
 // Good Morning songs that can be easily updated and managed
 export const goodMorningSongs: Song[] = [
   {
-    id: "morning1",
-    title: "inkem inkem inkem kaavaale",
-    artist: "Geetha Govindam",
-    imageUrl: "https://example.com/inkem-inkem-poster.jpg", // Replace with actual image URL
-    audioUrl: "https://example.com/inkem-inkem-audio.mp3", // Replace with actual audio URL
-    duration: 245,
-    album: "Geetha Govindam",
-    year: 2018,
-    genre: "Romance"
+    "id": "song214",
+    "title": "Garuda Gamana Tava",
+    "artist": " Madhuri Dasagrandhi, Revathi Mannava, Pallavi Ananthoju",
+    "imageUrl": "https://a10.gaanacdn.com/images/albums/48/1639248/crop_480x480_1639248.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1751168004/garuda-gamana-tava_rxfxen.mp3",
+    "duration": 217,
+    "album": " Devotional",
+    "year": 2025,
+    "genre": "."
   },
   {
     id: "morning2", 
