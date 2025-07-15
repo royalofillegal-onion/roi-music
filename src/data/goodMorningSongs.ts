@@ -3,7 +3,7 @@ import { Song } from './songs';
 // Good Morning songs that can be easily updated and managed
 export const goodMorningSongs: Song[] = [
   {
-    id: "song214", 
+    id: "morning1", 
     title: "Garuda Gamana Tava",
     artist: " Madhuri Dasagrandhi, Revathi Mannava, Pallavi Ananthoju",
     imageUrl: "https://a10.gaanacdn.com/images/albums/48/1639248/crop_480x480_1639248.jpg", // Replace with actual image URL
