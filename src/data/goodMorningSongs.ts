@@ -1,6 +1,9 @@
 
 import { Song } from './songs';
 
+// Display control for Good Morning songs section
+export const displayGoodMorningSongs = false; // Set to true to enable display
+
 // Good Morning songs that can be easily updated and managed
 export const goodMorningSongs: Song[] = [
   {
