@@ -3,16 +3,16 @@ import { Song } from './songs';
 // Good Evening songs that can be easily updated and managed
 export const goodEveningSongs: Song[] = [
   {
-    id: "evening1",
-    title: "Choosi Chudangane",
-    artist: "Chalo",
-    imageUrl: "https://example.com/choosi-chudangane-poster.jpg", // Replace with actual image URL
-    audioUrl: "https://example.com/choosi-chudangane-audio.mp3", // Replace with actual audio URL
-    duration: 245,
-    album: "Chalo",
-    year: 2018,
-    genre: "Romance"
-  },
+  id: "evening1",
+  title: "Nuvvunte Chaley",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754743776/Nuvvunte_Chaley_gvcrva.mp3",
+  duration: 240,
+  album: "Nuvvunte Chaley",
+  year: 2025,
+  genre: "."
+}
   {
     id: "evening2", 
     title: "Fidaa",
