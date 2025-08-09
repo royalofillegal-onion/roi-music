@@ -83,9 +83,10 @@ export const trendingSongs: Song[] = [
 ];
 
 // Export individual songs for easy access and modification
-export const premalo = trendingSongs[0];
-export const godariGattu = trendingSongs[1];
-export const bujjiThalli = trendingSongs[2];
-export const amaran = trendingSongs[3];
-export const kumkumala = trendingSongs[4];
-export const chotiChotiBaatein = trendingSongs[5];
+export const monicatelugu = trendingSongs[0];
+export const nuvvuntechaley = trendingSongs[1];
+export const minnalvala = trendingSongs[2];
+export const omnamobhagavatevasudevaya = trendingSongs[3];
+export const hridayamlopala = trendingSongs[4];
+export const naakoduka = trendingSongs[5];
+export const viralvayyari = trendingSongs[6];
