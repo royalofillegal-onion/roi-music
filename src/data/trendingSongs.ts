@@ -15,7 +15,18 @@ export const trendingSongs: Song[] = [
     genre: "."
   },
   {
-    id: "trending2",
+  id: "trending2",
+  title: "Nuvvunte Chaley",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754743776/Nuvvunte_Chaley_gvcrva.mp3",
+  duration: 240,
+  album: "Nuvvunte Chaley",
+  year: 2025,
+  genre: "."
+}
+  {
+    id: "trending3",
     title: "Minnalvala",
     artist: "Narivetta",
     imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752507033/Minnalvala-From-Narivetta-Malayalam-2025-20250416150421-500x500_cixjbx.jpg", // Replace with actual image URL
@@ -26,7 +37,7 @@ export const trendingSongs: Song[] = [
     genre: "Romance"
   },
   {
-    id: "trending3",
+    id: "trending4",
     title: "Om Namo Bhagavate Vasudevaya",
     artist: "Mahavatar Narsimha",
     imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754701000/IMG_20250809_062624_f6ogak.jpg",
@@ -37,7 +48,7 @@ export const trendingSongs: Song[] = [
     genre: "Love it"
   },
   {
-  id: "trending4",
+  id: "trending5",
   title: "Hridayam Lopala",
   artist: "Kingdom",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1746425141_j58ecx.webp",
@@ -48,7 +59,7 @@ export const trendingSongs: Song[] = [
   genre: "."
 },
   {
-  id: "trending5",
+  id: "trending6",
   title: "Naa Koduka",
   artist: "Kubera",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kuberaa-Telugu-2025-20250624153504-500x500_gappsa.jpg",
@@ -59,7 +70,7 @@ export const trendingSongs: Song[] = [
   genre: "."
 },
   {
-  id: "trending6",
+  id: "trending7",
   title: "Viral Vayyari",
   artist: "Viral Vayyari",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741749/Junior-2025_rxo3fe.jpg",
