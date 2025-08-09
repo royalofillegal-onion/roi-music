@@ -1,20 +1,29 @@
 
 import { songs } from '@/data/songs';
-import { goodMorningSongs } from '@/data/goodMorningSongs';
-import { goodAfternoonSongs } from '@/data/goodAfternoonSongs';
-import { goodEveningSongs } from '@/data/goodEveningSongs';
+import { goodMorningSongs, displayGoodMorningSongs } from '@/data/goodMorningSongs';
+import { goodAfternoonSongs, displayGoodAfternoonSongs } from '@/data/goodAfternoonSongs';
+import { goodEveningSongs, displayGoodEveningSongs } from '@/data/goodEveningSongs';
 
 export const getTimeBasedSongs = (count: number = 4) => {
   const hour = new Date().getHours();
   let songsToUse = goodMorningSongs; // Default to morning songs
+  let shouldDisplay = displayGoodMorningSongs; // Default display setting
   
   // Time ranges: 1 AM - 12 PM = Morning, 12 PM - 6 PM = Afternoon, 6 PM - 1 AM = Evening
   if (hour >= 1 && hour < 12) {
     songsToUse = goodMorningSongs;
+    shouldDisplay = displayGoodMorningSongs;
   } else if (hour >= 12 && hour < 18) {
     songsToUse = goodAfternoonSongs;
+    shouldDisplay = displayGoodAfternoonSongs;
   } else {
     songsToUse = goodEveningSongs;
+    shouldDisplay = displayGoodEveningSongs;
+  }
+  
+  // If display is disabled, return empty array
+  if (!shouldDisplay) {
+    return [];
   }
   
   // Get current date as seed for consistent daily rotation

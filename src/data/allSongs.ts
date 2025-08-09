@@ -1,19 +1,19 @@
 
 import { songs, popularSongs, newReleases } from './songs';
 import { trendingSongs } from './trendingSongs';
-import { goodMorningSongs } from './goodMorningSongs';
-import { goodAfternoonSongs } from './goodAfternoonSongs';
-import { goodEveningSongs } from './goodEveningSongs';
+import { goodMorningSongs, displayGoodMorningSongs } from './goodMorningSongs';
+import { goodAfternoonSongs, displayGoodAfternoonSongs } from './goodAfternoonSongs';
+import { goodEveningSongs, displayGoodEveningSongs } from './goodEveningSongs';
 import { additionalSongs } from './additionalSongs';
 import { moreSongs } from './moreSongs';
 
-// Combine all songs from different files
+// Combine all songs from different files, respecting display settings
 export const allSongs = [
   ...songs,
   ...trendingSongs,
-  ...goodMorningSongs,
-  ...goodAfternoonSongs,
-  ...goodEveningSongs,
+  ...(displayGoodMorningSongs ? goodMorningSongs : []),
+  ...(displayGoodAfternoonSongs ? goodAfternoonSongs : []),
+  ...(displayGoodEveningSongs ? goodEveningSongs : []),
   ...popularSongs, 
   ...newReleases,
   ...additionalSongs,
