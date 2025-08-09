@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import UserProfile from "@/components/UserProfile";
 import AnimatedHeader from "@/components/AnimatedHeader";
-import TimeBasedSections from "@/components/TimeBasedSections";
 import { Play, Shuffle, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -195,9 +194,6 @@ const Index = () => {
           </GlowingButton>
         </div>
       )}
-
-      {/* Time-Based Sections */}
-      <TimeBasedSections />
 
       {/* Good Morning Section - Show only one song */}
       {homepageSections.goodMorning && (
