@@ -58,15 +58,16 @@ export const trendingSongs: Song[] = [
     genre: "Devotional"
   },
   {
-    id: "trending6",
-    title: "Choti Choti Baatein",
-    artist: "Maharshi",
-    imageUrl: "https://example.com/choti-choti-baatein-poster.jpg", // Replace with actual image URL
-    audioUrl: "https://example.com/choti-choti-baatein-audio.mp3", // Replace with actual audio URL
-    duration: 276,
-    album: "Maharshi",
-    year: 2024,
-    genre: "Romantic"
+    "id": "trending6"
+    "title": "Om Namo Bhagavate Vasudevaya",
+    "artist": "Mahavatar Narsimha",
+    "imageUrl": "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754701000/IMG_20250809_062624_f6ogak.jpg",
+    "audioUrl": "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754701019/Om_Namo_Bhagavate_Vasudevaya_Lyrical_Video_-_Hindi___Hombale_Films___Kleem_Productions___Sam_CS_gjchsu.mp3",
+    "duration": 3:42,
+    "album": "Mahavatar Narsimha",
+    "year": 2025,
+    "genre": "Love it ",
+    "fileCategory": "god"
   }
 ];
 
