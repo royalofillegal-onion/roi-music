@@ -4,16 +4,16 @@ import { Song } from './songs';
 export const trendingSongs: Song[] = [
   
   {
-  id: "2trending1",
-  title: "Monica Telugu",
-  artist: "Monica",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741575/59317_4_eoh8rw.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754741635/Monica_Telugu_KoshalWorld.Com_itvbc7.mp3",
-  duration: 188,
-  album: "Monica Telugu",
-  year: 2025,
-  genre: "."
-},
+    id: "trending1",
+    title: "Monica Telugu",
+    artist: "Monica",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741575/59317_4_eoh8rw.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754741635/Monica_Telugu_KoshalWorld.Com_itvbc7.mp3",
+    duration: 188,
+    album: "Monica Telugu",
+    year: 2025,
+    genre: "."
+  },
   {
     id: "trending2",
     title: "Minnalvala",
@@ -25,7 +25,7 @@ export const trendingSongs: Song[] = [
     year: 2025,
     genre: "Romance"
   },
-    {
+  {
     id: "trending3",
     title: "Om Namo Bhagavate Vasudevaya",
     artist: "Mahavatar Narsimha",
@@ -35,8 +35,8 @@ export const trendingSongs: Song[] = [
     album: "Mahavatar Narsimha",
     year: 2025,
     genre: "Love it"
-  }
-    {
+  },
+  {
   id: "trending4",
   title: "Hridayam Lopala",
   artist: "Kingdom",
@@ -58,7 +58,7 @@ export const trendingSongs: Song[] = [
   year: 2025,
   genre: "."
 },
-    {
+  {
   id: "trending6",
   title: "Viral Vayyari",
   artist: "Viral Vayyari",
