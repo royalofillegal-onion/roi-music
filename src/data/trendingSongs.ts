@@ -15,16 +15,16 @@ export const trendingSongs: Song[] = [
     genre: "."
   },
   {
-  id: "trending2",
-  title: "Nuvvunte Chaley",
-  artist: "Andhra King Taluka",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754743776/Nuvvunte_Chaley_gvcrva.mp3",
-  duration: 240,
-  album: "Nuvvunte Chaley",
-  year: 2025,
-  genre: "."
-}
+    id: "trending2",
+    title: "Nuvvunte Chaley",
+    artist: "Andhra King Taluka",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754743776/Nuvvunte_Chaley_gvcrva.mp3",
+    duration: 240,
+    album: "Nuvvunte Chaley",
+    year: 2025,
+    genre: "."
+  },
   {
     id: "trending3",
     title: "Minnalvala",
