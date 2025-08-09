@@ -39,9 +39,10 @@ const Auth = () => {
       // Redirect to home page if logged in
       if (event === 'SIGNED_IN' && session) {
         console.log("Auth: User signed in, redirecting to home");
+        // Use window.location for mobile APK compatibility
         setTimeout(() => {
-          navigate('/');
-        }, 0);
+          window.location.href = '/';
+        }, 100);
       }
     });
 
@@ -53,25 +54,29 @@ const Auth = () => {
       // Also check localStorage for session data (for better persistence)
       const storedSession = localStorage.getItem('auth.session');
       
-      if (session || storedSession) {
+      if (session) {
         console.log("Auth: User is already logged in, redirecting to home");
-        
-        // If we have a stored session but no active session, try to restore it
-        if (storedSession && !session) {
-          try {
-            const parsedSession = JSON.parse(storedSession);
-            await supabase.auth.setSession({
-              access_token: parsedSession.access_token,
-              refresh_token: parsedSession.refresh_token,
-            });
-          } catch (error) {
-            console.error("Failed to restore session from localStorage:", error);
-            // Clear invalid stored session
+        window.location.href = '/';
+      } else if (storedSession) {
+        console.log("Auth: Attempting to restore session from localStorage");
+        try {
+          const parsedSession = JSON.parse(storedSession);
+          const { data, error } = await supabase.auth.setSession({
+            access_token: parsedSession.access_token,
+            refresh_token: parsedSession.refresh_token,
+          });
+          
+          if (error) {
+            console.error("Failed to restore session:", error);
             localStorage.removeItem('auth.session');
+          } else if (data.session) {
+            console.log("Auth: Session restored successfully");
+            window.location.href = '/';
           }
+        } catch (error) {
+          console.error("Failed to parse stored session:", error);
+          localStorage.removeItem('auth.session');
         }
-        
-        navigate('/');
       }
     } catch (error) {
       console.error("Error checking session:", error);
