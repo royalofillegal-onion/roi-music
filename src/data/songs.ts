@@ -2359,5 +2359,5 @@ export const songs: Song[] = [
 ];
 // Updated based on actual trending searches and popular songs
 export const trendingSongs = [songs[1], songs[5], songs[0], songs[14], songs[17], songs[15], songs[16], songs[18], songs[19], songs[20], songs[22], songs[25], songs[27], songs[30], songs[33], songs[35], songs[40], songs[42], songs[45], songs[50]];
-export const popularSongs = [songs[1], songs[5], songs[0], songs[14], songs[17], songs[22], songs[25], songs[27], songs[30], songs[33], songs[35], songs[40], songs[42], songs[45], songs[50], songs[55], songs[60], songs[65], songs[70], songs[75]];
-export const newReleases = [songs[0], songs[1], songs[5], songs[6], songs[14], songs[15], songs[16], songs[17], songs[18], songs[19], songs[20], songs[22], songs[25], songs[27], songs[30], songs[33], songs[35], songs[40], songs[42], songs[45]];
+export const popularSongs = [songs[2], songs[3], songs[4], songs[7], songs[8], songs[9], songs[10], songs[11], songs[12], songs[13], songs[21], songs[23], songs[24], songs[26], songs[28], songs[29], songs[31], songs[32], songs[34], songs[36]];
+export const newReleases = [songs[37], songs[38], songs[39], songs[41], songs[43], songs[44], songs[46], songs[47], songs[48], songs[49], songs[51], songs[52], songs[53], songs[54], songs[56], songs[57], songs[58], songs[59], songs[61], songs[62]];
