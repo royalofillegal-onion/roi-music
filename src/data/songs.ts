@@ -13,15 +13,26 @@ export interface Song {
 
 export const songs: Song[] = [
   {
-    id: "song1",
-    title: "My Love Is Gone",
-    artist: "Araya 2",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745143474/arya-2-indian-movie-poster_jl3eqb.webp",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745143401/6-My_Love_Is_Gone-SenSongsMp3.Co_1_vqkwrz.mp3",
-    duration: 289,
-    album: "Chill Vibes",
-    year: 2009,
-    genre: "Break Vibes"
+    id: "song17",
+    title: "Adhento Gaani Vunnapaatuga",
+    artist: "Jersey",
+    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1744979749/images_8_zglkpf.jpg",
+    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1744978242/Adhento_Gaani_Vunnapaatuga_-_Full_Video_JERSEY_Nani_Shraddha_Srinath_Anirudh_Ravichander_qyjfev.mp3",
+    duration: 290,
+    album: "Jersey",
+    year: 2019,
+    genre: "Emotional"
+  },
+  {
+    id: "song37",
+    title: "Thanu",
+    artist: "HIT 3",
+    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1747215703/wirl2nhuerncbhixa6eh.jpg",
+    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1747215204/aihawlod7kzdhv10ho0m.mp3",
+    duration: 248,
+    album: "HIT3",
+    year: 2025,
+    genre: "Title Track"
   },
   {
     id: "song2",
@@ -145,28 +156,6 @@ export const songs: Song[] = [
     genre: "World"
   },
   {
-    id: "song13",
-    title: "Cosmic Voyage",
-    artist: "Stellar Dreams",
-    imageUrl: "https://images.unsplash.com/photo-1537420327992-d6e192287183?q=80&w=500&auto=format&fit=crop",
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3",
-    duration: 204,
-    album: "Galaxy",
-    year: 2023,
-    genre: "Ambient"
-  },
-  {
-    id: "song14",
-    title: "Urban Jungle",
-    artist: "Street Beat",
-    imageUrl: "https://images.unsplash.com/photo-1572123748421-44414b1763df?q=80&w=500&auto=format&fit=crop",
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-621.mp3",
-    duration: 136,
-    album: "Concrete",
-    year: 2022,
-    genre: "Hip Hop"
-  },
-  {
     id: "song15",
     title: "Oh Pilla",
     artist: "Private",
@@ -187,17 +176,6 @@ export const songs: Song[] = [
     album: "Nuvvostanante Nenoddantana",
     year: 2005,
     genre: "Love"
-  },
-  {
-    id: "song17",
-    title: "Adhento Gaani Vunnapaatuga",
-    artist: "Jersey",
-    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1744979749/images_8_zglkpf.jpg",
-    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1744978242/Adhento_Gaani_Vunnapaatuga_-_Full_Video_JERSEY_Nani_Shraddha_Srinath_Anirudh_Ravichander_qyjfev.mp3",
-    duration: 290,
-    album: "Jersey",
-    year: 2019,
-    genre: "Emotional"
   },
   {
     id: "song18",
@@ -409,17 +387,6 @@ export const songs: Song[] = [
     genre: "Title Track"
   },
   {
-    id: "song37",
-    title: "Thanu",
-    artist: "HIT 3",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1747215703/wirl2nhuerncbhixa6eh.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1747215204/aihawlod7kzdhv10ho0m.mp3",
-    duration: 248,
-    album: "HIT3",
-    year: 2025,
-    genre: "Title Track"
-  },
-  {
     id: "song38",
     title: "Abir Baar Arjun Sarkaar",
     artist: "HIT 3",
@@ -616,6 +583,17 @@ export const songs: Song[] = [
     duration: 210,
     year: 2025,
     genre: "Title Track"
+  },
+  {
+    id: "song1",
+    title: "My Love Is Gone",
+    artist: "Araya 2",
+    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745143474/arya-2-indian-movie-poster_jl3eqb.webp",
+    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745143401/6-My_Love_Is_Gone-SenSongsMp3.Co_1_vqkwrz.mp3",
+    duration: 289,
+    album: "Chill Vibes",
+    year: 2009,
+    genre: "Break Vibes"
   },
   {
     id: "song56",
