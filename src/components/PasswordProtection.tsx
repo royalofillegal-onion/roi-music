@@ -1,99 +1,79 @@
-
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Lock, Eye, EyeOff } from "lucide-react";
-import { toast } from "sonner";
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Lock } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface PasswordProtectionProps {
-  children: React.ReactNode;
-  requiredPassword: string;
+  expectedPassword: string;
+  onSuccess: () => void;
   title?: string;
   description?: string;
 }
 
-const PasswordProtection = ({ 
-  children, 
-  requiredPassword, 
-  title = "Access Required",
-  description = "Please enter the password to access this page"
-}: PasswordProtectionProps) => {
-  const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  // Check if already authenticated (stored in sessionStorage)
-  useEffect(() => {
-    const stored = sessionStorage.getItem('artists_page_authenticated');
-    if (stored === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
+const PasswordProtection: React.FC<PasswordProtectionProps> = ({
+  expectedPassword,
+  onSuccess,
+  title = "Protected Content",
+  description = "Please enter the password to access this content."
+}) => {
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
 
-    // Simulate a small delay for better UX
+    // Simple password check
     setTimeout(() => {
-      if (password === requiredPassword) {
-        setIsAuthenticated(true);
-        sessionStorage.setItem('artists_page_authenticated', 'true');
-        toast.success("Access granted!");
+      if (password === expectedPassword) {
+        toast.success('Access granted!');
+        onSuccess();
       } else {
-        toast.error("Incorrect password. Please try again.");
-        setPassword("");
+        toast.error('Incorrect password. Please try again.');
+        setPassword('');
       }
-      setLoading(false);
+      setIsLoading(false);
     }, 500);
   };
 
-  if (isAuthenticated) {
-    return <>{children}</>;
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-900">
-      <Card className="w-full max-w-md bg-gray-800 border-gray-700">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-music-accent/10 flex items-center justify-center">
-            <Lock className="h-6 w-6 text-music-accent" />
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+      <div className="max-w-md w-full space-y-8 bg-gray-800/50 p-8 rounded-xl border border-gray-700 backdrop-blur-sm">
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 bg-yellow-500/10 rounded-full flex items-center justify-center mb-4">
+            <Lock className="h-6 w-6 text-yellow-500" />
           </div>
-          <CardTitle className="text-xl font-bold text-white">{title}</CardTitle>
-          <p className="text-gray-400 text-sm">{description}</p>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white pr-10"
-                disabled={loading}
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-            <Button
-              type="submit"
-              className="w-full bg-music-accent hover:bg-music-accent/90 text-black"
-              disabled={loading || !password.trim()}
-            >
-              {loading ? "Verifying..." : "Access Page"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+          <h2 className="text-2xl font-bold text-white">{title}</h2>
+          <p className="mt-2 text-gray-400 text-sm">{description}</p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="password" className="sr-only">
+              Password
+            </label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500"
+              required
+              autoFocus
+            />
+          </div>
+          
+          <Button
+            type="submit"
+            disabled={isLoading || !password.trim()}
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
+          >
+            {isLoading ? 'Verifying...' : 'Access Content'}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };

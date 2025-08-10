@@ -150,10 +150,23 @@ Listen now: ${url}
   }
 
   /**
-   * Handle smart app redirect
+   * Handle smart app redirect with APK detection
    */
   static handleSmartRedirect(hashCode: string): void {
     const fallbackUrl = `${this.getBaseUrl()}/share/${hashCode}`;
-    AppDeepLinks.openApp(`share/${hashCode}`, fallbackUrl);
+    
+    // Check if running in APK/mobile app
+    const isAPK = window.location.protocol === 'file:' || 
+                  window.navigator.userAgent.includes('wv') ||
+                  (window as any).Android ||
+                  (window as any).webkit?.messageHandlers;
+    
+    if (isAPK) {
+      // If in APK, try to open web version
+      window.open(fallbackUrl, '_blank');
+    } else {
+      // If in web, try to open app then fallback to web
+      AppDeepLinks.openApp(`share/${hashCode}`, fallbackUrl);
+    }
   }
 }

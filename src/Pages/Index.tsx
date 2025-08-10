@@ -30,6 +30,7 @@ const Index = () => {
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
+  const [currentTrendingIndex, setCurrentTrendingIndex] = useState(0);
   const [homepageSections, setHomepageSections] = useState<{
     goodMorning: Song | null;
     trendingNow: Song | null;
@@ -114,8 +115,11 @@ const Index = () => {
 
   const playTrendingPlaylist = () => {
     if (trendingSongs.length > 0) {
-      playSong(trendingSongs[0]);
-      showNotification.nowPlaying(trendingSongs[0].title, trendingSongs[0].artist);
+      const currentSong = trendingSongs[currentTrendingIndex];
+      playSong(currentSong);
+      showNotification.nowPlaying(currentSong.title, currentSong.artist);
+      // Cycle to next song for next click
+      setCurrentTrendingIndex((prev) => (prev + 1) % trendingSongs.length);
     }
   };
 

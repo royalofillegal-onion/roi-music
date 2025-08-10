@@ -1,14 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FileText, Share2, Copy, ExternalLink, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import PasswordProtection from '@/components/PasswordProtection';
 
 const TermsAndConditions = () => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const copyCurrentPageUrl = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -43,6 +45,17 @@ const TermsAndConditions = () => {
       }
     }
   };
+
+  if (!isAuthenticated) {
+    return (
+      <PasswordProtection
+        expectedPassword="callme"
+        onSuccess={() => setIsAuthenticated(true)}
+        title="Terms and Conditions Access"
+        description="This page is protected. Please enter the access code."
+      />
+    );
+  }
 
   return (
     <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
