@@ -12,7 +12,8 @@ import SongRow from "@/components/SongRow";
 import { playlists, getUserPlaylists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { supabase } from "@/integrations/supabase/client";
-import { songs, Song } from "@/data/songs";
+import { Song } from "@/data/songs";
+import { uniqueSongs } from "@/data/allSongs";
 import { toast } from "sonner";
 
 const PlaylistView = () => {
@@ -72,7 +73,7 @@ const PlaylistView = () => {
             
             if (!songsError && playlistSongsData) {
               const songsList = playlistSongsData
-                .map(ps => songs.find(s => s.id === ps.song_id))
+                .map(ps => uniqueSongs.find(s => s.id === ps.song_id))
                 .filter(Boolean) as Song[];
               
               setPlaylist({

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useRef, useEffect } from "react";
 import { Song } from "@/data/songs";
-import { songs } from "@/data/songs";
+import { uniqueSongs } from "@/data/allSongs";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   showAndroidNotification, 
   signalContinuousPlayback,
@@ -166,13 +167,43 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [currentSong, isPlaying]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("likedSongs");
-    if (saved) {
-      setLikedSongs(JSON.parse(saved));
-    }
+    const loadLikedSongs = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+          // Load from Supabase for authenticated users
+          const { data: likedSongsData, error } = await supabase
+            .from('liked_songs')
+            .select('song_id')
+            .eq('user_id', session.user.id);
+          
+          if (!error && likedSongsData) {
+            const likedSongIds = likedSongsData.map(item => item.song_id);
+            setLikedSongs(likedSongIds);
+          }
+        } else {
+          // Load from localStorage for non-authenticated users
+          const saved = localStorage.getItem("likedSongs");
+          if (saved) {
+            setLikedSongs(JSON.parse(saved));
+          }
+        }
+      } catch (error) {
+        console.error('Error loading liked songs:', error);
+        // Fallback to localStorage
+        const saved = localStorage.getItem("likedSongs");
+        if (saved) {
+          setLikedSongs(JSON.parse(saved));
+        }
+      }
+    };
+
+    loadLikedSongs();
   }, []);
 
   useEffect(() => {
+    // Always keep localStorage updated as backup
     localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
   }, [likedSongs]);
 
@@ -389,17 +420,61 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success(isRepeating ? "Repeat disabled" : "Repeat enabled");
   };
 
-  const toggleLike = (songId: string) => {
-    setLikedSongs(prev => {
-      const isLiked = prev.includes(songId);
-      if (isLiked) {
-        toast.success("Removed from liked songs");
-        return prev.filter(id => id !== songId);
+  const toggleLike = async (songId: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        // Handle Supabase liked songs for authenticated users
+        const isCurrentlyLiked = likedSongs.includes(songId);
+        
+        if (isCurrentlyLiked) {
+          // Remove from Supabase
+          const { error } = await supabase
+            .from('liked_songs')
+            .delete()
+            .eq('user_id', session.user.id)
+            .eq('song_id', songId);
+          
+          if (!error) {
+            setLikedSongs(prev => prev.filter(id => id !== songId));
+            toast.success("Removed from liked songs");
+          } else {
+            toast.error("Failed to remove from liked songs");
+          }
+        } else {
+          // Add to Supabase
+          const { error } = await supabase
+            .from('liked_songs')
+            .insert({
+              user_id: session.user.id,
+              song_id: songId
+            });
+          
+          if (!error) {
+            setLikedSongs(prev => [...prev, songId]);
+            toast.success("Added to liked songs");
+          } else {
+            toast.error("Failed to add to liked songs");
+          }
+        }
       } else {
-        toast.success("Added to liked songs");
-        return [...prev, songId];
+        // Handle localStorage liked songs for non-authenticated users
+        setLikedSongs(prev => {
+          const isLiked = prev.includes(songId);
+          if (isLiked) {
+            toast.success("Removed from liked songs");
+            return prev.filter(id => id !== songId);
+          } else {
+            toast.success("Added to liked songs");
+            return [...prev, songId];
+          }
+        });
       }
-    });
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      toast.error("Failed to update liked songs");
+    }
   };
 
   const toggleLikeSong = async (songId: string): Promise<boolean> => {
@@ -458,9 +533,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const playNextFromAllSongs = () => {
     if (!currentSong) return;
     
-    const currentIndex = songs.findIndex(song => song.id === currentSong.id);
-    const nextIndex = (currentIndex + 1) % songs.length;
-    const nextSong = songs[nextIndex];
+    const currentIndex = uniqueSongs.findIndex(song => song.id === currentSong.id);
+    const nextIndex = (currentIndex + 1) % uniqueSongs.length;
+    const nextSong = uniqueSongs[nextIndex];
     
     console.log('Playing next song from all songs:', nextSong.title);
     playSong(nextSong);
@@ -469,9 +544,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const playPreviousFromAllSongs = () => {
     if (!currentSong) return;
     
-    const currentIndex = songs.findIndex(song => song.id === currentSong.id);
-    const prevIndex = currentIndex === 0 ? songs.length - 1 : currentIndex - 1;
-    const prevSong = songs[prevIndex];
+    const currentIndex = uniqueSongs.findIndex(song => song.id === currentSong.id);
+    const prevIndex = currentIndex === 0 ? uniqueSongs.length - 1 : currentIndex - 1;
+    const prevSong = uniqueSongs[prevIndex];
     
     console.log('Playing previous song from all songs:', prevSong.title);
     playSong(prevSong);
@@ -541,18 +616,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
           setIsRepeating(prev => !prev);
           toast.success(isRepeating ? "Repeat disabled" : "Repeat enabled");
         },
-        toggleLike: (songId: string) => {
-          setLikedSongs(prev => {
-            const isLiked = prev.includes(songId);
-            if (isLiked) {
-              toast.success("Removed from liked songs");
-              return prev.filter(id => id !== songId);
-            } else {
-              toast.success("Added to liked songs");
-              return [...prev, songId];
-            }
-          });
-        },
+        toggleLike,
         toggleLikeSong: async (songId: string): Promise<boolean> => {
           return new Promise((resolve) => {
             setLikedSongs(prev => {

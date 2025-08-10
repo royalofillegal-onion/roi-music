@@ -4,7 +4,8 @@ import { Heart, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { usePlayer } from "@/context/PlayerContext";
-import { Song, songs } from "@/data/songs";
+import { Song } from "@/data/songs";
+import { uniqueSongs } from "@/data/allSongs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import AddToPlaylist from "@/components/AddToPlaylist";
@@ -17,7 +18,7 @@ const LikedSongs = () => {
   useEffect(() => {
     const getLikedSongs = () => {
       if (likedSongs) {
-        const fullSongDetails = songs.filter(song => likedSongs.includes(song.id));
+        const fullSongDetails = uniqueSongs.filter(song => likedSongs.includes(song.id));
         setLikedSongsList(fullSongDetails);
       } else {
         setLikedSongsList([]);
