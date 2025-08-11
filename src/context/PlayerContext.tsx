@@ -405,14 +405,35 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const toggleShuffle = () => {
-    setIsShuffled(prev => !prev);
-    if (!isShuffled && queue.length > 0) {
-      const shuffled = [...queue].sort(() => Math.random() - 0.5);
-      setQueue(shuffled);
-      toast.success("Shuffle enabled");
-    } else {
-      toast.success("Shuffle disabled");
-    }
+    setIsShuffled(prev => {
+      const newShuffled = !prev;
+      
+      if (newShuffled) {
+        // When enabling shuffle, shuffle both queue and circular queue
+        if (queue.length > 0) {
+          const shuffled = [...queue].sort(() => Math.random() - 0.5);
+          setQueue(shuffled);
+        }
+        
+        if (circularQueue.length > 0) {
+          const shuffledCircular = [...circularQueue];
+          // Keep current song at index 0, shuffle the rest
+          const currentSong = shuffledCircular[currentQueueIndex];
+          const remainingSongs = shuffledCircular.filter((_, i) => i !== currentQueueIndex);
+          const shuffledRemaining = remainingSongs.sort(() => Math.random() - 0.5);
+          
+          const newCircularQueue = [currentSong, ...shuffledRemaining];
+          setCircularQueue(newCircularQueue);
+          setCurrentQueueIndex(0);
+        }
+        
+        toast.success("Shuffle enabled");
+      } else {
+        toast.success("Shuffle disabled");
+      }
+      
+      return newShuffled;
+    });
   };
 
   const toggleRepeat = () => {

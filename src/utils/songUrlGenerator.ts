@@ -150,7 +150,7 @@ Listen now: ${url}
   }
 
   /**
-   * Handle smart app redirect with APK detection
+   * Handle smart app redirect with APK detection and prevent multiple reloads
    */
   static handleSmartRedirect(hashCode: string): void {
     const fallbackUrl = `${this.getBaseUrl()}/share/${hashCode}`;
@@ -161,9 +161,24 @@ Listen now: ${url}
                   (window as any).Android ||
                   (window as any).webkit?.messageHandlers;
     
+    // Prevent multiple redirects using session storage
+    const redirectKey = `redirect_${hashCode}`;
+    const lastRedirect = sessionStorage.getItem(redirectKey);
+    const now = Date.now();
+    
+    // Prevent redirect if attempted within last 5 seconds
+    if (lastRedirect && (now - parseInt(lastRedirect)) < 5000) {
+      console.log('Preventing duplicate redirect within 5 seconds');
+      return;
+    }
+    
+    sessionStorage.setItem(redirectKey, now.toString());
+    
     if (isAPK) {
-      // If in APK, try to open web version
-      window.open(fallbackUrl, '_blank');
+      // If in APK, use location.href instead of window.open
+      setTimeout(() => {
+        window.location.href = fallbackUrl;
+      }, 500); // Small delay to prevent reload loops
     } else {
       // If in web, try to open app then fallback to web
       AppDeepLinks.openApp(`share/${hashCode}`, fallbackUrl);

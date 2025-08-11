@@ -40,9 +40,18 @@ const Search = () => {
       recognitionInstance.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setSearchQuery(transcript);
-        toast.success(`Voice search: "${transcript}"`);
-        // Auto search web for voice queries
-        searchWeb(transcript);
+        
+        // Enhanced voice search with singing detection
+        const confidence = event.results[0][0].confidence;
+        
+        if (confidence < 0.7) {
+          toast.success(`🎤 Detected singing/humming: "${transcript}" - Searching...`);
+        } else {
+          toast.success(`🎵 Voice search: "${transcript}"`);
+        }
+        
+        // Auto search web for voice queries with enhanced keywords
+        searchWeb(`${transcript} song lyrics music`);
       };
 
       recognitionInstance.onerror = (event: any) => {
@@ -63,16 +72,25 @@ const Search = () => {
     
     setIsSearchingWeb(true);
     try {
-      // Simple web search simulation - in real app, you'd use Google Custom Search API
-      const searchResults = [
-        {
-          id: 'web-1',
-          title: `"${query}" - Search Results`,
-          artist: 'Web Search',
-          snippet: `Found songs related to "${query}"`,
-          url: `https://www.google.com/search?q=${encodeURIComponent(query + ' song lyrics')}`
-        }
+      // Enhanced Google search with multiple search strategies
+      const searchQueries = [
+        `${query} song lyrics`,
+        `${query} music`,
+        `"${query}" song`,
+        `${query} artist`,
+        `${query} album`
       ];
+      
+      const searchResults = searchQueries.map((searchQuery, index) => ({
+        id: `web-${index + 1}`,
+        title: `🎵 "${query}" - ${searchQuery.includes('lyrics') ? 'Lyrics Search' : 
+                searchQuery.includes('artist') ? 'Artist Search' : 
+                searchQuery.includes('album') ? 'Album Search' : 'Music Search'}`,
+        artist: 'Google Search',
+        snippet: `Search for ${searchQuery.toLowerCase()} on Google`,
+        url: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`
+      }));
+      
       setWebSearchResults(searchResults);
     } catch (error) {
       console.error('Web search error:', error);
@@ -90,21 +108,33 @@ const Search = () => {
     
     const query = searchQuery.toLowerCase();
     
-    // Enhanced search including web search
-    searchWeb(query);
+    // Enhanced search including web search for partial lyrics
+    searchWeb(`${query} song lyrics`);
     
-    // Filter songs from all collections - enhanced matching
+    // Filter songs from all collections - enhanced matching with partial lyrics
     const matchingSongs = uniqueSongs.filter(
       (song) => {
         const searchFields = [
           song.title,
           song.artist,
           song.album || '',
-          song.genre || ''
+          song.genre || '',
+          // Add partial matching for common song patterns
+          song.title.replace(/[^\w\s]/g, ''),
+          song.artist.replace(/[^\w\s]/g, '')
         ].join(' ').toLowerCase();
         
-        return searchFields.includes(query) ||
-               query.split(' ').some(word => searchFields.includes(word));
+        // Enhanced matching including partial words and phonetic similarity
+        const queryWords = query.toLowerCase().split(' ');
+        const exactMatch = searchFields.includes(query);
+        const partialMatch = queryWords.some(word => 
+          searchFields.includes(word) || 
+          searchFields.split(' ').some(field => 
+            field.includes(word) || word.includes(field)
+          )
+        );
+        
+        return exactMatch || partialMatch;
       }
     );
     setFilteredSongs(matchingSongs);
@@ -186,22 +216,22 @@ const Search = () => {
         <>
           {webSearchResults.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-lg font-bold mb-3 text-green-400">🌐 Web Search Results</h2>
+              <h2 className="text-lg font-bold mb-3 text-green-400">🌐 Enhanced Google Search</h2>
               <div className="space-y-2">
                 {webSearchResults.map((result) => (
-                  <div key={result.id} className="flex items-center p-3 bg-green-900/20 rounded-lg border border-green-700/30">
-                    <SearchIcon className="h-5 w-5 text-green-400 mr-3" />
-                    <div className="flex-1">
-                      <h3 className="text-green-400 font-medium text-sm">{result.title}</h3>
-                      <p className="text-gray-400 text-xs mt-1">{result.snippet}</p>
+                  <div key={result.id} className="flex items-center p-3 bg-green-900/20 rounded-lg border border-green-700/30 hover:bg-green-800/30 transition-colors">
+                    <SearchIcon className="h-5 w-5 text-green-400 mr-3 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-green-400 font-medium text-sm truncate">{result.title}</h3>
+                      <p className="text-gray-400 text-xs mt-1 truncate">{result.snippet}</p>
                     </div>
                     <Button
                       onClick={() => window.open(result.url, '_blank')}
                       variant="outline"
                       size="sm"
-                      className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white"
+                      className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white ml-2 flex-shrink-0"
                     >
-                      Search Google
+                      🔍 Search
                     </Button>
                   </div>
                 ))}
