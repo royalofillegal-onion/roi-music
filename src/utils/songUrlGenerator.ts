@@ -153,35 +153,65 @@ Listen now: ${url}
    * Handle smart app redirect with APK detection and prevent multiple reloads
    */
   static handleSmartRedirect(hashCode: string): void {
-    const fallbackUrl = `${this.getBaseUrl()}/share/${hashCode}`;
-    
     // Check if running in APK/mobile app
     const isAPK = window.location.protocol === 'file:' || 
                   window.navigator.userAgent.includes('wv') ||
                   (window as any).Android ||
                   (window as any).webkit?.messageHandlers;
     
-    // Prevent multiple redirects using session storage
+    // More aggressive prevention - check for any redirect in last 10 seconds
     const redirectKey = `redirect_${hashCode}`;
-    const lastRedirect = sessionStorage.getItem(redirectKey);
+    const pageLoadKey = `pageload_${hashCode}`;
+    const lastRedirect = localStorage.getItem(redirectKey);
+    const lastPageLoad = localStorage.getItem(pageLoadKey);
     const now = Date.now();
     
-    // Prevent redirect if attempted within last 5 seconds
-    if (lastRedirect && (now - parseInt(lastRedirect)) < 5000) {
-      console.log('Preventing duplicate redirect within 5 seconds');
+    // Prevent redirect if attempted within last 10 seconds OR if page loaded recently
+    if ((lastRedirect && (now - parseInt(lastRedirect)) < 10000) ||
+        (lastPageLoad && (now - parseInt(lastPageLoad)) < 3000)) {
+      console.log('🚫 Preventing duplicate redirect - too recent');
       return;
     }
     
-    sessionStorage.setItem(redirectKey, now.toString());
+    // Mark current page load
+    localStorage.setItem(pageLoadKey, now.toString());
     
     if (isAPK) {
-      // If in APK, use location.href instead of window.open
-      setTimeout(() => {
-        window.location.href = fallbackUrl;
-      }, 500); // Small delay to prevent reload loops
+      // If already in APK, just mark redirect to prevent loops
+      localStorage.setItem(redirectKey, now.toString());
+      console.log('✅ Already in APK - staying in app');
+      return;
     } else {
-      // If in web, try to open app then fallback to web
-      AppDeepLinks.openApp(`share/${hashCode}`, fallbackUrl);
+      // Store redirect attempt
+      localStorage.setItem(redirectKey, now.toString());
+      
+      // Check if app is installed before attempting redirect
+      const appUrl = `roimusic://share/${hashCode}`;
+      
+      // For Android, use intent URL with proper fallback
+      if (navigator.userAgent.includes('Android')) {
+        const intentUrl = `intent://share/${hashCode}#Intent;scheme=roimusic;package=com.roimusic.app;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end`;
+        
+        // Create a temporary iframe to test app availability
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.style.visibility = 'hidden';
+        iframe.src = appUrl;
+        document.body.appendChild(iframe);
+        
+        // Small delay then try intent
+        setTimeout(() => {
+          window.location.href = intentUrl;
+          // Clean up iframe
+          if (iframe.parentNode) {
+            iframe.parentNode.removeChild(iframe);
+          }
+        }, 300);
+        
+      } else {
+        // For iOS and other platforms
+        AppDeepLinks.openApp(`share/${hashCode}`, window.location.href);
+      }
     }
   }
 }

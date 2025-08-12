@@ -13,36 +13,8 @@ const SharedSong = () => {
   const [song, setSong] = useState<Song | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [appRedirectAttempted, setAppRedirectAttempted] = useState(false);
-
   // Extract hash code from URL parameters
   const hashCode = params.hashCode || params.songId;
-
-  // Check if app is available and redirect
-  const attemptAppRedirect = () => {
-    if (appRedirectAttempted) return;
-    setAppRedirectAttempted(true);
-
-    // Custom URL scheme for the app
-    const appUrl = `roimusic://share/${hashCode}`;
-    
-    // Try to open the app
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = appUrl;
-    document.body.appendChild(iframe);
-    
-    // Fallback timer - if app doesn't open, continue with web version
-    setTimeout(() => {
-      document.body.removeChild(iframe);
-    }, 1000);
-
-    // For Android Chrome, we can use intent URLs
-    if (navigator.userAgent.includes('Android')) {
-      const intentUrl = `intent://share/${hashCode}#Intent;scheme=roimusic;package=com.roimusic.app;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end`;
-      window.location.href = intentUrl;
-    }
-  };
 
   const loadSharedSong = async () => {
     if (!hashCode) {
@@ -77,11 +49,17 @@ const SharedSong = () => {
   };
 
   useEffect(() => {
-    // First attempt app redirect
-    attemptAppRedirect();
+    if (!hashCode) return;
     
-    // Then load the song for web fallback
-    loadSharedSong();
+    // Use smart redirect to handle APK properly
+    SongUrlGenerator.handleSmartRedirect(hashCode);
+    
+    // Load the song for web fallback (with delay to prevent conflicts)
+    const timer = setTimeout(() => {
+      loadSharedSong();
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, [hashCode]);
 
   const handleRetry = () => {
