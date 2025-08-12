@@ -22,7 +22,7 @@ interface SongCardProps {
 }
 
 const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
-  const { playSong, addToQueue, toggleLikeSong, isLiked } = usePlayer();
+  const { playSong, addToQueue, removeFromQueue, queue, toggleLikeSong, isLiked } = usePlayer();
   const [isLikedState, setIsLikedState] = useState(() => isLiked(song.id));
   const [isLoadingLike, setIsLoadingLike] = useState(false);
   
@@ -43,6 +43,20 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
     const newLikedState = await toggleLikeSong(song.id);
     setIsLikedState(newLikedState);
     setIsLoadingLike(false);
+  };
+
+  const isInQueue = queue.some(queueSong => queueSong.id === song.id);
+  
+  const handleQueueAction = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isInQueue) {
+      const queueIndex = queue.findIndex(queueSong => queueSong.id === song.id);
+      if (queueIndex !== -1) {
+        removeFromQueue(queueIndex);
+      }
+    } else {
+      addToQueue(song);
+    }
   };
   
   if (variant === "compact") {
@@ -91,15 +105,12 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
               <Plus className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-gray-900 border-gray-800">
+          <DropdownMenuContent align="end" className="w-48 bg-gray-900 border-gray-800 z-50">
             <DropdownMenuItem 
               className="text-sm cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                addToQueue(song);
-              }}
+              onClick={handleQueueAction}
             >
-              Add to Queue
+              {isInQueue ? 'Remove from Queue' : 'Add to Queue'}
             </DropdownMenuItem>
             {playlists.map((playlist) => (
               <DropdownMenuItem 
@@ -177,15 +188,12 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
               <Plus className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-gray-900 border-gray-800">
+          <DropdownMenuContent align="end" className="w-48 bg-gray-900 border-gray-800 z-50">
             <DropdownMenuItem 
               className="text-sm cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                addToQueue(song);
-              }}
+              onClick={handleQueueAction}
             >
-              Add to Queue
+              {isInQueue ? 'Remove from Queue' : 'Add to Queue'}
             </DropdownMenuItem>
             {playlists.map((playlist) => (
               <DropdownMenuItem 
