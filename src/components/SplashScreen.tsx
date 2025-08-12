@@ -56,7 +56,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
       
       {/* Text */}
       <p className="mt-8 text-xl font-bold text-white animate-fade-in">
-        RoyalStar Music
+        ROI MUSIC
       </p>
       <p className="mt-2 text-sm text-gray-400 animate-fade-in">
         Loading your music...

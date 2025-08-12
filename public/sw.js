@@ -185,7 +185,7 @@ self.addEventListener('push', (event) => {
     };
     
     event.waitUntil(
-      self.registration.showNotification(data.title || 'RoyalStar Music', options)
+      self.registration.showNotification(data.title || 'ROI MUSIC', options)
     );
   }
 });

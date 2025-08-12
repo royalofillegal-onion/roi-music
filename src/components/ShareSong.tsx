@@ -66,7 +66,7 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
       try {
         await navigator.share({
           title: `${song.title} - ${song.artist}`,
-          text: `🎵 Listen to this amazing song on RoyalStar Music!`,
+          text: `🎵 Listen to this amazing song on ROI MUSIC!`,
           url: shareUrl,
         });
         setIsOpen(false);
@@ -187,7 +187,7 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
               </Button>
             </div>
             <p className="text-xs text-gray-500 break-words">
-              Anyone with this link can listen to this song on RoyalStar Music
+              Anyone with this link can listen to this song on ROI MUSIC
             </p>
           </div>
 

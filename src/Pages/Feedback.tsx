@@ -41,7 +41,7 @@ const Feedback = () => {
       formData.append('rating', rating.toString());
       formData.append('feedback', feedback.trim());
       formData.append('user_id', session?.user?.id || 'guest');
-      formData.append('_subject', `New Feedback from RoyalStar Music - ${rating} stars`);
+      formData.append('_subject', `New Feedback from ROI MUSIC - ${rating} stars`);
       formData.append('_captcha', 'false');
       formData.append('_template', 'table');
       formData.append('_next', window.location.origin + '/feedback?success=true');
@@ -80,7 +80,7 @@ const Feedback = () => {
         <CardHeader>
           <CardTitle className="text-xl">Tell us what you think!</CardTitle>
           <p className="text-gray-400">
-            We value your opinion and would love to hear about your experience with RoyalStar Music.
+            We value your opinion and would love to hear about your experience with ROI MUSIC.
           </p>
         </CardHeader>
         

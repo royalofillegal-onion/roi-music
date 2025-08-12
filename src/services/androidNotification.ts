@@ -76,7 +76,7 @@ export const registerMediaSession = (data: MediaSessionData) => {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: data.title,
         artist: data.artist,
-        album: 'RoyalStar Music',
+        album: 'ROI MUSIC',
         artwork: [
           { src: data.imageUrl || '/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: data.imageUrl || '/icon-512.png', sizes: '512x512', type: 'image/png' }

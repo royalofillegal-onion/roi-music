@@ -117,7 +117,7 @@ export class SongUrlGenerator {
   static async generateShareText(song: Song): Promise<string> {
     const url = await this.createShareLink(song);
     
-    return `🎵 Check out "${song.title}" by ${song.artist} on RoyalStar Music! 
+    return `🎵 Check out "${song.title}" by ${song.artist} on ROI MUSIC! 
 
 Listen now: ${url}
 

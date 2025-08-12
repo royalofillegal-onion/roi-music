@@ -19,7 +19,7 @@ const TermsAndConditions = () => {
 
   const shareToSocial = (platform: string) => {
     const url = window.location.href;
-    const text = 'Check out RoyalStar Music Terms & Conditions - Open source music platform supporting artists!';
+    const text = 'Check out ROI MUSIC Terms & Conditions - Open source music platform supporting artists!';
     
     let shareUrl = '';
     switch (platform) {
@@ -33,7 +33,7 @@ const TermsAndConditions = () => {
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
         break;
       case 'email':
-        shareUrl = `mailto:?subject=${encodeURIComponent('RoyalStar Music Terms & Conditions')}&body=${encodeURIComponent(text + '\n\n' + url)}`;
+        shareUrl = `mailto:?subject=${encodeURIComponent('ROI MUSIC Terms & Conditions')}&body=${encodeURIComponent(text + '\n\n' + url)}`;
         break;
     }
     
@@ -119,7 +119,7 @@ const TermsAndConditions = () => {
                 <Badge className="bg-green-600">Platform Purpose</Badge>
               </h3>
               <p className="text-gray-200 text-base leading-relaxed mb-4">
-                <strong>RoyalStar Music</strong> is a free, open source music platform designed exclusively for entertainment, 
+                <strong>ROI MUSIC</strong> is a free, open source music platform designed exclusively for entertainment, 
                 artist promotion, and sponsorship purposes.
               </p>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">

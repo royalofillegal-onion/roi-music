@@ -151,7 +151,7 @@ const UserInteraction = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
-            placeholder="Tell us what you think about RoyalStar Music..."
+            placeholder="Tell us what you think about ROI MUSIC..."
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"

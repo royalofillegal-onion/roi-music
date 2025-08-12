@@ -15,7 +15,7 @@ const WelcomePopup = ({ onClose }: WelcomePopupProps) => {
 
   const steps = [
     {
-      title: "Welcome to RoyalStar Music!",
+      title: "Welcome to ROI MUSIC!",
       description: "Your ultimate music streaming experience",
       icon: <Music className="h-12 w-12 text-music-accent" />,
       features: [
@@ -37,7 +37,7 @@ const WelcomePopup = ({ onClose }: WelcomePopupProps) => {
   ];
 
   const handleSkip = () => {
-    toast.success("Welcome to RoyalStar Music! 🎵");
+    toast.success("Welcome to ROI MUSIC! 🎵");
     onClose();
   };
 

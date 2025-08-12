@@ -44,7 +44,7 @@ const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({ children }) => 
                 <Badge className="bg-green-600">Platform Purpose</Badge>
               </h3>
               <p className="text-gray-200 text-sm leading-relaxed mb-3">
-                <strong>RoyalStar Music</strong> is a free, open source music platform designed exclusively for entertainment, 
+                <strong>ROI MUSIC</strong> is a free, open source music platform designed exclusively for entertainment, 
                 artist promotion, and sponsorship purposes.
               </p>
               <ul className="list-disc pl-5 text-gray-300 space-y-1 text-sm">

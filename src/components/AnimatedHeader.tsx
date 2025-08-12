@@ -11,7 +11,7 @@ const AnimatedHeader = () => {
         "bg-clip-text text-transparent bg-size-200 animate-rainbow-slide",
         "glitch-text relative"
       )}>
-        Welcome to RoyalStar Music{" "}
+        Welcome to ROI MUSIC{" "}
         <span className="text-music-accent animate-pulse">Pro Advanced Edition</span>
       </h1>
       
@@ -21,14 +21,14 @@ const AnimatedHeader = () => {
           "text-3xl font-bold mb-6 mt-2",
           "text-red-500 opacity-30 animate-glitch-1"
         )}>
-          Welcome to RoyalStar Music{" "}
+          Welcome to ROI MUSIC{" "}
           <span className="text-music-accent">Pro Advanced Edition</span>
         </h1>
         <h1 className={cn(
           "text-3xl font-bold mb-6 mt-2",
           "text-blue-500 opacity-30 animate-glitch-2"
         )}>
-          Welcome to RoyalStar Music{" "}
+          Welcome to ROI MUSIC{" "}
           <span className="text-music-accent">Pro Advanced Edition</span>
         </h1>
       </div>

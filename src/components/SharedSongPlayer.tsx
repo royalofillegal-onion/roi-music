@@ -35,7 +35,7 @@ const SharedSongPlayer = ({ song, onExploreMusic }: SharedSongPlayerProps) => {
 
   useEffect(() => {
     // Update page metadata
-    document.title = `${song.title} by ${song.artist} - RoyalStar Music`;
+    document.title = `${song.title} by ${song.artist} - ROI MUSIC`;
     
     // Update meta tags for social sharing
     const updateMetaTag = (property: string, content: string) => {
@@ -49,7 +49,7 @@ const SharedSongPlayer = ({ song, onExploreMusic }: SharedSongPlayerProps) => {
     };
 
     updateMetaTag('og:title', `${song.title} - ${song.artist}`);
-    updateMetaTag('og:description', `Listen to ${song.title} by ${song.artist} on RoyalStar Music`);
+    updateMetaTag('og:description', `Listen to ${song.title} by ${song.artist} on ROI MUSIC`);
     updateMetaTag('og:image', song.imageUrl);
     updateMetaTag('og:url', window.location.href);
   }, [song]);

@@ -82,14 +82,14 @@ const FloatingMusicInfo = () => {
       try {
         await navigator.share({
           title: `${currentSong.title} - ${currentSong.artist}`,
-          text: `Listen to this amazing track on RoyalStar Music!`,
+          text: `Listen to this amazing track on ROI MUSIC!`,
           url: window.location.href,
         });
       } catch (error) {
         console.log('Share cancelled');
       }
     } else {
-      navigator.clipboard.writeText(`Now listening to: ${currentSong.title} by ${currentSong.artist} on RoyalStar Music`);
+      navigator.clipboard.writeText(`Now listening to: ${currentSong.title} by ${currentSong.artist} on ROI MUSIC`);
       toast.success('Track info copied to clipboard!');
     }
   };
@@ -195,7 +195,7 @@ const FloatingMusicInfo = () => {
           <div className="p-3">
             <div className="flex items-center justify-between mb-3">
               <Badge variant="secondary" className="bg-green-600 text-white text-xs">
-                RoyalStar Music
+                ROI MUSIC
               </Badge>
               <div className="flex items-center space-x-1">
                 <Button

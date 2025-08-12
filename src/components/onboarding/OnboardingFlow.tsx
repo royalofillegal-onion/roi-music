@@ -25,7 +25,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
 
   const steps = [
     {
-      title: "Welcome to RoyalStar Music!",
+      title: "Welcome to ROI MUSIC!",
       description: "Let's personalize your music experience",
       icon: <Sparkles className="h-8 w-8 text-music-accent" />
     },
@@ -68,7 +68,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
           preferences: { genres: selectedGenres }
         });
 
-      toast.success("Welcome to RoyalStar Music!");
+      toast.success("Welcome to ROI MUSIC!");
       onComplete();
     } catch (error) {
       console.error('Error skipping onboarding:', error);
@@ -118,7 +118,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
           name: username || 'Music Lover'
         });
 
-      toast.success("Welcome to RoyalStar Music!");
+      toast.success("Welcome to ROI MUSIC!");
       onComplete();
     } catch (error) {
       console.error('Error completing onboarding:', error);

@@ -34,7 +34,7 @@ const TermsAcceptance: React.FC<TermsAcceptanceProps> = ({ onAccept, loading = f
             <Shield className="h-12 w-12 text-music-accent" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">
-            Welcome to RoyalStar Music
+            Welcome to ROI MUSIC
           </h2>
           <p className="text-gray-400 text-sm">
             Please review and accept our terms to continue

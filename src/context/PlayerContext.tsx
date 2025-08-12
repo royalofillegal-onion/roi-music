@@ -132,7 +132,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentSong.title,
         artist: currentSong.artist,
-        album: 'RoyalStar Music',
+        album: 'ROI MUSIC',
         artwork: [
           { src: currentSong.imageUrl || '/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: currentSong.imageUrl || '/icon-512.png', sizes: '512x512', type: 'image/png' }
@@ -278,7 +278,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
         song.duration
       );
       
-      showAndroidNotification(`${song.title}`, `${song.artist} - RoyalStar Music`);
+      showAndroidNotification(`${song.title}`, `${song.artist} - ROI MUSIC`);
       
       registerMediaSession({
         title: song.title,
