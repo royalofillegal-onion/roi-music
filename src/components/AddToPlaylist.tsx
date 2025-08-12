@@ -206,7 +206,7 @@ const AddToPlaylist = ({ song, trigger }: AddToPlaylistProps) => {
           <div className="mb-4 p-3 bg-gray-800/50 rounded-lg">
             <div className="flex items-center gap-3">
               <img 
-                src={song.imageUrl || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
+                src={song.imageUrl || '/roi-assets/default-song-cover.png'} 
                 alt={song.title}
                 className="w-10 h-10 rounded object-cover"
               />
@@ -254,8 +254,8 @@ const AddToPlaylist = ({ song, trigger }: AddToPlaylistProps) => {
                     >
                       <div className="flex items-center w-full">
                         <img 
-                          src={playlist.cover_image || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
-                          alt={playlist.name} 
+                          src={playlist.cover_image || '/roi-assets/default-playlist-cover.png'} 
+                          alt={playlist.name}
                           className="w-8 h-8 object-cover rounded mr-3 flex-shrink-0" 
                         />
                         <div className="text-left flex-1 min-w-0">

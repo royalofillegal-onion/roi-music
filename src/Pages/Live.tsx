@@ -415,7 +415,7 @@ const Live = () => {
           return {
             ...comment,
             user_name: userData?.name || 'Unknown User',
-            avatar_url: userData?.avatar_url || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'
+            avatar_url: userData?.avatar_url || '/roi-assets/default-avatar.png'
           };
         })
       );
@@ -795,7 +795,7 @@ const Live = () => {
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
                       <img 
-                        src={currentLive.avatar_url || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
+                        src={currentLive.avatar_url || '/roi-assets/default-avatar.png'} 
                         alt={currentLive.user_name}
                         className="h-10 w-10 rounded-full"
                       />
@@ -853,7 +853,7 @@ const Live = () => {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-4">
                       <img 
-                        src={currentLive.avatar_url || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
+                        src={currentLive.avatar_url || '/roi-assets/default-avatar.png'} 
                         alt={currentLive.user_name}
                         className="h-12 w-12 rounded-full"
                       />
@@ -933,7 +933,7 @@ const Live = () => {
                     {comments.map(comment => (
                       <div key={comment.id} className="flex space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors">
                         <img 
-                          src={comment.avatar_url || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
+                          src={comment.avatar_url || '/roi-assets/default-avatar.png'} 
                           alt={comment.user_name}
                           className="h-8 w-8 rounded-full flex-shrink-0 ring-2 ring-gray-700"
                         />

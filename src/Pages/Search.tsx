@@ -284,9 +284,9 @@ const Search = () => {
                          </div>
                          
                          <div className="relative w-12 h-12 rounded-md overflow-hidden mr-3 flex-shrink-0 cursor-pointer group/play" onClick={() => handlePlaySong(song)}>
-                           <img 
-                             src={song.imageUrl || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
-                             alt={song.title}
+                            <img 
+                              src={song.imageUrl || '/roi-assets/default-song-cover.png'} 
+                              alt={song.title}
                              className="w-full h-full object-cover"
                            />
                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover/play:opacity-100 transition-opacity">

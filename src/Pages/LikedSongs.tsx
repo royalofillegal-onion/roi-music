@@ -117,8 +117,8 @@ const LikedSongs = () => {
                 onClick={() => handlePlaySong(song, index)}
               >
                 <img 
-                  src={song.imageUrl || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
-                  alt={song.title} 
+                  src={song.imageUrl || '/roi-assets/default-song-cover.png'} 
+                  alt={song.title}
                   className="h-10 w-10 mr-3 rounded"
                 />
                 <span className="truncate">{song.title}</span>
