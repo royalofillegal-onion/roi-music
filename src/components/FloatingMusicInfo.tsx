@@ -51,11 +51,8 @@ const FloatingMusicInfo = () => {
   if (!currentSong) return null;
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-  // Combine main songs and additional songs into one list
-  const allsongs = [songs,additionalSongs];
-
   // Get only current artist songs for better UX
-  const currentArtistSongs = allsongs.filter(song => song.artist === currentSong.artist);
+  const currentArtistSongs = songs.filter(song => song.artist === currentSong.artist);
 
   const handleAutoNext = () => {
     if (autoPlayArtist && currentArtistSongs.length > 1) {
@@ -66,9 +63,9 @@ const FloatingMusicInfo = () => {
       playSong(nextSong);
       toast.success(`Auto-playing: ${nextSong.title}`);
     } else {
-      const currentIndex = allsongs.findIndex(song => song.id === currentSong.id);
-      const nextIndex = (currentIndex + 1) % allsongs.length;
-      const nextSong = allsongs[nextIndex];
+      const currentIndex = songs.findIndex(song => song.id === currentSong.id);
+      const nextIndex = (currentIndex + 1) % songs.length;
+      const nextSong = songs[nextIndex];
       
       playSong(nextSong);
       toast.success(`Auto-playing: ${nextSong.title}`);
