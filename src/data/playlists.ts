@@ -3,6 +3,7 @@ import { Song, songs } from "./songs";
 import { moreSongs } from "./moreSongs";
 import { allSongs } from "./allSongs";
 import { additionalSongs } from "./additionalSongs";
+import { trendingSongs } from "./trendingSongs";
 
 export interface Playlist {
   id: string;
