@@ -54,6 +54,7 @@ const FloatingMusicInfo = () => {
 
   // Get only current artist songs for better UX
   const currentArtistSongs = songs.filter(song => song.artist === currentSong.artist);
+  const currentArtistSongs = additionalSongs.filter(song => song.artist === currentSong.artist);
 
   const handleAutoNext = () => {
     if (autoPlayArtist && currentArtistSongs.length > 1) {
