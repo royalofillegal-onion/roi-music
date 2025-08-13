@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Search as SearchIcon, Mic, MicOff, Play, Heart, Plus, Loader2 } from "lucide-react";
+import { Search as SearchIcon, Mic, MicOff, Play, Heart, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SongRow from "@/components/SongRow";
@@ -19,8 +19,6 @@ const Search = () => {
   const [filteredPlaylists, setFilteredPlaylists] = useState(playlists);
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
-  const [webSearchResults, setWebSearchResults] = useState<any[]>([]);
-  const [isSearchingWeb, setIsSearchingWeb] = useState(false);
 
   useEffect(() => {
     // Initialize speech recognition
@@ -34,24 +32,13 @@ const Search = () => {
 
       recognitionInstance.onstart = () => {
         setIsListening(true);
-        // Reduced notification frequency
+        toast.success("Listening... Speak now!");
       };
 
       recognitionInstance.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setSearchQuery(transcript);
-        
-        // Enhanced voice search with singing detection
-        const confidence = event.results[0][0].confidence;
-        
-        if (confidence < 0.7) {
-          toast.success(`🎤 Detected singing/humming: "${transcript}" - Searching...`);
-        } else {
-          toast.success(`🎵 Voice search: "${transcript}"`);
-        }
-        
-        // Auto search web for voice queries with enhanced keywords
-        searchWeb(`${transcript} song lyrics music`);
+        toast.success(`Searching for: "${transcript}"`);
       };
 
       recognitionInstance.onerror = (event: any) => {
@@ -66,38 +53,6 @@ const Search = () => {
       setRecognition(recognitionInstance);
     }
   }, []);
-
-  const searchWeb = async (query: string) => {
-    if (!query.trim()) return;
-    
-    setIsSearchingWeb(true);
-    try {
-      // Enhanced Google search with multiple search strategies
-      const searchQueries = [
-        `${query} song lyrics`,
-        `${query} music`,
-        `"${query}" song`,
-        `${query} artist`,
-        `${query} album`
-      ];
-      
-      const searchResults = searchQueries.map((searchQuery, index) => ({
-        id: `web-${index + 1}`,
-        title: `🎵 "${query}" - ${searchQuery.includes('lyrics') ? 'Lyrics Search' : 
-                searchQuery.includes('artist') ? 'Artist Search' : 
-                searchQuery.includes('album') ? 'Album Search' : 'Music Search'}`,
-        artist: 'Google Search',
-        snippet: `Search for ${searchQuery.toLowerCase()} on Google`,
-        url: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`
-      }));
-      
-      setWebSearchResults(searchResults);
-    } catch (error) {
-      console.error('Web search error:', error);
-    } finally {
-      setIsSearchingWeb(false);
-    }
-  };
   
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -108,34 +63,13 @@ const Search = () => {
     
     const query = searchQuery.toLowerCase();
     
-    // Enhanced search including web search for partial lyrics
-    searchWeb(`${query} song lyrics`);
-    
-    // Filter songs from all collections - enhanced matching with partial lyrics
+    // Filter songs from all collections - only basic properties
     const matchingSongs = uniqueSongs.filter(
-      (song) => {
-        const searchFields = [
-          song.title,
-          song.artist,
-          song.album || '',
-          song.genre || '',
-          // Add partial matching for common song patterns
-          song.title.replace(/[^\w\s]/g, ''),
-          song.artist.replace(/[^\w\s]/g, '')
-        ].join(' ').toLowerCase();
-        
-        // Enhanced matching including partial words and phonetic similarity
-        const queryWords = query.toLowerCase().split(' ');
-        const exactMatch = searchFields.includes(query);
-        const partialMatch = queryWords.some(word => 
-          searchFields.includes(word) || 
-          searchFields.split(' ').some(field => 
-            field.includes(word) || word.includes(field)
-          )
-        );
-        
-        return exactMatch || partialMatch;
-      }
+      (song) =>
+        song.title.toLowerCase().includes(query) ||
+        song.artist.toLowerCase().includes(query) ||
+        (song.album && song.album.toLowerCase().includes(query)) ||
+        (song.genre && song.genre.toLowerCase().includes(query))
     );
     setFilteredSongs(matchingSongs);
     
@@ -164,7 +98,7 @@ const Search = () => {
   
   const handlePlaySong = (song: any) => {
     playSong(song);
-    // Removed toast notification to reduce user interruption
+    toast.success(`Now playing: ${song.title}`);
   };
 
   const handleLikeSong = async (song: any, e: React.MouseEvent) => {
@@ -180,7 +114,7 @@ const Search = () => {
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
         <Input
           type="search"
-          placeholder="Search songs, lyrics, or sing to find music..."
+          placeholder="Search for songs, artists or playlists..."
           className="pl-10 pr-14 bg-gray-800 border-gray-700 focus:border-music-accent h-10 sm:h-12 rounded-full w-full text-sm sm:text-base"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -190,59 +124,25 @@ const Search = () => {
           variant="ghost"
           size="sm"
           className={`absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 sm:h-8 sm:w-8 p-0 rounded-full ${
-            isListening ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' : 'text-gray-400 hover:text-music-accent'
+            isListening ? 'bg-red-500 hover:bg-red-600 text-white' : 'text-gray-400 hover:text-music-accent'
           }`}
-          title={isListening ? 'Stop voice search' : 'Search by voice or singing'}
         >
           {isListening ? <MicOff size={14} className="sm:w-4 sm:h-4" /> : <Mic size={14} className="sm:w-4 sm:h-4" />}
         </Button>
       </div>
       
-      {isSearchingWeb && (
-        <div className="flex items-center justify-center py-4">
-          <Loader2 className="h-5 w-5 animate-spin mr-2" />
-          <span className="text-gray-400">Searching the web...</span>
-        </div>
-      )}
-      
       {searchQuery.trim() === "" ? (
         <div className="text-center py-8 sm:py-10 text-gray-400 px-4">
           <SearchIcon className="mx-auto mb-3" size={40} />
           <p className="text-base sm:text-lg">Search for your favorite songs, artists or playlists</p>
-          <p className="text-xs sm:text-sm mt-2">🎤 Use voice search or sing to find music instantly</p>
-          <p className="text-xs sm:text-sm mt-1">✨ Enhanced with web search for better results</p>
+          <p className="text-xs sm:text-sm mt-2">Use the microphone to search with your voice</p>
         </div>
       ) : (
         <>
-          {webSearchResults.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-bold mb-3 text-green-400">🌐 Enhanced Google Search</h2>
-              <div className="space-y-2">
-                {webSearchResults.map((result) => (
-                  <div key={result.id} className="flex items-center p-3 bg-green-900/20 rounded-lg border border-green-700/30 hover:bg-green-800/30 transition-colors">
-                    <SearchIcon className="h-5 w-5 text-green-400 mr-3 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-green-400 font-medium text-sm truncate">{result.title}</h3>
-                      <p className="text-gray-400 text-xs mt-1 truncate">{result.snippet}</p>
-                    </div>
-                    <Button
-                      onClick={() => window.open(result.url, '_blank')}
-                      variant="outline"
-                      size="sm"
-                      className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white ml-2 flex-shrink-0"
-                    >
-                      🔍 Search
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {filteredSongs.length === 0 && filteredPlaylists.length === 0 && webSearchResults.length === 0 ? (
+          {filteredSongs.length === 0 && filteredPlaylists.length === 0 ? (
             <div className="text-center py-8 sm:py-10 text-gray-400 px-4">
               <p className="text-base sm:text-lg">No results found for "{searchQuery}"</p>
-              <p className="text-xs sm:text-sm mt-2">Try searching with different keywords or use voice search</p>
+              <p className="text-xs sm:text-sm mt-2">Try searching with different keywords</p>
             </div>
           ) : (
             <>
@@ -284,9 +184,9 @@ const Search = () => {
                          </div>
                          
                          <div className="relative w-12 h-12 rounded-md overflow-hidden mr-3 flex-shrink-0 cursor-pointer group/play" onClick={() => handlePlaySong(song)}>
-                            <img 
-                              src={song.imageUrl || '/roi-assets/default-song-cover.png'} 
-                              alt={song.title}
+                           <img 
+                             src={song.imageUrl || '/lovable-uploads/a3cdc6ab-590f-4e71-b4c5-bdeec7e8189c.png'} 
+                             alt={song.title}
                              className="w-full h-full object-cover"
                            />
                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover/play:opacity-100 transition-opacity">
