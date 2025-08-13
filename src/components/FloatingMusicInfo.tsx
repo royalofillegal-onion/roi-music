@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import { songs } from '@/data/songs';
 import { songs } from '@/data/additionalSongs';
 import { songs } from '@/data/allSongs';
-import { songs } from '@/data/moreSongs';
 import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
 import { useIsMobile } from '@/hooks/use-mobile';
