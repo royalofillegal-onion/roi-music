@@ -12,7 +12,8 @@ export const trendingSongs: Song[] = [
     duration: 188,
     album: "Monica Telugu",
     year: 2025,
-    genre: "."
+    genre: ".",
+    language: "telugu"
   },
   {
     id: "trending2",
@@ -23,18 +24,20 @@ export const trendingSongs: Song[] = [
     duration: 240,
     album: "Nuvvunte Chaley",
     year: 2025,
-    genre: "."
+    genre: ".",
+    language: "telugu"
   },
   {
     id: "trending3",
     title: "Minnalvala",
     artist: "Narivetta",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752507033/Minnalvala-From-Narivetta-Malayalam-2025-20250416150421-500x500_cixjbx.jpg", // Replace with actual image URL
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752507065/Minnalvala_qocusu.mp3", // Replace with actual audio URL
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752507033/Minnalvala-From-Narivetta-Malayalam-2025-20250416150421-500x500_cixjbx.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752507065/Minnalvala_qocusu.mp3",
     duration: 299,
     album: "Love",
     year: 2025,
-    genre: "Romance"
+    genre: "Romance",
+    language: "other"
   },
   {
     id: "trending4",
@@ -45,7 +48,8 @@ export const trendingSongs: Song[] = [
     duration: 222,
     album: "Mahavatar Narsimha",
     year: 2025,
-    genre: "Love it"
+    genre: "Love it",
+    language: "hindi"
   },
   {
   id: "trending5",
@@ -56,7 +60,8 @@ export const trendingSongs: Song[] = [
   duration: 134,
   album: "Hridayam Lopala",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu"
 },
   {
   id: "trending6",
@@ -67,7 +72,8 @@ export const trendingSongs: Song[] = [
   duration: 285,
   album: "Naa Koduka",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu"
 },
   {
   id: "trending7",
@@ -78,7 +84,8 @@ export const trendingSongs: Song[] = [
   duration: 290,
   album: "Viral Vayyari",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu"
 }
 ];
 

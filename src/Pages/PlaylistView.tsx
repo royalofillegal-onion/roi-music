@@ -146,61 +146,15 @@ const PlaylistView = () => {
     }
   };
 
-  // Helper function to detect song language based on artist/title
-  const detectSongLanguage = (song: Song): string => {
-    const text = `${song.title} ${song.artist}`.toLowerCase();
-    
-    // Telugu detection patterns
-    if (text.includes('telugu') || 
-        /[\u0C00-\u0C7F]/.test(text) ||
-        song.artist.toLowerCase().includes('tollywood') ||
-        ['ntr', 'prabhas', 'allu arjun', 'ram charan', 'mahesh babu'].some(name => 
-          text.includes(name.toLowerCase())
-        )) {
-      return 'telugu';
-    }
-    
-    // Hindi detection patterns
-    if (text.includes('hindi') || 
-        text.includes('bollywood') ||
-        /[\u0900-\u097F]/.test(text) ||
-        ['shah rukh', 'salman khan', 'aamir khan', 'hrithik roshan', 'akshay kumar'].some(name => 
-          text.includes(name.toLowerCase())
-        )) {
-      return 'hindi';
-    }
-    
-    // Tamil detection patterns
-    if (text.includes('tamil') || 
-        text.includes('kollywood') ||
-        /[\u0B80-\u0BFF]/.test(text) ||
-        ['rajinikanth', 'kamal hassan', 'vijay', 'ajith', 'suriya'].some(name => 
-          text.includes(name.toLowerCase())
-        )) {
-      return 'tamil';
-    }
-    
-    // Kannada detection patterns
-    if (text.includes('kannada') || 
-        text.includes('sandalwood') ||
-        /[\u0C80-\u0CFF]/.test(text) ||
-        ['yash', 'puneeth rajkumar', 'sudeep'].some(name => 
-          text.includes(name.toLowerCase())
-        )) {
-      return 'kannada';
-    }
-    
-    return 'other';
-  };
-
-  // Filter songs based on selected language
+  // Filter songs based on selected language using the language property
   const filteredSongs = useMemo(() => {
     if (selectedLanguage === 'all') {
       return playlistSongs;
     }
     
     return playlistSongs.filter(song => {
-      const songLanguage = detectSongLanguage(song);
+      // Use the language property if available, otherwise fallback to 'other'
+      const songLanguage = song.language || 'other';
       return songLanguage === selectedLanguage;
     });
   }, [playlistSongs, selectedLanguage]);

@@ -9,6 +9,7 @@ export interface Song {
   album?: string;
   year?: number;
   genre?: string;
+  language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
 }
 
 export const songs: Song[] = [
@@ -21,7 +22,8 @@ export const songs: Song[] = [
     duration: 290,
     album: "Jersey",
     year: 2019,
-    genre: "Emotional"
+    genre: "Emotional",
+    language: "telugu"
   },
   {
     id: "song37",
@@ -32,7 +34,8 @@ export const songs: Song[] = [
     duration: 248,
     album: "HIT3",
     year: 2025,
-    genre: "Title Track"
+    genre: "Title Track",
+    language: "telugu"
   },
   {
     id: "song2",
