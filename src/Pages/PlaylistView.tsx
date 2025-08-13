@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, Play, Trash2, MoreVertical, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SongRow from "@/components/SongRow";
+import LanguageFilter from "@/components/LanguageFilter";
 import { playlists, getUserPlaylists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,6 +25,7 @@ const PlaylistView = () => {
   const [playlistSongs, setPlaylistSongs] = useState<Song[]>([]);
   const [isUserPlaylist, setIsUserPlaylist] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
   
   useEffect(() => {
     if (!id) return;
@@ -143,6 +145,65 @@ const PlaylistView = () => {
       toast.error('Failed to remove song');
     }
   };
+
+  // Helper function to detect song language based on artist/title
+  const detectSongLanguage = (song: Song): string => {
+    const text = `${song.title} ${song.artist}`.toLowerCase();
+    
+    // Telugu detection patterns
+    if (text.includes('telugu') || 
+        /[\u0C00-\u0C7F]/.test(text) ||
+        song.artist.toLowerCase().includes('tollywood') ||
+        ['ntr', 'prabhas', 'allu arjun', 'ram charan', 'mahesh babu'].some(name => 
+          text.includes(name.toLowerCase())
+        )) {
+      return 'telugu';
+    }
+    
+    // Hindi detection patterns
+    if (text.includes('hindi') || 
+        text.includes('bollywood') ||
+        /[\u0900-\u097F]/.test(text) ||
+        ['shah rukh', 'salman khan', 'aamir khan', 'hrithik roshan', 'akshay kumar'].some(name => 
+          text.includes(name.toLowerCase())
+        )) {
+      return 'hindi';
+    }
+    
+    // Tamil detection patterns
+    if (text.includes('tamil') || 
+        text.includes('kollywood') ||
+        /[\u0B80-\u0BFF]/.test(text) ||
+        ['rajinikanth', 'kamal hassan', 'vijay', 'ajith', 'suriya'].some(name => 
+          text.includes(name.toLowerCase())
+        )) {
+      return 'tamil';
+    }
+    
+    // Kannada detection patterns
+    if (text.includes('kannada') || 
+        text.includes('sandalwood') ||
+        /[\u0C80-\u0CFF]/.test(text) ||
+        ['yash', 'puneeth rajkumar', 'sudeep'].some(name => 
+          text.includes(name.toLowerCase())
+        )) {
+      return 'kannada';
+    }
+    
+    return 'other';
+  };
+
+  // Filter songs based on selected language
+  const filteredSongs = useMemo(() => {
+    if (selectedLanguage === 'all') {
+      return playlistSongs;
+    }
+    
+    return playlistSongs.filter(song => {
+      const songLanguage = detectSongLanguage(song);
+      return songLanguage === selectedLanguage;
+    });
+  }, [playlistSongs, selectedLanguage]);
   
   if (loading) {
     return (
@@ -167,7 +228,7 @@ const PlaylistView = () => {
     );
   }
   
-  const totalDuration = playlistSongs.reduce((acc, song) => acc + song.duration, 0);
+  const totalDuration = filteredSongs.reduce((acc, song) => acc + song.duration, 0);
   const formatTotalDuration = () => {
     const minutes = Math.floor(totalDuration / 60);
     const hours = Math.floor(minutes / 60);
@@ -179,8 +240,8 @@ const PlaylistView = () => {
   };
   
   const handlePlayPlaylist = () => {
-    if (playlistSongs.length > 0) {
-      playPlaylist(playlistSongs);
+    if (filteredSongs.length > 0) {
+      playPlaylist(filteredSongs);
     }
   };
   
@@ -216,21 +277,29 @@ const PlaylistView = () => {
           <h1 className="text-2xl md:text-5xl font-bold mb-1">{playlist.title}</h1>
           <p className="text-sm opacity-80 mb-3 line-clamp-2">{playlist.description}</p>
           <div className="flex items-center text-sm text-gray-300">
-            <span className="font-medium">{playlistSongs.length} songs</span>
+            <span className="font-medium">
+              {selectedLanguage === 'all' ? playlistSongs.length : filteredSongs.length} 
+              {selectedLanguage !== 'all' && ` of ${playlistSongs.length}`} songs
+            </span>
             <span className="mx-2">•</span>
             <span>{formatTotalDuration()}</span>
           </div>
         </div>
       </div>
       
-      {/* Action buttons */}
-      <div className="px-4 md:px-8 py-4 flex items-center bg-gray-900/30">
+      {/* Action buttons and filters */}
+      <div className="px-4 md:px-8 py-4 flex items-center justify-between bg-gray-900/30">
         <Button 
           onClick={handlePlayPlaylist}
-          className="rounded-full bg-music-accent hover:bg-music-accent/80 text-black font-medium h-12 w-12 md:h-14 md:w-14 p-0 mr-4"
+          className="rounded-full bg-music-accent hover:bg-music-accent/80 text-black font-medium h-12 w-12 md:h-14 md:w-14 p-0"
         >
           <Play className="h-5 w-5 md:h-6 md:w-6" />
         </Button>
+        
+        <LanguageFilter
+          selectedLanguage={selectedLanguage}
+          onLanguageChange={setSelectedLanguage}
+        />
       </div>
       
       {/* Songs list */}
@@ -247,12 +316,26 @@ const PlaylistView = () => {
         
         {/* Songs */}
         <div className="mt-2 space-y-1">
-          {playlistSongs.length === 0 ? (
+          {filteredSongs.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
-              <p>This playlist is empty</p>
+              <p>
+                {selectedLanguage === 'all' 
+                  ? 'This playlist is empty' 
+                  : `No songs found for ${selectedLanguage.charAt(0).toUpperCase() + selectedLanguage.slice(1)} language`
+                }
+              </p>
+              {selectedLanguage !== 'all' && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setSelectedLanguage('all')}
+                  className="mt-2 text-sm"
+                >
+                  Show all songs
+                </Button>
+              )}
             </div>
           ) : (
-            playlistSongs.map((song, index) => (
+            filteredSongs.map((song, index) => (
               <div key={song.id} className="group">
                 <div className="flex items-center gap-3 md:gap-4 p-2 md:p-4 rounded-lg hover:bg-gray-800/50 transition-colors">
                   {/* Mobile layout */}
