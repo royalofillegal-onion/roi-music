@@ -52,7 +52,7 @@ const FloatingMusicInfo = () => {
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   // Combine main songs and additional songs into one list
-  const allsongs = [...songs, ...additionalSongs];
+  const allsongs = [songs,additionalSongs];
 
   // Get only current artist songs for better UX
   const currentArtistSongs = allsongs.filter(song => song.artist === currentSong.artist);
