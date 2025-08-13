@@ -20,7 +20,7 @@ export const playlists: Playlist[] = [
     title: "Chill the vibe",
     description: "Perfect for relaxing and unwinding",
     coverImage: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747285370/0x1900-000000-80-0-0_gpphvv.jpg",
-    songs: [songs[1], songs[4], songs[7], songs[9], songs[12], moreSongs[0]],
+    songs: [songs[1], songs[4], trending[1]],
     createdBy: "RoyalStar",
     createdAt: "2024-05-15"
   },
