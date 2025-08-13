@@ -10,6 +10,7 @@ export interface Song {
   year?: number;
   genre?: string;
   language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
+  sync?: 'sad' | 'love' | 'happy' | 'devotional' | 'dance' | 'action' | 'romantic' | 'party' | 'classical' | 'folk';
 }
 
 export const songs: Song[] = [

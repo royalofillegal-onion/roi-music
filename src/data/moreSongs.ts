@@ -9,6 +9,8 @@ export interface Song {
   audioUrl: string;
   duration: number;
   year?: number;
+  language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
+  sync?: 'sad' | 'love' | 'happy' | 'devotional' | 'dance' | 'action' | 'romantic' | 'party' | 'classical' | 'folk';
 }
 
 export const moreSongs: Song[] = [
@@ -21,7 +23,9 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-9.mp3",
     duration: 278,
-    year: 2023
+    year: 2023,
+    language: "other",
+    sync: "action"
   },
   {
     id: "more-002",
@@ -32,7 +36,9 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-10.mp3",
     duration: 345,
-    year: 2022
+    year: 2022,
+    language: "other",
+    sync: "sad"
   },
   {
     id: "more-003",
@@ -43,7 +49,9 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-11.mp3",
     duration: 189,
-    year: 2023
+    year: 2023,
+    language: "other",
+    sync: "dance"
   },
   {
     id: "more-004",
@@ -54,7 +62,9 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-12.mp3",
     duration: 267,
-    year: 2022
+    year: 2022,
+    language: "other",
+    sync: "sad"
   },
   {
     id: "more-005",
@@ -65,7 +75,9 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-13.mp3",
     duration: 412,
-    year: 2023
+    year: 2023,
+    language: "other",
+    sync: "devotional"
   },
   {
     id: "more-006",
@@ -76,7 +88,9 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-14.mp3",
     duration: 198,
-    year: 2023
+    year: 2023,
+    language: "other",
+    sync: "action"
   },
   {
     id: "more-007",
@@ -87,7 +101,9 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-15.mp3",
     duration: 256,
-    year: 2022
+    year: 2022,
+    language: "other",
+    sync: "love"
   },
   {
     id: "more-008",
@@ -98,6 +114,8 @@ export const moreSongs: Song[] = [
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
     audioUrl: "https://www.soundjay.com/misc/sounds-16.mp3",
     duration: 223,
-    year: 2023
+    year: 2023,
+    language: "other",
+    sync: "party"
   }
 ];

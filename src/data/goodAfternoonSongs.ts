@@ -14,7 +14,9 @@ export const goodAfternoonSongs: Song[] = [
     duration: 245,
     album: "Ala Vaikunthapurramuloo",
     year: 2020,
-    genre: "Classical"
+    genre: "Classical",
+    language: "telugu",
+    sync: "classical"
   },
   {
     id: "afternoon2", 
@@ -25,7 +27,9 @@ export const goodAfternoonSongs: Song[] = [
     duration: 267,
     album: "Ala Vaikunthapurramuloo",
     year: 2020,
-    genre: "Romance"
+    genre: "Romance",
+    language: "telugu",
+    sync: "love"
   },
   {
     id: "afternoon3",
@@ -36,7 +40,9 @@ export const goodAfternoonSongs: Song[] = [
     duration: 234,
     album: "Ala Vaikunthapurramuloo", 
     year: 2020,
-    genre: "Dance"
+    genre: "Dance",
+    language: "telugu",
+    sync: "dance"
   },
   {
     id: "afternoon4",
@@ -47,7 +53,9 @@ export const goodAfternoonSongs: Song[] = [
     duration: 289,
     album: "Ala Vaikunthapurramuloo",
     year: 2020,
-    genre: "Devotional"
+    genre: "Devotional",
+    language: "telugu",
+    sync: "devotional"
   }
 ];
 

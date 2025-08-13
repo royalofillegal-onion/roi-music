@@ -1,4 +1,3 @@
-
 export interface Song {
   id: string;
   title: string;
@@ -9,6 +8,8 @@ export interface Song {
   audioUrl: string;
   duration: number;
   year?: number;
+  language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
+  sync?: 'sad' | 'love' | 'happy' | 'devotional' | 'dance' | 'action' | 'romantic' | 'party' | 'classical' | 'folk';
 }
 
 export const additionalSongs: Song[] = [
@@ -21,7 +22,9 @@ export const additionalSongs: Song[] = [
   duration: 287,
   album: "Aaradugula Bullettu",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "dance"
 },
   {
   id: "aa-002",
@@ -32,7 +35,9 @@ export const additionalSongs: Song[] = [
   duration: 333,
   album: "Ninnu Chudagane",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-003",
@@ -43,7 +48,9 @@ export const additionalSongs: Song[] = [
   duration: 282,
   album: "Bapu Gari Bommo",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "devotional"
 },
   {
   id: "add-004",
@@ -54,7 +61,9 @@ export const additionalSongs: Song[] = [
   duration: 269,
   album: "Time To Party",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "party"
 },
   {
   id: "add-004",
@@ -65,7 +74,9 @@ export const additionalSongs: Song[] = [
   duration: 237,
   album: "Kirraaku",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
 },
   {
   id: "add-005",
@@ -76,7 +87,9 @@ export const additionalSongs: Song[] = [
   duration: 287,
   album: "Deva Devam",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "devotional"
 },
   {
   id: "add-006",
@@ -87,7 +100,9 @@ export const additionalSongs: Song[] = [
   duration: 65,
   album: "Katamarayuda",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-007",
@@ -98,7 +113,9 @@ export const additionalSongs: Song[] = [
   duration: 270,
   album: "Yenno Yenno",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-008",
@@ -109,7 +126,9 @@ export const additionalSongs: Song[] = [
   duration: 280,
   album: "Marhaba",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
 },
   {
   id: "add-009",
@@ -120,7 +139,9 @@ export const additionalSongs: Song[] = [
   duration: 249,
   album: "Choti Zindagi",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
 },
   {
   id: "add-010",
@@ -131,7 +152,9 @@ export const additionalSongs: Song[] = [
   duration: 178,
   album: "Gathama Gathama",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "dance"
 },
   {
   id: "add-011",
@@ -142,7 +165,9 @@ export const additionalSongs: Song[] = [
   duration: 270,
   album: "Varinche Prema",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-012",
@@ -153,7 +178,9 @@ export const additionalSongs: Song[] = [
   duration: 285,
   album: "Naa Koduka",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-013",
@@ -164,7 +191,9 @@ export const additionalSongs: Song[] = [
   duration: 263,
   album: "Poyiraa Mama",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-014",
@@ -175,7 +204,9 @@ export const additionalSongs: Song[] = [
   duration: 202,
   album: "Anaganaga Kadha",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
 },
   {
   id: "add-015",
@@ -186,7 +217,9 @@ export const additionalSongs: Song[] = [
   duration: 227,
   album: "Pippi Pippi Dum Dum",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
 },
   {
   id: "add-016",
@@ -197,7 +230,9 @@ export const additionalSongs: Song[] = [
   duration: 68,
   album: "kannappa Theme",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-017",
@@ -208,7 +243,9 @@ export const additionalSongs: Song[] = [
   duration: 87,
   album: "Alapana",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "classical"
 },
   {
   id: "add-018",
@@ -219,7 +256,9 @@ export const additionalSongs: Song[] = [
   duration: 89,
   album: "kannappa Theme",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "classical"
 },
   {
   id: "add-019",
@@ -230,7 +269,9 @@ export const additionalSongs: Song[] = [
   duration: 211,
   album: "Aadu Macha",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-020",
@@ -241,7 +282,9 @@ export const additionalSongs: Song[] = [
   duration: 145,
   album: "Om NamahS hivaya",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "devotional"
 },
   {
   id: "add-021",
@@ -252,7 +295,9 @@ export const additionalSongs: Song[] = [
   duration: 345,
   album: "Sri Kala Hasti",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "devotional"
 },
   {
   id: "add-022",
@@ -263,7 +308,9 @@ export const additionalSongs: Song[] = [
   duration: 254,
   album: "kannapa Love Song ",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-023",
@@ -274,7 +321,9 @@ export const additionalSongs: Song[] = [
   duration: 319,
   album: "Akasha Veedhilo",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-024",
@@ -285,7 +334,9 @@ export const additionalSongs: Song[] = [
   duration: 342,
   album: "Shiva Shiva Shankaraa",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "devotional"
 },
   {
   id: "add-025",
@@ -296,7 +347,9 @@ export const additionalSongs: Song[] = [
   duration: 169,
   album: "Eagles On His Way",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-026",
@@ -307,7 +360,9 @@ export const additionalSongs: Song[] = [
   duration: 208,
   album: "Garudam",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-027",
@@ -318,7 +373,9 @@ export const additionalSongs: Song[] = [
   duration: 224,
   album: "Gallanthe",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-028",
@@ -329,7 +386,9 @@ export const additionalSongs: Song[] = [
   duration: 158,
   album: "Hey Garuda",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-029",
@@ -340,7 +399,9 @@ export const additionalSongs: Song[] = [
   duration: 201,
   album: "Kalyani Vaccha Vacchaa",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "hindi",
+  sync: "romantic"
 },
   {
   id: "add-030",
@@ -351,7 +412,9 @@ export const additionalSongs: Song[] = [
   duration: 254,
   album: "Madhuramu Kadha",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-031",
@@ -362,7 +425,9 @@ export const additionalSongs: Song[] = [
   duration: 296,
   album: "Nandanandanaa",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-032",
@@ -373,7 +438,9 @@ export const additionalSongs: Song[] = [
   duration: 200,
   album: "Dekhore Dekho",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
 },
   {
   id: "add-033",
@@ -384,7 +451,9 @@ export const additionalSongs: Song[] = [
   duration: 228,
   album: "Suttamla Soosi",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-034",
@@ -395,7 +464,9 @@ export const additionalSongs: Song[] = [
   duration: 234,
   album: "Motha",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "dance"
 },
   {
   id: "add-035",
@@ -406,7 +477,9 @@ export const additionalSongs: Song[] = [
   duration: 79,
   album: "Not A Teaser",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
 },
   {
   id: "add-036",
@@ -417,7 +490,9 @@ export const additionalSongs: Song[] = [
   duration: 188,
   album: "Shiva Thandavame",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "devotional"
 },
   {
   id: "add-037",
@@ -428,7 +503,9 @@ export const additionalSongs: Song[] = [
   duration: 176,
   album: "Bhaga Bhaga",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
 },
   {
   id: "add-038",
@@ -439,7 +516,9 @@ export const additionalSongs: Song[] = [
   duration: 84,
   album: "Samavarthi",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
 },
   {
   id: "add-039",
@@ -450,7 +529,9 @@ export const additionalSongs: Song[] = [
   duration: 254,
   album: "Laalijo Raagam",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-040",
@@ -461,7 +542,9 @@ export const additionalSongs: Song[] = [
   duration: 166,
   album: "Unchained",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-041",
@@ -472,7 +555,9 @@ export const additionalSongs: Song[] = [
   duration: 281,
   album: "Malupero",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-042",
@@ -483,7 +568,9 @@ export const additionalSongs: Song[] = [
   duration: 166,
   album: "Veta Vinodham",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
 },
   {
   id: "add-043",
@@ -494,7 +581,9 @@ export const additionalSongs: Song[] = [
   duration: 262,
   album: "Sarimapa",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-044",
@@ -505,7 +594,9 @@ export const additionalSongs: Song[] = [
   duration: 153,
   album: "Dimbhaka",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "dance"
 },
   {
   id: "add-045",
@@ -516,7 +607,9 @@ export const additionalSongs: Song[] = [
   duration: 255,
   album: "Garam Garam",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
 },
   {
   id: "add-046",
@@ -527,7 +620,9 @@ export const additionalSongs: Song[] = [
   duration: 75,
   album: "RRR Theme Music",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-047",
@@ -538,7 +633,9 @@ export const additionalSongs: Song[] = [
   duration: 74,
   album: "Bheem For Ramaraju",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-048",
@@ -549,7 +646,9 @@ export const additionalSongs: Song[] = [
   duration: 208,
   album: "Naatu Naatu",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "dance"
 },
   {
   id: "add-049",
@@ -560,7 +659,9 @@ export const additionalSongs: Song[] = [
   duration: 189,
   album: "Janani",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-050",
@@ -571,7 +672,9 @@ export const additionalSongs: Song[] = [
   duration: 111,
   album: "Roar Of RRR",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-051",
@@ -582,7 +685,9 @@ export const additionalSongs: Song[] = [
   duration: 340,
   album: "Dosti",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-052",
@@ -593,7 +698,9 @@ export const additionalSongs: Song[] = [
   duration: 231,
   album: "Raamam Raaghavam",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-053",
@@ -604,7 +711,9 @@ export const additionalSongs: Song[] = [
   duration: 284,
   album: "Komma Uyyala",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-054",
@@ -615,7 +724,9 @@ export const additionalSongs: Song[] = [
   duration: 262,
   album: "Etthara Jenda",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-055",
@@ -626,7 +737,9 @@ export const additionalSongs: Song[] = [
   duration: 248,
   album: "Komuram Bheemudo",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "action"
 },
   {
   id: "add-056",
@@ -637,7 +750,9 @@ export const additionalSongs: Song[] = [
   duration: 134,
   album: "Hridayam Lopala",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-057",
@@ -648,7 +763,9 @@ export const additionalSongs: Song[] = [
   duration: 329,
   album: "Ragile Ragile",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-058",
@@ -659,7 +776,9 @@ export const additionalSongs: Song[] = [
   duration: 278,
   album: "Anna Antene",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "add-059",
@@ -670,7 +789,9 @@ export const additionalSongs: Song[] = [
   duration: 188,
   album: "Monica Telugu",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
   {
   id: "add-060",
@@ -681,6 +802,8 @@ export const additionalSongs: Song[] = [
   duration: 290,
   album: "Viral Vayyari",
   year: 2025,
-  genre: "."
+  genre: ".",
+  language: "telugu",
+  sync: "dance"
 }
 ];

@@ -15,7 +15,9 @@ export const goodMorningSongs: Song[] = [
     duration: 217,
     album: "Devotional",
     year: 2025,
-    genre: "Devotional"
+    genre: "Devotional",
+    language: "telugu",
+    sync: "devotional"
   },
   {
     id: "morning1",
@@ -26,7 +28,9 @@ export const goodMorningSongs: Song[] = [
     duration: 245,
     album: "Geetha Govindam",
     year: 2018,
-    genre: "Romance"
+    genre: "Romance",
+    language: "telugu",
+    sync: "love"
   },
   {
     id: "morning2", 
@@ -37,7 +41,9 @@ export const goodMorningSongs: Song[] = [
     duration: 267,
     album: "Game Changer",
     year: 2024,
-    genre: "Dance"
+    genre: "Dance",
+    language: "telugu",
+    sync: "dance"
   },
   {
     id: "morning3",
@@ -48,7 +54,9 @@ export const goodMorningSongs: Song[] = [
     duration: 234,
     album: "Mem Famous", 
     year: 2023,
-    genre: "Comedy"
+    genre: "Comedy",
+    language: "telugu",
+    sync: "happy"
   },
   {
     id: "morning4",
@@ -59,7 +67,9 @@ export const goodMorningSongs: Song[] = [
     duration: 289,
     album: "Devara",
     year: 2024,
-    genre: "Action"
+    genre: "Action",
+    language: "telugu",
+    sync: "action"
   }
 ];
 

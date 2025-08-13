@@ -14,7 +14,9 @@ export const goodEveningSongs: Song[] = [
     duration: 240,
     album: "Nuvvunte Chaley",
     year: 2025,
-    genre: "."
+    genre: ".",
+    language: "telugu",
+    sync: "romantic"
   },
   {
     id: "evening2", 
@@ -25,7 +27,9 @@ export const goodEveningSongs: Song[] = [
     duration: 267,
     album: "Fidaa",
     year: 2017,
-    genre: "Melody"
+    genre: "Melody",
+    language: "telugu",
+    sync: "romantic"
   },
   {
     id: "evening3",
@@ -36,7 +40,9 @@ export const goodEveningSongs: Song[] = [
     duration: 234,
     album: "Malli Raava", 
     year: 2017,
-    genre: "Romance"
+    genre: "Romance",
+    language: "telugu",
+    sync: "love"
   },
   {
     id: "evening4",
@@ -47,7 +53,9 @@ export const goodEveningSongs: Song[] = [
     duration: 289,
     album: "Mahanati",
     year: 2018,
-    genre: "Classical"
+    genre: "Classical",
+    language: "telugu",
+    sync: "classical"
   }
 ];
 
