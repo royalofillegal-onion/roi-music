@@ -18,46 +18,46 @@ export interface Playlist {
 export const playlists: Playlist[] = [
   {
     id: "playlist1",
-    title: "Chill the vibe",
+    title: "444",
     description: ".....",
-    coverImage: "https://www.bing.com/images/search?view=detailV2&ccid=O5sKsHAq&id=1F7A7B7FDF6C7AA63CD26C75FC31B4420D5A3759&thid=OIP.O5sKsHAqQSxWl0S0w-24wwHaEJ&mediaurl=https%3A%2F%2Fimg.freepik.com%2Fpremium-photo%2Fdigital-error-message-red-blue-neon-lights_1009781-4833.jpg&exph=351&expw=626&q=Red+Error&simid=607997366905347300&FORM=IRPRST&ck=2EA6C4B3C91AB13F22048404AA47B095&selectedIndex=29&itb=0&cw=1375&ch=664&ajaxhist=0&ajaxserp=0",
+    coverImage: "https://res.cloudinary.com/dd6xwej67/image/upload/v1755049414/Screenshot_2025-08-13_071302_myenzb.png",
     songs: [songs[1], songs[4], trendingSongs[1]],
     createdBy: "RoyalStar",
     createdAt: "2024-05-15"
   },
   {
     id: "playlist2",
-    title: "Workout Mix",
-    description: "High energy tracks to keep you motivated",
-    coverImage: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=500&auto=format&fit=crop",
-    songs: [songs[0], songs[3], songs[5], songs[8], songs[10]],
+    title: "444",
+    description: "??",
+    coverImage: "https://res.cloudinary.com/dd6xwej67/image/upload/v1755049414/Screenshot_2025-08-13_071302_myenzb.png",
+    songs: [],
     createdBy: "RoyalStar",
     createdAt: "2023-05-10"
   },
   {
     id: "playlist3",
-    title: "Focus Flow",
-    description: "Concentration and productivity enhancement",
-    coverImage: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=500&auto=format&fit=crop",
-    songs: [songs[2], songs[4], songs[6], songs[13], songs[14]],
+    title: "444",
+    description: "???",
+    coverImage: "https://res.cloudinary.com/dd6xwej67/image/upload/v1755049414/Screenshot_2025-08-13_071302_myenzb.png",
+    songs: [],
     createdBy: "RoyalStar",
     createdAt: "2023-06-22"
   },
   {
     id: "playlist4",
-    title: "Late Night Drive",
-    description: "Smooth tracks for your nighttime journey",
-    coverImage: "https://images.unsplash.com/photo-1551710029-607e06bd45ff?q=80&w=500&auto=format&fit=crop",
-    songs: [songs[3], songs[8], songs[11], songs[0], songs[7]],
+    title: "444",
+    description: "....",
+    coverImage: "https://res.cloudinary.com/dd6xwej67/image/upload/v1755049414/Screenshot_2025-08-13_071302_myenzb.png",
+    songs: [],
     createdBy: "RoyalStar",
     createdAt: "2023-07-05"
   },
   {
     id: "playlist5",
-    title: "Morning Coffee",
-    description: "Start your day right with these uplifting beats",
-    coverImage: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=500&auto=format&fit=crop",
-    songs: [songs[9], songs[5], songs[2], songs[14], songs[1]],
+    title: "444",
+    description: "...",
+    coverImage: "https://res.cloudinary.com/dd6xwej67/image/upload/v1755049414/Screenshot_2025-08-13_071302_myenzb.png",
+    songs: [],
     createdBy: "RoyalStar",
     createdAt: "2023-08-18"
   }
