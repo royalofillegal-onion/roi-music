@@ -18,9 +18,9 @@ export const playlists: Playlist[] = [
   {
     id: "playlist1",
     title: "Chill the vibe",
-    description: "Perfect for relaxing and unwinding",
-    coverImage: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747285370/0x1900-000000-80-0-0_gpphvv.jpg",
-    songs: [songs[1], songs[4], trending[1]],
+    description: ".....",
+    coverImage: "https://www.bing.com/images/search?view=detailV2&ccid=O5sKsHAq&id=1F7A7B7FDF6C7AA63CD26C75FC31B4420D5A3759&thid=OIP.O5sKsHAqQSxWl0S0w-24wwHaEJ&mediaurl=https%3A%2F%2Fimg.freepik.com%2Fpremium-photo%2Fdigital-error-message-red-blue-neon-lights_1009781-4833.jpg&exph=351&expw=626&q=Red+Error&simid=607997366905347300&FORM=IRPRST&ck=2EA6C4B3C91AB13F22048404AA47B095&selectedIndex=29&itb=0&cw=1375&ch=664&ajaxhist=0&ajaxserp=0",
+    songs: [songs[1], songs[4], trendingSongs["trending1"]],
     createdBy: "RoyalStar",
     createdAt: "2024-05-15"
   },
