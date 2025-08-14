@@ -13,7 +13,8 @@ export const trendingSongs: Song[] = [
     album: "Monica Telugu",
     year: 2025,
     genre: ".",
-    language: "telugu"
+    language: "telugu",
+    sync: "mass"
   },
   {
     id: "trending2",
@@ -25,7 +26,8 @@ export const trendingSongs: Song[] = [
     album: "Nuvvunte Chaley",
     year: 2025,
     genre: ".",
-    language: "telugu"
+    language: "telugu",
+    sync: "Feel"
   },
   {
     id: "trending3",
@@ -37,7 +39,21 @@ export const trendingSongs: Song[] = [
     album: "Love",
     year: 2025,
     genre: "Romance",
-    language: "other"
+    language: "tamil",
+    sync: "Feel"
+  },
+  {
+    id: "trending1",
+    title: "Monica Telugu",
+    artist: "Monica",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741575/59317_4_eoh8rw.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754741635/Monica_Telugu_KoshalWorld.Com_itvbc7.mp3",
+    duration: 188,
+    album: "Monica Telugu",
+    year: 2025,
+    genre: ".",
+    language: "telugu",
+    sync: "mass"
   },
   {
     id: "trending4",
@@ -49,7 +65,8 @@ export const trendingSongs: Song[] = [
     album: "Mahavatar Narsimha",
     year: 2025,
     genre: "Love it",
-    language: "hindi"
+    language: "hindi",
+    sync: "Dev"
   },
   {
   id: "trending5",
@@ -61,7 +78,8 @@ export const trendingSongs: Song[] = [
   album: "Hridayam Lopala",
   year: 2025,
   genre: ".",
-  language: "telugu"
+  language: "telugu",
+  sync: "Feel"
 },
   {
   id: "trending6",
@@ -73,7 +91,8 @@ export const trendingSongs: Song[] = [
   album: "Naa Koduka",
   year: 2025,
   genre: ".",
-  language: "telugu"
+  language: "telugu",
+  sync: "Lovem"
 },
   {
   id: "trending7",
@@ -85,7 +104,8 @@ export const trendingSongs: Song[] = [
   album: "Viral Vayyari",
   year: 2025,
   genre: ".",
-  language: "telugu"
+  language: "telugu",
+  sync: "mass"
 }
 ];
 
