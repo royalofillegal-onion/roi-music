@@ -13,6 +13,9 @@ import {
   showSongNotification,
   cancelNotifications
 } from "@/services/NotificationService";
+import { usePersistentRecentlyPlayed } from "@/hooks/usePersistentRecentlyPlayed";
+import { useSyncBasedPlayback } from "@/hooks/useSyncBasedPlayback";
+import { useOfflinePlaylist } from "@/hooks/useOfflinePlaylist";
 
 interface PlayerContextType {
   currentSong: Song | null;
@@ -27,6 +30,8 @@ interface PlayerContextType {
   isLiveMode: boolean;
   playMode: 'sequence' | 'shuffle' | 'repeat';
   recentlyPlayed: Song[];
+  showQuickActions: boolean;
+  setShowQuickActions: (show: boolean) => void;
   playSong: (song: Song) => void;
   pauseSong: () => void;
   resumeSong: () => void;
@@ -72,12 +77,25 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
   const [isLiveMode, setIsLiveMode] = useState(false);
   const [playMode, setPlayMode] = useState<'sequence' | 'shuffle' | 'repeat'>('sequence');
-  const [recentlyPlayed, setRecentlyPlayed] = useState<Song[]>([]);
   const [continuousPlayback, setContinuousPlayback] = useState(true);
   const [autoPlayArtist, setAutoPlayArtist] = useState(true);
   const [circularQueue, setCircularQueue] = useState<Song[]>([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
+  const [showQuickActions, setShowQuickActions] = useState(() => {
+    const saved = localStorage.getItem('showQuickActions');
+    return saved ? JSON.parse(saved) : true;
+  });
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Use custom hooks
+  const { recentlyPlayed, addToRecentlyPlayed } = usePersistentRecentlyPlayed();
+  const { 
+    startSyncPlayback, 
+    getNextSyncSong, 
+    currentSync,
+    resetSyncPlayback 
+  } = useSyncBasedPlayback();
+  const { getOfflineSong } = useOfflinePlaylist();
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -208,6 +226,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [likedSongs]);
 
   useEffect(() => {
+    localStorage.setItem('showQuickActions', JSON.stringify(showQuickActions));
+  }, [showQuickActions]);
+
+  useEffect(() => {
     if (isShuffled) {
       setPlayMode('shuffle');
     } else if (isRepeating) {
@@ -217,12 +239,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isShuffled, isRepeating]);
 
-  const addToRecentlyPlayed = (song: Song) => {
-    setRecentlyPlayed(prev => {
-      const filtered = prev.filter(s => s.id !== song.id);
-      return [song, ...filtered].slice(0, 10);
-    });
-  };
+  // Remove the old addToRecentlyPlayed function since we're using the hook now
 
   const createCircularQueue = (songs: Song[], startingSong?: Song) => {
     if (startingSong) {
@@ -262,9 +279,23 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const playSong = (song: Song) => {
     if (!audioRef.current) return;
 
-    setCurrentSong(song);
-    addToRecentlyPlayed(song);
-    audioRef.current.src = song.audioUrl;
+    // Check if song is available offline first
+    const offlineSong = getOfflineSong(song.id);
+    const songToPlay = offlineSong || song;
+
+    setCurrentSong(songToPlay);
+    addToRecentlyPlayed(songToPlay);
+    
+    // Start sync-based playback if song has sync property
+    if (songToPlay.sync) {
+      const syncQueue = startSyncPlayback(songToPlay);
+      if (syncQueue.length > 0) {
+        setCircularQueue(syncQueue);
+        setCurrentQueueIndex(0);
+      }
+    }
+
+    audioRef.current.src = songToPlay.audioUrl;
     audioRef.current.load();
     
     audioRef.current.play().then(() => {
@@ -323,6 +354,16 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const nextSong = () => {
     console.log('Next song called');
+    
+    // Try sync-based playback first if current song has sync
+    if (currentSong && currentSong.sync) {
+      const syncNext = getNextSyncSong(currentSong);
+      if (syncNext) {
+        console.log('Playing next song from sync:', syncNext.title);
+        playSong(syncNext);
+        return;
+      }
+    }
     
     if (continuousPlayback && circularQueue.length > 0) {
       const nextSong = getNextSongInCircular();
