@@ -4,17 +4,17 @@ import { Song } from './songs';
 export const trendingSongs: Song[] = [
   
   {
-    id: "trending1",
-    title: "Monica Telugu",
-    artist: "Monica",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741575/59317_4_eoh8rw.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754741635/Monica_Telugu_KoshalWorld.Com_itvbc7.mp3",
-    duration: 188,
-    album: "Monica Telugu",
+    id: "6d313dfd-4814-4c9f-92f0-9fcb2fd7203b",
+    title: "Firestorm",
+    artist: "OG",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755087734/iSongs.info_02_-_Firestorm_mmu1pg.mp3",
+    duration: 240,
+    album: "Firestorm",
     year: 2025,
     genre: ".",
-    language: "telugu",
-    sync: "mass"
+    language: "Telugu",
+    sync: "Rap"
   },
   {
     id: "trending2",
