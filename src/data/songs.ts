@@ -14,41 +14,45 @@ export interface Song {
 }
 
 export const songs: Song[] = [
-  {
-    id: "song17",
-    title: "Adhento Gaani Vunnapaatuga",
-    artist: "Jersey",
-    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1744979749/images_8_zglkpf.jpg",
-    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1744978242/Adhento_Gaani_Vunnapaatuga_-_Full_Video_JERSEY_Nani_Shraddha_Srinath_Anirudh_Ravichander_qyjfev.mp3",
-    duration: 290,
-    album: "Jersey",
-    year: 2019,
-    genre: "Emotional",
-    language: "telugu"
-  },
-  {
-    id: "song37",
-    title: "Thanu",
-    artist: "HIT 3",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1747215703/wirl2nhuerncbhixa6eh.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1747215204/aihawlod7kzdhv10ho0m.mp3",
-    duration: 248,
-    album: "HIT3",
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu"
-  },
-  {
-    id: "song2",
-    title: "Mooga Manasulu",
-    artist: "Maahanati",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1746957847/size_m_1524230645_o5xq9i.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1746957845/Mooga_Manasulu_jozppu.mp3",
-    duration: 254,
-    album: "Feel It",
-    year: 2018,
-    genre: "Feel"
-  },
+   {
+     id: "song17",
+     title: "Adhento Gaani Vunnapaatuga",
+     artist: "Jersey",
+     imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1744979749/images_8_zglkpf.jpg",
+     audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1744978242/Adhento_Gaani_Vunnapaatuga_-_Full_Video_JERSEY_Nani_Shraddha_Srinath_Anirudh_Ravichander_qyjfev.mp3",
+     duration: 290,
+     album: "Jersey",
+     year: 2019,
+     genre: "Emotional",
+     language: "telugu",
+     sync: "sad"
+   },
+   {
+     id: "song37",
+     title: "Thanu",
+     artist: "HIT 3",
+     imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1747215703/wirl2nhuerncbhixa6eh.jpg",
+     audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1747215204/aihawlod7kzdhv10ho0m.mp3",
+     duration: 248,
+     album: "HIT3",
+     year: 2025,
+     genre: "Title Track",
+     language: "telugu",
+     sync: "action"
+   },
+   {
+     id: "song2",
+     title: "Mooga Manasulu",
+     artist: "Maahanati",
+     imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1746957847/size_m_1524230645_o5xq9i.jpg",
+     audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1746957845/Mooga_Manasulu_jozppu.mp3",
+     duration: 254,
+     album: "Feel It",
+     year: 2018,
+     genre: "Feel",
+     language: "telugu",
+     sync: "sad"
+   },
   {
     id: "song3",
     title: "ye Kannuulu Chudani Chitrame",

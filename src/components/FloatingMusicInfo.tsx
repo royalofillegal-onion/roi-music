@@ -7,13 +7,13 @@ import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { songs } from '@/data/songs';
-import { songs } from '@/data/additionalSongs';
-import { songs } from '@/data/allSongs';
+import { allSongs } from '@/data/allSongs';
 import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
 import { useIsMobile } from '@/hooks/use-mobile';
 import ShareSong from '@/components/ShareSong';
+import QuickActionsToggle from '@/components/QuickActionsToggle';
+import { enhanceAllSongs } from '@/utils/songEnhancer';
 
 const FloatingMusicInfo = () => {
   const { 
@@ -38,6 +38,8 @@ const FloatingMusicInfo = () => {
   const [continuousPlayback, setContinuousPlayback] = useState(true);
   const [autoPlayArtist, setAutoPlayArtist] = useState(true);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
+  const [completedSyncs, setCompletedSyncs] = useState<Set<string>>(new Set());
   
   const isMobile = useIsMobile();
 
@@ -51,8 +53,12 @@ const FloatingMusicInfo = () => {
   if (!currentSong) return null;
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-  // Get only current artist songs for better UX
-  const currentArtistSongs = songs.filter(song => song.artist === currentSong.artist);
+  // Enhance songs with missing language/sync data
+  const enhancedSongs = enhanceAllSongs(allSongs);
+  
+  // Get songs from the same sync category and artist
+  const currentSyncSongs = enhancedSongs.filter(song => song.sync === currentSong.sync);
+  const currentArtistSongs = enhancedSongs.filter(song => song.artist === currentSong.artist);
 
   const handleAutoNext = () => {
     if (autoPlayArtist && currentArtistSongs.length > 1) {
@@ -61,14 +67,39 @@ const FloatingMusicInfo = () => {
       const nextSong = currentArtistSongs[nextIndex];
       
       playSong(nextSong);
-      toast.success(`Auto-playing: ${nextSong.title}`);
+    } else if (currentSong.sync && currentSyncSongs.length > 1) {
+      // Check if current sync is completed
+      const currentIndex = currentSyncSongs.findIndex(song => song.id === currentSong.id);
+      const isLastInSync = currentIndex === currentSyncSongs.length - 1;
+      
+      if (isLastInSync && !completedSyncs.has(currentSong.sync)) {
+        // Mark this sync as completed and move to next sync category
+        setCompletedSyncs(prev => new Set([...prev, currentSong.sync!]));
+        
+        // Find next sync category
+        const availableSyncs = ['sad', 'love', 'happy', 'devotional', 'dance', 'action', 'romantic', 'party', 'classical', 'folk'];
+        const nextSync = availableSyncs.find(sync => !completedSyncs.has(sync) && sync !== currentSong.sync);
+        
+        if (nextSync) {
+          const nextSyncSongs = enhancedSongs.filter(song => song.sync === nextSync);
+          if (nextSyncSongs.length > 0) {
+            playSong(nextSyncSongs[0]);
+            return;
+          }
+        }
+      }
+      
+      // Continue with current sync
+      const nextIndex = (currentIndex + 1) % currentSyncSongs.length;
+      const nextSong = currentSyncSongs[nextIndex];
+      playSong(nextSong);
     } else {
-      const currentIndex = songs.findIndex(song => song.id === currentSong.id);
-      const nextIndex = (currentIndex + 1) % songs.length;
-      const nextSong = songs[nextIndex];
+      // Fallback to all songs
+      const currentIndex = enhancedSongs.findIndex(song => song.id === currentSong.id);
+      const nextIndex = (currentIndex + 1) % enhancedSongs.length;
+      const nextSong = enhancedSongs[nextIndex];
       
       playSong(nextSong);
-      toast.success(`Auto-playing: ${nextSong.title}`);
     }
   };
 
@@ -102,13 +133,12 @@ const FloatingMusicInfo = () => {
 
   const handleSongSelect = (song: any) => {
     playSong(song);
-    toast.success(`Now playing: ${song.title}`);
   };
 
   const addArtistSongsToQueue = () => {
     const songsToAdd = currentArtistSongs.filter(song => song.id !== currentSong.id);
     songsToAdd.forEach(song => addToQueue(song));
-    toast.success(`Added ${songsToAdd.length} songs by ${currentSong.artist} to queue`);
+    toast.success(`Added ${songsToAdd.length} songs to queue`);
   };
 
   // Improved mobile responsive positioning with better height calculation
@@ -199,6 +229,10 @@ const FloatingMusicInfo = () => {
                 ROI MUSIC
               </Badge>
               <div className="flex items-center space-x-1">
+                <QuickActionsToggle 
+                  showQuickActions={showQuickActions} 
+                  onToggle={setShowQuickActions} 
+                />
                 <Button
                   size="sm"
                   variant="ghost"
@@ -291,26 +325,28 @@ const FloatingMusicInfo = () => {
               >
                 <div className="p-3 space-y-4" style={{ maxHeight: isMobile ? '60vh' : 'auto', overflowY: isMobile ? 'auto' : 'visible' }}>
                   {/* Quick Actions */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={toggleLike}
-                        className={`text-gray-400 hover:text-white ${isLiked ? 'text-red-500' : ''}`}
-                      >
-                        <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-                      </Button>
-                      <ShareSong song={currentSong} />
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={addArtistSongsToQueue}
-                        className="text-gray-400 hover:text-white"
-                      >
-                        <Radio className="h-4 w-4" />
-                      </Button>
-                    </div>
+                  {showQuickActions && (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={toggleLike}
+                            className={`text-gray-400 hover:text-white ${isLiked ? 'text-red-500' : ''}`}
+                          >
+                            <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+                          </Button>
+                          <ShareSong song={currentSong} />
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={addArtistSongsToQueue}
+                            className="text-gray-400 hover:text-white"
+                          >
+                            <Radio className="h-4 w-4" />
+                          </Button>
+                        </div>
                     
                     {/* Playback mode buttons */}
                     <div className="flex items-center space-x-1">
@@ -330,10 +366,13 @@ const FloatingMusicInfo = () => {
                       >
                         <Repeat className="h-3 w-3" />
                       </Button>
+                      </div>
                     </div>
-                  </div>
+                    <Separator />
+                    </>
+                  )}
 
-                  <Separator />
+                  {showQuickActions && <Separator />}
 
                   {/* Volume Control */}
                   <div className="space-y-2">
