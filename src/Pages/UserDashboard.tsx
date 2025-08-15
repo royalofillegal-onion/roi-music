@@ -1,7 +1,6 @@
 
 import React from 'react';
 import UserInteraction from '@/components/UserInteraction';
-import GuestPlaylist444 from '@/components/GuestPlaylist444';
 
 const UserDashboard = () => {
   return (
@@ -13,10 +12,6 @@ const UserDashboard = () => {
         </div>
         
         <UserInteraction />
-        
-        <div className="mt-8">
-          <GuestPlaylist444 />
-        </div>
       </div>
     </div>
   );

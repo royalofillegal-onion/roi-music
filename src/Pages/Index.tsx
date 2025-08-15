@@ -11,7 +11,6 @@ import FloatingMusicInfo from "@/components/FloatingMusicInfo";
 import RecentlyPlayedSection from "@/components/RecentlyPlayedSection";
 import { Button } from "@/components/ui/button";
 import { trendingSongs, popularSongs, newReleases, uniqueSongs } from "@/data/allSongs";
-import { massRapSongs } from "@/data/massRapSongs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
@@ -242,14 +241,6 @@ const Index = () => {
         <SliderRow title="Popular Songs" className="animate-slide-up" style={{animationDelay: "400ms"}}>
           <div className="flex gap-4">
             {popularSongs.map((song) => (
-              <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
-            ))}
-          </div>
-        </SliderRow>
-        
-        <SliderRow title="Mass Rap" className="animate-slide-up" style={{animationDelay: "450ms"}}>
-          <div className="flex gap-4">
-            {massRapSongs.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
             ))}
           </div>

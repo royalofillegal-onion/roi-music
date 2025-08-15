@@ -38,15 +38,15 @@ const FloatingMusicInfo = () => {
   const [continuousPlayback, setContinuousPlayback] = useState(true);
   const [autoPlayArtist, setAutoPlayArtist] = useState(true);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
-  const [showQuickActions, setShowQuickActions] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   const [completedSyncs, setCompletedSyncs] = useState<Set<string>>(new Set());
   
   const isMobile = useIsMobile();
 
-  // Auto-play next song when current ends (less intrusive)
+  // Auto-play next song when current ends
   useEffect(() => {
-    if (currentSong && continuousPlayback && currentTime > 0 && duration > 0 && Math.abs(currentTime - duration) < 1) {
-      setTimeout(() => handleAutoNext(), 500); // Small delay to reduce abrupt transitions
+    if (currentSong && continuousPlayback && currentTime > 0 && duration > 0 && Math.abs(currentTime - duration) < 0.5) {
+      handleAutoNext();
     }
   }, [currentTime, duration, continuousPlayback, currentSong]);
 
@@ -128,10 +128,7 @@ const FloatingMusicInfo = () => {
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
-    // Less intrusive notification - no sound
-    toast(isLiked ? 'Removed from favorites' : 'Added to favorites', {
-      duration: 1500,
-    });
+    toast.success(isLiked ? 'Removed from favorites' : 'Added to favorites');
   };
 
   const handleSongSelect = (song: any) => {
@@ -141,10 +138,7 @@ const FloatingMusicInfo = () => {
   const addArtistSongsToQueue = () => {
     const songsToAdd = currentArtistSongs.filter(song => song.id !== currentSong.id);
     songsToAdd.forEach(song => addToQueue(song));
-    // Less intrusive notification
-    toast(`Added ${songsToAdd.length} songs to queue`, {
-      duration: 2000,
-    });
+    toast.success(`Added ${songsToAdd.length} songs to queue`);
   };
 
   // Improved mobile responsive positioning with better height calculation

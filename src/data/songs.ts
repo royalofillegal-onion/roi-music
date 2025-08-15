@@ -2373,8 +2373,8 @@ export const songs: Song[] = [
   album: "Hungry Cheetah OG Glimpse",
   year: 2025,
   genre: ".",
-  language: "telugu",
-  sync: "action"
+  language: "Telugu",
+  sync: "Rap"
 },
   {
   id: "56f45eea-fd11-46d4-a59b-b428060b0c43",
@@ -2387,7 +2387,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "happy"
+  sync: "."
 },
   {
   id: "8edeaacd-18f6-4095-990a-0f5ae749eac1",
@@ -2400,7 +2400,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "dance"
+  sync: "."
 },
   {
   id: "be148260-58c2-4913-a70c-dac99186479d",
@@ -2413,7 +2413,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "action"
+  sync: "."
 },
   {
   id: "bf79fa73-24e5-42b7-941d-48cd275459e2",
@@ -2426,7 +2426,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "party"
+  sync: "."
 },
   {
   id: "dd64fd2d-c477-4883-a6bd-f482a73c6fd9",
@@ -2439,7 +2439,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: "Feel",
   language: "telugu",
-  sync: "classical"
+  sync: "old"
 },
   {
   id: "60a8a7a1-48df-44ca-acff-1cb5204f82aa",
@@ -2452,7 +2452,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "devotional"
+  sync: "."
 },
   {
   id: "84802fd6-b136-4994-8d5e-705e8cca5aca",
@@ -2465,7 +2465,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "classical"
+  sync: "."
 },
   {
   id: "c7fedc5d-e120-45e7-86ae-c47fdd3d79d1",
@@ -2478,7 +2478,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "folk"
+  sync: "."
 },
   {
   id: "2dc62fe2-54f8-4927-b917-9a786ff1e81b",
@@ -2491,7 +2491,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: "Love it ",
   language: "telugu",
-  sync: "love"
+  sync: "Love"
 },
   {
   id: "057a9c1f-1c99-4706-82cb-a614384137b9",
@@ -2504,7 +2504,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "action"
+  sync: "teasure"
 },
   {
   id: "34d5ea64-c8f5-49a3-a94e-52480916c335",
@@ -2517,7 +2517,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "party"
+  sync: "vibe"
 },
   {
   id: "fc8e242a-dd5d-40bc-8414-78d7f87ccad3",
@@ -2530,7 +2530,7 @@ export const songs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "dance"
+  sync: "."
 }
   
 ];
