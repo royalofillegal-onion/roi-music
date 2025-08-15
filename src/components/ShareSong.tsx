@@ -135,7 +135,7 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
           <Share2 className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md mx-2 sm:mx-4 max-h-[85vh] sm:max-h-[90vh] overflow-y-auto w-[calc(100vw-1rem)] sm:w-auto">
         <DialogHeader>
           <DialogTitle className="text-green-400">Share Song</DialogTitle>
           <DialogDescription className="text-gray-400">
@@ -160,28 +160,28 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
           {/* Unique Share URL */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300">Unique Song URL</label>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Input
                 value={isGenerating ? 'Generating unique URL...' : shareUrl}
                 readOnly
-                className="bg-gray-800 border-gray-600 text-white text-xs flex-1 min-w-0"
+                className="bg-gray-800 border-gray-600 text-white text-xs w-full"
                 disabled={isGenerating}
               />
               <Button
                 onClick={handleCopyUrl}
                 size="sm"
-                className="bg-green-600 hover:bg-green-700 shrink-0 w-full sm:w-auto"
+                className="bg-green-600 hover:bg-green-700 w-full"
                 disabled={isGenerating}
               >
                 {copied ? (
                   <>
                     <Check className="h-4 w-4 mr-2" />
-                    <span className="sm:hidden">Copied!</span>
+                    Copied!
                   </>
                 ) : (
                   <>
                     <Copy className="h-4 w-4 mr-2" />
-                    <span className="sm:hidden">Copy URL</span>
+                    Copy URL
                   </>
                 )}
               </Button>
@@ -208,7 +208,7 @@ const ShareSong: React.FC<ShareSongProps> = ({ song, className = '' }) => {
             )}
 
             {/* Social Media & Communication Options */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <Button
                 onClick={() => handleSocialShare('whatsapp')}
                 variant="outline"
