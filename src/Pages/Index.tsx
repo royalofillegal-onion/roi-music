@@ -156,6 +156,7 @@ const Index = () => {
       </div>
       
       {/* Toggle for Quick Actions */}
+      {/* hide quick act
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Quick Actions</h3>
         <Button
@@ -167,8 +168,9 @@ const Index = () => {
           {showQuickActions ? 'Show' : 'Hide'}
         </Button>
       </div>
-
+       */}
       {/* Quick Action Buttons - Toggleable */}
+       {/* hide quick act
       {showQuickActions && (
         <div className="flex flex-wrap gap-4 mb-8">
           <GlowingButton 
@@ -199,7 +201,7 @@ const Index = () => {
           </GlowingButton>
         </div>
       )}
-
+       */}
       {/* Good Morning Section - Show only one song */}
       {homepageSections.goodMorning && (
         <SliderRow title="Good Morning" className="animate-slide-up mb-8" style={{animationDelay: "100ms"}}>
