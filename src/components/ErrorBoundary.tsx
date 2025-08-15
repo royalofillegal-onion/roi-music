@@ -63,7 +63,7 @@ class ErrorBoundary extends Component<Props, State> {
                 Go to Home
               </Button>
             </div>
-            
+            {/*
             {this.state.error && (
               <details className="mt-6 p-4 bg-gray-800 rounded-lg text-left">
                 <summary className="cursor-pointer text-sm text-gray-400 mb-2">
@@ -73,7 +73,7 @@ class ErrorBoundary extends Component<Props, State> {
                   {this.state.error.message}
                 </pre>
               </details>
-            )}
+            )} */}
           </div>
         </div>
       );
