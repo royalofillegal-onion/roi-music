@@ -14,6 +14,7 @@ import { playlists } from "@/data/playlists";
 import { supabase } from "@/integrations/supabase/client";
 import ShareSong from "@/components/ShareSong";
 import QuickAddToPlaylist from "@/components/QuickAddToPlaylist";
+import { useGuestPlaylist } from "@/hooks/useGuestPlaylist";
 
 interface SongCardProps {
   song: Song;
@@ -25,6 +26,7 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
   const { playSong, addToQueue, toggleLikeSong, isLiked } = usePlayer();
   const [isLikedState, setIsLikedState] = useState(() => isLiked(song.id));
   const [isLoadingLike, setIsLoadingLike] = useState(false);
+  const { addToGuestPlaylist, isInGuestPlaylist } = useGuestPlaylist();
   
   const handlePlay = () => {
     playSong(song);
@@ -36,7 +38,9 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
     // Check if user is logged in before liking
     const { data: session } = await supabase.auth.getSession();
     if (!session?.session) {
-      return; // This will be handled by the toggleLikeSong function
+      // For guest users, add to the "444" playlist
+      addToGuestPlaylist(song);
+      return;
     }
 
     setIsLoadingLike(true);

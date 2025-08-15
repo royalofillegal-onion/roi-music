@@ -13,8 +13,8 @@ export const trendingSongs: Song[] = [
     album: "Firestorm",
     year: 2025,
     genre: ".",
-    language: "Telugu",
-    sync: "Rap"
+    language: "telugu",
+    sync: "action"
   },
   {
     id: "trending2",
@@ -27,7 +27,7 @@ export const trendingSongs: Song[] = [
     year: 2025,
     genre: ".",
     language: "telugu",
-    sync: "Feel"
+    sync: "sad"
   },
   {
     id: "trending3",
@@ -40,7 +40,7 @@ export const trendingSongs: Song[] = [
     year: 2025,
     genre: "Romance",
     language: "tamil",
-    sync: "Feel"
+    sync: "romantic"
   },
   {
     id: "trending1",
@@ -53,7 +53,7 @@ export const trendingSongs: Song[] = [
     year: 2025,
     genre: ".",
     language: "telugu",
-    sync: "mass"
+    sync: "action"
   },
   {
     id: "trending4",
@@ -66,7 +66,7 @@ export const trendingSongs: Song[] = [
     year: 2025,
     genre: "Love it",
     language: "hindi",
-    sync: "Dev"
+    sync: "devotional"
   },
   {
   id: "trending5",
@@ -79,7 +79,7 @@ export const trendingSongs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "Feel"
+  sync: "sad"
 },
   {
   id: "trending6",
@@ -92,7 +92,7 @@ export const trendingSongs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "Lovem"
+  sync: "love"
 },
   {
   id: "trending7",
@@ -105,7 +105,7 @@ export const trendingSongs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "mass"
+  sync: "action"
 }
 ];
 
