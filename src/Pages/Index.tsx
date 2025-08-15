@@ -164,7 +164,7 @@ const Index = () => {
           onClick={() => setShowQuickActions(!showQuickActions)}
           className="text-gray-400 hover:text-white"
         >
-          {showQuickActions ? 'Hide' : 'Show'}
+          {showQuickActions ? 'Show' : 'Hide'}
         </Button>
       </div>
 
