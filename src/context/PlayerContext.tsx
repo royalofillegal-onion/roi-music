@@ -289,14 +289,14 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       });
       
       signalContinuousPlayback();
-      
+      {/*
       toast.success(`Now playing: ${song.title}`);
     }).catch(error => {
       console.error("Error playing song:", error);
       toast.error("Failed to play song");
     });
   };
-
+*/}
   const pauseSong = () => {
     if (audioRef.current) {
       audioRef.current.pause();
