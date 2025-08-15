@@ -268,7 +268,7 @@ const Index = () => {
 
         <SliderRow title="Hindi Songs" className="animate-slide-up" style={{animationDelay: "500ms"}}>
           <div className="flex gap-4">
-            {HindiSong.map((song) => (
+            {HindiSongs.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
             ))}
           </div>
