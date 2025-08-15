@@ -12,6 +12,7 @@ import RecentlyPlayedSection from "@/components/RecentlyPlayedSection";
 import { Button } from "@/components/ui/button";
 import { trendingSongs, popularSongs, newReleases, uniqueSongs } from "@/data/allSongs";
 import { massRapSongs } from "@/data/massRapSongs";
+import { HindiSongs } from "@/data/HindiSongs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
@@ -260,6 +261,14 @@ const Index = () => {
         <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "500ms"}}>
           <div className="flex gap-4">
             {newReleases.map((song) => (
+              <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
+            ))}
+          </div>
+        </SliderRow>
+
+        <SliderRow title="Hindi Songs" className="animate-slide-up" style={{animationDelay: "500ms"}}>
+          <div className="flex gap-4">
+            {HindiSong.map((song) => (
               <SongCard key={song.id} song={song} className="min-w-[180px] w-[180px]" />
             ))}
           </div>
