@@ -96,12 +96,30 @@ export const playlists: Playlist[] = [
   },
   {
     id: "playlist3",
-    title: "444",
-    description: "???",
-    coverImage: "https://res.cloudinary.com/dd6xwej67/image/upload/v1755049414/Screenshot_2025-08-13_071302_myenzb.png",
-    songs: [],
-    createdBy: "RoyalStar",
-    createdAt: "2023-06-22"
+    title: "Break!,Sad,Alone,Mood MIX",
+    description: "Enjoy and Entertainment the platform. ROI",
+    coverImage: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755419378/IMG_20250817_135835_dwga28.jpg",
+    songs: [
+      moreSongs.find(s => s.id === "Mawaa Enthaina"),
+      moreSongs.find(s => s.id === "Varinche Prema"), 
+      moreSongs.find(s => s.id === "Thanu"),
+      moreSongs.find(s => s.id === "Mari Antaga"),
+      moreSongs.find(s => s.id === "Ayyayyo Sad"), 
+      moreSongs.find(s => s.id === "Katha Kaadhey"),
+      moreSongs.find(s => s.id === "Why This Kolaveri Di"),
+      moreSongs.find(s => s.id === "Po Ve Po Remix"), 
+      moreSongs.find(s => s.id === "Sailaja Sailaja"),
+      moreSongs.find(s => s.id === "Pranam pothunna"),
+      moreSongs.find(s => s.id === "A Life Full Of Love"), 
+      moreSongs.find(s => s.id === "Uppenantha"),
+      moreSongs.find(s => s.id === "Pillaa Raa"),
+      moreSongs.find(s => s.id === "Megham Karigena"),
+      moreSongs.find(s => s.id === "Life of Pandu From Thiru"),
+      moreSongs.find(s => s.id === "Evarevaro"),
+      moreSongs.find(s => s.id === "My Love Is Gone")
+    ].filter(Boolean) as Song[],
+    createdBy: "ROI",
+    createdAt: "2024-05-15"
   },
   {
     id: "playlist4",
