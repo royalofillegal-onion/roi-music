@@ -169,7 +169,7 @@ export const songs: Song[] =[
     sync: "love"
   },
   {
-    id: "song5",
+    id: "Golden Sparrow",
     title: "Golden Sparrow",
     artist: "Jaabilamma Neeku Antha Kopama",
     imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747287102/images_16_rmhsqh.jpg",
@@ -351,7 +351,7 @@ export const songs: Song[] =[
     sync: "romantic"
   },
    {
-    id: "song18",
+    id: "Bala Tripuramani",
     title: "Bala Tripuramani",
     artist: "Bramhostavam",
     imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1744979888/images_9_am84ql.jpg",
