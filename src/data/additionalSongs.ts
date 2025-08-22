@@ -548,7 +548,19 @@ export const additionalSongs: Song[] = [
   language: "telugu",
   sync: "romantic"
 },
-  
+  {
+  id: "cce65d4a-0ed5-4b58-b21c-c6e4c9b265be",
+  title: "Amma Amma ,Nee Vennela",
+  artist: "Paagal",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344898/Paagal-2021-jpeg_ktfxvx.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344910/Amma_Amma_Nee_Vennela_w6vwlj.mp3",
+  duration: 337,
+  album: "Amma Amma ,Nee Vennela",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "mother"
+},
   {
   id: "add-014",
   title: "Anaganaga Kadha",
