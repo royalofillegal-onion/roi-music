@@ -274,6 +274,19 @@ export const massRapSongs: Song[] = [
   sync: "rap"
 },
   {
+  id: "03e70546-d2e9-4cd8-8bec-1c17be9327dd",
+  title: "Rama Krishna",
+  artist: "Agent",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344680/Rama_Krishna_axumcc.mp3",
+  duration: 193,
+  album: "Rama Krishna",
+  year: 2025,
+  genre: "Mass",
+  language: "telugu",
+  sync: "Rap"
+},
+  {
   id: "a1ad23db-3e7c-4a2c-8149-a2fe7eb594e1",
   title: "Poonakaalu Loading",
   artist: " Waltair Veerayya",
@@ -556,5 +569,6 @@ export const massRapSongs: Song[] = [
   genre: ".",
   language: "telugu",
   sync: "mass",
-}
+},
+  
 ];
