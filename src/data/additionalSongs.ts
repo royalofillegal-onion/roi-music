@@ -14,6 +14,19 @@ export interface Song {
 
 export const additionalSongs: Song[] = [
   {
+  id: "Koyila",
+  title: "Koyila",
+  artist: "Private",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345849/57987_4_ka62v5.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345855/Koyila_KoshalWorld.Com_ogxzlg.mp3",
+  duration: 232,
+  album: "Koyila",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "Love"
+},
+  {
   id: "add-001",
   title: "Aaradugula Bullettu",
   artist: " Atharintiki Dharedhi",
