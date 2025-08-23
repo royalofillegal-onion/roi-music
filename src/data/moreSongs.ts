@@ -16,6 +16,19 @@ export const moreSongs: Song[] = [
     language: "telugu",
     sync: "break"
    },
+    {
+  id: "Telisineyn Na Nuvvey",
+  title: "Telisineyn Na Nuvvey",
+  artist: "Arjun Reddy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755913600/Telisiney_Na_Nuvvey_-_SenSongsMp3.Co_fqniw8.mp3",
+  duration: 252,
+  album: "Telisineyn Na Nuvvey",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "break"
+},
    {
     id: "Mawaa Enthaina",
     title: "Mawaa Enthaina",
@@ -327,5 +340,70 @@ export const moreSongs: Song[] = [
   genre: ".",
   language: "telugu",
   sync: "Feel"
-}
+},
+    {
+  id: "dd769833-380e-4cf4-ad46-c2d1f731a52a",
+  title: "Oopiri Aaguthunnadey",
+  artist: "Arjun Reddy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345054/Oopiri_Aaguthunnadey_PenduJatt.Com.Se_jesbuy.mp3",
+  duration: 244,
+  album: "Oopiri Aaguthunnadey",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
+  {
+  id: "94783b0b-7d4f-47ad-b2a5-bb9c9e1f2305",
+  title: "Emitemitemo",
+  artist: "Arjun Reddy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345050/Emitemitemo_PenduJatt.Com.Se_josscd.mp3",
+  duration: 203,
+  album: "Emitemitemo",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
+  {
+  id: "33740aee-4069-4567-955a-bca029957b4d",
+  title: "Yemainado",
+  artist: "Mr Majnu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345533/Mr-Majnu-2018jpeg_mdwnht.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345542/Yemainado_-_SenSongsMp3.Co_vrag0y.mp3",
+  duration: 196,
+  album: "Yemainado",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
+  {
+  id: "9816a79e-b3af-4ef0-8539-33b16f034846",
+  title: "Urime Manase",
+  artist: "Krishnarjuna Yudham",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345784/Krishnarjuna-Yudham-2018jpeg-300x300_pju6ml.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345803/Urime_Manase_-_SenSongsMp3.Co_iipnc9.mp3",
+  duration: 188,
+  album: "Urime Manase",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "sad"
+},
+  {
+  id: "bf3cf359-8e30-4c3a-8d1f-fe0ff5055d37",
+  title: "Ela Ela",
+  artist: "Krishnarjuna Yudham",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345784/Krishnarjuna-Yudham-2018jpeg-300x300_pju6ml.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345814/Ela_Ela_-_SenSongsMp3.Co_fe3y2s.mp3",
+  duration: 227,
+  album: "Ela Ela",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "sad"
+},
 ];
