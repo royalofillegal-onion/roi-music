@@ -996,9 +996,3 @@ export const popularSongs = [
 ].filter((s): s is Song => Boolean(s));
 
 
-// New releases from main collection  
-export const newReleases: Song[] = [
-  songs.find(s => s.id === ""),
-  songs.find(s => s.id === ""),
-].filter((s): s is Song => Boolean(s));
-
