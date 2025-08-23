@@ -1,10 +1,61 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { showAndroidNotification } from "@/services/androidNotification";
 
 const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
   const [lineWidth, setLineWidth] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
   
   useEffect(() => {
+    // Enable audio context for mobile devices
+    const enableAudioForMobile = () => {
+      if (audioRef.current) {
+        audioRef.current.load();
+        audioRef.current.volume = 0.7;
+        
+        // Try to play immediately
+        const playPromise = audioRef.current.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log('Loading audio started successfully');
+              showAndroidNotification('ROI MUSIC', 'Loading your music experience...');
+            })
+            .catch(error => {
+              console.log('Auto-play blocked, setting up user interaction handler:', error);
+              
+              // Function to handle first user interaction
+              const handleFirstInteraction = () => {
+                if (audioRef.current) {
+                  audioRef.current.volume = 0.7;
+                  audioRef.current.play()
+                    .then(() => {
+                      console.log('Audio started after user interaction');
+                      showAndroidNotification('ROI MUSIC', 'Loading your music experience...');
+                    })
+                    .catch(e => console.log('Audio play failed:', e));
+                }
+                
+                // Remove listeners after first interaction
+                document.removeEventListener('touchstart', handleFirstInteraction);
+                document.removeEventListener('click', handleFirstInteraction);
+                document.removeEventListener('keydown', handleFirstInteraction);
+              };
+              
+              // Add multiple event listeners for different interaction types
+              document.addEventListener('touchstart', handleFirstInteraction);
+              document.addEventListener('click', handleFirstInteraction);  
+              document.addEventListener('keydown', handleFirstInteraction);
+            });
+        }
+      }
+    };
+
+    // Small delay to ensure DOM is ready
+    const audioTimer = setTimeout(enableAudioForMobile, 100);
+    
+    // Start line animation
     // Start line animation
     const timer1 = setTimeout(() => {
       setLineWidth(100);
@@ -16,6 +67,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
     }, 2000);
     
     return () => {
+      clearTimeout(audioTimer);
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
@@ -94,6 +146,16 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
       <p className="mt-2 text-sm text-gray-400 animate-fade-in">
         Loading your music...
       </p>
+      
+      {/* Hidden audio element for loading sound */}
+      <audio 
+        ref={audioRef}
+        preload="auto"
+        loop
+      >
+        <source src="https://res.cloudinary.com/dilqrz7sw/video/upload/v1755909215/Retro-Space-Explosion-Or-Death-chosic.com_-_AudioTrimmer.com_jatv98.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
     </div>
   );
 };
