@@ -264,7 +264,7 @@ export const moreSongs: Song[] = [
     sync: "sad"
   },
     {
-  id: "e25ddd67-b4c5-4192-8976-909f23d66efa",
+  id: "Yevarini Yevaritho",
   title: "Yevarini Yevaritho",
   artist: " Das Ka Dhamki",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344189/images_vlnja7.jpg",
@@ -277,7 +277,7 @@ export const moreSongs: Song[] = [
   sync: "sad"
 },
   {
-  id: "75b8b4a1-e9dc-4a0e-9b2d-dac0a0c972fa",
+  id: "Ori Vaari",
   title: "Ori Vaari",
   artist: "Dasara",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344787/Dasara-2023_aaxtut.jpg",
@@ -290,7 +290,7 @@ export const moreSongs: Song[] = [
   sync: "sad"
 },
   {
-  id: "b14915a1-b44c-4d8e-90b1-465226096f18",
+  id: "Saradaga Kasepaina",
   title: "Saradaga Kasepaina",
   artist: "Paagal",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344898/Paagal-2021-jpeg_ktfxvx.jpg",
@@ -303,7 +303,7 @@ export const moreSongs: Song[] = [
   sync: "sad"
 },
   {
-  id: "0f89dbda-6bda-46fa-962b-9854a065daf2",
+  id: "Chamkeela Angeelesi",
   title: "Chamkeela Angeelesi",
   artist: "Dasara",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344787/Dasara-2023_aaxtut.jpg",
@@ -316,7 +316,7 @@ export const moreSongs: Song[] = [
   sync: "Feel"
 },
   {
-  id: "638c41f8-2899-4684-b6ba-a751cd514e05",
+  id: "Ee Single Chinnode",
   title: "Ee Single Chinnode",
   artist: "Paagal",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344898/Paagal-2021-jpeg_ktfxvx.jpg",
@@ -329,7 +329,7 @@ export const moreSongs: Song[] = [
   sync: "Feel"
 },
   {
-  id: "55b35ccc-dd70-4d8d-8147-eb8c9b52acec",
+  id: "Gaaju Bomma",
   title: "Gaaju Bomma",
   artist: "Hi Nana",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344934/images_9_kiydoy.jpg",
@@ -342,7 +342,7 @@ export const moreSongs: Song[] = [
   sync: "Feel"
 },
     {
-  id: "dd769833-380e-4cf4-ad46-c2d1f731a52a",
+  id: "Oopiri Aaguthunnadey",
   title: "Oopiri Aaguthunnadey",
   artist: "Arjun Reddy",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
@@ -355,7 +355,7 @@ export const moreSongs: Song[] = [
   sync: "sad"
 },
   {
-  id: "94783b0b-7d4f-47ad-b2a5-bb9c9e1f2305",
+  id: "Emitemitemo",
   title: "Emitemitemo",
   artist: "Arjun Reddy",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
@@ -368,7 +368,7 @@ export const moreSongs: Song[] = [
   sync: "sad"
 },
   {
-  id: "33740aee-4069-4567-955a-bca029957b4d",
+  id: "Yemainado",
   title: "Yemainado",
   artist: "Mr Majnu",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345533/Mr-Majnu-2018jpeg_mdwnht.jpg",
@@ -381,12 +381,12 @@ export const moreSongs: Song[] = [
   sync: "sad"
 },
   {
-  id: "9816a79e-b3af-4ef0-8539-33b16f034846",
+  id: "Urime Manase",
   title: "Urime Manase",
   artist: "Krishnarjuna Yudham",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345784/Krishnarjuna-Yudham-2018jpeg-300x300_pju6ml.jpg",
   audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345803/Urime_Manase_-_SenSongsMp3.Co_iipnc9.mp3",
-  duration: 188,
+  duration: 227,
   album: "Urime Manase",
   year: 2025,
   genre: "Feel",
@@ -394,7 +394,7 @@ export const moreSongs: Song[] = [
   sync: "sad"
 },
   {
-  id: "bf3cf359-8e30-4c3a-8d1f-fe0ff5055d37",
+  id: "Ela Ela",
   title: "Ela Ela",
   artist: "Krishnarjuna Yudham",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345784/Krishnarjuna-Yudham-2018jpeg-300x300_pju6ml.jpg",
