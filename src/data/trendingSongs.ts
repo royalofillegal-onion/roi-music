@@ -2,20 +2,19 @@ import { Song } from './songs';
 
 // Trending songs that can be easily updated and managed
 export const trendingSongs: Song[] = [
-  
   {
-    id: "6d313dfd-4814-4c9f-92f0-9fcb2fd7203b",
-    title: "Firestorm",
-    artist: "OG",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755087734/iSongs.info_02_-_Firestorm_mmu1pg.mp3",
-    duration: 240,
-    album: "Firestorm",
-    year: 2025,
-    genre: ".",
-    language: "telugu",
-    sync: "action"
-  },
+  id: "vibe-undi",
+  title: "Vibe Undi",
+  artist: "Mirai",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755944038/Mirai-2025-Vibe-Undi-250x250_n1oiqz.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755944069/Vibe_Undi_g25hgd.mp3",
+  duration: 202,
+  album: "Vibe Undi",
+  year: 2025,
+  genre: "rap",
+  language: "telugu",
+  sync: "rap"
+},
   {
     id: "trending2",
     title: "Nuvvunte Chaley",
@@ -28,19 +27,6 @@ export const trendingSongs: Song[] = [
     genre: ".",
     language: "telugu",
     sync: "sad"
-  },
-  {
-    id: "trending3",
-    title: "Minnalvala",
-    artist: "Narivetta",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752507033/Minnalvala-From-Narivetta-Malayalam-2025-20250416150421-500x500_cixjbx.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752507065/Minnalvala_qocusu.mp3",
-    duration: 299,
-    album: "Love",
-    year: 2025,
-    genre: "Romance",
-    language: "tamil",
-    sync: "romantic"
   },
   {
     id: "trending1",
@@ -56,6 +42,19 @@ export const trendingSongs: Song[] = [
     sync: "action"
   },
   {
+  id: "trending5",
+  title: "Hridayam Lopala",
+  artist: "Kingdom",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1746425141_j58ecx.webp",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740891/Hridayam_Lopala_yq1sdw.mp3",
+  duration: 134,
+  album: "Hridayam Lopala",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
+  {
     id: "trending4",
     title: "Om Namo Bhagavate Vasudevaya",
     artist: "Mahavatar Narsimha",
@@ -69,18 +68,31 @@ export const trendingSongs: Song[] = [
     sync: "devotional"
   },
   {
-  id: "trending5",
-  title: "Hridayam Lopala",
-  artist: "Kingdom",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1746425141_j58ecx.webp",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740891/Hridayam_Lopala_yq1sdw.mp3",
-  duration: 134,
-  album: "Hridayam Lopala",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
+    id: "6d313dfd-4814-4c9f-92f0-9fcb2fd7203b",
+    title: "Firestorm",
+    artist: "OG",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755087734/iSongs.info_02_-_Firestorm_mmu1pg.mp3",
+    duration: 240,
+    album: "Firestorm",
+    year: 2025,
+    genre: ".",
+    language: "telugu",
+    sync: "action"
+  },
+  {
+    id: "trending3",
+    title: "Minnalvala",
+    artist: "Narivetta",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752507033/Minnalvala-From-Narivetta-Malayalam-2025-20250416150421-500x500_cixjbx.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752507065/Minnalvala_qocusu.mp3",
+    duration: 299,
+    album: "Love",
+    year: 2025,
+    genre: "Romance",
+    language: "tamil",
+    sync: "romantic"
+  },
   {
   id: "trending6",
   title: "Naa Koduka",
