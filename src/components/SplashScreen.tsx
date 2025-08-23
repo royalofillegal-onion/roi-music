@@ -151,7 +151,6 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
       <audio 
         ref={audioRef}
         preload="auto"
-        loop
       >
         <source src="https://res.cloudinary.com/dilqrz7sw/video/upload/v1755911023/roi_like_splash-_AudioTrimmer.com_ppoltm.mp3" type="audio/mpeg" />
         Your browser does not support the audio element.
