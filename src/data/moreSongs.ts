@@ -17,6 +17,45 @@ export const moreSongs: Song[] = [
     sync: "break"
    },
     {
+  id: "89866360-ff70-4294-abb4-731f3e941272",
+  title: "Yendhukae Nannodhilaavu",
+  artist: "Return of the Dargon",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755939650/Return-Of-The-Dragon-Telugu-2025-Yendhukae-Nannodhilaavu-250x250_p53pfr.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755939685/iSongs.info_03_-_Yendhukae_Nannodhilaavu_tumpal.mp3",
+  duration: 258,
+  album: "Yendhukae Nannodhilaavu",
+  year: 2025,
+  genre: "love",
+  language: "telugu",
+  sync: "sad"
+},
+{
+  id: "nee-choopule",
+  title: "Nee Choopule",
+  artist: "Endukante Premanta",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940448/Endukante-Premanta0_edtvam.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940474/Nee_Choopule_xr6tu5.mp3",
+  duration: 362,
+  album: "Nee Choopule",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "sad"
+},
+{
+  id: "yellipoke-shyamala",
+  title: "Yellipoke Shyamala",
+  artist: "A Aa",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940736/iSongs.info_05_-_Yellipoke_Shyamala_yi74ac.mp3",
+  duration: 215,
+  album: "Yellipoke Shyamala",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "sad"
+},
+    {
   id: "Telisineyn Na Nuvvey",
   title: "Telisineyn Na Nuvvey",
   artist: "Arjun Reddy",
