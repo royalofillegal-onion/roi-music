@@ -754,7 +754,7 @@ export const songs: Song[] =[
   sync: "Love"
 },
   {
-  id: "4cdb6e95-ee12-47b3-8e38-44c1dbf9e578",
+  id: "Ninnele",
   title: "Ninnele",
   artist: "Radhe Shyam",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344980/Radhe-Shyam-2021-jpeg_nip6iy.jpg",
@@ -767,7 +767,59 @@ export const songs: Song[] =[
   sync: "love"
 },
   {
-  id: "209aa0cb-17ef-4e30-9a81-53349ffb52ba",
+  id: "I Wanna Fly",
+  title: "I Wanna Fly",
+  artist: "Krishnarjuna Yudham",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345784/Krishnarjuna-Yudham-2018jpeg-300x300_pju6ml.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345791/I_Wanna_Fly_-_SenSongsMp3.Co_dze0xl.mp3",
+  duration: 188,
+  album: "I Wanna Fly",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "Love"
+},
+  {
+  id: "Mastaaru Mastaaru",
+  title: "Mastaaru Mastaaru",
+  artist: "Sir",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755346240/Sir-2022_shp95g.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755346248/Mastaaru_Mastaaru_znkskk.mp3",
+  duration: 247,
+  album: "Mastaaru Mastaaru",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "Love"
+},
+  {
+  id: "Mastaaru Mastaaru Reprise Version",
+  title: "Mastaaru Mastaaru Reprise Version",
+  artist: "Sir",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755346240/Sir-2022_shp95g.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755346261/Mastaaru_Mastaaru_Reprise_Version_uut528.mp3",
+  duration: 227,
+  album: "Mastaaru Mastaaru Reprise Version",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "Love"
+},
+  {
+  id: "Nachavule Nachavule",
+  title: "Nachavule Nachavule",
+  artist: "Virupaksha",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755346352/Virupaksha-Naa-Songs-Download_xjvq1j.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755346358/Nachavule_Nachavule_kqgful.mp3",
+  duration: 222,
+  album: "Nachavule Nachavule",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "Love"
+},
+  {
+  id: "Baby Wont You Tell Me",
   title: "Baby Wont You Tell Me",
   artist: "Saaho",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345007/images_10_wzbefo.jpg",
@@ -780,7 +832,7 @@ export const songs: Song[] =[
   sync: "love"
 },
   {
-  id: "dac3a499-8c20-41b0-9482-5dd530be86f7",
+  id: "All Most Padipoyinde Pilla",
   title: "All Most Padipoyinde Pilla",
   artist: " Das Ka Dhamki",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344189/Dhamki-2022-1_xegcmk.jpg",
@@ -793,7 +845,7 @@ export const songs: Song[] =[
   sync: "Love"
 },
   {
-  id: "53212ccb-f9f4-4208-bd95-30a4a89d1b0a",
+  id: "Sitra",
   title: "Sitra",
   artist: "Mr Bachchan",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344635/images_5_jvc51o.jpg",
@@ -806,7 +858,7 @@ export const songs: Song[] =[
   sync: "Love"
 },
   {
-  id: "7b63ff46-aac1-44b9-9cae-e15681e8a769",
+  id: "Nacchesave",
   title: "Nacchesave",
   artist: "Gam Gam Ganesha",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344706/images_7_veyyt5.jpg",
@@ -819,7 +871,7 @@ export const songs: Song[] =[
   sync: "Love"
 },
   {
-  id: "9724c663-e04a-4d89-8a9b-63a98f6ba5ab",
+  id: "Aradhya",
   title: "Aradhya",
   artist: "Kushi",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344732/Kushi-2023_inugyh.jpg",
@@ -832,7 +884,7 @@ export const songs: Song[] =[
   sync: "Love"
 },
   {
-  id: "3e8968ab-93f1-4680-a449-a7012b21d91a",
+  id: "Ee Raathale",
   title: "Ee Raathale",
   artist: "Radhe Shyam",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344980/Radhe-Shyam-2021-jpeg_nip6iy.jpg",
@@ -845,7 +897,7 @@ export const songs: Song[] =[
   sync: "Love"
 },
   {
-  id: "7466ec11-b2d3-4b45-8db5-0ae4d606eb78",
+  id: "Ye Chotam Nuvvunna",
   title: "Ye Chotam Nuvvunna",
   artist: "Saaho",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345007/images_10_wzbefo.jpg",
