@@ -1,4 +1,17 @@
 import { Song } from './songs';
+export interface Song {
+  id: string;
+  title: string;
+  artist: string;
+  imageUrl: string;
+  audioUrl: string;
+  duration: number; // in seconds
+  album?: string;
+  year?: number;
+  genre?: string;
+  language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
+  sync?: 'sad' | 'love' | 'break' | 'happy' | 'devotional' | 'feel1' | 'action' | 'romantic' | 'friend' | 'dance' | 'folk' | 'mass' | 'party' | 'classical' | 'rap' | 'moti';
+}
 
 export const moreSongs: Song[] = [
     /*Breakup&alonetheme*/
