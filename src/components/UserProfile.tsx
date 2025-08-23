@@ -358,7 +358,7 @@ const UserProfile = () => {
         </DropdownMenuTrigger>
         
         <DropdownMenuContent align="end" className="w-56 bg-gray-900 border-gray-800">
-          <DropdownMenuLabel>RoyalStar Pro Advanced Edition</DropdownMenuLabel>
+          <DropdownMenuLabel>ROI MUSIC 2.7</DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-gray-800" />
           
           {isLoggedIn ? (
