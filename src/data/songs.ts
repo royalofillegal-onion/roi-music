@@ -38,6 +38,19 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "romantic"
 },
+  {
+  id: "a5aa9c07-9f72-4e93-8a36-a15bccc996df",
+  title: "Apple Beauty",
+  artist: "Janatha Garage",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755346096/Janatha-Garage-2016-250x250_fi3g8h.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755346109/iSongs.info_03_-_Apple_Beauty_avy0hw.mp3",
+  duration: 231,
+  album: "Apple Beauty",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
+},
 {
   id: "Om Namah Shivaya",
   title: "Om Namah Shivaya",
