@@ -964,12 +964,16 @@ export const songs: Song[] =[
 ];
 
 // Popular songs from main collection
-export const popularSongs: Song[] = [
-  songs[0], songs[1], songs[2], songs[3], songs[4],
-  // Use title lookup safely instead of bracket notation
-  songs.find(s => s.title === "Taralirada") as Song].filter(Boolean) as Song[],
-  songs.find(s => s.id === "Adhento Gaani Vunnapaatuga") as Song].filter(Boolean) as Song[];
-    
+export const popularSongs = [
+  songs[0],
+  songs[1],
+  songs[2],
+  songs[3],
+  songs[4],
+  songs.find(s => s.id === "Taralirada"),
+  songs.find(s => s.id === "Adhento Gaani Vunnapaatuga"),
+].filter((s): s is Song => Boolean(s));
+
 
 // New releases from main collection  
 export const newReleases: Song[] = [
