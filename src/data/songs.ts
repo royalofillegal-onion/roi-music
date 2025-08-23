@@ -965,17 +965,40 @@ export const songs: Song[] =[
 
 // Popular songs from main collection
 export const popularSongs = [
-  songs[0],
-  songs[1],
-  songs[2],
-  songs[3],
-  songs[4],
-  songs.find(s => s.id === "Taralirada"),
+  songs.find(s => s.id === "Koyila"),
+  songs.find(s => s.id === "Ninnele"),
+  songs.find(s => s.id === "Nuvvu Navvukuntu"),
+  songs.find(s => s.id === "Yedhee"),
+  songs.find(s => s.id === "Anuvanuvuu"),
+  songs.find(s => s.id === "Godari Gattu"),
+  songs.find(s => s.id === "Kanulu Chadire"),
+  songs.find(s => s.id === "Kanapadava"),
+  songs.find(s => s.id === "Chandruloo Unde"),
+  songs.find(s => s.id === "Kollagotte"),
+  songs.find(s => s.id === "Poolamme Pilla"),
+  songs.find(s => s.id === "Oh Pilla"),
   songs.find(s => s.id === "Adhento Gaani Vunnapaatuga"),
+  songs.find(s => s.id === "All Most Padipoyinde Pilla"),
+  songs.find(s => s.id === "Chuttamalle"),
+  songs.find(s => s.id === "Prema Velluva"),
+  songs.find(s => s.id === "Yemito"),
+  songs.find(s => s.id === "ye Kannuulu Chudani Chitrame"),
+  songs.find(s => s.id === "Golden Sparrow"),
+  songs.find(s => s.id === "Shiva Shiva Shankaraa"),
+  songs.find(s => s.id === "pilla Padesaave"),
+  songs.find(s => s.id === "Bala Tripuramani"),
+  songs.find(s => s.id === "Ee Raathale"),
+  songs.find(s => s.id === "Yedurangula Vaana"),
+  songs.find(s => s.id === "Hello Rammante"),
+  songs.find(s => s.id === "Hey Rangule"),
+  songs.find(s => s.id === "Meenu"),
+  songs.find(s => s.id === "Hanuman Chalisa"),
 ].filter((s): s is Song => Boolean(s));
 
 
 // New releases from main collection  
 export const newReleases: Song[] = [
-  songs[5], songs[6], songs[7], songs[8], songs[9]
-];
+  songs.find(s => s.id === ""),
+  songs.find(s => s.id === ""),
+].filter((s): s is Song => Boolean(s));
+
