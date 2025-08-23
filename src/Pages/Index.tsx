@@ -16,6 +16,7 @@ import TimeLighting from "@/components/TimeLighting";
 import { Button } from "@/components/ui/button";
 import { trendingSongs, popularSongs, newReleases, uniqueSongs } from "@/data/allSongs";
 import { massRapSongs } from "@/data/massRapSongs";
+import { moreSongs } from "@/data/moreSongs";
 import { HindiSongs } from "@/data/HindiSongs";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
