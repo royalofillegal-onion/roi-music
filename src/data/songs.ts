@@ -77,6 +77,45 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "romantic"
 },
+  {
+  id: "andhamaa-andhamaa",
+  title: "Andhamaa Andhamaa",
+  artist: "8 Vasantalu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755941762/8-Vasantalu-2025-Parichayamila-250x250_cpn2x1.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755941781/Andhamaa_Andhamaa_ytethq.mp3",
+  duration: 276,
+  album: "Andhamaa Andhamaa",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "Love"
+},
+  {
+  id: "parichayamila",
+  title: "Parichayamila",
+  artist: "8 Vasantalu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755941762/8-Vasantalu-2025-Parichayamila-250x250_cpn2x1.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755941781/Parichayamila_iwhbd4.mp3",
+  duration: 204,
+  album: "Parichayamila",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "feel"
+},
+{
+  id: "kannamma",
+  title: "Kannamma",
+  artist: "Beauty",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940258/Beauty-2025-Kannamma-250x250_y34qml.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940280/iSongs.info_01_-_Kannamma_u43peq.mp3",
+  duration: 317,
+  album: "Kannamma",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "Love"
+},
 {
     id: "Mooga Manasulu",
     title: "Mooga Manasulu",
