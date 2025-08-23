@@ -41,6 +41,19 @@ export const massRapSongs: Song[] = [
   language: "telugu",
   sync: "mass"
 },
+  {
+  id: "rise-of-dragon",
+  title: "Rise Of Dragon",
+  artist: "Return of the Dargon",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755939650/Return-Of-The-Dragon-Telugu-2025-Yendhukae-Nannodhilaavu-250x250_p53pfr.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755939685/iSongs.info_03_-_Yendhukae_Nannodhilaavu_tumpal.mp3",
+  duration: 210,
+  album: "Rise Of Dragon",
+  year: 2025,
+  genre: "mass",
+  language: "telugu",
+  sync: "rap"
+},
 {
   id: "Hungry Cheetah OG Glimpse",
   title: "Hungry Cheetah OG Glimpse",
