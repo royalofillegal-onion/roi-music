@@ -153,7 +153,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
         preload="auto"
         loop
       >
-        <source src="https://res.cloudinary.com/dilqrz7sw/video/upload/v1755909215/Retro-Space-Explosion-Or-Death-chosic.com_-_AudioTrimmer.com_jatv98.mp3" type="audio/mpeg" />
+        <source src="https://res.cloudinary.com/dilqrz7sw/video/upload/v1755911023/roi_like_splash-_AudioTrimmer.com_ppoltm.mp3" type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </div>
