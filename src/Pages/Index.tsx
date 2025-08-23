@@ -246,6 +246,23 @@ const Index = () => {
 
       {/* Original sections with improved spacing */}
       <div className="mt-12 space-y-8">
+
+        <SliderRow title="Popular Songs" className="animate-slide-up" style={{animationDelay: "400ms"}}>
+          <div className="flex gap-4">
+            {popularSongs.filter(Boolean).map((song, index) => (
+              <SongCard key={`popular-${song.id}-${index}`} song={song} className="min-w-[180px] w-[180px]" />
+            ))}
+          </div>
+        </SliderRow>
+
+        <SliderRow title="Feel the Songs" className="animate-slide-up" style={{animationDelay: "500ms"}}>
+          <div className="flex gap-4">
+            {newReleases.filter(Boolean).map((song, index) => (
+              <SongCard key={`new-${song.id}-${index}`} song={song} className="min-w-[180px] w-[180px]" />
+            ))}
+          </div>
+        </SliderRow>
+
         <SliderRow title="Featured Playlists" className="animate-slide-up" style={{animationDelay: "300ms"}}>
           <div className="flex gap-4">
             {playlists.map((playlist) => (
@@ -262,21 +279,6 @@ const Index = () => {
           </div>
         </SliderRow>
         
-        <SliderRow title="Popular Songs" className="animate-slide-up" style={{animationDelay: "400ms"}}>
-          <div className="flex gap-4">
-            {popularSongs.filter(Boolean).map((song, index) => (
-              <SongCard key={`popular-${song.id}-${index}`} song={song} className="min-w-[180px] w-[180px]" />
-            ))}
-          </div>
-        </SliderRow>
-        
-        <SliderRow title="New Releases" className="animate-slide-up" style={{animationDelay: "500ms"}}>
-          <div className="flex gap-4">
-            {newReleases.filter(Boolean).map((song, index) => (
-              <SongCard key={`new-${song.id}-${index}`} song={song} className="min-w-[180px] w-[180px]" />
-            ))}
-          </div>
-        </SliderRow>
 
         <SliderRow title="Hindi&Tamil&English Songs" className="animate-slide-up" style={{animationDelay: "500ms"}}>
           <div className="flex gap-4">
