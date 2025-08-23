@@ -39,7 +39,7 @@ export const songs: Song[] =[
   sync: "romantic"
 },
   {
-  id: "a5aa9c07-9f72-4e93-8a36-a15bccc996df",
+  id: "Apple Beauty",
   title: "Apple Beauty",
   artist: "Janatha Garage",
   imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755346096/Janatha-Garage-2016-250x250_fi3g8h.jpg",
@@ -967,8 +967,9 @@ export const songs: Song[] =[
 export const popularSongs: Song[] = [
   songs[0], songs[1], songs[2], songs[3], songs[4],
   // Use title lookup safely instead of bracket notation
-  songs.find(s => s.title === "Taralirada") as Song
-].filter(Boolean) as Song[];
+  songs.find(s => s.title === "Taralirada") as Song].filter(Boolean) as Song[],
+  songs.find(s => s.id === "Adhento Gaani Vunnapaatuga") as Song].filter(Boolean) as Song[];
+    
 
 // New releases from main collection  
 export const newReleases: Song[] = [
