@@ -327,6 +327,58 @@ export const additionalSongs: Song[] = [
   sync: "."
 },
   {
+  id: "teaser-theme",
+  title: "Teaser Theme",
+  artist: "Mirai",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755944038/Mirai-2025-Vibe-Undi-250x250_n1oiqz.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755944065/Teaser_Theme_hv7ida.mp3",
+  duration: 118,
+  album: "Teaser Theme",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "rudhira-magadha",
+  title: "Rudhira Magadha",
+  artist: "Mirai",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755944038/Mirai-2025-Vibe-Undi-250x250_n1oiqz.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755944066/iSongs.info_01_-_Rudhira_Magadha_rhfyhi.mp3",
+  duration: 58,
+  album: "Rudhira Magadha",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "the-black-sword",
+  title: "The Black Sword",
+  artist: "Mirai",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755944038/Mirai-2025-Vibe-Undi-250x250_n1oiqz.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755944066/The_Black_Sword_frgcmg.mp3",
+  duration: 85,
+  album: "The Black Sword",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "tikamaka-makatika",
+  title: "Tikamaka Makatika",
+  artist: "Mirai",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755944038/Mirai-2025-Vibe-Undi-250x250_n1oiqz.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755944067/Tikamaka_Makatika_-_SenSongsMp3.Co_ded75q.mp3",
+  duration: 230,
+  album: "Tikamaka Makatika",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
   id: "chill-out",
   title: "Chill Out",
   artist: "Endukante Premanta",
