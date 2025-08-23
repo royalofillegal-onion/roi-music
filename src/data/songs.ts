@@ -994,8 +994,3 @@ export const popularSongs = [
   songs.find(s => s.id === "Meenu"),
   songs.find(s => s.id === "Hanuman Chalisa"),
 ].filter((s): s is Song => Boolean(s));
-
-export const newReleases: Song[] = [
-  songs.find(s => s.id === ""),
-  songs.find(s => s.id === ""),
-].filter((s): s is Song => Boolean(s));
