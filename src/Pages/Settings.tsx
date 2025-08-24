@@ -469,7 +469,7 @@ const Settings = () => {
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-green-400" />
               <span className="text-gray-400">Active Users:</span>
-              <span>50K+</span>
+              <span>NA</span>
             </div>
           </div>
           
