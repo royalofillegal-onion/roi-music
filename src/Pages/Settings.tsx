@@ -446,45 +446,6 @@ const Settings = () => {
         </Card>
       </div>
 
-      {/* App Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Info className="h-5 w-5" />
-            About Royal of Illegal
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Globe className="h-4 w-4 text-blue-400" />
-              <span className="text-gray-400">Version:</span>
-              <span>2.1.0</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Music2 className="h-4 w-4 text-purple-400" />
-              <span className="text-gray-400">Songs Available:</span>
-              <span>1000+</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-green-400" />
-              <span className="text-gray-400">Active Users:</span>
-              <span>50K+</span>
-            </div>
-          </div>
-          
-          <Separator />
-          
-          <div className="flex items-center justify-between text-xs text-gray-400">
-            <div className="flex items-center gap-1">
-              <Copyright className="h-3 w-3" />
-              <span>2024 Royal of Illegal. All rights reserved.</span>
-            </div>
-            <span>Made with ❤️ for music lovers</span>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Feedback Section */}
       <Card>
         <CardHeader>
@@ -596,6 +557,45 @@ const Settings = () => {
         </CardContent>
       </Card>
     </div>
+    
+      {/* App Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Info className="h-5 w-5" />
+            About Royal of Illegal
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-blue-400" />
+              <span className="text-gray-400">Version:</span>
+              <span>2.7.0</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Music2 className="h-4 w-4 text-purple-400" />
+              <span className="text-gray-400">Songs Available:</span>
+              <span>10000+</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-green-400" />
+              <span className="text-gray-400">Active Users:</span>
+              <span>NA</span>
+            </div>
+          </div>
+          
+          <Separator />
+          
+          <div className="flex items-center justify-between text-xs text-gray-400">
+            <div className="flex items-center gap-1">
+              <Copyright className="h-3 w-3" />
+              <span>2024 Royal of Illegal. All rights reserved.</span>
+            </div>
+            <span>Made with ❤️ for music lovers</span>
+          </div>
+        </CardContent>
+      </Card>
   );
 };
 
