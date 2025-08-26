@@ -91,7 +91,7 @@ const Player = () => {
   // Get artist songs for current song with duplicate filtering
   const getArtistSongs = (): Song[] => {
     if (!currentSong) return [];
-    
+    {/*
     // Import uniqueSongs and filter by artist, removing duplicates by title and artist
     return uniqueSongs
       .filter(song => song.artist === currentSong.artist)
@@ -132,7 +132,7 @@ const Player = () => {
       default: return 'Sequence';
     }
   };
-  
+  */}
   // Toggle fullscreen player
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
