@@ -1,0 +1,196 @@
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Play, Heart, Plus } from 'lucide-react';
+import { Song } from '@/data/songs';
+import { usePlayer } from '@/context/PlayerContext';
+import { allSongs } from '@/data/allSongs';
+import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
+
+interface ArtistFullViewProps {
+  artistName: string;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) => {
+  const { playSong, currentSong, isPlaying, addToQueue, toggleLikeSong, isLiked, playArtistSongs } = usePlayer();
+  const [artistSongs, setArtistSongs] = useState<Song[]>([]);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && artistName) {
+      const songs = allSongs.filter(song => 
+        song.artist.toLowerCase().includes(artistName.toLowerCase())
+      );
+      setArtistSongs(songs);
+    }
+  }, [artistName, isOpen]);
+
+  const handleClose = (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 300);
+  };
+
+  const handleSongPlay = (song: Song) => {
+    playSong(song);
+    toast.success(`Playing "${song.title}" by ${song.artist}`);
+  };
+
+  const handleLike = async (song: Song, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await toggleLikeSong(song.id);
+  };
+
+  const handleAddToQueue = (song: Song, e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToQueue(song);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className={cn(
+      "fixed inset-0 z-50 bg-background transition-transform duration-300 ease-out",
+      isClosing ? "translate-x-full" : "translate-x-0"
+    )}>
+      {/* Header with close button */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="flex items-center justify-between p-4">
+          <button
+            onClick={(e) => handleClose(e)}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 hover:bg-accent/20 transition-colors group"
+          >
+            <ArrowLeft className="w-5 h-5 text-accent group-hover:translate-x-[-2px] transition-transform" />
+          </button>
+          
+          <div className="text-center flex-1 mx-4">
+            <h1 className="text-xl font-bold text-foreground">{artistName}</h1>
+            <p className="text-sm text-muted-foreground">{artistSongs.length} songs</p>
+          </div>
+          
+          <div className="w-10 h-10" /> {/* Spacer for centering */}
+        </div>
+      </div>
+
+      {/* Artist info section */}
+      {artistSongs.length > 0 && (
+        <div className="relative h-64 bg-gradient-to-b from-primary/20 to-background">
+          <img 
+            src={artistSongs[0].imageUrl} 
+            alt={artistName}
+            className="absolute inset-0 w-full h-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
+          <div className="relative h-full flex flex-col justify-end p-6">
+            <div className="mb-4">
+              <h2 className="text-3xl font-bold text-white mb-2">{artistName}</h2>
+              <p className="text-white/80">{artistSongs.length} songs available</p>
+            </div>
+            <button
+              onClick={() => handleSongPlay(artistSongs[0])}
+              className="flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 rounded-full font-medium hover:bg-accent/90 transition-colors w-fit"
+            >
+              <Play className="w-5 h-5 fill-current" />
+              Play All
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Songs list */}
+      <div className="px-4 py-6">
+        <h3 className="text-lg font-semibold mb-4 text-foreground">Songs</h3>
+        <div className="space-y-2">
+          {artistSongs.map((song, index) => {
+            const isCurrentSong = currentSong?.id === song.id;
+            const isCurrentPlaying = isCurrentSong && isPlaying;
+
+            return (
+              <div
+                key={song.id}
+                className={cn(
+                  "flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors group",
+                  isCurrentSong 
+                    ? "bg-accent/20 text-accent" 
+                    : "hover:bg-accent/5 text-foreground"
+                )}
+                onClick={() => handleSongPlay(song)}
+              >
+                {/* Song number / Play indicator */}
+                <div className="w-8 flex items-center justify-center">
+                  {isCurrentPlaying ? (
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 bg-accent animate-pulse" />
+                      <div className="w-1 h-2 bg-accent animate-pulse" style={{ animationDelay: '0.1s' }} />
+                      <div className="w-1 h-4 bg-accent animate-pulse" style={{ animationDelay: '0.2s' }} />
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <span className="text-sm text-muted-foreground group-hover:opacity-0 transition-opacity">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <Play className="w-4 h-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Song artwork */}
+                <div className="w-12 h-12 rounded-md overflow-hidden bg-accent/10">
+                  <img 
+                    src={song.imageUrl} 
+                    alt={song.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Song info */}
+                <div className="flex-1 min-w-0">
+                  <h4 className={cn(
+                    "font-medium truncate",
+                    isCurrentSong ? "text-accent" : "text-foreground"
+                  )}>
+                    {song.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
+                </div>
+
+                {/* Duration */}
+                <div className="text-sm text-muted-foreground">
+                  {Math.floor(song.duration / 60)}:{String(song.duration % 60).padStart(2, '0')}
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => handleLike(song, e)}
+                    className={cn(
+                      "p-2 rounded-full hover:bg-accent/20 transition-colors",
+                      isLiked(song.id) ? "text-red-500" : "text-muted-foreground"
+                    )}
+                  >
+                    <Heart className={cn("w-4 h-4", isLiked(song.id) && "fill-current")} />
+                  </button>
+                  
+                  <button
+                    onClick={(e) => handleAddToQueue(song, e)}
+                    className="p-2 rounded-full hover:bg-accent/20 transition-colors text-muted-foreground"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ArtistFullView;
