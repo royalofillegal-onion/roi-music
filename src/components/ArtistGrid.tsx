@@ -32,6 +32,27 @@ const ArtistGrid = ({ title, className = "" }: ArtistGridProps) => {
     navigate(`/artist/${encodeURIComponent(artistName)}`);
   };
 
+  const handleShareArtist = (e: React.MouseEvent, artistName: string) => {
+    e.stopPropagation();
+    const shareUrl = `${window.location.origin}/artist/${encodeURIComponent(artistName)}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: `Check out ${artistName}`,
+        text: `Listen to songs by ${artistName}`,
+        url: shareUrl
+      }).catch(() => {
+        // Fallback to clipboard
+        navigator.clipboard.writeText(shareUrl);
+        toast.success('Artist link copied to clipboard!');
+      });
+    } else {
+      // Fallback to clipboard
+      navigator.clipboard.writeText(shareUrl);
+      toast.success('Artist link copied to clipboard!');
+    }
+  };
+  
   return (
     <div className={`${className}`}>
       <h2 className="text-xl font-bold mb-4 text-foreground">{title}</h2>
@@ -51,6 +72,14 @@ const ArtistGrid = ({ title, className = "" }: ArtistGridProps) => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+               {/* Share button */}
+                <button
+                  onClick={(e) => handleShareArtist(e, artist.name)}
+                  className="absolute top-2 right-2 p-2 rounded-full bg-black/50 hover:bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
+                  aria-label={`Share ${artist.name}`}
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
               </div>
               <div className="mt-2 text-center">
                 <h3 className="font-medium text-foreground text-sm truncate group-hover:text-accent transition-colors">
