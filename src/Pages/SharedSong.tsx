@@ -27,7 +27,7 @@ const SharedSong = () => {
       setIsLoading(true);
       setError(null);
       
-      console.log('🔎 Loading shared song with hash:', hashCode);
+      console.log('🔎 Loading shared song :', hashCode);
       
       const foundSong = await SongUrlGenerator.getSongFromHash(hashCode);
       
