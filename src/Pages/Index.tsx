@@ -285,6 +285,11 @@ const Index = () => {
           </div>
         </SliderRow>
 
+        {/* Artist Grid Section */}
+        <div className="mt-12">
+          <ArtistGrid title="Popular Artists" />
+        </div>
+        
         <SliderRow 
           title="Feel the Songs" 
           className="animate-slide-up" 
@@ -372,10 +377,6 @@ const Index = () => {
           </div>
         </SliderRow>
 
-        {/* Artist Grid Section */}
-        <div className="mt-12">
-          <ArtistGrid title="Popular Artists" />
-        </div>
         
         {/* Recently Played Section - Show only at the bottom */}
         <div className="mt-12">
