@@ -520,7 +520,7 @@ export const moreSongs: Song[] = [
   genre: "love",
   language: "telugu",
   sync: "emotional"
-},
+}
 ];
 export const newReleases: Song[] = [
     moreSongs.find(s => s.id === "Urime Manase"),
