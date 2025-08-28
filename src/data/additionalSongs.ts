@@ -1041,7 +1041,7 @@ export const additionalSongs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "devotional"
+  sync: "."
 },
   {
   id: "add-007",
