@@ -182,15 +182,18 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
                     </div>
 
                     <div className="flex-1 min-w-0 mr-3">
-                      <h4 className={cn(
-                        "font-medium text-base leading-tight mb-1",
-                        isCurrentSong ? "text-accent" : "text-foreground",
-                        song.title.length > 20 ? "animate-marquee whitespace-nowrap" : "truncate"
-                      )}>
-                        {song.title}
-                      </h4>
-                      <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
-                    </div>
+                       <h4 className={cn(
+                         "font-medium text-sm md:text-base leading-tight mb-1",
+                         isCurrentSong ? "text-accent" : "text-foreground"
+                       )}>
+                         <span className={cn(
+                           song.title.length > 25 ? "animate-[marquee_15s_linear_infinite] hover:animation-paused" : "truncate"
+                         )}>
+                           {song.title}
+                         </span>
+                       </h4>
+                       <p className="text-xs md:text-sm text-muted-foreground truncate">{song.artist}</p>
+                     </div>
 
                     <div className="flex items-center gap-1">
                       <button
@@ -285,12 +288,12 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
         {/* Artists Section */}
         {otherArtists.length > 0 && (
           <div className="px-4 py-6 border-t border-border">
-            <h3 className="text-lg font-semibold mb-4 text-foreground">Artists</h3>
-            <div className="flex overflow-x-auto gap-3 md:gap-4 pb-4 scrollbar-hide">
-              {otherArtists.map((artist) => (
+            <h3 className="text-lg font-semibold mb-4 text-foreground">More Songs</h3>
+            <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4 max-h-[400px] overflow-y-auto scrollbar-hide">
+              {otherArtists.slice(0, 24).map((artist) => (
                 <div
                   key={artist.name}
-                  className="group cursor-pointer flex-shrink-0 w-24 md:w-32"
+                  className="group cursor-pointer animate-scale-in"
                   onClick={() => handleArtistClick(artist.name)}
                 >
                   <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
@@ -302,13 +305,20 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   <div className="mt-2 text-center">
-                    <h4 className="font-medium text-foreground text-xs md:text-sm truncate group-hover:text-accent transition-colors">
+                    <h4 className="font-medium text-foreground text-xs truncate group-hover:text-accent transition-colors">
                       {artist.name}
                     </h4>
                   </div>
                 </div>
               ))}
             </div>
+            {otherArtists.length > 24 && (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-muted-foreground">
+                  +{otherArtists.length - 24} more artists available
+                </p>
+              </div>
+            )}
           </div>
         )}
 
