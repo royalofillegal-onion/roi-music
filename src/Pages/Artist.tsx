@@ -7,6 +7,7 @@ import { allSongs } from '@/data/allSongs';
 import { Song } from '@/data/songs';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import ShareButton from '@/components/ShareButton';
 
 const Artist = () => {
   const { artistName } = useParams<{ artistName: string }>();
@@ -91,13 +92,16 @@ const Artist = () => {
           </p>
           
           {artistSongs.length > 0 && (
-            <Button
-              onClick={handlePlayAll}
-              className="flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 rounded-full font-medium hover:bg-accent/90 transition-colors"
-            >
-              <Play className="w-5 h-5 fill-current" />
-              Play All
-            </Button>
+            <div className="flex items-center gap-3 flex-wrap">
+              <Button
+                onClick={handlePlayAll}
+                className="flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 rounded-full font-medium hover:bg-accent/90 transition-colors"
+              >
+                <Play className="w-5 h-5 fill-current" />
+                Play All
+              </Button>
+              <ShareButton artist={decodedArtistName} type="artist" />
+            </div>
           )}
         </div>
       </div>
