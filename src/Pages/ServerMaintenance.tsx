@@ -24,7 +24,7 @@ const ServerMaintenance = () => {
           
           setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
         } else {
-          setTimeRemaining('00:00:00');
+          setTimeRemaining('100000000:00:00');
         }
       }
     };
