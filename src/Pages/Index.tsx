@@ -15,6 +15,7 @@ import ArtistGrid from "@/components/ArtistGrid";
 import FestivalPopup from "@/components/FestivalPopup";
 import TimeLighting from "@/components/TimeLighting";
 import SectionFullView from "@/components/SectionFullView";
+import { getCurrentSections } from "@/utils/sectionShuffle";
 
 import { Button } from "@/components/ui/button";
 import { trendingSongs, popularSongs, newReleases, uniqueSongs } from "@/data/allSongs";
@@ -272,36 +273,61 @@ const Index = () => {
       {/* Original sections with improved spacing */}
       <div className="mt-12 space-y-8">
 
-        <SliderRow 
-          title="Popular Songs" 
-          className="animate-slide-up" 
-          style={{animationDelay: "400ms"}}
-          onViewAll={() => openSectionFullView("Popular Songs", popularSongs.filter(Boolean))}
-        >
-          <div className="flex gap-4">
-            {popularSongs.filter(Boolean).map((song, index) => (
-              <SongCard key={`popular-${song.id}-${index}`} song={song} className="min-w-[180px] w-[180px]" />
-            ))}
-          </div>
-        </SliderRow>
+        {/* Dynamic sections with hourly shuffle */}
+      <div className="mt-12 space-y-8">
+        {getCurrentSections().map((section, index) => {
+          let sectionSongs: Song[] = [];
+          
+          // Map section IDs to actual song arrays
+          switch (section.id) {
+            case 'trending':
+              sectionSongs = trendingSongs.filter(Boolean);
+              break;
+            case 'popular':
+              sectionSongs = popularSongs.filter(Boolean);
+              break;
+            case 'newReleases':
+              sectionSongs = newReleases.filter(Boolean);
+              break;
+            case 'massRap':
+              sectionSongs = massRapSongs.filter(Boolean);
+              break;
+            case 'hindi':
+              sectionSongs = HindiSongs.filter(Boolean);
+              break;
+            case 'feelGood':
+              sectionSongs = moreSongs.filter(Boolean);
+              break;
+          }
+          
+          const displayTitle = section.id === 'trending' ? 'Trending Now' :
+                              section.id === 'popular' ? 'Popular Songs' :
+                              section.id === 'newReleases' ? 'New Releases' :
+                              section.id === 'massRap' ? 'Mass & Rap' :
+                              section.id === 'hindi' ? 'Hindi & Tamil Songs' :
+                              section.id === 'feelGood' ? 'Feel Good Vibes' :
+                              section.title;
 
-        {/* Artist Grid Section */}
-        <div className="mt-12">
-          <ArtistGrid title="Popular Artists" />
-        </div>
-        
-        <SliderRow 
-          title="Feel the Songs" 
-          className="animate-slide-up" 
-          style={{animationDelay: "500ms"}}
-          onViewAll={() => openSectionFullView("Feel the Songs", newReleases.filter(Boolean))}
-        >
-          <div className="flex gap-4">
-            {newReleases.filter(Boolean).map((song, index) => (
-              <SongCard key={`new-${song.id}-${index}`} song={song} className="min-w-[180px] w-[180px]" />
-            ))}
-          </div>
-        </SliderRow>
+          return (
+            <SliderRow
+              key={`${section.id}-${index}`}
+              title={displayTitle}
+              className="animate-slide-up"
+              style={{animationDelay: `${(index + 1) * 100}ms`}}
+              onViewAll={() => openSectionFullView(displayTitle, sectionSongs)}
+            >
+              <div className="flex gap-4">
+                {sectionSongs.slice(0, 15).map((song, songIndex) => (
+                  <SongCard 
+                    key={`${section.id}-${song.id}-${songIndex}`} 
+                    song={song} 
+                    className="min-w-[180px] w-[180px]" 
+                  />
+                ))}
+              </div>
+            </SliderRow>
+          );
+        })}
 
         <SliderRow title="Featured Playlists" className="animate-slide-up" style={{animationDelay: "300ms"}}>
           <div className="flex gap-4">
