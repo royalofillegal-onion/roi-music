@@ -94,6 +94,16 @@
     background: transparent;
   }
 
+  /* Marquee animation for long text */
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
   ::-moz-selection {
     background: transparent;
   }
