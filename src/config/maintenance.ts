@@ -15,8 +15,8 @@ export const maintenanceConfig: MaintenanceConfig = {
   isEnabled: true, // Enable maintenance mode
   startTime: now.toISOString(), // Start maintenance now
   endTime: fiveHoursLater.toISOString(), // End after 5 hours
-  message: 'We are currently performing scheduled maintenance to improve your experience. We apologize for any inconvenience and will be back online shortly.',
-  title: 'Scheduled Maintenance'
+  message: '..',
+  title: 'it was closed'
 };
 
 // Helper function to check if maintenance is currently active
