@@ -88,7 +88,7 @@ const ServerMaintenance = () => {
             </CardTitle>
             <div className="flex items-center justify-center gap-2 text-orange-400">
               <AlertTriangle className="h-5 w-5" />
-              <span className="font-medium">Service Temporarily Unavailable under construction🤗</span>
+              <span className="font-medium">Service unavilable it will be close by ROI</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -104,13 +104,13 @@ const ServerMaintenance = () => {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Clock className="h-5 w-5 text-music-accent" />
-                  <span className="text-gray-400">Estimated time remaining:</span>
+                  <span className="text-gray-400">NO MORE</span>
                 </div>
                 <div className="text-4xl font-mono font-bold text-music-accent">
                   {timeRemaining}
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
-                  Hours : Minutes : Seconds
+                  NOTHING
                 </p>
               </div>
             )}
@@ -119,7 +119,7 @@ const ServerMaintenance = () => {
             <div className="bg-gray-900/50 rounded-lg p-4 space-y-3">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <Clock className="h-5 w-5 text-music-accent" />
-                Maintenance Schedule
+                LEAVE IT 
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -140,7 +140,7 @@ const ServerMaintenance = () => {
                 className="flex-1 bg-music-accent hover:bg-music-accent/90 text-black"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Check Status
+                FIX IT 
               </Button>
               <Button 
                 variant="outline" 
@@ -158,10 +158,10 @@ const ServerMaintenance = () => {
           <CardContent className="p-4">
             <div className="text-center text-sm text-gray-400">
               <p className="mb-2">
-                We appreciate your patience during this maintenance window.
+                lets get out.
               </p>
               <p>
-                For urgent matters, please contact our support team.
+                get out ppf the site now .
               </p>
             </div>
           </CardContent>
