@@ -24,7 +24,7 @@ const ServerMaintenance = () => {
           
           setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
         } else {
-          setTimeRemaining('100000000:00:00');
+          setTimeRemaining('365:00:00');
         }
       }
     };
@@ -45,7 +45,7 @@ const ServerMaintenance = () => {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      hour: '2-digit',
+      hour: '3-digit',
       minute: '2-digit',
       timeZoneName: 'short'
     });
