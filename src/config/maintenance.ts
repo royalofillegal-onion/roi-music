@@ -9,7 +9,7 @@ export interface MaintenanceConfig {
 
 // Calculate current time and 5 hours from now
 const now = new Date();
-const fiveHoursLater = new Date(now.getTime() + (365* 60 * 60 * 1000));
+const fiveHoursLater = new Date(now.getTime() + (0* 60 * 60 * 1000));
 
 export const maintenanceConfig: MaintenanceConfig = {
   isEnabled: true, // Enable maintenance mode
