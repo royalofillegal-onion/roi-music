@@ -1051,7 +1051,7 @@ export const songs: Song[] =[
   year: 2025,
   genre: "Love it ",
   language: "telugu",
-  sync: "Romantic"
+  sync: "romantic"
 },
   {
   id: "orayyo",

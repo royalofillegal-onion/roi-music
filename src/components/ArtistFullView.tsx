@@ -187,14 +187,6 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
               <Play className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 fill-current" />
               Play All
             </button>
-             {/* Share button */}
-                <button
-                  onClick={(e) => handleShareArtist(e, artist.name)}
-                  className="absolute top-2 right-2 p-2 rounded-full bg-black/50 hover:bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
-                  aria-label={`Share ${artist.name}`}
-                >
-                  <Share2 className="w-4 h-4" />
-                </button>
           </div>
         </div>
       )}

@@ -594,7 +594,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "Energetic",
   language: "telugu",
-  sync: "Motivational"
+  sync: "moti"
 },
     {
   id: "bengal-tiger",
@@ -607,7 +607,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "Mass",
   language: "telugu",
-  sync: "Rap"
+  sync: "rap"
 },
    {
   id: "aasia-khantamlo",
@@ -620,7 +620,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "mass",
   language: "telugu",
-  sync: "motivational"
+  sync: "moti"
 },
    {
   id: "aasia-khantamlo",
@@ -633,7 +633,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "mass",
   language: "telugu",
-  sync: "motivational"
+  sync: "moti"
 },
   {
   id: "jigelu-rani",
@@ -646,7 +646,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "mass",
   language: "telugu",
-  sync: "Rap"
+  sync: "rap"
 },
   {
   id: "aa-gattununtaava",
@@ -658,8 +658,8 @@ export const massRapSongs: Song[] = [
   album: "Aa Gattununtaava",
   year: 2025,
   genre: "mass",
-  language: "Telugu",
-  sync: "."
+  language: "telugu",
+  sync: "mass"
 },
   {
   id: "ranga-ranga-rangasthalana",
@@ -672,7 +672,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "mass",
   language: "telugu",
-  sync: "energtic"
+  sync: "action"
 },
   {
   id: "sarkaru-vaari-paata",
@@ -685,7 +685,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "mass",
   language: "telugu",
-  sync: "Rap"
+  sync: "rap"
 },
     {
   id: "ma-ma-mahesha",
@@ -698,7 +698,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "Mass",
   language: "telugu",
-  sync: "Rap"
+  sync: "rap"
 },
   {
   id: "penny",
@@ -711,7 +711,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "fun",
   language: "telugu",
-  sync: "energitic"
+  sync: "action"
 },
   {
   id: "prathi-kadalo",
@@ -724,7 +724,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "mass",
   language: "telugu",
-  sync: "energitic"
+  sync: "action"
 },
   {
   id: "sound-of-salaar",

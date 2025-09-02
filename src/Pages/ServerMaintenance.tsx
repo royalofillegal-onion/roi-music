@@ -45,7 +45,7 @@ const ServerMaintenance = () => {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      hour: '3-digit',
+      hour: '2-digit',
       minute: '2-digit',
       timeZoneName: 'short'
     });

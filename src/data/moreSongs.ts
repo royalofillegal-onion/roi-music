@@ -454,7 +454,7 @@ export const moreSongs: Song[] = [
   year: 2025,
   genre: "Feel",
   language: "telugu",
-  sync: "Emotional"
+  sync: "devotional"
 },
      {
   id: "evvare-nuvvu",
@@ -506,7 +506,7 @@ export const moreSongs: Song[] = [
   year: 2025,
   genre: "Feel",
   language: "telugu",
-  sync: "Emotional"
+  sync: "devotional"
 },
  {
   id: "vinaraa",
@@ -519,7 +519,7 @@ export const moreSongs: Song[] = [
   year: 2025,
   genre: "love",
   language: "telugu",
-  sync: "emotional"
+  sync: "devotional"
 }
 ];
 export const newReleases: Song[] = [
