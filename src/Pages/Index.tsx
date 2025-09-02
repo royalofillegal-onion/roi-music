@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useState } from "react";
 import SliderRow from "@/components/SliderRow";
 import SongCard from "@/components/SongCard";
@@ -434,4 +433,3 @@ const Index = () => {
 };
 
 export default Index;
-
