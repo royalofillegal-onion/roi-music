@@ -271,9 +271,7 @@ const Index = () => {
       )}
 
       {/* Original sections with improved spacing */}
-      <div className="mt-12 space-y-8">
-
-        {/* Dynamic sections with hourly shuffle */}
+      {/* Dynamic sections with hourly shuffle */}
       <div className="mt-12 space-y-8">
         {getCurrentSections().map((section, index) => {
           let sectionSongs: Song[] = [];
