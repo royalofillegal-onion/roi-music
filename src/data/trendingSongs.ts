@@ -3,6 +3,19 @@ import { Song } from './songs';
 // Trending songs that can be easily updated and managed
 export const trendingSongs: Song[] = [
   {
+  id: "suvvi-suvvi",
+  title: "Suvvi Suvvi",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756834705/IMG_20250902_230806_xw0rxf.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756834521/They_Call_Him_OG_-_Suvvi_Suvvi_Lyric_Video_Pawan_Kalyan_Sujeeth_Thaman_S_DVV_Danayya_vamobe.mp3",
+  duration: 281,
+  album: "Suvvi Suvvi",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
   id: "vibe-undi",
   title: "Vibe Undi",
   artist: "Mirai",
