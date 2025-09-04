@@ -309,7 +309,42 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
         {/* Artists Section */}
         {otherArtists.length > 0 && (
           <div className="px-4 py-6 border-t border-border">
-            <h3 className="text-lg font-semibold mb-4 text-foreground">More Songs</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Discover More Artists</h3>
+              <button
+                onClick={() => navigate('/artists')}
+                className="text-sm text-accent hover:text-accent/80 transition-colors"
+              >
+                View All Artists →
+              </button>
+            </div>
+            
+            {/* Cross-section navigation for current section */}
+            <div className="mb-6">
+              <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-foreground mb-3">More sections like "{title}"</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  {['Trending Now', 'Popular Songs', 'Mass & Rap'].map((relatedTitle, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        // Close current view first, then parent can handle navigation
+                        onClose();
+                        // Add a small delay to allow animation to complete
+                        setTimeout(() => {
+                          // This will be handled by the parent component
+                        }, 300);
+                      }}
+                      className="flex items-center gap-2 p-2 text-sm bg-background/50 hover:bg-accent/10 rounded-lg transition-colors text-left"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-accent/60" />
+                      <span className="text-muted-foreground hover:text-accent transition-colors">{relatedTitle}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
             <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4 max-h-[400px] overflow-y-auto scrollbar-hide">
               {otherArtists.slice(0, 24).map((artist) => (
                 <div
@@ -317,13 +352,20 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
                   className="group cursor-pointer animate-scale-in"
                   onClick={() => handleArtistClick(artist.name)}
                 >
-                  <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
+                  <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105 border border-border/20 group-hover:border-accent/30">
                     <img
                       src={artist.image}
                       alt={artist.name}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    
+                    {/* Quick action on hover */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="bg-accent/90 text-accent-foreground px-2 py-1 rounded-full text-xs font-medium">
+                        View Artist
+                      </div>
+                    </div>
                   </div>
                   <div className="mt-2 text-center">
                     <h4 className="font-medium text-foreground text-xs truncate group-hover:text-accent transition-colors">
@@ -338,6 +380,12 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
                 <p className="text-sm text-muted-foreground">
                   +{otherArtists.length - 24} more artists available
                 </p>
+                <button
+                  onClick={() => navigate('/artists')}
+                  className="mt-2 text-sm text-accent hover:text-accent/80 transition-colors"
+                >
+                  Explore All Artists
+                </button>
               </div>
             )}
           </div>

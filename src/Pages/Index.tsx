@@ -16,6 +16,11 @@ import FestivalPopup from "@/components/FestivalPopup";
 import TimeLighting from "@/components/TimeLighting";
 import SectionFullView from "@/components/SectionFullView";
 import { getCurrentSections } from "@/utils/sectionShuffle";
+import { getEnhancedSections, getRelatedSections, EnhancedSectionConfig } from "@/utils/enhancedSectionShuffle";
+import CrossSectionNavigation from "@/components/CrossSectionNavigation";
+import EnhancedArtistGrid from "@/components/EnhancedArtistGrid";
+import SpotifyLikeInteractiveSection from "@/components/SpotifyLikeInteractiveSection";
+import MoodBasedSectionSelector from "@/components/MoodBasedSectionSelector";
 
 import { Button } from "@/components/ui/button";
 import { trendingSongs, popularSongs, newReleases, uniqueSongs } from "@/data/allSongs";
@@ -59,6 +64,8 @@ const Index = () => {
     songs: [],
     isOpen: false,
   });
+  const [enhancedSections, setEnhancedSections] = useState<EnhancedSectionConfig[]>([]);
+  const [selectedSectionForCrossNav, setSelectedSectionForCrossNav] = useState<EnhancedSectionConfig | null>(null);
   
   useEffect(() => {
     // Check auth status
@@ -75,6 +82,21 @@ const Index = () => {
     });
     
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Initialize enhanced sections and set up hourly refresh
+  useEffect(() => {
+    const updateSections = () => {
+      const sections = getEnhancedSections();
+      setEnhancedSections(sections);
+    };
+
+    updateSections();
+    
+    // Update sections every hour
+    const interval = setInterval(updateSections, 60 * 60 * 1000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -154,6 +176,25 @@ const Index = () => {
       ...prev,
       isOpen: false,
     }));
+  };
+
+  const handleSectionClick = (sectionId: string) => {
+    const section = enhancedSections.find(s => s.id === sectionId);
+    if (section) {
+      const songs = section.getSongs();
+      openSectionFullView(section.title, songs);
+      setSelectedSectionForCrossNav(section);
+    }
+  };
+
+  const handleArtistSectionLink = (artistName: string, relatedSection: string) => {
+    // Navigate to related section based on artist
+    const section = enhancedSections.find(s => 
+      s.title.toLowerCase().includes(relatedSection.toLowerCase())
+    );
+    if (section) {
+      handleSectionClick(section.id);
+    }
   };
 
   // Only show onboarding for logged-in users who haven't completed it
@@ -271,48 +312,63 @@ const Index = () => {
       )}
 
       {/* Original sections with improved spacing */}
-      {/* Dynamic sections with hourly shuffle */}
-      <div className="mt-12 space-y-8">
-        {getCurrentSections().map((section, index) => {
-          let sectionSongs: Song[] = [];
+      {/* Mood-based Section Selector */}
+      <MoodBasedSectionSelector
+        onSectionSelect={(section) => {
+          const songs = section.getSongs();
+          openSectionFullView(section.title, songs);
+        }}
+        className="mb-12 animate-fade-in"
+      />
+      <EnhancedArtistGrid
+        title="Explore Artists"
+        className="mb-12 animate-fade-in"
+        showFilter={true}
+        maxArtists={12}
+        onArtistSectionLink={handleArtistSectionLink}
+      />
+
+      {/* Enhanced Dynamic sections with hourly shuffle and Spotify-like interactions */}
+      <div className="mt-12 space-y-12">
+        {enhancedSections.map((section, index) => {
+          const sectionSongs = section.getSongs();
+          const relatedSections = getRelatedSections(section.id);
           
-          // Map section IDs to actual song arrays
-          switch (section.id) {
-            case 'trending':
-              sectionSongs = trendingSongs.filter(Boolean);
-              break;
-            case 'popular':
-              sectionSongs = popularSongs.filter(Boolean);
-              break;
-            case 'newReleases':
-              sectionSongs = newReleases.filter(Boolean);
-              break;
-            case 'massRap':
-              sectionSongs = massRapSongs.filter(Boolean);
-              break;
-            case 'hindi':
-              sectionSongs = HindiSongs.filter(Boolean);
-              break;
-            case 'feelGood':
-              sectionSongs = moreSongs.filter(Boolean);
-              break;
+          // Every 3rd section gets the interactive treatment
+          const useInteractiveSection = index % 3 === 0 && sectionSongs.length > 0;
+          
+          if (useInteractiveSection) {
+            return (
+              <div key={`enhanced-${section.id}-${index}`} className="space-y-6">
+                <SpotifyLikeInteractiveSection
+                  title={section.title}
+                  songs={sectionSongs}
+                  description={section.description}
+                  gradient={section.gradient}
+                  onViewAll={() => openSectionFullView(section.title, sectionSongs)}
+                  className="animate-fade-in"
+                />
+                
+                {/* Cross-section navigation */}
+                {relatedSections.length > 0 && (
+                  <CrossSectionNavigation
+                    currentSection={section}
+                    relatedSections={relatedSections}
+                    onSectionClick={handleSectionClick}
+                    className="animate-slide-in-right"
+                  />
+                )}
+              </div>
+            );
           }
-          
-          const displayTitle = section.id === 'trending' ? 'Trending Now' :
-                              section.id === 'popular' ? 'Popular Songs' :
-                              section.id === 'newReleases' ? 'New Releases' :
-                              section.id === 'massRap' ? 'Mass & Rap' :
-                              section.id === 'hindi' ? 'Hindi & Tamil Songs' :
-                              section.id === 'feelGood' ? 'Feel Good Vibes' :
-                              section.title;
 
           return (
             <SliderRow
               key={`${section.id}-${index}`}
-              title={displayTitle}
+              title={section.title}
               className="animate-slide-up"
               style={{animationDelay: `${(index + 1) * 100}ms`}}
-              onViewAll={() => openSectionFullView(displayTitle, sectionSongs)}
+              onViewAll={() => openSectionFullView(section.title, sectionSongs)}
             >
               <div className="flex gap-4">
                 {sectionSongs.slice(0, 15).map((song, songIndex) => (
