@@ -155,63 +155,84 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
                   onClick={() => handleSongPlay(song)}
                 >
                   {/* Mobile layout */}
-                  <div className="md:hidden flex items-center gap-3 flex-1">
-                    <div className="w-8 flex items-center justify-center flex-shrink-0">
-                      {isCurrentPlaying ? (
-                        <div className="flex items-center gap-1">
-                          <div className="w-1 h-3 bg-accent animate-pulse" />
-                          <div className="w-1 h-2 bg-accent animate-pulse" style={{ animationDelay: '0.1s' }} />
-                          <div className="w-1 h-4 bg-accent animate-pulse" style={{ animationDelay: '0.2s' }} />
-                        </div>
-                      ) : (
-                        <div className="relative">
-                          <span className="text-sm text-muted-foreground group-hover:opacity-0 transition-opacity">
-                            {String(index + 1).padStart(2, '0')}
-                          </span>
-                          <Play className="w-4 h-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-accent/10 flex-shrink-0">
-                      <img 
-                        src={song.imageUrl} 
-                        alt={song.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0 mr-3">
-                       <h4 className={cn(
-                         "font-medium text-sm md:text-base leading-tight mb-1",
-                         isCurrentSong ? "text-accent" : "text-foreground"
-                       )}>
-                         <span className={cn(
-                           song.title.length > 25 ? "animate-[marquee_15s_linear_infinite] hover:animation-paused" : "truncate"
-                         )}>
-                           {song.title}
-                         </span>
-                       </h4>
-                       <p className="text-xs md:text-sm text-muted-foreground truncate">{song.artist}</p>
-                     </div>
-
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={(e) => handleLike(song, e)}
-                        className={cn(
-                          "p-2 rounded-full hover:bg-accent/20 transition-colors",
-                          isLiked(song.id) ? "text-red-500" : "text-muted-foreground"
+                  <div className="md:hidden border border-border/50 rounded-lg p-3 bg-card/30 backdrop-blur-sm">
+                    <div className="flex items-start gap-3">
+                      {/* Track number and play indicator */}
+                      <div className="w-8 flex items-center justify-center flex-shrink-0 mt-1">
+                        {isCurrentPlaying ? (
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-3 bg-accent animate-pulse" />
+                            <div className="w-1 h-2 bg-accent animate-pulse" style={{ animationDelay: '0.1s' }} />
+                            <div className="w-1 h-4 bg-accent animate-pulse" style={{ animationDelay: '0.2s' }} />
+                          </div>
+                        ) : (
+                          <div className="relative">
+                            <span className="text-xs text-muted-foreground group-hover:opacity-0 transition-opacity">
+                              {String(index + 1).padStart(2, '0')}
+                            </span>
+                            <Play className="w-3 h-3 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
+                          </div>
                         )}
-                      >
-                        <Heart className={cn("w-4 h-4", isLiked(song.id) && "fill-current")} />
-                      </button>
-                      
-                      <button
-                        onClick={(e) => handleAddToQueue(song, e)}
-                        className="p-2 rounded-full hover:bg-accent/20 transition-colors text-muted-foreground"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
+                      </div>
+
+                      {/* Album artwork */}
+                      <div className="w-14 h-14 rounded-lg overflow-hidden bg-accent/10 flex-shrink-0 border border-border/30">
+                        <img 
+                          src={song.imageUrl} 
+                          alt={song.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Song info - flexible container */}
+                      <div className="flex-1 min-w-0 space-y-1">
+                        {/* Title */}
+                        <div className="w-full">
+                          <h4 className={cn(
+                            "font-medium text-sm leading-tight",
+                            isCurrentSong ? "text-accent" : "text-foreground"
+                          )}>
+                            <div className="break-words hyphens-auto">
+                              {song.title}
+                            </div>
+                          </h4>
+                        </div>
+                        
+                        {/* Artist */}
+                        <div className="w-full">
+                          <p className="text-xs text-muted-foreground break-words">
+                            {song.artist}
+                          </p>
+                        </div>
+                        
+                        {/* Duration */}
+                        <div className="flex items-center gap-2 pt-1">
+                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground">
+                            {Math.floor(song.duration / 60)}:{String(song.duration % 60).padStart(2, '0')}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex flex-col items-center gap-2 flex-shrink-0">
+                        <button
+                          onClick={(e) => handleLike(song, e)}
+                          className={cn(
+                            "p-2 rounded-full hover:bg-accent/20 transition-colors border border-border/30",
+                            isLiked(song.id) ? "text-red-500 bg-red-50 border-red-200" : "text-muted-foreground bg-background/50"
+                          )}
+                        >
+                          <Heart className={cn("w-4 h-4", isLiked(song.id) && "fill-current")} />
+                        </button>
+                        
+                        <button
+                          onClick={(e) => handleAddToQueue(song, e)}
+                          className="p-2 rounded-full hover:bg-accent/20 transition-colors text-muted-foreground bg-background/50 border border-border/30"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
 
