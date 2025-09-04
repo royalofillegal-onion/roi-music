@@ -1078,6 +1078,32 @@ export const songs: Song[] =[
   genre: "Love it ",
   language: "telugu",
   sync: "romantic"
+},
+  {
+  id: "alara-chanchalamaina",
+  title: "Alara Chanchalamaina",
+  artist: "ANNAMAYYA",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756949547/Annamayya-1997jpeg_cobz1u.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756949551/Alara_Chanchalamaina_PenduJatt.Com.Se_bobohc.mp3",
+  duration: 289,
+  album: "Alara Chanchalamaina",
+  year: 2025,
+  genre: "god",
+  language: "telugu",
+  sync: "devotional"
+},
+  {
+  id: "hey-krishna",
+  title: "Hey Krishna",
+  artist: "Ata Kadhara Shiva",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756950094/we_e0xsjh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756949878/Hey_Krishna_PenduJatt.Com.Se_fpafvx.mp3",
+  duration: 223,
+  album: "Hey Krishna",
+  year: 2025,
+  genre: "god",
+  language: "telugu",
+  sync: "devotional"
 }
 ];
 
