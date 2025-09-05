@@ -38,19 +38,6 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "romantic"
 },
-  {
-  id: "Apple Beauty",
-  title: "Apple Beauty",
-  artist: "Janatha Garage",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755346096/Janatha-Garage-2016-250x250_fi3g8h.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755346109/iSongs.info_03_-_Apple_Beauty_avy0hw.mp3",
-  duration: 231,
-  album: "Apple Beauty",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "love"
-},
 {
   id: "Om Namah Shivaya",
   title: "Om Namah Shivaya",
@@ -129,6 +116,97 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "Love"
 },
+  {
+  id: "kannullo-nee-roopame",
+  title: "Kannullo Nee Roopame",
+  artist: "Writer Padmabhushan",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756231928/Writer-Padmabhushan-2023_xd3dho.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756231933/Kannullo_Nee_Roopame_yc2iay.mp3",
+  duration: 238,
+  album: "Kannullo Nee Roopame",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
+},
+{
+  id: "potti-pilla",
+  title: "Potti Pilla",
+  artist: "Balagam",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232080/Balagam-2023_mdkjdy.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232098/Potti_Pilla_pdoyci.mp3",
+  duration: 223,
+  album: "Potti Pilla",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
+},
+{
+  id: "pyaar-lona-paagal",
+  title: "Pyaar Lona Paagal",
+  artist: "Raavanasura",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232250/Pyaar_Lona_Paagal_ok3eio.mp3",
+  duration: 207,
+  album: "Pyaar Lona Paagal",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "love"
+},
+{
+  id: "albela-albela",
+  title: "Albela Albela",
+  artist: "Ugram",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232398/Ugram-2023_iuao9o.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232403/Albela_Albela_frlcse.mp3",
+  duration: 129,
+  album: "Albela Albela",
+  year: 2023,
+  genre: "Feel",
+  language: "telugu",
+  sync: "romantic"
+},
+{
+  id: "jhoom-jhoom",
+  title: "Jhoom Jhoom",
+  artist: "Spy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232506/Spy-2023_fjdyna.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232513/Jhoom_Jhoom_bmnmd8.mp3",
+  duration: 235,
+  album: "Jhoom Jhoom",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
+  id: "o-rendu-prema-meghaalila",
+  title: "O Rendu Prema Meghaalila",
+  artist: "Baby",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232569/Baby-2023_znc7bo.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232587/O_Rendu_Prema_Meghaalila_la4ris.mp3",
+  duration: 314,
+  album: "O Rendu Prema Meghaalila",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
+},
+{
+  id: "milky-beauty",
+  title: "Milky Beauty",
+  artist: "Bhola Shankar",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232714/bhola-shankar-naa-songs-chiranjeevi-tamanna-1_gdkno2.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232725/Milky_Beauty_hqduco.mp3",
+  duration: 233,
+  album: "Milky Beauty",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
 {
     id: "Mooga Manasulu",
     title: "Mooga Manasulu",
@@ -180,6 +258,19 @@ export const songs: Song[] =[
   genre: "good",
   language: "telugu",
   sync: "happy"
+},
+  {
+  id: "ranguladdhukunna",
+  title: "Ranguladdhukunna",
+  artist: "Uppena",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232920/Uppena-Telugu-2020-20210218155246-500x500_pd8scv.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232896/Ranguladdhukunna_-_SenSongsMp3.Com_taqnxv.mp3",
+  duration: 262,
+  album: "Ranguladdhukunna",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
 },
 {
   id: "Adhento Gaani Vunnapaatuga",
@@ -271,6 +362,19 @@ export const songs: Song[] =[
   genre: "feel",
   language: "telugu",
   sync: "devotional"
+},
+  {
+  id: "veyyinokka-jillala-varaku",
+  title: "Veyyinokka Jillala Varaku",
+  artist: "Ravanasura",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232273/Veyyinokka_peukgm.mp3",
+  duration: 237,
+  album: "Veyyinokka Jillala Varaku",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "romantic"
 },
 {
   id: "Naatu Naatu",
@@ -546,6 +650,19 @@ export const songs: Song[] =[
     sync: "action"
   },
   {
+  id: "Apple Beauty",
+  title: "Apple Beauty",
+  artist: "Janatha Garage",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755346096/Janatha-Garage-2016-250x250_fi3g8h.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755346109/iSongs.info_03_-_Apple_Beauty_avy0hw.mp3",
+  duration: 231,
+  album: "Apple Beauty",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
+},
+  {
     id: "Sooreede",
     title: "Sooreede",
     artist: "Salaar",
@@ -584,6 +701,19 @@ export const songs: Song[] =[
     language: "telugu",
     sync: "love"
   },
+  {
+  id: "jala-jala-jalapaatham-nuvvu",
+  title: "Jala Jala Jalapaatham Nuvvu",
+  artist: "Uppena",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232920/Uppena-Telugu-2020-20210218155246-500x500_pd8scv.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232900/Jala_Jala_Jalapaatham_Nuvvu_-_SenSongsMp3.Com_cajo3v.mp3",
+  duration: 252,
+  album: "Jala Jala Jalapaatham Nuvvu",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
   {
     id: "Dosthulam",
     title: "Dosthulam",
@@ -649,6 +779,19 @@ export const songs: Song[] =[
     language: "telugu",
     sync:"love"
   },
+  {
+  id: "ninne-naa-ninne",
+  title: "Ninne Naa Ninne",
+  artist: "Uppena",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232920/Uppena-Telugu-2020-20210218155246-500x500_pd8scv.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232904/Ninne_Naa_Ninne_-_SenSongsMp3.Com_iggmgm.mp3",
+  duration: 90,
+  album: "Ninne Naa Ninne",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
+},
   {
     id: "Chukkala Chunni",
     title: "Chukkala Chunni",
@@ -740,6 +883,19 @@ export const songs: Song[] =[
     language: "telugu",
     sync: "love"
   },
+  {
+  id: "nee-kannu-neeli-samudram",
+  title: "Nee Kannu Neeli Samudram",
+  artist: "Uppena",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232920/Uppena-Telugu-2020-20210218155246-500x500_pd8scv.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232908/Nee_Kannu_Neeli_Samudram_-_SenSongsMp3.Com_qzofqw.mp3",
+  duration: 309,
+  album: "Nee Kannu Neeli Samudram",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "love"
+},
   {
     id: "Srimathi Garu",
     title: "Srimathi Garu",
@@ -923,6 +1079,32 @@ export const songs: Song[] =[
   sync: "Love"
 },
   {
+  id: "sandram-lona-neerantha",
+  title: "Sandram Lona Neerantha",
+  artist: "Uppena",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232920/Uppena-Telugu-2020-20210218155246-500x500_pd8scv.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232918/Sandram_Lona_Neerantha_-_SenSongsMp3.Com_rx2hvk.mp3",
+  duration: 240,
+  album: "Sandram Lona Neerantha",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
+  id: "nee-chuttu-chuttu",
+  title: "Nee Chuttu Chuttu",
+  artist: "Skanda",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232943/Skanda-Official-Image_qh9uwd.webp",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232979/Nee_Chuttu_Chuttu_ywti1b.mp3",
+  duration: 260,
+  album: "Nee Chuttu Chuttu",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
   id: "Aradhya",
   title: "Aradhya",
   artist: "Kushi",
@@ -1054,6 +1236,19 @@ export const songs: Song[] =[
   sync: "romantic"
 },
   {
+  id: "nuvvu-muttukunte",
+  title: "Nuvvu Muttukunte",
+  artist: "Yamadonga",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440742/Nuvvu_Muttukunte-SenSongsMp3.Co_r39ouo.mp3",
+  duration: 232,
+  album: "Nuvvu Muttukunte",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
   id: "orayyo",
   title: "Orayyo",
   artist: "Rangasthalam",
@@ -1065,6 +1260,32 @@ export const songs: Song[] =[
   genre: "Feel",
   language: "telugu",
   sync: "sad"
+},
+  {
+  id: "rendu-gundela-monagada",
+  title: "Rendu Gundela Monagada",
+  artist: "Tiger Nageswara Rao",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233454/Rendu_Gundela_Monagada_xsyrww.mp3",
+  duration: 139,
+  album: "Rendu Gundela Monagada",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
+  id: "bambarala-chumbanala",
+  title: "Bambarala Chumbanala",
+  artist: "Yamadonga",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440723/Bambarala_Chumbanala-SenSongsMp3.Co_b8ibau.mp3",
+  duration: 60,
+  album: "Bambarala Chumbanala",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
 },
   {
   id: "kalaavathi",
