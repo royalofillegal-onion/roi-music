@@ -3219,6 +3219,19 @@ export const additionalSongs: Song[] = [
   sync: "."
 },
   {
+  id: "ekadantaya-vakratundaya",
+  title: "Ekadantaya Vakratundaya",
+  artist: "Bala Ganapathi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756231673/Vinayaka-Chavithi-Special-jpeg_k621ld.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756231702/Ekadantaya_Vakratundaya_hgeoww.mp3",
+  duration: 406,
+  album: "Ekadantaya Vakratundaya",
+  year: 2025,
+  genre: "god",
+  language: "telugu",
+  sync: "devotional"
+},
+  {
   id: "bala-ganapathi",
   title: "Bala Ganapathi",
   artist: "Bala Ganapathi",
