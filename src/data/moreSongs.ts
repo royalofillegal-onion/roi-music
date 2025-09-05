@@ -79,6 +79,19 @@ export const moreSongs: Song[] = [
     language: "telugu",
     sync: "sad"
   },
+    {
+  id: "balarama-narsayyo",
+  title: "Balarama Narsayyo",
+  artist: "Balagam",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232080/Balagam-2023_mdkjdy.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232089/Balarama_Narsayyo_vdig5s.mp3",
+  duration: 279,
+  album: "Balarama Narsayyo",
+  year: 2023,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
    {
      id: "Thanu",
      title: "Thanu",
@@ -118,6 +131,32 @@ export const moreSongs: Song[] = [
     language: "telugu",
     sync: "sad"
   },
+    {
+  id: "thoduga-ma-thodundi",
+  title: "Thoduga Ma Thodundi",
+  artist: "Balagam",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232080/Balagam-2023_mdkjdy.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232101/Thoduga_Ma_Thodundi_e9zyhs.mp3",
+  duration: 379,
+  album: "Thoduga Ma Thodundi",
+  year: 2025,
+  genre: "feel",
+  language: "telugu",
+  sync: "sad"
+},
+    {
+  id: "dikka-dishum",
+  title: "Dikka Dishum",
+  artist: "Ravanasura",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232276/Dikka_Dishum_cxryln.mp3",
+  duration: 197,
+  album: "Dikka Dishum",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "sad"
+},
     {
     id: "Katha Kaadhey",
     title: "Katha Kaadhey",
@@ -261,6 +300,19 @@ export const moreSongs: Song[] = [
     language: "telugu",
     sync: "sad"
   },
+    {
+  id: "devari",
+  title: "Devari",
+  artist: "Ugram",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232398/Ugram-2023_iuao9o.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232407/Devari_cqzbnn.mp3",
+  duration: 208,
+  album: "Devari",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "sad"
+},
    {
     id: "Pillaa Raa",
     title: "Pillaa Raa",
@@ -313,6 +365,33 @@ export const moreSongs: Song[] = [
   language: "telugu",
   sync: "sad"
 },
+    {
+  id: "premisthunna",
+  title: "Premisthunna",
+  artist: "Baby",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232569/Baby-2023_znc7bo.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232603/Premisthunna_bgt1zz.mp3",
+  duration: 396,
+  album: "Premisthunna",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
+    {
+  id: "uyyaalo-uyyaala",
+  title: "Uyyaalo Uyyaala",
+  artist: "Bhagavanth Kesari",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233229/Bhagavanth-Kesari-songs-download-naa-songs-download_xjxrzd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233242/Uyyaalo_Uyyaala_dlcbkm.mp3",
+  duration: 257,
+  album: "Uyyaalo Uyyaala",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
+    
   {
   id: "Ori Vaari",
   title: "Ori Vaari",
