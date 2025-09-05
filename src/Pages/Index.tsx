@@ -88,7 +88,6 @@ const Index = () => {
   const staticSections = [
     { id: 'popular', title: 'Popular Right Now', songs: popularSongs },
     { id: 'trending', title: 'Trending Now', songs: trendingSongs },
-    { id: 'newReleases', title: 'New Releases', songs: newReleases },
     { id: 'massRap', title: 'Mass & Rap Hits', songs: massRapSongs },
     { id: 'hindi', title: 'Hindi, Tamil & English', songs: HindiSongs },
     { id: 'moreSongs', title: 'More Hits', songs: moreSongs },
