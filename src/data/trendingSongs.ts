@@ -28,6 +28,19 @@ export const trendingSongs: Song[] = [
   language: "telugu",
   sync: "rap"
 },
+   {
+  id: "mallika-gandha",
+  title: "Mallika Gandha",
+  artist: "Mallika Gandhi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757091523/60396_4_pzrtin.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757091533/Mallika_Gandha_KoshalWorld.Com_yzw9ct.mp3",
+  duration: 261,
+  album: "Mallika Gandha",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "love"
+},
   {
     id: "trending2",
     title: "Nuvvunte Chaley",
@@ -41,19 +54,6 @@ export const trendingSongs: Song[] = [
     language: "telugu",
     sync: "sad"
   },
-  {
-  id: "mallika-gandha",
-  title: "Mallika Gandha",
-  artist: "Mallika Gandhi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757091523/60396_4_pzrtin.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757091533/Mallika_Gandha_KoshalWorld.Com_yzw9ct.mp3",
-  duration: 261,
-  album: "Mallika Gandha",
-  year: 2025,
-  genre: "Love it ",
-  language: "telugu",
-  sync: "love"
-},
   {
     id: "trending1",
     title: "Monica Telugu",
