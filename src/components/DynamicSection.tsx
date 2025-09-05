@@ -13,7 +13,7 @@ interface DynamicSectionProps {
   onViewAll?: () => void;
   cardSize?: "small" | "medium" | "large";
   showRankings?: boolean;
-  layout?: "grid" | "horizontal" | "list";
+  layout?: "grid" | "horizontal" | "list" | "three-row";
 }
 
 const DynamicSection = ({ 
@@ -100,6 +100,37 @@ const DynamicSection = ({
               index={showRankings ? index + 1 : undefined}
             />
           ))}
+        </div>
+      ) : layout === "three-row" ? (
+        <div className="space-y-4">
+          {/* First row with exactly 3 songs */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {songs.slice(0, 3).map((song, index) => (
+              <ModernSongCard
+                key={`${song.id}-${index}`}
+                song={song}
+                size={cardSize}
+                showIndex={showRankings}
+                index={showRankings ? index + 1 : undefined}
+              />
+            ))}
+          </div>
+
+          {/* Remaining songs in horizontal scroll */}
+          {songs.length > 3 && (
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+              {songs.slice(3).map((song, index) => (
+                <ModernSongCard
+                  key={`${song.id}-${index + 3}`}
+                  song={song}
+                  size={cardSize}
+                  className={getHorizontalItemWidth()}
+                  showIndex={showRankings}
+                  index={showRankings ? index + 4 : undefined}
+                />
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">

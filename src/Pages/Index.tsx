@@ -191,8 +191,8 @@ const Index = () => {
             <DynamicSection
               title={section.title}
               songs={section.songs}
-              layout={index === 0 ? "list" : "horizontal"}
-              cardSize={isMobile ? "small" : index === 0 ? "small" : "medium"}
+              layout="three-row"
+              cardSize={isMobile ? "small" : "medium"}
               showRankings={index === 0}
               onViewAll={() => openSectionFullView(section.title, section.songs)}
               className="transition-all duration-300"
