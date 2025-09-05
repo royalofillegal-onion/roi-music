@@ -1040,6 +1040,32 @@ export const songs: Song[] =[
   sync: "love"
 },
   {
+  id: "maanu-maaku",
+  title: "Maanu Maaku",
+  artist: "Bhagavanth Kesari",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233229/Bhagavanth-Kesari-songs-download-naa-songs-download_xjxrzd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233250/Maanu_Maaku_r72did.mp3",
+  duration: 150,
+  album: "Maanu Maaku",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "feel"
+},
+  {
+  id: "icchesukuntaale",
+  title: "Icchesukuntaale",
+  artist: "Tiger Nageswara Rao",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233455/Icchesukuntaale_fhzyop.mp3",
+  duration: 271,
+  album: "Icchesukuntaale",
+  year: 2025,
+  genre: "Feel",
+  language: "telugu",
+  sync: "feel"
+},
+  {
   id: "All Most Padipoyinde Pilla",
   title: "All Most Padipoyinde Pilla",
   artist: " Das Ka Dhamki",
@@ -1051,6 +1077,19 @@ export const songs: Song[] =[
   genre: "Love it ",
   language: "telugu",
   sync: "Love"
+},
+  {
+  id: "chala-challa-gaali",
+  title: "Chala Challa Gaali",
+  artist: "Yamadonga",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440726/Chala_Challa_Gaali-SenSongsMp3.Co_xq2ecq.mp3",
+  duration: 116,
+  album: "Chala Challa Gaali",
+  year: 2025,
+  genre: "feel",
+  language: "telugu",
+  sync: "feel"
 },
   {
   id: "Sitra",
