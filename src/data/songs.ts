@@ -25,6 +25,32 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "feel1"
 },
+  {
+  id: "alara-chanchalamaina",
+  title: "Alara Chanchalamaina",
+  artist: "ANNAMAYYA",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756949547/Annamayya-1997jpeg_cobz1u.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756949551/Alara_Chanchalamaina_PenduJatt.Com.Se_bobohc.mp3",
+  duration: 289,
+  album: "Alara Chanchalamaina",
+  year: 2025,
+  genre: "god",
+  language: "telugu",
+  sync: "devotional"
+},
+  {
+  id: "hey-krishna",
+  title: "Hey Krishna",
+  artist: "Ata Kadhara Shiva",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756950094/we_e0xsjh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756949878/Hey_Krishna_PenduJatt.Com.Se_fpafvx.mp3",
+  duration: 223,
+  album: "Hey Krishna",
+  year: 2025,
+  genre: "god",
+  language: "telugu",
+  sync: "devotional"
+},
 {
   id: "Hridayam Lopala",
   title: "Hridayam Lopala",
@@ -193,6 +219,19 @@ export const songs: Song[] =[
   genre: ".",
   language: "telugu",
   sync: "love"
+},
+  {
+  id: "eswara",
+  title: "Eswara",
+  artist: "Uppena",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232920/Uppena-Telugu-2020-20210218155246-500x500_pd8scv.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232918/Eswara_-_SenSongsMp3.Com_kycavc.mp3",
+  duration: 207,
+  album: "Eswara",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "devotional"
 },
 {
   id: "milky-beauty",
@@ -1338,32 +1377,6 @@ export const songs: Song[] =[
   genre: "Love it ",
   language: "telugu",
   sync: "romantic"
-},
-  {
-  id: "alara-chanchalamaina",
-  title: "Alara Chanchalamaina",
-  artist: "ANNAMAYYA",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756949547/Annamayya-1997jpeg_cobz1u.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756949551/Alara_Chanchalamaina_PenduJatt.Com.Se_bobohc.mp3",
-  duration: 289,
-  album: "Alara Chanchalamaina",
-  year: 2025,
-  genre: "god",
-  language: "telugu",
-  sync: "devotional"
-},
-  {
-  id: "hey-krishna",
-  title: "Hey Krishna",
-  artist: "Ata Kadhara Shiva",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756950094/we_e0xsjh.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756949878/Hey_Krishna_PenduJatt.Com.Se_fpafvx.mp3",
-  duration: 223,
-  album: "Hey Krishna",
-  year: 2025,
-  genre: "god",
-  language: "telugu",
-  sync: "devotional"
 }
 ];
 
