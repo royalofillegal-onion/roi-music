@@ -86,8 +86,8 @@ const Index = () => {
   
   // Static sections - all showing as numbered lists like Spotify
   const staticSections = [
-    { id: 'popular', title: 'Popular Right Now', songs: popularSongs },
     { id: 'trending', title: 'Trending Now', songs: trendingSongs },
+    { id: 'popular', title: 'Popular Right Now', songs: popularSongs },
     { id: 'massRap', title: 'Mass & Rap Hits', songs: massRapSongs },
     { id: 'hindi', title: 'Hindi, Tamil & English', songs: HindiSongs },
     { id: 'moreSongs', title: 'More Hits', songs: moreSongs },
