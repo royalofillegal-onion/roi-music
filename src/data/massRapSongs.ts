@@ -80,6 +80,19 @@ export const massRapSongs: Song[] = [
   language: "telugu",
   sync: "mass"
 },
+  {
+  id: "rabbaru-gaajulu",
+  title: "Rabbaru Gaajulu",
+  artist: "Yamadonga",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440718/Rabbaru_Gaajulu-SenSongsMp3.Co_adruil.mp3",
+  duration: 318,
+  album: "Rabbaru Gaajulu",
+  year: 2025,
+  genre: "mass",
+  language: "telugu",
+  sync: "mass"
+},
 {
     id: "Salaam Rocky Bhai",
     title: "Salaam Rocky Bhai",
@@ -146,6 +159,19 @@ export const massRapSongs: Song[] = [
     sync: "mass"
   },
   {
+  id: "naachore",
+  title: "Naachore",
+  artist: "Yamadonga",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440723/Naachore-SenSongsMp3.Co_oqq99f.mp3",
+  duration: 293,
+  album: "Naachore",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "rap"
+},
+  {
     id: "Radhika",
     title: "Radhika",
     artist: "Dj Tillu 2",
@@ -184,6 +210,19 @@ export const massRapSongs: Song[] = [
     language: "telugu",
     sync: "rap"
   },
+  {
+  id: "young-yama",
+  title: "Young Yama",
+  artist: "Yamadonga",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440726/Young_Yama-SenSongsMp3.Co_bs6zmi.mp3",
+  duration: 293,
+  album: "Young Yama",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
+},
   {
     id: "Lucky Bhaskar (Title song)",
     title: "Lucky Bhaskar (Title song)",
@@ -248,6 +287,19 @@ export const massRapSongs: Song[] = [
   sync: "mass"
 },
   {
+  id: "samarale-sariovna",
+  title: "Samarale Sariovna",
+  artist: "Tiger Nageswara Rao",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233471/Samarale_Sariovna_qmnrad.mp3",
+  duration: 256,
+  album: "Samarale Sariovna",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "rap"
+},
+  {
   id: "fa9cf5d0-06c4-419e-8bca-bd962a5429ba",
   title: "Nee Chuttu Chuttu",
   artist: "Skanda",
@@ -270,6 +322,45 @@ export const massRapSongs: Song[] = [
   album: "Odiyamma",
   year: 2025,
   genre: "Mass",
+  language: "telugu",
+  sync: "mass"
+},
+  {
+  id: "ganesh-anthem",
+  title: "Ganesh Anthem",
+  artist: "Bhagavanth Kesari",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233229/Bhagavanth-Kesari-songs-download-naa-songs-download_xjxrzd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233248/Ganesh_Anthem_gbm4mb.mp3",
+  duration: 276,
+  album: "Ganesh Anthem",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
+},
+  {
+  id: "veedu",
+  title: "Veedu",
+  artist: "Tiger Nageswara Rao",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233462/Veedu_huq3rf.mp3",
+  duration: 196,
+  album: "Veedu",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "rap"
+},
+  {
+  id: "ek-dum-ek-dum",
+  title: "Ek Dum Ek Dum",
+  artist: "Tiger Nageswara Rao",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233462/Ek_Dum_Ek_Dum_bdcasj.mp3",
+  duration: 256,
+  album: "Ek Dum Ek Dum",
+  year: 2025,
+  genre: ".",
   language: "telugu",
   sync: "mass"
 },
@@ -298,6 +389,19 @@ export const massRapSongs: Song[] = [
   genre: "Mass",
   language: "telugu",
   sync: "rap"
+},
+  {
+  id: "roar-of-kesari",
+  title: "Roar of Kesari",
+  artist: "Bhagavanth Kesari",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233229/Bhagavanth-Kesari-songs-download-naa-songs-download_xjxrzd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233246/Roar_of_Kesari_mz4ouh.mp3",
+  duration: 199,
+  album: "Roar of Kesari",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
 },
   {
   id: "a1ad23db-3e7c-4a2c-8149-a2fe7eb594e1",
@@ -339,6 +443,19 @@ export const massRapSongs: Song[] = [
     sync: "rap"
   },
   {
+  id: "dummare-dumma",
+  title: "Dummare Dumma",
+  artist: "Skanda",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232943/Skanda-Official-Image_qh9uwd.webp",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233194/Dummare_Dumma_vqvuzy.mp3",
+  duration: 240,
+  album: "Dummare Dumma",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
+},
+  {
     id: "Oo Antava Oo Oo Antava",
     title: "Oo Antava Oo Oo Antava",
     artist: "pushpa 1",
@@ -364,6 +481,19 @@ export const massRapSongs: Song[] = [
     language: "telugu",
     sync: "rap"
   },
+  {
+  id: "gandarabai",
+  title: "Gandarabai",
+  artist: "Skanda",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232943/Skanda-Official-Image_qh9uwd.webp",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233191/Gandarabai_wzrk6i.mp3",
+  duration: 248,
+  album: "Gandarabai",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
+},
   {
     id: "Padara Padara",
     title: "Padara Padara",
@@ -417,6 +547,19 @@ export const massRapSongs: Song[] = [
     sync: "mass"
   },
   {
+  id: "rage-of-bholaa",
+  title: "Rage Of Bholaa",
+  artist: "Bholaa Shankar",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232714/bhola-shankar-naa-songs-chiranjeevi-tamanna-1_gdkno2.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232731/Rage_Of_Bholaa_m1sms1.mp3",
+  duration: 180,
+  album: "Rage Of Bholaa",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "rap"
+},
+  {
     id: "Ayudha Pooja",
     title: "Ayudha Pooja",
     artist: "Devara",
@@ -442,6 +585,19 @@ export const massRapSongs: Song[] = [
     language: "telugu",
     sync: "moti"
   },
+  {
+  id: "bholaa-mania",
+  title: "Bholaa Mania",
+  artist: "Bhola Shankar",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232714/bhola-shankar-naa-songs-chiranjeevi-tamanna-1_gdkno2.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232725/Bholaa_Mania_clkthn.mp3",
+  duration: 234,
+  album: "Bholaa Mania",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
+},
   {
     id: "proude to single",
     title: "proude to single",
@@ -469,6 +625,19 @@ export const massRapSongs: Song[] = [
     sync: "mass"
   },
   {
+  id: "kottara-kottu-teenumaaru",
+  title: "Kottara Kottu Teenumaaru",
+  artist: "Bhola Shankar",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232714/bhola-shankar-naa-songs-chiranjeevi-tamanna-1_gdkno2.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232722/Kottara_Kottu_Teenumaaru_ti8ry7.mp3",
+  duration: 216,
+  album: "Kottara Kottu Teenumaaru",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
+},
+  {
     id: "Dammunte Pattukora",
     title: "Dammunte Pattukora",
     artist: "pushpa 2",
@@ -494,6 +663,19 @@ export const massRapSongs: Song[] = [
     language: "telugu",
     sync: "moti"
   },
+  {
+  id: "kodukulara",
+  title: "Kodukulara",
+  artist: "Balagam",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232080/Balagam-2023_mdkjdy.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232090/Kodukulara_wyejit.mp3",
+  duration: 82,
+  album: "Kodukulara",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
   {
     id: "Ramana Aei",
     title: "Ramana Aei",
@@ -531,6 +713,45 @@ export const massRapSongs: Song[] = [
     language: "telugu",
     sync: "rap"
   },
+  {
+  id: "raavanasura-anthem",
+  title: "Raavanasura Anthem",
+  artist: "Raavanasura",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232222/Raavanasura_Anthem_btez1j.mp3",
+  duration: 237,
+  album: "Raavanasura Anthem",
+  year: 2025,
+  genre: "mass",
+  language: "telugu",
+  sync: "mass"
+},
+  {
+  id: "ravanasura",
+  title: "Ravanasura",
+  artist: "Raavanasura",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232271/Ravanasura_nrwxs5.mp3",
+  duration: 224,
+  album: "Ravanasura",
+  year: 2025,
+  genre: "mass",
+  language: "telugu",
+  sync: "mass"
+},
+  {
+  id: "head-up-high",
+  title: "Head Up High",
+  artist: "Custody",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232436/custody-naa-songs_gfmhp1.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232444/Head_Up_High_c8svzu.mp3",
+  duration: 251,
+  album: "Head Up High",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "motivational"
+},
   {
     id: "Ga Eega Eega Eega",
     title: "Ga Eega Eega Eega",
@@ -582,6 +803,33 @@ export const massRapSongs: Song[] = [
   genre: ".",
   language: "telugu",
   sync: "mass",
+},
+  {
+  id: "ammunni-rukkumanee",
+  title: "Ammunni Rukkumanee",
+  artist: "Custody",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232436/custody-naa-songs_gfmhp1.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232446/Ammunni_Rukkumanee_pxzxyn.mp3",
+  duration: 197,
+  album: "Ammunni Rukkumanee",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "mass"
+},
+  
+  {
+  id: "azaadi",
+  title: "Azaadi",
+  artist: "Spy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232506/Spy-2023_fjdyna.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232514/Azaadi_qtynbq.mp3",
+  duration: 208,
+  album: "Azaadi",
+  year: 2025,
+  genre: "mass",
+  language: "telugu",
+  sync: "motivational"
 },
   {
   id: "comrade-anthem",
