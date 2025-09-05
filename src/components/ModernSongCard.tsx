@@ -69,16 +69,16 @@ const ModernSongCard = ({
       image: "w-full aspect-square",
       playButton: "w-12 h-12",
       playIcon: "w-4 h-4",
-      title: "text-base font-semibold",
-      artist: "text-sm text-muted-foreground"
+      title: "text-sm md:text-base font-semibold",
+      artist: "text-xs md:text-sm text-muted-foreground"
     },
     large: {
       card: "group cursor-pointer transition-all duration-300 hover:bg-white/5 rounded-2xl p-6",
       image: "w-full aspect-square",
       playButton: "w-14 h-14",
       playIcon: "w-5 h-5",
-      title: "text-lg font-bold",
-      artist: "text-base text-muted-foreground"
+      title: "text-base md:text-lg font-bold",
+      artist: "text-sm md:text-base text-muted-foreground"
     }
   };
 
@@ -218,9 +218,9 @@ const ModernSongCard = ({
           </div>
         </div>
 
-        <div className="space-y-1">
-          <h3 className={cn(currentSize.title, "truncate text-white")}>{song.title}</h3>
-          <p className={cn(currentSize.artist, "truncate")}>{song.artist}</p>
+        <div className="space-y-1 px-1">
+          <h3 className={cn(currentSize.title, "truncate text-white leading-tight")}>{song.title}</h3>
+          <p className={cn(currentSize.artist, "truncate leading-tight")}>{song.artist}</p>
         </div>
       </div>
     </div>

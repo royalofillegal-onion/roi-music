@@ -45,13 +45,13 @@ const DynamicSection = ({
   const getHorizontalItemWidth = () => {
     switch (cardSize) {
       case "small":
-        return "min-w-[300px] w-[300px]";
+        return isMobile ? "min-w-[280px] w-[280px]" : "min-w-[300px] w-[300px]";
       case "medium":
-        return "min-w-[180px] w-[180px]";
+        return isMobile ? "min-w-[140px] w-[140px]" : "min-w-[180px] w-[180px]";
       case "large":
-        return "min-w-[220px] w-[220px]";
+        return isMobile ? "min-w-[160px] w-[160px]" : "min-w-[220px] w-[220px]";
       default:
-        return "min-w-[180px] w-[180px]";
+        return isMobile ? "min-w-[140px] w-[140px]" : "min-w-[180px] w-[180px]";
     }
   };
 
@@ -102,7 +102,10 @@ const DynamicSection = ({
           ))}
         </div>
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+        <div className={cn(
+          "flex gap-3 overflow-x-auto pb-2 scrollbar-hide",
+          isMobile ? "gap-2 px-1" : "gap-4"
+        )}>
           {songs.slice(0, 15).map((song, index) => (
             <ModernSongCard
               key={`${song.id}-${index}`}
