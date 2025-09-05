@@ -237,22 +237,100 @@ const Search = () => {
         </Button>
       </div>
       
+      {/* Browse by Category Section - Show when no search */}
+      {searchQuery.trim() === "" && !selectedSync && !artistFilter && (
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-4 text-white">Browse by Mood</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {SYNC_FILTERS.map((filter) => (
+              <button
+                key={filter.id}
+                onClick={() => handleSyncFilter(filter.id)}
+                className="flex flex-col items-center p-4 bg-gradient-to-br from-primary/20 to-primary/5 rounded-lg hover:from-primary/30 hover:to-primary/10 transition-all group"
+              >
+                <span className="text-2xl mb-2 group-hover:scale-110 transition-transform">{filter.emoji}</span>
+                <span className="text-sm font-medium text-foreground">{filter.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Browse by Artist Section */}
+      {searchQuery.trim() === "" && !selectedSync && !artistFilter && (
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-4 text-white">Browse by Artist</h2>
+          <div className="flex flex-wrap gap-2">
+            {availableArtists.slice(0, 12).map((artist) => (
+              <button
+                key={artist}
+                onClick={() => handleArtistFilter(artist)}
+                className="px-4 py-2 bg-secondary/20 hover:bg-secondary/40 rounded-full text-sm text-foreground transition-colors"
+              >
+                {artist}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Search Results Section */}
-      {searchQuery.trim() !== "" && searchQuery.trim().length >= 3 && (
+      {(searchQuery.trim().length >= 3 || selectedSync || artistFilter) && (
         <>
+          {/* Active Filters Display */}
+          {(selectedSync || artistFilter) && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {selectedSync && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-primary/20 rounded-full text-sm">
+                  <span>{SYNC_FILTERS.find(f => f.id === selectedSync)?.emoji}</span>
+                  <span>{SYNC_FILTERS.find(f => f.id === selectedSync)?.label}</span>
+                  <button 
+                    onClick={() => setSelectedSync(null)}
+                    className="ml-1 text-xs hover:text-destructive"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              {artistFilter && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-secondary/20 rounded-full text-sm">
+                  <span>🎤</span>
+                  <span>{artistFilter}</span>
+                  <button 
+                    onClick={() => setArtistFilter(null)}
+                    className="ml-1 text-xs hover:text-destructive"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           {filteredSongs.length === 0 && filteredPlaylists.length === 0 ? (
-            <div className="text-center py-8 sm:py-10 text-gray-400 px-4">
-              <p className="text-base sm:text-lg">No results found for "{searchQuery}"</p>
-              <p className="text-xs sm:text-sm mt-2">Try searching with different keywords</p>
+            <div className="text-center py-8 sm:py-10 text-muted-foreground px-4">
+              <SearchIcon className="mx-auto mb-3" size={40} />
+              <p className="text-base sm:text-lg">
+                {searchQuery.trim().length >= 3 
+                  ? `No results found for "${searchQuery}"` 
+                  : "No songs found for selected filters"
+                }
+              </p>
+              <p className="text-xs sm:text-sm mt-2">
+                {searchQuery.trim().length >= 3 
+                  ? "Try searching with different keywords" 
+                  : "Try selecting different filters"
+                }
+              </p>
             </div>
           ) : (
             <>
               {filteredPlaylists.length > 0 && (
                 <div className="mb-6">
-                  <h2 className="text-lg font-bold mb-3 text-white">Playlists</h2>
+                  <h2 className="text-lg font-bold mb-3 text-foreground">Playlists ({filteredPlaylists.length})</h2>
                   <div className="space-y-2">
                     {filteredPlaylists.map((playlist) => (
-                      <div key={playlist.id} className="flex items-center p-3 bg-gray-900/50 rounded-lg hover:bg-gray-800/50 transition-colors">
+                      <div key={playlist.id} className="flex items-center p-3 bg-card rounded-lg hover:bg-accent/50 transition-colors">
                         <div className="w-12 h-12 rounded-md overflow-hidden mr-3 flex-shrink-0">
                           <img 
                             src={playlist.coverImage} 
@@ -262,11 +340,11 @@ const Search = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="relative overflow-hidden">
-                            <h3 className="text-white font-medium text-sm whitespace-nowrap animate-marquee">
+                            <h3 className="text-foreground font-medium text-sm whitespace-nowrap animate-marquee">
                               {playlist.title}
                             </h3>
                           </div>
-                          <p className="text-gray-400 text-xs mt-1">{playlist.songs.length} songs</p>
+                          <p className="text-muted-foreground text-xs mt-1">{playlist.songs.length} songs</p>
                         </div>
                       </div>
                     ))}
@@ -276,20 +354,20 @@ const Search = () => {
               
               {filteredSongs.length > 0 && (
                 <div className="w-full">
-                  <h2 className="text-lg font-bold mb-3 text-white">Songs</h2>
+                  <h2 className="text-lg font-bold mb-3 text-foreground">Songs ({filteredSongs.length})</h2>
                   <div className="space-y-2">
                      {filteredSongs.map((song, index) => {
                        const isCurrentSong = currentSong?.id === song.id;
                        const isCurrentPlaying = isCurrentSong && isPlaying;
                        
                        return (
-                       <div key={`${song.id}-${index}`} className="flex items-center p-3 bg-gray-900/50 rounded-lg hover:bg-gray-800/50 transition-colors group">
-                          <div className="w-8 text-gray-400 text-sm font-medium mr-3 text-center flex-shrink-0">
+                       <div key={`${song.id}-${index}`} className="flex items-center p-3 bg-card rounded-lg hover:bg-accent/50 transition-colors group">
+                          <div className="w-8 text-muted-foreground text-sm font-medium mr-3 text-center flex-shrink-0">
                             {isCurrentPlaying ? (
                               <div className="flex items-center gap-0.5 justify-center">
-                                <div className="w-1 h-3 bg-orange-500 animate-pulse" />
-                                <div className="w-1 h-2 bg-orange-500 animate-pulse" style={{ animationDelay: '0.1s' }} />
-                                <div className="w-1 h-4 bg-orange-500 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                                <div className="w-1 h-3 bg-primary animate-pulse" />
+                                <div className="w-1 h-2 bg-primary animate-pulse" style={{ animationDelay: '0.1s' }} />
+                                <div className="w-1 h-4 bg-primary animate-pulse" style={{ animationDelay: '0.2s' }} />
                               </div>
                             ) : (
                               <Play className="h-3 w-3" />
@@ -309,12 +387,12 @@ const Search = () => {
                          
                          <div className="flex-1 min-w-0 mr-3 cursor-pointer" onClick={() => handlePlaySong(song)}>
                            <div className="relative overflow-hidden">
-                             <h3 className="text-white font-medium text-sm whitespace-nowrap animate-marquee">
+                             <h3 className="text-foreground font-medium text-sm whitespace-nowrap animate-marquee">
                                {song.title}
                              </h3>
                            </div>
                            <div className="relative overflow-hidden mt-1">
-                             <p className="text-gray-400 text-xs whitespace-nowrap animate-marquee">
+                             <p className="text-muted-foreground text-xs whitespace-nowrap animate-marquee">
                                {song.artist}
                              </p>
                            </div>
@@ -325,8 +403,8 @@ const Search = () => {
                              variant="ghost"
                              size="sm"
                              className={cn(
-                               "p-1 h-6 w-6 rounded-full hover:bg-gray-700/50 transition-all",
-                               isLiked(song.id) ? "text-red-500" : "text-gray-400 opacity-0 group-hover:opacity-100"
+                               "p-1 h-6 w-6 rounded-full hover:bg-accent transition-all",
+                               isLiked(song.id) ? "text-destructive" : "text-muted-foreground opacity-0 group-hover:opacity-100"
                              )}
                              onClick={(e) => handleLikeSong(song, e)}
                            >
@@ -339,7 +417,7 @@ const Search = () => {
                                <Button 
                                  variant="ghost" 
                                  size="sm"
-                                 className="p-1 h-6 w-6 rounded-full text-gray-400 hover:text-white hover:bg-gray-700/50 opacity-0 group-hover:opacity-100 transition-all"
+                                 className="p-1 h-6 w-6 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent opacity-0 group-hover:opacity-100 transition-all"
                                >
                                  <Plus className="h-3 w-3" />
                                </Button>
@@ -347,7 +425,7 @@ const Search = () => {
                            />
                          </div>
                          
-                         <div className="text-gray-400 text-xs flex-shrink-0">
+                         <div className="text-muted-foreground text-xs flex-shrink-0">
                            {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
                           </div>
                         </div>
@@ -361,34 +439,14 @@ const Search = () => {
         </>
       )}
 
-      {/* All Songs Section - Enhanced Display */}
-      <div className="mt-8">
-        {searchQuery.trim() === "" && (
-          <div className="text-center py-8 text-gray-400 mb-8">
-            <SearchIcon className="mx-auto mb-3" size={40} />
-            <p className="text-base sm:text-lg">Search for songs, artists or playlists</p>
-            <p className="text-xs sm:text-sm mt-2">Use the microphone to search with your voice</p>
-          </div>
-        )}
-        
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">All Songs</h2>
-          <div className="text-sm text-gray-400">
-            {allDisplaySongs.length} songs available
-          </div>
+      {/* Empty State */}
+      {searchQuery.trim() === "" && !selectedSync && !artistFilter && (
+        <div className="text-center py-12 text-muted-foreground">
+          <SearchIcon className="mx-auto mb-4" size={48} />
+          <p className="text-lg font-medium mb-2">Discover Your Perfect Sound</p>
+          <p className="text-sm">Search for songs, browse by mood, or explore artists</p>
         </div>
-        
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
-          {allDisplaySongs.map((song, index) => (
-            <SongCard 
-              key={`${song.id}-${index}`} 
-              song={song} 
-              className="w-full"
-              variant="search"
-            />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 };
