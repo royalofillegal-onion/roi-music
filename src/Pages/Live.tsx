@@ -581,24 +581,49 @@ const Live = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-b from-gray-900 to-black ${isFullScreen ? 'fixed inset-0 z-50' : 'pt-16 md:pt-0 md:ml-16'}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 ${isFullScreen ? 'fixed inset-0 z-50' : 'pt-16 md:pt-0 md:ml-16'}`}>
+      {/* Animated Background Effects */}
+      <div className="fixed inset-0 opacity-10 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-music-accent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-purple-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+      
       {isLoading ? (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-music-accent mx-auto mb-4" />
-            <p className="text-gray-400">Loading live stream...</p>
+        <div className="flex items-center justify-center min-h-screen relative z-10">
+          <div className="text-center animate-fade-in">
+            <div className="relative">
+              <Loader2 className="h-16 w-16 animate-spin text-music-accent mx-auto mb-6" />
+              <div className="absolute inset-0 h-16 w-16 border-4 border-music-accent/20 rounded-full mx-auto animate-ping"></div>
+            </div>
+            <p className="text-gray-300 text-lg font-medium">Connecting to live stream...</p>
+            <div className="mt-4 flex justify-center space-x-1">
+              <div className="w-2 h-2 bg-music-accent rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-music-accent rounded-full animate-bounce delay-100"></div>
+              <div className="w-2 h-2 bg-music-accent rounded-full animate-bounce delay-200"></div>
+            </div>
           </div>
         </div>
       ) : !currentLive ? (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-          <div className="max-w-md">
-            <h2 className="text-2xl font-bold mb-4">No Live Stream</h2>
-            <p className="text-gray-400 mb-6">There's no active live stream right now. Check back later for live content!</p>
+        <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center relative z-10">
+          <div className="max-w-md animate-fade-in">
+            <div className="mb-8 relative">
+              <div className="w-24 h-24 bg-gradient-to-br from-music-accent to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <Users className="h-12 w-12 text-black" />
+              </div>
+              <div className="absolute inset-0 w-24 h-24 bg-music-accent/20 rounded-full mx-auto animate-ping"></div>
+            </div>
+            <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-music-accent to-purple-400 bg-clip-text text-transparent">
+              No Live Stream
+            </h2>
+            <p className="text-gray-400 mb-8 text-lg">There's no active live stream right now. Check back later for live content!</p>
             <Button 
               onClick={() => window.location.reload()} 
-              className="bg-music-accent hover:bg-music-accent/80 text-black"
+              className="bg-gradient-to-r from-music-accent to-music-accent/80 hover:from-music-accent/90 hover:to-music-accent/70 text-black font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:scale-105"
             >
-              Refresh
+              <div className="flex items-center space-x-2">
+                <span>Refresh</span>
+                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+              </div>
             </Button>
           </div>
         </div>
@@ -606,14 +631,17 @@ const Live = () => {
         <div className="flex flex-col h-screen">
           {/* Enhanced Mobile Header */}
           {isMobile && !isFullScreen && (
-            <div className="flex items-center justify-between p-4 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-900/95 to-gray-800/95 backdrop-blur-md border-b border-gray-700/50 animate-fade-in">
               <div className="flex items-center space-x-3">
-                <Badge variant="destructive" className="bg-red-600 animate-pulse">
-                  🔴 LIVE
+                <Badge variant="destructive" className="bg-gradient-to-r from-red-600 to-red-500 animate-pulse shadow-lg shadow-red-500/20">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+                    <span>LIVE</span>
+                  </div>
                 </Badge>
-                <div className="flex items-center space-x-1 text-sm text-gray-400">
-                  <Users className="h-4 w-4" />
-                  <span>{viewerCount}</span>
+                <div className="flex items-center space-x-1 text-sm text-gray-300 bg-white/10 rounded-full px-2 py-1">
+                  <Users className="h-4 w-4 text-music-accent" />
+                  <span className="font-medium">{viewerCount}</span>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -621,15 +649,15 @@ const Live = () => {
                   size="sm"
                   variant="ghost"
                   onClick={toggleLike}
-                  className={`text-white ${isLiked ? 'text-red-500' : ''}`}
+                  className={`text-white hover:bg-white/10 rounded-full transition-all duration-300 ${isLiked ? 'text-red-500 bg-red-500/10' : ''}`}
                 >
-                  <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+                  <Heart className={`h-4 w-4 transition-transform duration-300 ${isLiked ? 'fill-current scale-110' : 'hover:scale-110'}`} />
                 </Button>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={shareStream}
-                  className="text-white"
+                  className="text-white hover:bg-white/10 rounded-full transition-all duration-300 hover:scale-110"
                 >
                   <Share2 className="h-4 w-4" />
                 </Button>
@@ -637,11 +665,11 @@ const Live = () => {
                   size="sm"
                   variant="ghost"
                   onClick={() => setShowMobileChat(!showMobileChat)}
-                  className="text-white"
+                  className="text-white hover:bg-white/10 rounded-full transition-all duration-300 relative"
                 >
                   <MessageSquare className="h-4 w-4" />
                   {comments.length > 0 && (
-                    <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 bg-gradient-to-r from-music-accent to-purple-500 text-black text-xs rounded-full px-1.5 py-0.5 min-w-[18px] h-5 flex items-center justify-center font-bold shadow-lg animate-bounce">
                       {comments.length > 99 ? '99+' : comments.length}
                     </span>
                   )}
@@ -686,19 +714,19 @@ const Live = () => {
 
                 {/* Enhanced Mobile Video Controls Overlay */}
                 {isMobile && (
-                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between animate-fade-in">
                     <div className="flex items-center space-x-2">
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={toggleMute}
-                        className="bg-black/50 hover:bg-black/70 text-white rounded-full"
+                        className="bg-black/60 hover:bg-black/80 text-white rounded-full backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110"
                       >
                         {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                       </Button>
                       
                       {!isMuted && (
-                        <div className="w-16 bg-black/50 rounded p-1">
+                        <div className="w-20 bg-black/60 rounded-full p-2 backdrop-blur-sm border border-white/10">
                           <Slider
                             value={[videoVolume]}
                             max={1}
@@ -716,17 +744,17 @@ const Live = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="bg-black/50 hover:bg-black/70 text-white rounded-full"
+                            className="bg-black/60 hover:bg-black/80 text-white rounded-full backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110"
                           >
                             <Settings className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-gray-900 border-gray-700">
+                        <DropdownMenuContent className="bg-gray-900/95 backdrop-blur-md border-gray-600">
                           {qualityOptions.map((quality) => (
                             <DropdownMenuItem
                               key={quality}
                               onClick={() => setSelectedQuality(quality)}
-                              className={`text-white hover:bg-gray-800 ${selectedQuality === quality ? 'bg-gray-700' : ''}`}
+                              className={`text-white hover:bg-white/10 transition-colors ${selectedQuality === quality ? 'bg-music-accent/20 text-music-accent' : ''}`}
                             >
                               {quality} {selectedQuality === quality && '✓'}
                             </DropdownMenuItem>
@@ -738,7 +766,7 @@ const Live = () => {
                         size="sm"
                         variant="ghost"
                         onClick={toggleFullScreen}
-                        className="bg-black/50 hover:bg-black/70 text-white rounded-full"
+                        className="bg-black/60 hover:bg-black/80 text-white rounded-full backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110"
                       >
                         {isFullScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
                       </Button>
@@ -748,24 +776,27 @@ const Live = () => {
 
                 {/* Desktop Controls - Enhanced */}
                 {!isMobile && (
-                  <div className="absolute top-4 right-4 flex items-center gap-2">
-                    <Badge variant="destructive" className="bg-red-600 animate-pulse">
-                      🔴 LIVE
+                  <div className="absolute top-4 right-4 flex items-center gap-3 animate-fade-in">
+                    <Badge variant="destructive" className="bg-gradient-to-r from-red-600 to-red-500 animate-pulse shadow-lg shadow-red-500/30 border border-red-400/20">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+                        <span className="font-bold">LIVE</span>
+                      </div>
                     </Badge>
-                    <div className="flex items-center space-x-2 bg-black/50 rounded-lg p-2">
+                    <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-sm rounded-xl p-3 border border-white/10">
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={toggleLike}
-                        className={`text-white ${isLiked ? 'text-red-500' : ''}`}
+                        className={`text-white hover:bg-white/10 rounded-full transition-all duration-300 ${isLiked ? 'text-red-500 bg-red-500/10' : ''}`}
                       >
-                        <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+                        <Heart className={`h-4 w-4 transition-transform duration-300 ${isLiked ? 'fill-current scale-110' : 'hover:scale-110'}`} />
                       </Button>
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={shareStream}
-                        className="text-white"
+                        className="text-white hover:bg-white/10 rounded-full transition-all duration-300 hover:scale-110"
                       >
                         <Share2 className="h-4 w-4" />
                       </Button>
@@ -773,7 +804,7 @@ const Live = () => {
                         variant="secondary"
                         size="icon"
                         onClick={toggleFullScreen}
-                        className="bg-black/50 hover:bg-black/70"
+                        className="bg-music-accent/20 hover:bg-music-accent/30 text-music-accent rounded-full transition-all duration-300 hover:scale-110"
                       >
                         {isFullScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
                       </Button>
@@ -784,17 +815,22 @@ const Live = () => {
 
               {/* Enhanced Stream Info - Mobile */}
               {isMobile && !isFullScreen && (
-                <div className="p-4 bg-gray-900">
-                  <h3 className="font-bold text-lg mb-2">{currentLive.title}</h3>
-                  <div className="flex items-center justify-between mb-3">
+                <div className="p-4 bg-gradient-to-br from-gray-900 to-gray-800 border-b border-gray-700/50 animate-fade-in">
+                  <h3 className="font-bold text-xl mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                    {currentLive.title}
+                  </h3>
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <img 
-                        src={currentLive.avatar_url || '/roi-assets/default-avatar.png'} 
-                        alt={currentLive.user_name}
-                        className="h-10 w-10 rounded-full"
-                      />
+                      <div className="relative">
+                        <img 
+                          src={currentLive.avatar_url || '/roi-assets/default-avatar.png'} 
+                          alt={currentLive.user_name}
+                          className="h-12 w-12 rounded-full border-2 border-music-accent/50"
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-900"></div>
+                      </div>
                       <div>
-                        <p className="font-medium">{currentLive.user_name}</p>
+                        <p className="font-semibold text-white">{currentLive.user_name}</p>
                         <p className="text-xs text-gray-400">
                           Started {format(new Date(currentLive.scheduled_at), "MMM d, h:mm a")}
                         </p>
@@ -802,39 +838,41 @@ const Live = () => {
                     </div>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button size="sm" variant="ghost" className="text-white">
+                        <Button size="sm" variant="ghost" className="text-white hover:bg-white/10 rounded-full">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-gray-900 border-gray-700">
-                        <DropdownMenuItem className="text-white hover:bg-gray-800">
+                      <DropdownMenuContent className="bg-gray-900/95 backdrop-blur-md border-gray-600">
+                        <DropdownMenuItem className="text-white hover:bg-white/10">
                           Report Stream
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-white hover:bg-gray-800">
+                        <DropdownMenuItem className="text-white hover:bg-white/10">
                           Block User
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
                   {currentLive.description && (
-                    <p className="text-sm text-gray-300 bg-gray-800 rounded-lg p-3 mb-3">
-                      {currentLive.description}
-                    </p>
+                    <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/60 backdrop-blur-sm rounded-xl p-4 mb-4 border border-gray-600/30">
+                      <p className="text-sm text-gray-200">{currentLive.description}</p>
+                    </div>
                   )}
                   
-                  {/* Engagement Stats */}
-                  <div className="flex items-center space-x-4 text-sm text-gray-400">
-                    <div className="flex items-center space-x-1">
-                      <Heart className="h-4 w-4" />
-                      <span>{currentLive.likes_count}</span>
+                  {/* Enhanced Engagement Stats */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2 bg-white/10 rounded-full px-3 py-1">
+                        <Heart className="h-4 w-4 text-red-500" />
+                        <span className="text-sm font-medium">{currentLive.likes_count}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 bg-white/10 rounded-full px-3 py-1">
+                        <MessageSquare className="h-4 w-4 text-music-accent" />
+                        <span className="text-sm font-medium">{comments.length}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <MessageSquare className="h-4 w-4" />
-                      <span>{comments.length}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Users className="h-4 w-4" />
-                      <span>{viewerCount} watching</span>
+                    <div className="flex items-center space-x-2 bg-green-500/20 rounded-full px-3 py-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-sm font-medium text-green-400">{viewerCount} watching</span>
                     </div>
                   </div>
                 </div>
