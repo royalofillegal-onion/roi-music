@@ -156,23 +156,23 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
                   {/* Mobile layout */}
                   <div className="md:hidden w-full border border-border/50 rounded-lg p-3 bg-card/30 backdrop-blur-sm">
                     <div className="flex items-start gap-3">
-                      {/* Track number and play indicator */}
-                      <div className="w-8 flex items-center justify-center flex-shrink-0 mt-1">
-                        {isCurrentPlaying ? (
-                          <div className="flex items-center gap-1">
-                            <div className="w-1 h-3 bg-accent animate-pulse" />
-                            <div className="w-1 h-2 bg-accent animate-pulse" style={{ animationDelay: '0.1s' }} />
-                            <div className="w-1 h-4 bg-accent animate-pulse" style={{ animationDelay: '0.2s' }} />
-                          </div>
-                        ) : (
-                          <div className="relative">
-                            <span className="text-xs text-muted-foreground group-hover:opacity-0 transition-opacity">
-                              {String(index + 1).padStart(2, '0')}
-                            </span>
-                            <Play className="w-3 h-3 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
-                          </div>
-                        )}
-                      </div>
+            {/* Track number and play indicator */}
+                       <div className="w-8 flex items-center justify-center flex-shrink-0 mt-1 relative">
+                         {isCurrentPlaying ? (
+                           <div className="flex items-center gap-1">
+                             <div className="w-1 h-3 bg-accent animate-pulse" />
+                             <div className="w-1 h-2 bg-accent animate-pulse" style={{ animationDelay: '0.1s' }} />
+                             <div className="w-1 h-4 bg-accent animate-pulse" style={{ animationDelay: '0.2s' }} />
+                           </div>
+                         ) : (
+                           <>
+                             <span className="text-xs text-muted-foreground group-hover:opacity-0 transition-opacity">
+                               {String(index + 1).padStart(2, '0')}
+                             </span>
+                             <Play className="w-3 h-3 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
+                           </>
+                         )}
+                       </div>
 
                       {/* Album artwork */}
                       <div className="w-14 h-14 rounded-lg overflow-hidden bg-accent/10 flex-shrink-0 border border-border/30">
@@ -300,9 +300,9 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
             </div>
             {otherArtists.length > 24 && (
               <div className="mt-4 text-center">
-                <p className="text-sm text-muted-foreground">
-                  +{otherArtists.length - 24} more artists available
-                </p>
+                 <p className="text-sm text-muted-foreground">
+                   +{otherArtists.length - 24} more artists available
+                 </p>
               </div>
             )}
           </div>

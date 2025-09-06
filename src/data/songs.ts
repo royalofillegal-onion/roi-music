@@ -1089,7 +1089,7 @@ export const songs: Song[] =[
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "feel"
+  sync: "feel1"
 },
   {
   id: "icchesukuntaale",
@@ -1102,7 +1102,7 @@ export const songs: Song[] =[
   year: 2025,
   genre: "Feel",
   language: "telugu",
-  sync: "feel"
+  sync: "feel1"
 },
   {
   id: "All Most Padipoyinde Pilla",
@@ -1128,7 +1128,7 @@ export const songs: Song[] =[
   year: 2025,
   genre: "feel",
   language: "telugu",
-  sync: "feel"
+  sync: "feel1"
 },
   {
   id: "Sitra",

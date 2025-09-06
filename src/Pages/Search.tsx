@@ -362,17 +362,18 @@ const Search = () => {
                        
                        return (
                        <div key={`${song.id}-${index}`} className="flex items-center p-3 bg-card rounded-lg hover:bg-accent/50 transition-colors group">
-                          <div className="w-8 text-muted-foreground text-sm font-medium mr-3 text-center flex-shrink-0">
-                            {isCurrentPlaying ? (
-                              <div className="flex items-center gap-0.5 justify-center">
-                                <div className="w-1 h-3 bg-primary animate-pulse" />
-                                <div className="w-1 h-2 bg-primary animate-pulse" style={{ animationDelay: '0.1s' }} />
-                                <div className="w-1 h-4 bg-primary animate-pulse" style={{ animationDelay: '0.2s' }} />
-                              </div>
-                            ) : (
-                              <Play className="h-3 w-3" />
-                            )}
-                          </div>
+                           <div className="w-8 text-muted-foreground text-sm font-medium mr-3 text-center flex-shrink-0">
+                             {isCurrentPlaying ? (
+                               <div className="flex items-center gap-0.5 justify-center">
+                                 <div className="w-1 h-3 bg-primary animate-pulse" />
+                                 <div className="w-1 h-2 bg-primary animate-pulse" style={{ animationDelay: '0.1s' }} />
+                                 <div className="w-1 h-4 bg-primary animate-pulse" style={{ animationDelay: '0.2s' }} />
+                               </div>
+                             ) : (
+                               <span className="group-hover:hidden">{index + 1}</span>
+                             )}
+                             <Play className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:block absolute" style={{ display: isCurrentPlaying ? 'none' : '' }} />
+                           </div>
                          
                          <div className="relative w-12 h-12 rounded-md overflow-hidden mr-3 flex-shrink-0 cursor-pointer group/play" onClick={() => handlePlaySong(song)}>
                            <img 

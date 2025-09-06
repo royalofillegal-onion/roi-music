@@ -672,9 +672,9 @@ export const massRapSongs: Song[] = [
   duration: 82,
   album: "Kodukulara",
   year: 2025,
-  genre: ".",
+  genre: "Mass",
   language: "telugu",
-  sync: "."
+  sync: "mass"
 },
   {
     id: "Ramana Aei",
@@ -750,7 +750,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: ".",
   language: "telugu",
-  sync: "motivational"
+  sync: "moti"
 },
   {
     id: "Ga Eega Eega Eega",
@@ -829,7 +829,7 @@ export const massRapSongs: Song[] = [
   year: 2025,
   genre: "mass",
   language: "telugu",
-  sync: "motivational"
+  sync: "moti"
 },
   {
   id: "comrade-anthem",
