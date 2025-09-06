@@ -225,7 +225,7 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
                         <span className="text-xs sm:text-sm text-muted-foreground group-hover:opacity-0 transition-opacity">
                           {String(index + 1).padStart(2, '0')}
                         </span>
-                        <Play className="w-3 h-3 sm:w-4 sm:h-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0 flex items-center justify-center" />
+                        <Play className="w-3 h-3 sm:w-4 sm:h-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
                       </div>
                     )}
                   </div>
