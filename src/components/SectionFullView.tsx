@@ -165,12 +165,12 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
                              <div className="w-1 h-4 bg-accent animate-pulse" style={{ animationDelay: '0.2s' }} />
                            </div>
                          ) : (
-                           <>
-                             <span className="text-xs text-muted-foreground group-hover:opacity-0 transition-opacity">
-                               {String(index + 1).padStart(2, '0')}
-                             </span>
-                             <Play className="w-3 h-3 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
-                           </>
+                              <>
+                              <span className="text-xs text-muted-foreground group-hover:opacity-0 transition-opacity">
+                                {String(index + 1).padStart(2, '0')}
+                              </span>
+                              <Play className="w-3 h-3 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0 flex items-center justify-center" />
+                            </>
                          )}
                        </div>
 
