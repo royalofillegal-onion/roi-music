@@ -18,6 +18,7 @@ interface DynamicSectionProps {
   showRankings?: boolean;
   layout?: "grid" | "horizontal" | "list";
   isPlaylistSection?: boolean;
+  onSongPlay?: (song: Song) => void;
 }
 
 const DynamicSection = ({ 
@@ -28,10 +29,19 @@ const DynamicSection = ({
   cardSize = "medium",
   showRankings = false,
   layout = "horizontal",
-  isPlaylistSection = false
+  isPlaylistSection = false,
+  onSongPlay
 }: DynamicSectionProps) => {
   const isMobile = useIsMobile();
   const { playSong } = usePlayer();
+
+  const handlePlay = (song: Song) => {
+    if (onSongPlay) {
+      onSongPlay(song);
+    } else {
+      playSong(song);
+    }
+  };
 
   // Handle playlist section
   if (isPlaylistSection) {
@@ -124,7 +134,7 @@ const DynamicSection = ({
             <div
               key={`${song.id}-${index}`}
               className="flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-all group hover:bg-primary/5 border border-transparent hover:border-primary/20 hover:shadow-crimson"
-              onClick={() => playSong(song)}
+              onClick={() => handlePlay(song)}
             >
               {/* Ranking number */}
               {showRankings && (
@@ -180,7 +190,7 @@ const DynamicSection = ({
                 getHorizontalItemWidth(),
                 "snap-start flex-shrink-0 group cursor-pointer"
               )}
-              onClick={() => playSong(song)}
+              onClick={() => handlePlay(song)}
             >
               <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
                 <img
