@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy, useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -27,7 +28,6 @@ const SharedPlaylist = lazy(() => import("./Pages/SharedPlaylist"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 const UserSettings = lazy(() => import("./Pages/UserSettings"));
 const ServerMaintenance = lazy(() => import("./Pages/ServerMaintenance"));
-const AdminDynamic = lazy(() => import("./Pages/AdminDynamic"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,9 +92,6 @@ function App() {
                           <Route path="/user-settings" element={<UserSettings />} />
                           <Route path="/feedback" element={<Feedback />} />
                           <Route path="/terms" element={<TermsAndConditions />} />
-                          
-                          {/* Admin routes */}
-                          <Route path="/admin/dynamic" element={<AdminDynamic />} />
                           
                           {/* Maintenance route */}
                           <Route path="/maintenance" element={<ServerMaintenance />} />

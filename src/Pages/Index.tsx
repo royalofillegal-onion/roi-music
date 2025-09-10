@@ -7,21 +7,43 @@ import FloatingSettingsPanel from "@/components/FloatingSettingsPanel";
 import RecentlyPlayedSection from "@/components/RecentlyPlayedSection";
 import FestivalPopup from "@/components/FestivalPopup";
 import TimeLighting from "@/components/TimeLighting";
-import DynamicHomepage from "@/components/DynamicHomepage";
+import SectionFullView from "@/components/SectionFullView";
+import HeroSection from "@/components/HeroSection";
+import DynamicSection from "@/components/DynamicSection";
+import ModernSongCard from "@/components/ModernSongCard";
 import { Music2 } from "lucide-react";
 
-import { supabase } from "@/integrations/supabase/client";
+import { trendingSongs, popularSongs, newReleases, uniqueSongs, moreSongs, massRapSongs, HindiSongs } from "@/data/allSongs";
+import ArtistGrid from "@/components/ArtistGrid";
+import { playlists } from "@/data/playlists";
+import { usePlayer } from "@/context/PlayerContext";
+import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/hooks/useOnboarding";
-import { useDynamicContent } from "@/hooks/useDynamicContent";
 import UserProfile from "@/components/UserProfile";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { getDailyRotatedSongs } from "@/utils/dailyRotation";
+
+import { supabase } from "@/integrations/supabase/client";
+import { Song } from "@/data/songs";
 
 const Index = () => {
+  const { playSong } = usePlayer();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
-  const { config } = useDynamicContent();
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showFloatingSettings, setShowFloatingSettings] = useState(false);
   const [showFestivalPopup, setShowFestivalPopup] = useState(false);
+  const [currentFullViewSection, setCurrentFullViewSection] = useState<{
+    title: string;
+    songs: Song[];
+    isOpen: boolean;
+  }>({
+    title: '',
+    songs: [],
+    isOpen: false,
+  });
   
   useEffect(() => {
     // Check auth status
@@ -62,8 +84,34 @@ const Index = () => {
     fetchContent();
   }, []);
   
-  // Dynamic site title from config
-  const siteTitle = config.site_title?.replace(/"/g, '') || 'ROI MUSIC';
+  // Static sections - all showing as numbered lists like Spotify
+  const staticSections = [
+    { id: 'trending', title: 'Trending Now', songs: trendingSongs },
+    { id: 'popular', title: 'Popular Right Now', songs: popularSongs },
+    { id: 'massRap', title: 'Mass & Rap Hits', songs: massRapSongs },
+    { id: 'hindi', title: 'Hindi, Tamil & English', songs: HindiSongs },
+    { id: 'moreSongs', title: 'More Hits', songs: moreSongs },
+    { id: 'romantic', title: 'Romantic Melodies', songs: uniqueSongs.filter(song => song.sync === 'romantic' || song.sync === 'love') },
+    { id: 'dance', title: 'Dance & Party', songs: uniqueSongs.filter(song => song.sync === 'dance' || song.sync === 'party') },
+    { id: 'devotional', title: 'Devotional Songs', songs: uniqueSongs.filter(song => song.sync === 'devotional') }
+  ];
+
+  const quickPicks = getDailyRotatedSongs(6);
+
+  const openSectionFullView = (title: string, songs: Song[]) => {
+    setCurrentFullViewSection({
+      title,
+      songs,
+      isOpen: true,
+    });
+  };
+
+  const closeSectionFullView = () => {
+    setCurrentFullViewSection(prev => ({
+      ...prev,
+      isOpen: false,
+    }));
+  };
 
   // Only show onboarding for logged-in users who haven't completed it
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
@@ -88,7 +136,7 @@ const Index = () => {
             <div className="w-10 h-10 bg-gradient-bloody rounded-full flex items-center justify-center shadow-bloody animate-bloody-glow">
               <Music2 className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-fire bg-clip-text text-transparent">{siteTitle}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-fire bg-clip-text text-transparent">ROI MUSIC</h1>
           </div>
         </div>
         <UserProfile />
@@ -103,12 +151,60 @@ const Index = () => {
         </div>
       )}
 
-      {/* Dynamic Homepage Content */}
-      <DynamicHomepage className="space-y-6 md:space-y-8 lg:space-y-12" />
+      <div className="space-y-6 md:space-y-8 lg:space-y-12">
+        {/* Hero Section with enhanced animations */}
+        <HeroSection className="animate-fade-in" />
 
-      {/* Recently Played Section - Always show */}
-      <div className="animate-slide-up mt-8">
-        <RecentlyPlayedSection />
+        {/* Artist Grid */}
+        <div className="animate-slide-up">
+          <ArtistGrid title="Featured Artists" className="mb-6" />
+        </div>
+
+        {/* Quick Picks Grid - Enhanced for mobile */}
+        <DynamicSection
+          title="Made for you"
+          songs={quickPicks}
+          layout={isMobile ? "grid" : "horizontal"}
+          cardSize={isMobile ? "small" : "medium"}
+          className="animate-slide-up"
+        />
+
+        {/* Static Sections */}
+        {staticSections.map((section, index) => (
+          <div 
+            key={section.id}
+            className="animate-slide-up hover-scale transition-all duration-300"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <DynamicSection
+              title={section.title}
+              songs={section.songs}
+              layout="list"
+              cardSize="small"
+              showRankings={true}
+              onViewAll={() => openSectionFullView(section.title, section.songs)}
+              className="transition-all duration-300 hover:shadow-bloody"
+            />
+          </div>
+        ))}
+
+        {/* Featured Playlists Section */}
+        <div className="animate-slide-up">
+          <DynamicSection
+            title="Featured Playlists"
+            songs={[]} // Will be handled differently in DynamicSection
+            layout="grid"
+            cardSize="medium"
+            isPlaylistSection={true}
+            onViewAll={() => navigate('/playlists')}
+            className="transition-all duration-300"
+          />
+        </div>
+
+        {/* Recently Played with enhanced styling */}
+        <div className="animate-slide-up">
+          <RecentlyPlayedSection />
+        </div>
       </div>
 
       {/* Onboarding Flow - Only show for logged-in users */}
@@ -122,6 +218,13 @@ const Index = () => {
         onToggle={setShowFloatingSettings}
       />
 
+      {/* Section Full View */}
+      <SectionFullView
+        title={currentFullViewSection.title}
+        songs={currentFullViewSection.songs}
+        isOpen={currentFullViewSection.isOpen}
+        onClose={closeSectionFullView}
+      />
     </div>
   );
 };

@@ -7,82 +7,13 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
+  // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
   }
   public: {
     Tables: {
-      app_config: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          is_public: boolean
-          key: string
-          updated_at: string
-          value: Json
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          is_public?: boolean
-          key: string
-          updated_at?: string
-          value: Json
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          is_public?: boolean
-          key?: string
-          updated_at?: string
-          value?: Json
-        }
-        Relationships: []
-      }
-      auto_playlists: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          description: string | null
-          id: string
-          is_active: boolean
-          max_songs: number | null
-          name: string
-          refresh_interval: string | null
-          rules: Json
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_songs?: number | null
-          name: string
-          refresh_interval?: string | null
-          rules: Json
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_songs?: number | null
-          name?: string
-          refresh_interval?: string | null
-          rules?: Json
-          updated_at?: string
-        }
-        Relationships: []
-      }
       conversations: {
         Row: {
           id: string
@@ -104,90 +35,6 @@ export type Database = {
           response?: string
           timestamp?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      dynamic_content: {
-        Row: {
-          content_type: string
-          created_at: string
-          created_by: string | null
-          description: string | null
-          id: string
-          is_active: boolean
-          is_featured: boolean
-          media_url: string | null
-          metadata: Json
-          sort_order: number | null
-          tags: string[] | null
-          thumbnail_url: string | null
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          content_type: string
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          is_featured?: boolean
-          media_url?: string | null
-          metadata?: Json
-          sort_order?: number | null
-          tags?: string[] | null
-          thumbnail_url?: string | null
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          content_type?: string
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          is_featured?: boolean
-          media_url?: string | null
-          metadata?: Json
-          sort_order?: number | null
-          tags?: string[] | null
-          thumbnail_url?: string | null
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      dynamic_sections: {
-        Row: {
-          config: Json
-          created_at: string
-          id: string
-          is_active: boolean
-          name: string
-          position: number
-          type: string
-          updated_at: string
-        }
-        Insert: {
-          config?: Json
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          name: string
-          position?: number
-          type: string
-          updated_at?: string
-        }
-        Update: {
-          config?: Json
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          name?: string
-          position?: number
-          type?: string
-          updated_at?: string
         }
         Relationships: []
       }
@@ -369,71 +216,6 @@ export type Database = {
         }
         Relationships: []
       }
-      offline_playlists: {
-        Row: {
-          cover_image: string | null
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          cover_image?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          cover_image?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      offline_songs: {
-        Row: {
-          audio_blob_url: string | null
-          downloaded_at: string
-          id: string
-          playlist_id: string
-          song_data: Json
-          song_id: string
-        }
-        Insert: {
-          audio_blob_url?: string | null
-          downloaded_at?: string
-          id?: string
-          playlist_id: string
-          song_data: Json
-          song_id: string
-        }
-        Update: {
-          audio_blob_url?: string | null
-          downloaded_at?: string
-          id?: string
-          playlist_id?: string
-          song_data?: Json
-          song_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_offline_songs_playlist"
-            columns: ["playlist_id"]
-            isOneToOne: false
-            referencedRelation: "offline_playlists"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       playlist_songs: {
         Row: {
           created_at: string | null
@@ -549,48 +331,6 @@ export type Database = {
           url?: string
         }
         Relationships: []
-      }
-      section_content: {
-        Row: {
-          content_id: string
-          created_at: string
-          id: string
-          is_active: boolean
-          position: number
-          section_id: string
-        }
-        Insert: {
-          content_id: string
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          position?: number
-          section_id: string
-        }
-        Update: {
-          content_id?: string
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          position?: number
-          section_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "section_content_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "dynamic_content"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "section_content_section_id_fkey"
-            columns: ["section_id"]
-            isOneToOne: false
-            referencedRelation: "dynamic_sections"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       shared_songs: {
         Row: {
@@ -775,36 +515,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_interactions: {
-        Row: {
-          content_id: string | null
-          content_type: string | null
-          created_at: string
-          id: string
-          interaction_type: string
-          metadata: Json | null
-          user_id: string | null
-        }
-        Insert: {
-          content_id?: string | null
-          content_type?: string | null
-          created_at?: string
-          id?: string
-          interaction_type: string
-          metadata?: Json | null
-          user_id?: string | null
-        }
-        Update: {
-          content_id?: string | null
-          content_type?: string | null
-          created_at?: string
-          id?: string
-          interaction_type?: string
-          metadata?: Json | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       user_onboarding: {
         Row: {
           completed: boolean
@@ -931,25 +641,6 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
-      get_dynamic_homepage: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          content_items: Json
-          section_config: Json
-          section_id: string
-          section_name: string
-          section_type: string
-        }[]
-      }
-      get_personalized_content: {
-        Args: { p_limit?: number; p_user_id: string }
-        Returns: {
-          content_id: string
-          content_type: string
-          score: number
-          title: string
-        }[]
-      }
       get_song_like_count: {
         Args: { song_id_param: string }
         Returns: number
@@ -957,33 +648,33 @@ export type Database = {
       get_song_likers: {
         Args: { song_id_param: string }
         Returns: {
-          created_at: string
           user_id: string
           username: string
+          created_at: string
         }[]
       }
       get_time_based_content: {
         Args: { content_type_param?: string }
         Returns: {
-          content_data: Json
-          content_type: string
           id: string
-          is_current_period: boolean
           time_period: string
+          content_type: string
+          content_data: Json
+          is_current_period: boolean
         }[]
       }
       get_trending_songs: {
         Args: { limit_count?: number }
         Returns: {
-          album: string
-          artist: string
-          audio_url: string
-          duration: number
-          genre: string
           id: string
-          image_url: string
-          play_count: number
           title: string
+          artist: string
+          album: string
+          genre: string
+          duration: number
+          image_url: string
+          audio_url: string
+          play_count: number
           upload_date: string
         }[]
       }
@@ -998,15 +689,6 @@ export type Database = {
       is_admin: {
         Args: { user_id: string }
         Returns: boolean
-      }
-      track_interaction: {
-        Args: {
-          p_content_id?: string
-          p_content_type?: string
-          p_interaction_type: string
-          p_metadata?: Json
-        }
-        Returns: undefined
       }
     }
     Enums: {
