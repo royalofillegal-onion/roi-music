@@ -4,8 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PlayerProvider } from "./context/PlayerContext";
-import Navbar from "./components/Navbar";
-import Player from "./components/Player";
+import SpotifySidebar from "./components/SpotifySidebar";
+import EnhancedSpotifyPlayer from "./components/EnhancedSpotifyPlayer";
 import SplashScreen from "./components/SplashScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { isMaintenanceActive } from "./config/maintenance";
@@ -75,8 +75,8 @@ function App() {
                   </main>
                 ) : (
                   <>
-                    <Navbar />
-                    <main className="flex-1 pb-20 md:pb-0 md:ml-16 lg:ml-20 xl:ml-64 transition-all duration-300">
+                    <SpotifySidebar />
+                    <main className="flex-1 md:ml-64 pb-24 transition-all duration-300">
                       <Suspense fallback={<LoadingFallback />}>
                         <Routes>
                           <Route path="/" element={<Index />} />
@@ -112,7 +112,7 @@ function App() {
                         </Routes>
                       </Suspense>
                     </main>
-                    <Player />
+                    <EnhancedSpotifyPlayer />
                   </>
                 )}
               </div>

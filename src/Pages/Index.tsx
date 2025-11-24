@@ -22,6 +22,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import UserProfile from "@/components/UserProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getDailyRotatedSongs } from "@/utils/dailyRotation";
+import { getGreeting } from "@/utils/timeGreeting";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Song } from "@/data/songs";
@@ -117,7 +118,7 @@ const Index = () => {
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-32 md:pb-40 px-4 md:px-8 md:ml-16 min-h-screen">
+    <div className="relative pb-32 px-6 py-8 min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
       {/* Time-based lighting overlay */}
       <TimeLighting />
       
@@ -129,15 +130,13 @@ const Index = () => {
       {/* Festival Popup */}
       <FestivalPopup onClose={() => setShowFestivalPopup(false)} />
       
-      {/* Header with User Profile and Site Name */}
+      {/* Header with Greeting */}
       <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-bloody rounded-full flex items-center justify-center shadow-bloody animate-bloody-glow">
-              <Music2 className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-fire bg-clip-text text-transparent">ROI MUSIC</h1>
-          </div>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">
+            {getGreeting()}
+          </h1>
+          <p className="text-sm text-muted-foreground">Discover your next favorite song</p>
         </div>
         <UserProfile />
       </div>
