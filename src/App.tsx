@@ -9,6 +9,8 @@ import EnhancedSpotifyPlayer from "./components/EnhancedSpotifyPlayer";
 import SplashScreen from "./components/SplashScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { isMaintenanceActive } from "./config/maintenance";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Menu } from "lucide-react";
 
 // Lazy load pages
 const Index = lazy(() => import("./Pages/Index"));
@@ -63,59 +65,68 @@ function App() {
         <PlayerProvider>
           <TooltipProvider>
             <BrowserRouter>
-              <div className="flex flex-col min-h-screen bg-background text-foreground">
-                {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-                
-                {/* Show maintenance page if maintenance is active */}
-                {maintenanceActive ? (
-                  <main className="flex-1">
-                    <Suspense fallback={<LoadingFallback />}>
-                      <ServerMaintenance />
-                    </Suspense>
-                  </main>
-                ) : (
-                  <>
-                    <SpotifySidebar />
-                    <main className="flex-1 md:ml-64 pb-24 transition-all duration-300">
+              <SidebarProvider defaultOpen={true}>
+                <div className="flex min-h-screen w-full bg-background text-foreground">
+                  {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+                  
+                  {/* Show maintenance page if maintenance is active */}
+                  {maintenanceActive ? (
+                    <main className="flex-1">
                       <Suspense fallback={<LoadingFallback />}>
-                        <Routes>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/search" element={<Search />} />
-                          <Route path="/playlists" element={<Playlists />} />
-                          <Route path="/playlist/:id" element={<PlaylistView />} />
-                          <Route path="/liked" element={<LikedSongs />} />
-                          <Route path="/artists" element={<Artists />} />
-                          <Route path="/artist/:artistName" element={<Artist />} />
-                          <Route path="/live" element={<Live />} />
-                          <Route path="/auth" element={<Auth />} />
-                          <Route path="/settings" element={<Settings />} />
-                          <Route path="/user-settings" element={<UserSettings />} />
-                          <Route path="/feedback" element={<Feedback />} />
-                          <Route path="/terms" element={<TermsAndConditions />} />
-                          
-                          {/* Maintenance route */}
-                          <Route path="/maintenance" element={<ServerMaintenance />} />
-                          
-                          {/* Enhanced song sharing routes */}
-                          <Route path="/share/:hashCode" element={<SharedSong />} />
-                          <Route path="/song/:songId" element={<SharedSong />} />
-                          <Route path="/s/:hashCode" element={<SharedSong />} />
-                          <Route path="/shared/:hashCode" element={<SharedSong />} />
-                          <Route path="/music/:hashCode" element={<SharedSong />} />
-                          <Route path="/track/:hashCode" element={<SharedSong />} />
-                          
-                          {/* Shared playlist route */}
-                          <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
-                          
-                          {/* Catch-all route */}
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
+                        <ServerMaintenance />
                       </Suspense>
                     </main>
-                    <EnhancedSpotifyPlayer />
-                  </>
-                )}
-              </div>
+                  ) : (
+                    <>
+                      <SpotifySidebar />
+                      <main className="flex-1 pb-24 transition-all duration-300">
+                        {/* Floating trigger button */}
+                        <div className="fixed top-4 left-4 z-50">
+                          <SidebarTrigger className="bg-black/80 hover:bg-black border border-white/10 text-white">
+                            <Menu className="h-5 w-5" />
+                          </SidebarTrigger>
+                        </div>
+                        
+                        <Suspense fallback={<LoadingFallback />}>
+                          <Routes>
+                            <Route path="/" element={<Index />} />
+                            <Route path="/search" element={<Search />} />
+                            <Route path="/playlists" element={<Playlists />} />
+                            <Route path="/playlist/:id" element={<PlaylistView />} />
+                            <Route path="/liked" element={<LikedSongs />} />
+                            <Route path="/artists" element={<Artists />} />
+                            <Route path="/artist/:artistName" element={<Artist />} />
+                            <Route path="/live" element={<Live />} />
+                            <Route path="/auth" element={<Auth />} />
+                            <Route path="/settings" element={<Settings />} />
+                            <Route path="/user-settings" element={<UserSettings />} />
+                            <Route path="/feedback" element={<Feedback />} />
+                            <Route path="/terms" element={<TermsAndConditions />} />
+                            
+                            {/* Maintenance route */}
+                            <Route path="/maintenance" element={<ServerMaintenance />} />
+                            
+                            {/* Enhanced song sharing routes */}
+                            <Route path="/share/:hashCode" element={<SharedSong />} />
+                            <Route path="/song/:songId" element={<SharedSong />} />
+                            <Route path="/s/:hashCode" element={<SharedSong />} />
+                            <Route path="/shared/:hashCode" element={<SharedSong />} />
+                            <Route path="/music/:hashCode" element={<SharedSong />} />
+                            <Route path="/track/:hashCode" element={<SharedSong />} />
+                            
+                            {/* Shared playlist route */}
+                            <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
+                            
+                            {/* Catch-all route */}
+                            <Route path="*" element={<NotFound />} />
+                          </Routes>
+                        </Suspense>
+                      </main>
+                      <EnhancedSpotifyPlayer />
+                    </>
+                  )}
+                </div>
+              </SidebarProvider>
             </BrowserRouter>
           </TooltipProvider>
         </PlayerProvider>
