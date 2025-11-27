@@ -10,7 +10,9 @@ import SplashScreen from "./components/SplashScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { isMaintenanceActive } from "./config/maintenance";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Lazy load pages
 const Index = lazy(() => import("./Pages/Index"));
@@ -42,6 +44,8 @@ const queryClient = new QueryClient({
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleSplashFinish = () => {
     setShowSplash(false);
@@ -78,13 +82,39 @@ function App() {
                     </main>
                   ) : (
                     <>
-                      <SpotifySidebar />
-                      <main className="flex-1 pb-24 transition-all duration-300">
-                        {/* Floating trigger button */}
-                        <div className="fixed top-4 left-4 z-50">
-                          <SidebarTrigger className="bg-black/80 hover:bg-black border border-white/10 text-white">
-                            <Menu className="h-5 w-5" />
-                          </SidebarTrigger>
+                      <SpotifySidebar 
+                        mobileOpen={mobileMenuOpen}
+                        onMobileClose={() => setMobileMenuOpen(false)}
+                      />
+                      <main className="flex-1 pb-32 md:pb-24 transition-all duration-300">
+                        {/* Header with trigger button */}
+                        <div className="sticky top-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10">
+                          <div className="flex items-center gap-3 px-3 md:px-4 h-14">
+                            {isMobile ? (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setMobileMenuOpen(true)}
+                                className="text-white hover:text-primary hover:bg-white/10 transition-colors"
+                              >
+                                <Menu className="h-5 w-5" />
+                              </Button>
+                            ) : (
+                              <SidebarTrigger className="text-white hover:text-primary transition-colors">
+                                <Menu className="h-5 w-5" />
+                              </SidebarTrigger>
+                            )}
+                            
+                            {/* Logo for mobile */}
+                            {isMobile && (
+                              <div className="flex items-center gap-2">
+                                <div className="w-7 h-7 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                                  <span className="text-xs font-bold text-white">R</span>
+                                </div>
+                                <span className="text-base font-bold text-white">ROI MUSIC</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <Suspense fallback={<LoadingFallback />}>

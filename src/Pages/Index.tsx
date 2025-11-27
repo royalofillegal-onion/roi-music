@@ -118,7 +118,7 @@ const Index = () => {
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-32 px-6 py-8 min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
+    <div className="relative pb-32 px-3 sm:px-4 md:px-6 py-4 md:py-8 min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
       {/* Time-based lighting overlay */}
       <TimeLighting />
       
@@ -131,32 +131,32 @@ const Index = () => {
       <FestivalPopup onClose={() => setShowFestivalPopup(false)} />
       
       {/* Header with Greeting */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">
+      <div className="flex items-center justify-between mb-6 md:mb-8">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 truncate">
             {getGreeting()}
           </h1>
-          <p className="text-sm text-muted-foreground">Discover your next favorite song</p>
+          <p className="text-xs sm:text-sm text-muted-foreground">Discover your next favorite song</p>
         </div>
         <UserProfile />
       </div>
       
       {/* Time-based Banner */}
       {timeBasedBanner && (
-        <div className="mb-6 p-4 bg-gradient-bloody rounded-xl border border-primary/30 backdrop-blur-sm shadow-crimson">
-          <p className="text-center text-sm md:text-base font-medium text-primary-glow">
+        <div className="mb-4 md:mb-6 p-3 md:p-4 bg-gradient-bloody rounded-lg md:rounded-xl border border-primary/30 backdrop-blur-sm shadow-crimson">
+          <p className="text-center text-xs sm:text-sm md:text-base font-medium text-primary-glow">
             {timeBasedBanner}
           </p>
         </div>
       )}
 
-      <div className="space-y-6 md:space-y-8 lg:space-y-12">
+      <div className="space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10">
         {/* Hero Section with enhanced animations */}
         <HeroSection className="animate-fade-in" />
 
         {/* Artist Grid */}
         <div className="animate-slide-up">
-          <ArtistGrid title="Featured Artists" className="mb-6" />
+          <ArtistGrid title="Featured Artists" className="mb-4 md:mb-6" />
         </div>
 
         {/* Quick Picks Grid - Enhanced for mobile */}
@@ -164,7 +164,7 @@ const Index = () => {
           title="Made for you"
           songs={quickPicks}
           layout={isMobile ? "grid" : "horizontal"}
-          cardSize={isMobile ? "small" : "medium"}
+          cardSize="small"
           className="animate-slide-up"
         />
 
@@ -191,9 +191,9 @@ const Index = () => {
         <div className="animate-slide-up">
           <DynamicSection
             title="Featured Playlists"
-            songs={[]} // Will be handled differently in DynamicSection
+            songs={[]}
             layout="grid"
-            cardSize="medium"
+            cardSize="small"
             isPlaylistSection={true}
             onViewAll={() => navigate('/playlists')}
             className="transition-all duration-300"
