@@ -150,39 +150,69 @@ const Index = () => {
         </div>
       )}
 
-      <div className="space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10">
+      <div className="space-y-6 sm:space-y-8 md:space-y-10 lg:space-y-12">
         {/* Hero Section with enhanced animations */}
-        <HeroSection className="animate-fade-in" />
+        <HeroSection className="animate-fade-in -mx-3 sm:-mx-4 md:-mx-6" />
+
+        {/* Quick Picks - Prominent placement */}
+        <div className="animate-slide-up">
+          <DynamicSection
+            title="🎵 Made for you today"
+            songs={quickPicks}
+            layout={isMobile ? "grid" : "horizontal"}
+            cardSize="medium"
+            className="bg-gradient-to-b from-primary/5 to-transparent rounded-2xl p-4 md:p-6 border border-primary/10"
+          />
+        </div>
+
+        {/* Trending Section - Featured */}
+        <div className="animate-slide-up">
+          <DynamicSection
+            title="🔥 Trending Now"
+            songs={trendingSongs}
+            layout="grid"
+            cardSize="small"
+            showRankings={false}
+            onViewAll={() => openSectionFullView("Trending Now", trendingSongs)}
+            className="bg-gradient-to-br from-accent/10 via-primary/5 to-transparent rounded-2xl p-4 md:p-6 border border-accent/20"
+          />
+        </div>
 
         {/* Artist Grid */}
         <div className="animate-slide-up">
-          <ArtistGrid title="Featured Artists" className="mb-4 md:mb-6" />
+          <div className="bg-gradient-to-r from-secondary/10 to-primary/10 rounded-2xl p-4 md:p-6 border border-secondary/20">
+            <ArtistGrid title="⭐ Featured Artists" className="" />
+          </div>
         </div>
 
-        {/* Quick Picks Grid - Enhanced for mobile */}
-        <DynamicSection
-          title="Made for you"
-          songs={quickPicks}
-          layout={isMobile ? "grid" : "horizontal"}
-          cardSize="small"
-          className="animate-slide-up"
-        />
+        {/* Popular - List view */}
+        <div className="animate-slide-up">
+          <DynamicSection
+            title="💎 Popular Right Now"
+            songs={popularSongs}
+            layout="list"
+            cardSize="small"
+            showRankings={true}
+            onViewAll={() => openSectionFullView("Popular Right Now", popularSongs)}
+            className="bg-card/50 rounded-2xl p-4 md:p-6 border border-border/50"
+          />
+        </div>
 
-        {/* Static Sections */}
-        {staticSections.map((section, index) => (
+        {/* Static Sections - Alternating layouts */}
+        {staticSections.slice(2).map((section, index) => (
           <div 
             key={section.id}
-            className="animate-slide-up hover-scale transition-all duration-300"
-            style={{ animationDelay: `${index * 100}ms` }}
+            className="animate-slide-up transition-all duration-300"
+            style={{ animationDelay: `${index * 50}ms` }}
           >
             <DynamicSection
               title={section.title}
               songs={section.songs}
-              layout="list"
+              layout={index % 2 === 0 ? "list" : "horizontal"}
               cardSize="small"
-              showRankings={true}
+              showRankings={index % 2 === 0}
               onViewAll={() => openSectionFullView(section.title, section.songs)}
-              className="transition-all duration-300 hover:shadow-bloody"
+              className="bg-card/30 rounded-xl p-4 md:p-5 border border-border/30 hover:border-primary/30 transition-all"
             />
           </div>
         ))}
@@ -190,19 +220,21 @@ const Index = () => {
         {/* Featured Playlists Section */}
         <div className="animate-slide-up">
           <DynamicSection
-            title="Featured Playlists"
+            title="📚 Your Playlists"
             songs={[]}
             layout="grid"
-            cardSize="small"
+            cardSize="medium"
             isPlaylistSection={true}
             onViewAll={() => navigate('/playlists')}
-            className="transition-all duration-300"
+            className="bg-gradient-to-tl from-primary/10 to-accent/10 rounded-2xl p-4 md:p-6 border border-primary/20"
           />
         </div>
 
         {/* Recently Played with enhanced styling */}
-        <div className="animate-slide-up">
-          <RecentlyPlayedSection />
+        <div className="animate-slide-up mb-8">
+          <div className="bg-card/40 rounded-2xl p-4 md:p-6 border border-border/40">
+            <RecentlyPlayedSection />
+          </div>
         </div>
       </div>
 
