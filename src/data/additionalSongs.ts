@@ -3716,5 +3716,16 @@ export const additionalSongs: Song[] = [
   album: "Chal Chal",
   year: 2025,
   genre: "."
+},
+  {
+  id: "Ala Ala",
+  title: "Ala Ala",
+  artist: "Raju Weds Rambai",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764306173/Raju-Weds-Rambai-2025_rdz0no.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764306192/Ala_Ala_hi8eyh.mp3",
+  duration: 215,
+  album: "Ala Ala",
+  year: 2025,
+  genre: "."
 }
 ];
