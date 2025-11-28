@@ -13,9 +13,11 @@ export const featuredArtists: Artist[] = [
   { name: "Andhra King Taluka", display: true },
   { name: "Raju Weds Rambai", display: true },
   { name: "OG", display: true },
-  { name: "Monica", display: true },
+  { name: "Dear Comrade", display: true },
   { name: "Kingdom", display: true },
+  { name: "Jersey", display: true },
   { name: "Mirai", display: true },
+  { name: "Monica", display: true },
   { name: "Mahavatar Narsimha", display: true },
 ];
 
