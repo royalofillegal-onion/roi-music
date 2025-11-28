@@ -118,7 +118,7 @@ const Index = () => {
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-32 px-3 sm:px-4 md:px-6 py-4 md:py-8 min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
+    <div className="relative pb-36 px-4 sm:px-5 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
       {/* Time-based lighting overlay */}
       <TimeLighting />
       
@@ -131,28 +131,28 @@ const Index = () => {
       <FestivalPopup onClose={() => setShowFestivalPopup(false)} />
       
       {/* Header with Greeting */}
-      <div className="flex items-center justify-between mb-6 md:mb-8">
+      <div className="flex items-center justify-between mb-5 sm:mb-6 md:mb-8 gap-3">
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 truncate">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1.5 sm:mb-2 truncate">
             {getGreeting()}
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground">Discover your next favorite song</p>
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground">Discover your next favorite song</p>
         </div>
         <UserProfile />
       </div>
       
       {/* Time-based Banner */}
       {timeBasedBanner && (
-        <div className="mb-4 md:mb-6 p-3 md:p-4 bg-gradient-bloody rounded-lg md:rounded-xl border border-primary/30 backdrop-blur-sm shadow-crimson">
-          <p className="text-center text-xs sm:text-sm md:text-base font-medium text-primary-glow">
+        <div className="mb-4 sm:mb-5 md:mb-6 p-4 sm:p-5 md:p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl md:rounded-2xl border border-primary/30 backdrop-blur-sm shadow-spotify">
+          <p className="text-center text-sm sm:text-base md:text-lg font-semibold text-primary-glow">
             {timeBasedBanner}
           </p>
         </div>
       )}
 
-      <div className="space-y-6 sm:space-y-8 md:space-y-10 lg:space-y-12">
+      <div className="space-y-5 sm:space-y-6 md:space-y-8 lg:space-y-10">
         {/* Hero Section with enhanced animations */}
-        <HeroSection className="animate-fade-in -mx-3 sm:-mx-4 md:-mx-6" />
+        <HeroSection className="animate-fade-in -mx-4 sm:-mx-5 md:-mx-6 lg:-mx-8" />
 
         {/* Quick Picks - Prominent placement */}
         <div className="animate-slide-up">
@@ -160,8 +160,8 @@ const Index = () => {
             title="🎵 Made for you today"
             songs={quickPicks}
             layout={isMobile ? "grid" : "horizontal"}
-            cardSize="medium"
-            className="bg-gradient-to-b from-primary/5 to-transparent rounded-2xl p-4 md:p-6 border border-primary/10"
+            cardSize={isMobile ? "large" : "medium"}
+            className="bg-gradient-to-b from-primary/10 to-transparent rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-primary/20"
           />
         </div>
 
@@ -171,16 +171,16 @@ const Index = () => {
             title="🔥 Trending Now"
             songs={trendingSongs}
             layout="grid"
-            cardSize="small"
+            cardSize={isMobile ? "large" : "medium"}
             showRankings={false}
             onViewAll={() => openSectionFullView("Trending Now", trendingSongs)}
-            className="bg-gradient-to-br from-accent/10 via-primary/5 to-transparent rounded-2xl p-4 md:p-6 border border-accent/20"
+            className="bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-primary/20"
           />
         </div>
 
         {/* Artist Grid */}
         <div className="animate-slide-up">
-          <div className="bg-gradient-to-r from-secondary/10 to-primary/10 rounded-2xl p-4 md:p-6 border border-secondary/20">
+          <div className="bg-gradient-to-r from-muted/50 to-primary/10 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/30">
             <ArtistGrid title="⭐ Featured Artists" className="" />
           </div>
         </div>
@@ -190,11 +190,11 @@ const Index = () => {
           <DynamicSection
             title="💎 Popular Right Now"
             songs={popularSongs}
-            layout="list"
-            cardSize="small"
-            showRankings={true}
+            layout={isMobile ? "grid" : "list"}
+            cardSize={isMobile ? "large" : "medium"}
+            showRankings={!isMobile}
             onViewAll={() => openSectionFullView("Popular Right Now", popularSongs)}
-            className="bg-card/50 rounded-2xl p-4 md:p-6 border border-border/50"
+            className="bg-card/50 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/50"
           />
         </div>
 
@@ -208,11 +208,11 @@ const Index = () => {
             <DynamicSection
               title={section.title}
               songs={section.songs}
-              layout={index % 2 === 0 ? "list" : "horizontal"}
-              cardSize="small"
-              showRankings={index % 2 === 0}
+              layout={isMobile ? "grid" : (index % 2 === 0 ? "list" : "horizontal")}
+              cardSize={isMobile ? "large" : "medium"}
+              showRankings={!isMobile && index % 2 === 0}
               onViewAll={() => openSectionFullView(section.title, section.songs)}
-              className="bg-card/30 rounded-xl p-4 md:p-5 border border-border/30 hover:border-primary/30 transition-all"
+              className="bg-card/30 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/30 hover:border-primary/30 transition-all"
             />
           </div>
         ))}
@@ -223,16 +223,16 @@ const Index = () => {
             title="📚 Your Playlists"
             songs={[]}
             layout="grid"
-            cardSize="medium"
+            cardSize={isMobile ? "large" : "medium"}
             isPlaylistSection={true}
             onViewAll={() => navigate('/playlists')}
-            className="bg-gradient-to-tl from-primary/10 to-accent/10 rounded-2xl p-4 md:p-6 border border-primary/20"
+            className="bg-gradient-to-tl from-primary/10 to-accent/10 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-primary/20"
           />
         </div>
 
         {/* Recently Played with enhanced styling */}
-        <div className="animate-slide-up mb-8">
-          <div className="bg-card/40 rounded-2xl p-4 md:p-6 border border-border/40">
+        <div className="animate-slide-up mb-6 sm:mb-8 md:mb-10">
+          <div className="bg-card/40 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/40">
             <RecentlyPlayedSection />
           </div>
         </div>
