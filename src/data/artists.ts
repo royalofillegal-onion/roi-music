@@ -10,21 +10,13 @@ export const displayFeaturedArtists = true; // Set to false to hide all artists
 
 // Add or remove artists from this list to control homepage display
 export const featuredArtists: Artist[] = [
-  { name: "Mirai", display: true },
   { name: "Andhra King Taluka", display: true },
+  { name: "Raju Weds Rambai", display: true },
+  { name: "OG", display: true },
   { name: "Monica", display: true },
   { name: "Kingdom", display: true },
+  { name: "Mirai", display: true },
   { name: "Mahavatar Narsimha", display: true },
-  { name: "OG", display: true },
-  { name: "Devi Sri Prasad", display: true },
-  { name: "Anirudh Ravichander", display: true },
-  { name: "Thaman S", display: true },
-  { name: "Sid Sriram", display: true },
-  { name: "Shreya Ghoshal", display: true },
-  { name: "Armaan Malik", display: true },
-  { name: "Arijit Singh", display: true },
-  { name: "KK", display: true },
-  { name: "Sonu Nigam", display: true }
 ];
 
 // Get visible artists based on display flags
