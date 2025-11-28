@@ -98,8 +98,8 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
           `
         }}>
           <img 
-            src="https://res.cloudinary.com/dkhbceri0/image/upload/v1746935837/WhatsApp_Image_2025-05-11_at_9.25.57_AM_cfrtmn.jpg" 
-            alt="RoyalStar Logo"
+            src="https://res.cloudinary.com/dl8dmkhmv/image/upload/v1764332925/roimusic_efmjo9.png" 
+            alt="Roi music Logo"
             className="w-full h-full object-cover animate-pulse"
             style={{
               filter: 'drop-shadow(0 0 10px #dc2626) saturate(1.2) contrast(1.1)'
