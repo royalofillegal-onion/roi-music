@@ -301,7 +301,7 @@ const SectionFullView = ({ title, songs, isOpen, onClose }: SectionFullViewProps
             {otherArtists.length > 24 && (
               <div className="mt-4 text-center">
                  <p className="text-sm text-muted-foreground">
-                   +{otherArtists.length - 24} more artists available
+                   444
                  </p>
               </div>
             )}
