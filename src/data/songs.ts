@@ -26,6 +26,50 @@ export const songs: Song[] =[
   sync: "feel1"
 },
   {
+  id: "Puppy Shame",
+  title: "Puppy Shame",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298288/Puppy_Shame_zv1i4t.mp3",
+  duration: 214,
+  album: "Andhra King Taluka",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Chalu",
+  title: "Chalu",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298339/Chalu_h3lay1.mp3",
+  duration: 269,
+  album: "Chalu",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "First Day First Show",
+  title: "First Day First Show",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298358/First_Day_First_Show_tnev6d.mp3",
+  duration: 176,
+  album: "First Day First Show",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Untold Emotions",
+  title: "Untold Emotions",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298323/Untold_Emotions_zzyhrl.mp3",
+  duration: 276,
+  album: "Untold Emotions",
+  year: 2025,
+  genre: "."
+},
+  {
   id: "alara-chanchalamaina",
   title: "Alara Chanchalamaina",
   artist: "ANNAMAYYA",
