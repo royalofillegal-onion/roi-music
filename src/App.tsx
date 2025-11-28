@@ -88,30 +88,31 @@ function App() {
                       />
                       <main className="flex-1 pb-32 md:pb-24 transition-all duration-300">
                         {/* Header with trigger button */}
-                        <div className="sticky top-0 z-40 bg-black/95 backdrop-blur-md border-b border-white/10">
-                          <div className="flex items-center gap-3 px-3 md:px-4 h-14">
+                        <div className="sticky top-0 z-40 bg-black/98 backdrop-blur-xl border-b border-white/5">
+                          <div className="flex items-center gap-3 px-4 md:px-6 h-16">
                             {isMobile ? (
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setMobileMenuOpen(true)}
-                                className="text-white hover:text-primary hover:bg-white/10 transition-colors"
+                                className="text-white hover:text-primary hover:bg-primary/10 transition-all duration-200 hover:scale-105 rounded-full w-10 h-10"
+                                aria-label="Open menu"
                               >
-                                <Menu className="h-5 w-5" />
+                                <Menu className="h-6 w-6" />
                               </Button>
                             ) : (
-                              <SidebarTrigger className="text-white hover:text-primary transition-colors">
-                                <Menu className="h-5 w-5" />
+                              <SidebarTrigger className="text-white hover:text-primary transition-all duration-200 hover:scale-105">
+                                <Menu className="h-6 w-6" />
                               </SidebarTrigger>
                             )}
                             
                             {/* Logo for mobile */}
                             {isMobile && (
-                              <div className="flex items-center gap-2">
-                                <div className="w-7 h-7 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-                                  <span className="text-xs font-bold text-white">R</span>
+                              <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(30,215,96,0.3)]">
+                                  <span className="text-sm font-bold text-black">R</span>
                                 </div>
-                                <span className="text-base font-bold text-white">ROI MUSIC</span>
+                                <span className="text-lg font-bold text-white tracking-tight">ROI MUSIC</span>
                               </div>
                             )}
                           </div>

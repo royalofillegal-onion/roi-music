@@ -47,17 +47,17 @@ const SpotifySidebar = ({ mobileOpen = false, onMobileClose }: SpotifySidebarPro
   const sidebarContent = (
     <>
       {/* Logo */}
-      <div className="p-6">
-        <Link to="/" className="flex items-center gap-2" onClick={onMobileClose}>
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center flex-shrink-0">
-            <Music2 className="w-5 h-5 text-white" />
+      <div className="p-6 border-b border-white/5">
+        <Link to="/" className="flex items-center gap-3 group" onClick={onMobileClose}>
+          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-[0_0_20px_rgba(30,215,96,0.3)]">
+            <Music2 className="w-6 h-6 text-black" />
           </div>
-          <span className="text-xl font-bold text-white">ROI MUSIC</span>
+          <span className="text-xl font-bold text-white tracking-tight">ROI MUSIC</span>
         </Link>
       </div>
 
       {/* Main Navigation */}
-      <div className="px-3">
+      <div className="px-3 pt-2">
         <div className="space-y-1">
           {mainNavItems.map((item) => (
             <Link
@@ -65,14 +65,17 @@ const SpotifySidebar = ({ mobileOpen = false, onMobileClose }: SpotifySidebarPro
               to={item.path}
               onClick={onMobileClose}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
+                "flex items-center gap-4 px-4 py-3 rounded-md transition-all duration-200 group",
                 isActive(item.path)
-                  ? "bg-white/10 text-white font-semibold"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                  ? "bg-muted text-white font-semibold"
+                  : "text-muted-foreground hover:text-white hover:bg-white/5"
               )}
             >
-              <item.icon className="h-5 w-5 flex-shrink-0" />
-              <span className="text-sm">{item.name}</span>
+              <item.icon className={cn(
+                "h-6 w-6 flex-shrink-0 transition-colors",
+                isActive(item.path) ? "text-primary" : "group-hover:text-primary"
+              )} />
+              <span className="text-sm font-medium">{item.name}</span>
             </Link>
           ))}
         </div>
@@ -98,14 +101,17 @@ const SpotifySidebar = ({ mobileOpen = false, onMobileClose }: SpotifySidebarPro
               to={item.path}
               onClick={onMobileClose}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
+                "flex items-center gap-4 px-4 py-3 rounded-md transition-all duration-200 group",
                 isActive(item.path)
-                  ? "bg-white/10 text-white font-semibold"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                  ? "bg-muted text-white font-semibold"
+                  : "text-muted-foreground hover:text-white hover:bg-white/5"
               )}
             >
-              <item.icon className="h-5 w-5 flex-shrink-0" />
-              <span className="text-sm">{item.name}</span>
+              <item.icon className={cn(
+                "h-6 w-6 flex-shrink-0 transition-colors",
+                isActive(item.path) ? "text-primary" : "group-hover:text-primary"
+              )} />
+              <span className="text-sm font-medium">{item.name}</span>
             </Link>
           ))}
         </div>
@@ -113,24 +119,24 @@ const SpotifySidebar = ({ mobileOpen = false, onMobileClose }: SpotifySidebarPro
         <Separator className="my-4 bg-white/10" />
 
         {/* Playlists */}
-        <div className="px-2 mb-2">
-          <span className="text-xs text-gray-400 font-semibold">Playlists</span>
+        <div className="px-4 mb-3">
+          <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Playlists</span>
         </div>
-        <ScrollArea className="h-[calc(100vh-550px)]">
-          <div className="space-y-1">
+        <ScrollArea className="h-[calc(100vh-500px)]">
+          <div className="space-y-1 px-2">
             {playlists.slice(0, 15).map((playlist) => (
               <Link
                 key={playlist.id}
                 to={`/playlist/${playlist.id}`}
                 onClick={onMobileClose}
-                className="flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5"
+                className="flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 text-muted-foreground hover:text-white hover:bg-white/5 group"
               >
-                <div className="w-10 h-10 rounded bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-                  <ListMusic className="h-4 w-4 text-primary" />
+                <div className="w-12 h-12 rounded bg-muted flex items-center justify-center flex-shrink-0 group-hover:bg-muted/80 transition-colors">
+                  <ListMusic className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm truncate">{playlist.title}</div>
-                  <div className="text-xs text-gray-500">Playlist</div>
+                  <div className="text-sm font-medium truncate group-hover:text-primary transition-colors">{playlist.title}</div>
+                  <div className="text-xs text-muted-foreground">Playlist • {playlist.songs?.length || 0} songs</div>
                 </div>
               </Link>
             ))}
@@ -154,12 +160,15 @@ const SpotifySidebar = ({ mobileOpen = false, onMobileClose }: SpotifySidebarPro
     </>
   );
 
-  // Mobile: use Sheet
+  // Mobile: use Sheet with enhanced visibility
   if (isMobile) {
     return (
       <Sheet open={mobileOpen} onOpenChange={onMobileClose}>
-        <SheetContent side="left" className="w-[280px] bg-black border-white/10 p-0">
-          <div className="flex flex-col h-full">
+        <SheetContent 
+          side="left" 
+          className="w-[300px] bg-black border-r border-primary/20 p-0 shadow-[0_0_50px_rgba(30,215,96,0.15)]"
+        >
+          <div className="flex flex-col h-full animate-slide-in">
             {sidebarContent}
           </div>
         </SheetContent>
