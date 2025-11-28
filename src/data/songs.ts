@@ -26,6 +26,17 @@ export const songs: Song[] =[
   sync: "feel1"
 },
   {
+  id: "Bommanu Geesthey",
+  title: "Bommanu Geesthey",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304723/Bommanu_Geesthey-SenSongsMp3.Co_dr7mod.mp3",
+  duration: 237,
+  album: "Bommanu Geesthey",
+  year: 2025,
+  genre: "."
+},
+  {
   id: "Puppy Shame",
   title: "Puppy Shame",
   artist: "Andhra King Taluka",
