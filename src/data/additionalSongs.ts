@@ -3607,5 +3607,114 @@ export const additionalSongs: Song[] = [
   genre: "god",
   language: "telugu",
   sync: "devotional"
+},
+  {
+  id: "We Have Romeo",
+  title: "We Have Romeo",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304700/We_Have_Romeo-SenSongsMp3.Co_xixps4.mp3",
+  duration: 235,
+  album: "We Have Romeo",
+  year: 2025,
+  genre: "."
+},{
+  id: "Nammaka Tappani",
+  title: "Nammaka Tappani",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304716/Nammaka_Tappani-SenSongsMp3.Co_wue3xa.mp3",
+  duration: 275,
+  album: "Nammaka Tappani",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Apudo Ipudo",
+  title: "Apudo Ipudo",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304721/Apudo_Ipudo-SenSongsMp3.Co_ehnshm.mp3",
+  duration: 243,
+  album: "Apudo Ipudo",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Laalu Dharvaja",
+  title: "Laalu Dharvaja",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304727/Laalu_Dharvaja-SenSongsMp3.Co_cxduuh.mp3",
+  duration: 293,
+  album: "Laalu Dharvaja",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Kaani Ippudu",
+  title: "Kaani Ippudu",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304729/Kaani_Ippudu-SenSongsMp3.Co_ftb7vi.mp3",
+  duration: 316,
+  album: "Kaani Ippudu",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Parugulu",
+  title: "Parugulu",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304773/Parugulu-SenSongsMp3.Com_1_uuuzzf.mp3",
+  duration: 260,
+  album: "Parugulu",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: " Yelageyalaga",
+  title: " Yelageyalaga",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304759/Yelageyalaga-SenSongsMp3.Com_v6vao0.mp3",
+  duration: 262,
+  album: " Yelageyalaga",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Hrudayam",
+  title: "Hrudayam",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304772/Hrudayam-SenSongsMp3.Com_wzi89d.mp3",
+  duration: 228,
+  album: "Hrudayam",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Manakanna Podiche",
+  title: "Manakanna Podiche",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304781/Manakanna_Podiche-SenSongsMp3.Com_i17gwc.mp3",
+  duration: 280,
+  album: "Manakanna Podiche",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Chal Chal",
+  title: "Chal Chal",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304788/Chal_Chal-SenSongsMp3.Com_fpjeao.mp3",
+  duration: 277,
+  album: "Chal Chal",
+  year: 2025,
+  genre: "."
 }
 ];
