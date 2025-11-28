@@ -26,6 +26,17 @@ export const songs: Song[] =[
   sync: "feel1"
 },
   {
+  id: "Nammavemo",
+  title: "Nammavemo",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304782/Nammavemo-SenSongsMp3.Com_f5rm9u.mp3",
+  duration: 288,
+  album: "Nammavemo",
+  year: 2025,
+  genre: "."
+},
+  {
   id: "Puppy Shame",
   title: "Puppy Shame",
   artist: "Andhra King Taluka",
