@@ -25,7 +25,7 @@ export const trendingSongs: Song[] = [
   album: "Rambai Neemeedha Naku",
   year: 2025,
   genre: "."
-}
+},
   {
   id: "suvvi-suvvi",
   title: "Suvvi Suvvi",
