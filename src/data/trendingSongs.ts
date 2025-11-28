@@ -16,6 +16,17 @@ export const trendingSongs: Song[] = [
     sync: "romantic"
   },
   {
+  id: "Rambai Neemeedha Naku",
+  title: "Rambai Neemeedha Naku",
+  artist: "Raju Weds Rambai",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764306173/Raju-Weds-Rambai-2025_rdz0no.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764306183/Rambai_Neemeedha_Naku_zo4kfr.mp3",
+  duration: 250,
+  album: "Rambai Neemeedha Naku",
+  year: 2025,
+  genre: "."
+}
+  {
   id: "suvvi-suvvi",
   title: "Suvvi Suvvi",
   artist: "OG",
