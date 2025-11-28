@@ -59,6 +59,17 @@ export const songs: Song[] =[
   genre: "."
 },
   {
+  id: "Guns And Roses",
+  title: "Guns And Roses",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298876/Guns_And_Roses_ozfrvx.mp3",
+  duration: 257,
+  album: "Guns And Roses",
+  year: 2025,
+  genre: "."
+},
+  {
   id: "Untold Emotions",
   title: "Untold Emotions",
   artist: "Andhra King Taluka",
@@ -66,6 +77,50 @@ export const songs: Song[] =[
   audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298323/Untold_Emotions_zzyhrl.mp3",
   duration: 276,
   album: "Untold Emotions",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Washi O Washi",
+  title: "Washi O Washi",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298819/Washi_O_Washi_ghjrsd.mp3",
+  duration: 112,
+  album: "Washi O Washi",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "The Streets Of Fire",
+  title: "The Streets Of Fire",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298848/In_The_Streets_Of_Fire_yg549b.mp3",
+  duration: 119,
+  album: "The Streets Of Fire",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Trance of OMI",
+  title: "Trance of OMI",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298857/Trance_of_OMI_ki4rob.mp3",
+  duration: 173,
+  album: "Trance of OMI",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Kiss Kiss Bang Bang",
+  title: "Kiss Kiss Bang Bang",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298858/Kiss_Kiss_Bang_Bang_wwtyeo.mp3",
+  duration: 257,
+  album: "Kiss Kiss Bang Bang",
   year: 2025,
   genre: "."
 },
@@ -107,6 +162,61 @@ export const songs: Song[] =[
   genre: "love",
   language: "telugu",
   sync: "romantic"
+},
+  {
+  id: "eYe Mantramo",
+  title: "Ye Mantramo",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093144/iSongs.info_04_-_Ye_Mantramo_g1li9o.mp3",
+  duration: 167,
+  album: "Ye Mantramo",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Vennante",
+  title: "Vennante",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093145/iSongs.info_06_-_Vennante_kqv463.mp3",
+  duration: 207,
+  album: "Vennante",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Ne Ninnu Chera",
+  title: "Ne Ninnu Chera",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093133/iSongs.info_03_-_Ne_Ninnu_Chera_isovdm.mp3",
+  duration: 209,
+  album: "Ne Ninnu Chera",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Manasa Marchipo",
+  title: "Manasa Marchipo",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093147/iSongs.info_05_-_Manasa_Marchipo_gb0j3s.mp3",
+  duration: 268,
+  album: "Manasa Marchipo",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Manasu Palike",
+  title: "Manasu Palike",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093143/iSongs.info_02_-_Manasu_Palike_mshtqp.mp3",
+  duration: 228,
+  album: "Manasu Palike",
+  year: 2025,
+  genre: "."
 },
 {
   id: "Om Namah Shivaya",
