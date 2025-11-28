@@ -22,7 +22,6 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import UserProfile from "@/components/UserProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getDailyRotatedSongs } from "@/utils/dailyRotation";
-import { getGreeting } from "@/utils/timeGreeting";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Song } from "@/data/songs";
@@ -118,7 +117,7 @@ const Index = () => {
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-36 px-4 sm:px-5 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
+    <div className="relative pb-32 md:pb-40 px-4 md:px-8 md:ml-16 min-h-screen">
       {/* Time-based lighting overlay */}
       <TimeLighting />
       
@@ -130,89 +129,61 @@ const Index = () => {
       {/* Festival Popup */}
       <FestivalPopup onClose={() => setShowFestivalPopup(false)} />
       
-      {/* Header with Greeting */}
-      <div className="flex items-center justify-between mb-5 sm:mb-6 md:mb-8 gap-3">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1.5 sm:mb-2 truncate">
-            {getGreeting()}
-          </h1>
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground">Discover your next favorite song</p>
+      {/* Header with User Profile and Site Name */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-bloody rounded-full flex items-center justify-center shadow-bloody animate-bloody-glow">
+              <Music2 className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-fire bg-clip-text text-transparent">ROI MUSIC</h1>
+          </div>
         </div>
         <UserProfile />
       </div>
       
       {/* Time-based Banner */}
       {timeBasedBanner && (
-        <div className="mb-4 sm:mb-5 md:mb-6 p-4 sm:p-5 md:p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl md:rounded-2xl border border-primary/30 backdrop-blur-sm shadow-spotify">
-          <p className="text-center text-sm sm:text-base md:text-lg font-semibold text-primary-glow">
+        <div className="mb-6 p-4 bg-gradient-bloody rounded-xl border border-primary/30 backdrop-blur-sm shadow-crimson">
+          <p className="text-center text-sm md:text-base font-medium text-primary-glow">
             {timeBasedBanner}
           </p>
         </div>
       )}
 
-      <div className="space-y-5 sm:space-y-6 md:space-y-8 lg:space-y-10">
+      <div className="space-y-6 md:space-y-8 lg:space-y-12">
         {/* Hero Section with enhanced animations */}
-        <HeroSection className="animate-fade-in -mx-4 sm:-mx-5 md:-mx-6 lg:-mx-8" />
-
-        {/* Quick Picks - Prominent placement */}
-        <div className="animate-slide-up">
-          <DynamicSection
-            title="🎵 Made for you today"
-            songs={quickPicks}
-            layout={isMobile ? "grid" : "horizontal"}
-            cardSize={isMobile ? "large" : "medium"}
-            className="bg-gradient-to-b from-primary/10 to-transparent rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-primary/20"
-          />
-        </div>
-
-        {/* Trending Section - Featured */}
-        <div className="animate-slide-up">
-          <DynamicSection
-            title="🔥 Trending Now"
-            songs={trendingSongs}
-            layout="grid"
-            cardSize={isMobile ? "large" : "medium"}
-            showRankings={false}
-            onViewAll={() => openSectionFullView("Trending Now", trendingSongs)}
-            className="bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-primary/20"
-          />
-        </div>
+        <HeroSection className="animate-fade-in" />
 
         {/* Artist Grid */}
         <div className="animate-slide-up">
-          <div className="bg-gradient-to-r from-muted/50 to-primary/10 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/30">
-            <ArtistGrid title="⭐ Featured Artists" className="" />
-          </div>
+          <ArtistGrid title="Featured Artists" className="mb-6" />
         </div>
 
-        {/* Popular - List view */}
-        <div className="animate-slide-up">
-          <DynamicSection
-            title="💎 Popular Right Now"
-            songs={popularSongs}
-            layout={isMobile ? "grid" : "list"}
-            cardSize={isMobile ? "large" : "medium"}
-            showRankings={!isMobile}
-            onViewAll={() => openSectionFullView("Popular Right Now", popularSongs)}
-            className="bg-card/50 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/50"
-          />
-        </div>
+        {/* Quick Picks Grid - Enhanced for mobile */}
+        <DynamicSection
+          title="Made for you"
+          songs={quickPicks}
+          layout={isMobile ? "grid" : "horizontal"}
+          cardSize={isMobile ? "small" : "medium"}
+          className="animate-slide-up"
+        />
 
-        {/* Static Sections - Alternating layouts */}
-        {staticSections.slice(2).map((section, index) => (
+        {/* Static Sections */}
+        {staticSections.map((section, index) => (
           <div 
             key={section.id}
-            className="animate-slide-up transition-all duration-300"
-            style={{ animationDelay: `${index * 50}ms` }}
+            className="animate-slide-up hover-scale transition-all duration-300"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             <DynamicSection
               title={section.title}
               songs={section.songs}
-              layout={isMobile ? "grid" : (index % 2 === 0 ? "list" : "horizontal")}
-              cardSize={isMobile ? "large" : "medium"}
-              showRankings={!isMobile && index % 2 === 0}
+              layout="list"
+              cardSize="small"
+              showRankings={true}
               onViewAll={() => openSectionFullView(section.title, section.songs)}
-              className="bg-card/30 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/30 hover:border-primary/30 transition-all"
+              className="transition-all duration-300 hover:shadow-bloody"
             />
           </div>
         ))}
@@ -220,21 +191,19 @@ const Index = () => {
         {/* Featured Playlists Section */}
         <div className="animate-slide-up">
           <DynamicSection
-            title="📚 Your Playlists"
-            songs={[]}
+            title="Featured Playlists"
+            songs={[]} // Will be handled differently in DynamicSection
             layout="grid"
-            cardSize={isMobile ? "large" : "medium"}
+            cardSize="medium"
             isPlaylistSection={true}
             onViewAll={() => navigate('/playlists')}
-            className="bg-gradient-to-tl from-primary/10 to-accent/10 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-primary/20"
+            className="transition-all duration-300"
           />
         </div>
 
         {/* Recently Played with enhanced styling */}
-        <div className="animate-slide-up mb-6 sm:mb-8 md:mb-10">
-          <div className="bg-card/40 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 border border-border/40">
-            <RecentlyPlayedSection />
-          </div>
+        <div className="animate-slide-up">
+          <RecentlyPlayedSection />
         </div>
       </div>
 

@@ -112,10 +112,6 @@ module.exports = {
           "0%, 100%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.3)" },
           "50%": { boxShadow: "0 0 40px hsl(var(--primary) / 0.6)" },
         },
-        "slow-zoom": {
-          "0%": { transform: "scale(1)" },
-          "100%": { transform: "scale(1.1)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -125,7 +121,6 @@ module.exports = {
         "scale-in": "scale-in 0.3s ease-out",
         "pulse-fire": "pulse-fire 2s ease-in-out infinite",
         "bloody-glow": "bloody-glow 3s ease-in-out infinite",
-        "slow-zoom": "slow-zoom 20s ease-in-out infinite alternate",
       },
     },
   },

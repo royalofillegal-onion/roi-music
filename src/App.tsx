@@ -4,15 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PlayerProvider } from "./context/PlayerContext";
-import SpotifySidebar from "./components/SpotifySidebar";
-import EnhancedSpotifyPlayer from "./components/EnhancedSpotifyPlayer";
+import Navbar from "./components/Navbar";
+import Player from "./components/Player";
 import SplashScreen from "./components/SplashScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { isMaintenanceActive } from "./config/maintenance";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 // Lazy load pages
 const Index = lazy(() => import("./Pages/Index"));
@@ -44,8 +40,6 @@ const queryClient = new QueryClient({
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   const handleSplashFinish = () => {
     setShowSplash(false);
@@ -69,95 +63,59 @@ function App() {
         <PlayerProvider>
           <TooltipProvider>
             <BrowserRouter>
-              <SidebarProvider defaultOpen={true}>
-                <div className="flex min-h-screen w-full bg-background text-foreground">
-                  {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-                  
-                  {/* Show maintenance page if maintenance is active */}
-                  {maintenanceActive ? (
-                    <main className="flex-1">
+              <div className="flex flex-col min-h-screen bg-background text-foreground">
+                {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+                
+                {/* Show maintenance page if maintenance is active */}
+                {maintenanceActive ? (
+                  <main className="flex-1">
+                    <Suspense fallback={<LoadingFallback />}>
+                      <ServerMaintenance />
+                    </Suspense>
+                  </main>
+                ) : (
+                  <>
+                    <Navbar />
+                    <main className="flex-1 pb-20 md:pb-0 md:ml-16 lg:ml-20 xl:ml-64 transition-all duration-300">
                       <Suspense fallback={<LoadingFallback />}>
-                        <ServerMaintenance />
+                        <Routes>
+                          <Route path="/" element={<Index />} />
+                          <Route path="/search" element={<Search />} />
+                          <Route path="/playlists" element={<Playlists />} />
+                          <Route path="/playlist/:id" element={<PlaylistView />} />
+                          <Route path="/liked" element={<LikedSongs />} />
+                          <Route path="/artists" element={<Artists />} />
+                          <Route path="/artist/:artistName" element={<Artist />} />
+                          <Route path="/live" element={<Live />} />
+                          <Route path="/auth" element={<Auth />} />
+                          <Route path="/settings" element={<Settings />} />
+                          <Route path="/user-settings" element={<UserSettings />} />
+                          <Route path="/feedback" element={<Feedback />} />
+                          <Route path="/terms" element={<TermsAndConditions />} />
+                          
+                          {/* Maintenance route */}
+                          <Route path="/maintenance" element={<ServerMaintenance />} />
+                          
+                          {/* Enhanced song sharing routes */}
+                          <Route path="/share/:hashCode" element={<SharedSong />} />
+                          <Route path="/song/:songId" element={<SharedSong />} />
+                          <Route path="/s/:hashCode" element={<SharedSong />} />
+                          <Route path="/shared/:hashCode" element={<SharedSong />} />
+                          <Route path="/music/:hashCode" element={<SharedSong />} />
+                          <Route path="/track/:hashCode" element={<SharedSong />} />
+                          
+                          {/* Shared playlist route */}
+                          <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
+                          
+                          {/* Catch-all route */}
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
                       </Suspense>
                     </main>
-                  ) : (
-                    <>
-                      <SpotifySidebar 
-                        mobileOpen={mobileMenuOpen}
-                        onMobileClose={() => setMobileMenuOpen(false)}
-                      />
-                      <main className="flex-1 pb-32 md:pb-24 transition-all duration-300">
-                        {/* Header with trigger button */}
-                        <div className="sticky top-0 z-40 bg-black/98 backdrop-blur-xl border-b border-white/5">
-                          <div className="flex items-center gap-3 px-4 md:px-6 h-16">
-                            {isMobile ? (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setMobileMenuOpen(true)}
-                                className="text-white hover:text-primary hover:bg-primary/10 transition-all duration-200 hover:scale-105 rounded-full w-10 h-10"
-                                aria-label="Open menu"
-                              >
-                                <Menu className="h-6 w-6" />
-                              </Button>
-                            ) : (
-                              <SidebarTrigger className="text-white hover:text-primary transition-all duration-200 hover:scale-105">
-                                <Menu className="h-6 w-6" />
-                              </SidebarTrigger>
-                            )}
-                            
-                            {/* Logo for mobile */}
-                            {isMobile && (
-                              <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(30,215,96,0.3)]">
-                                  <span className="text-sm font-bold text-black">R</span>
-                                </div>
-                                <span className="text-lg font-bold text-white tracking-tight">ROI MUSIC</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        
-                        <Suspense fallback={<LoadingFallback />}>
-                          <Routes>
-                            <Route path="/" element={<Index />} />
-                            <Route path="/search" element={<Search />} />
-                            <Route path="/playlists" element={<Playlists />} />
-                            <Route path="/playlist/:id" element={<PlaylistView />} />
-                            <Route path="/liked" element={<LikedSongs />} />
-                            <Route path="/artists" element={<Artists />} />
-                            <Route path="/artist/:artistName" element={<Artist />} />
-                            <Route path="/live" element={<Live />} />
-                            <Route path="/auth" element={<Auth />} />
-                            <Route path="/settings" element={<Settings />} />
-                            <Route path="/user-settings" element={<UserSettings />} />
-                            <Route path="/feedback" element={<Feedback />} />
-                            <Route path="/terms" element={<TermsAndConditions />} />
-                            
-                            {/* Maintenance route */}
-                            <Route path="/maintenance" element={<ServerMaintenance />} />
-                            
-                            {/* Enhanced song sharing routes */}
-                            <Route path="/share/:hashCode" element={<SharedSong />} />
-                            <Route path="/song/:songId" element={<SharedSong />} />
-                            <Route path="/s/:hashCode" element={<SharedSong />} />
-                            <Route path="/shared/:hashCode" element={<SharedSong />} />
-                            <Route path="/music/:hashCode" element={<SharedSong />} />
-                            <Route path="/track/:hashCode" element={<SharedSong />} />
-                            
-                            {/* Shared playlist route */}
-                            <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
-                            
-                            {/* Catch-all route */}
-                            <Route path="*" element={<NotFound />} />
-                          </Routes>
-                        </Suspense>
-                      </main>
-                      <EnhancedSpotifyPlayer />
-                    </>
-                  )}
-                </div>
-              </SidebarProvider>
+                    <Player />
+                  </>
+                )}
+              </div>
             </BrowserRouter>
           </TooltipProvider>
         </PlayerProvider>

@@ -6,79 +6,79 @@
 
 @layer base {
   :root {
-    /* Spotify-inspired color scheme */
-    --background: 0 0% 7%;
+    /* Bloody red and orange color scheme */
+    --background: 10 10% 8%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 10%;
+    --card: 15 15% 12%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 10%;
+    --popover: 15 15% 12%;
     --popover-foreground: 0 0% 98%;
     
-    /* Primary - Spotify Green */
-    --primary: 141 73% 42%;
-    --primary-foreground: 0 0% 0%;
-    --primary-glow: 141 76% 48%;
-    --primary-dark: 141 70% 35%;
+    /* Primary - Deep Blood Red */
+    --primary: 0 75% 45%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 0 85% 55%;
+    --primary-dark: 0 65% 35%;
     
-    /* Secondary - Darker Gray */
-    --secondary: 0 0% 15%;
+    /* Secondary - Crimson */
+    --secondary: 345 85% 40%;
     --secondary-foreground: 0 0% 98%;
-    --secondary-glow: 0 0% 20%;
+    --secondary-glow: 345 90% 50%;
     
-    /* Accent - Bright Green */
-    --accent: 141 76% 48%;
-    --accent-foreground: 0 0% 0%;
-    --accent-glow: 141 80% 55%;
-    --accent-dark: 141 70% 38%;
+    /* Accent - Fiery Orange */
+    --accent: 15 90% 55%;
+    --accent-foreground: 0 0% 5%;
+    --accent-glow: 25 95% 65%;
+    --accent-dark: 10 85% 45%;
     
-    /* Muted colors */
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 63%;
+    /* Muted colors with red tint */
+    --muted: 10 20% 15%;
+    --muted-foreground: 10 5% 65%;
     
-    /* Border and ring */
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 141 73% 42%;
+    /* Border and ring with red tint */
+    --border: 10 25% 20%;
+    --input: 10 25% 20%;
+    --ring: 0 75% 45%;
     
-    /* Destructive - Red */
-    --destructive: 0 85% 60%;
+    /* Destructive - Bright Red */
+    --destructive: 0 85% 55%;
     --destructive-foreground: 0 0% 98%;
     
-    /* Chart colors - Spotify theme */
-    --chart-1: 141 73% 42%;
-    --chart-2: 141 76% 48%;
-    --chart-3: 0 0% 30%;
-    --chart-4: 141 80% 55%;
-    --chart-5: 0 0% 40%;
+    /* Chart colors - Red/Orange theme */
+    --chart-1: 0 75% 45%;
+    --chart-2: 15 90% 55%;
+    --chart-3: 345 85% 40%;
+    --chart-4: 25 95% 65%;
+    --chart-5: 10 85% 45%;
     
     /* Custom gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-spotify: linear-gradient(180deg, hsl(var(--primary-dark)), hsl(var(--primary-glow)));
-    --gradient-dark: linear-gradient(90deg, hsl(var(--background)), hsl(var(--card)));
+    --gradient-bloody: linear-gradient(180deg, hsl(var(--primary-dark)), hsl(var(--destructive)));
+    --gradient-fire: linear-gradient(90deg, hsl(var(--accent-dark)), hsl(var(--accent-glow)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
     
     /* Custom shadows */
-    --shadow-spotify: 0 10px 30px -10px hsl(var(--primary) / 0.3);
-    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.2);
-    --shadow-elevated: 0 8px 24px hsl(0 0% 0% / 0.5);
+    --shadow-bloody: 0 10px 30px -10px hsl(var(--primary) / 0.4);
+    --shadow-fire: 0 0 40px hsl(var(--accent) / 0.3);
+    --shadow-crimson: 0 5px 20px hsl(var(--secondary) / 0.5);
     
     /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --radius: 0.5rem;
+    --transition-bloody: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius: 0.75rem;
   }
 
   .dark {
-    /* Enhanced dark mode - true black Spotify style */
-    --background: 0 0% 0%;
+    /* Dark mode enhancement - deeper bloody tones */
+    --background: 5 15% 5%;
     --foreground: 0 0% 95%;
-    --card: 0 0% 8%;
+    --card: 10 20% 8%;
     --card-foreground: 0 0% 95%;
-    --popover: 0 0% 8%;
+    --popover: 10 20% 8%;
     --popover-foreground: 0 0% 95%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 60%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --muted: 5 25% 12%;
+    --muted-foreground: 5 10% 60%;
+    --border: 5 30% 15%;
+    --input: 5 30% 15%;
   }
 
   * {
@@ -110,9 +110,12 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    background: linear-gradient(180deg, 
-      hsl(0, 0%, 7%) 0%, 
-      hsl(0, 0%, 0%) 100%
+    background: linear-gradient(135deg, 
+      hsl(10, 20%, 8%) 0%, 
+      hsl(15, 25%, 6%) 25%, 
+      hsl(5, 30%, 10%) 50%,
+      hsl(0, 35%, 8%) 75%,
+      hsl(345, 40%, 6%) 100%
     );
     background-attachment: fixed;
     overscroll-behavior: none;
@@ -125,29 +128,13 @@
     max-width: min(100%, 1400px);
   }
 
-  /* Enhanced responsive text scaling for mobile */
-  .text-responsive-xs { font-size: clamp(0.8rem, 2.5vw, 0.875rem); }
-  .text-responsive-sm { font-size: clamp(0.9rem, 2.8vw, 1rem); }
-  .text-responsive-base { font-size: clamp(1rem, 3vw, 1.125rem); }
-  .text-responsive-lg { font-size: clamp(1.125rem, 3.5vw, 1.375rem); }
-  .text-responsive-xl { font-size: clamp(1.375rem, 4vw, 1.75rem); }
-  .text-responsive-2xl { font-size: clamp(1.75rem, 5vw, 2.25rem); }
-  .text-responsive-3xl { font-size: clamp(2rem, 6vw, 3rem); }
-
-  /* Enhanced touch targets for mobile */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Mobile-optimized spacing */
-  .mobile-padding {
-    @apply px-3 sm:px-4 md:px-6 lg:px-8;
-  }
-
-  .mobile-gap {
-    @apply gap-2 sm:gap-3 md:gap-4 lg:gap-6;
-  }
+  /* Responsive text scaling */
+  .text-responsive-xs { font-size: clamp(0.75rem, 2vw, 0.875rem); }
+  .text-responsive-sm { font-size: clamp(0.875rem, 2.2vw, 1rem); }
+  .text-responsive-base { font-size: clamp(1rem, 2.5vw, 1.125rem); }
+  .text-responsive-lg { font-size: clamp(1.125rem, 3vw, 1.25rem); }
+  .text-responsive-xl { font-size: clamp(1.25rem, 3.5vw, 1.5rem); }
+  .text-responsive-2xl { font-size: clamp(1.5rem, 4vw, 2rem); }
 
   /* Enhanced grid systems */
   .grid-responsive-cards {
