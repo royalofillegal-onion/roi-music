@@ -42,7 +42,7 @@ const HeroSection = ({ className }: HeroSectionProps) => {
   if (!currentSong) return null;
 
   return (
-    <div className={cn("relative overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl", className)}>
+    <div className={cn("relative overflow-hidden rounded-xl sm:rounded-2xl md:rounded-3xl shadow-2xl", className)}>
       {/* Background with current song image */}
       <div className="absolute inset-0">
         <img
@@ -50,86 +50,87 @@ const HeroSection = ({ className }: HeroSectionProps) => {
           alt={currentSong.title}
           className="w-full h-full object-cover scale-110 animate-slow-zoom"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
         
         {/* Animated gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20 animate-pulse-fire" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-accent/15 opacity-60" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 p-5 sm:p-8 md:p-12 min-h-[320px] sm:min-h-[360px] md:min-h-[420px] flex flex-col justify-end">
-        <div className="space-y-3 md:space-y-4 max-w-3xl">
+      <div className="relative z-10 p-5 sm:p-7 md:p-10 lg:p-12 min-h-[360px] sm:min-h-[400px] md:min-h-[440px] flex flex-col justify-end">
+        <div className="space-y-3 sm:space-y-4 md:space-y-5 max-w-3xl">
           {/* Greeting */}
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80 animate-fade-in">
-            <TrendingUp className="h-4 w-4 animate-bounce" />
-            <span className="font-medium">{getTimeBasedGreeting()}</span>
+          <div className="flex items-center gap-2 text-sm sm:text-base text-white/90 animate-fade-in">
+            <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-primary animate-bounce" />
+            <span className="font-semibold">{getTimeBasedGreeting()}</span>
           </div>
 
           {/* Song info */}
-          <div className="space-y-2 animate-slide-up">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight drop-shadow-2xl">
+          <div className="space-y-2 sm:space-y-3 animate-slide-up">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight drop-shadow-2xl">
               {currentSong.title}
             </h1>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 font-semibold">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-bold">
               by {currentSong.artist}
             </p>
-            <p className="text-xs sm:text-sm text-white/70 flex items-center gap-2 flex-wrap">
+            <p className="text-sm sm:text-base text-white/80 flex items-center gap-2 sm:gap-3 flex-wrap">
               {currentSong.album && (
-                <span className="bg-white/10 px-2 py-1 rounded-full backdrop-blur-sm">
+                <span className="bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-md font-medium">
                   {currentSong.album}
                 </span>
               )}
-              <span className="bg-white/10 px-2 py-1 rounded-full backdrop-blur-sm">
+              <span className="bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-md font-medium">
                 {currentSong.year}
               </span>
             </p>
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-wrap gap-2 md:gap-3 pt-3 md:pt-4 animate-scale-in">
+          <div className="flex flex-wrap gap-2 sm:gap-3 pt-4 sm:pt-5 animate-scale-in">
             <Button
-              size={isMobile ? "default" : "lg"}
-              className="bg-gradient-to-r from-accent to-accent-glow hover:from-accent/90 hover:to-accent text-black font-bold gap-2 rounded-full shadow-fire hover:shadow-bloody transition-all hover:scale-105"
+              size={isMobile ? "lg" : "lg"}
+              className="bg-primary hover:bg-primary/90 text-black font-bold gap-2 sm:gap-3 rounded-full shadow-spotify hover:scale-105 transition-all touch-target px-6 sm:px-8"
               onClick={() => playSong(currentSong)}
             >
-              <Play className="h-4 w-4 md:h-5 md:w-5 fill-current" />
-              <span className="text-sm md:text-base">Play Now</span>
+              <Play className="h-5 w-5 sm:h-6 sm:w-6 fill-current" />
+              <span className="text-base sm:text-lg font-bold">Play Now</span>
             </Button>
 
             <Button
-              size={isMobile ? "default" : "lg"}
+              size={isMobile ? "lg" : "lg"}
               variant="secondary"
-              className="bg-white/20 hover:bg-white/30 text-white border border-white/40 backdrop-blur-md gap-2 rounded-full font-semibold hover:scale-105 transition-all"
+              className="bg-white/20 hover:bg-white/30 text-white border-2 border-white/50 backdrop-blur-md gap-2 sm:gap-3 rounded-full font-bold hover:scale-105 transition-all touch-target px-5 sm:px-7"
               onClick={shuffleAllSongs}
             >
-              <Shuffle className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="text-sm md:text-base hidden sm:inline">Shuffle All</span>
-              <span className="text-sm md:text-base sm:hidden">Shuffle</span>
+              <Shuffle className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="text-base sm:text-lg font-bold hidden sm:inline">Shuffle All</span>
+              <span className="text-base font-bold sm:hidden">Shuffle</span>
             </Button>
 
             <Button
-              size={isMobile ? "default" : "lg"}
+              size="icon"
               variant="ghost"
-              className="text-white hover:bg-white/20 hover:text-primary-glow rounded-full hover:scale-110 transition-all"
+              className="text-white hover:bg-white/20 hover:text-primary rounded-full hover:scale-110 transition-all touch-target h-11 w-11 sm:h-12 sm:w-12"
               onClick={playTrending}
             >
-              <Heart className="h-4 w-4 md:h-5 md:w-5" />
+              <Heart className="h-6 w-6 sm:h-7 sm:w-7" />
             </Button>
           </div>
 
           {/* Song indicators */}
-          <div className="flex gap-2 pt-3 md:pt-4">
+          <div className="flex gap-2 sm:gap-3 pt-4 sm:pt-5">
             {heroSongs.map((_, index) => (
               <button
                 key={index}
                 className={cn(
-                  "h-1.5 md:h-2 rounded-full transition-all duration-500",
+                  "h-2 sm:h-2.5 rounded-full transition-all duration-500",
                   index === currentHeroSong
-                    ? "w-8 md:w-10 bg-gradient-to-r from-primary to-accent shadow-crimson"
-                    : "w-1.5 md:w-2 bg-white/30 hover:bg-white/60 hover:w-4"
+                    ? "w-10 sm:w-12 bg-primary shadow-spotify"
+                    : "w-2 sm:w-2.5 bg-white/40 hover:bg-white/70 hover:w-5"
                 )}
                 onClick={() => setCurrentHeroSong(index)}
+                aria-label={`Go to song ${index + 1}`}
               />
             ))}
           </div>

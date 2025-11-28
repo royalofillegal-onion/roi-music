@@ -77,14 +77,14 @@ const EnhancedSpotifyPlayer = () => {
   
   if (!currentSong) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 h-24 md:h-20 bg-gradient-to-t from-black via-black/95 to-black/90 border-t border-primary/20 backdrop-blur-xl flex items-center justify-center z-50">
-        <div className="flex flex-col items-center gap-2 animate-fade-in">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <p className="text-gray-300 text-sm md:text-base font-medium">Select a song to start your journey</p>
-            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" style={{ animationDelay: '0.3s' }} />
+      <div className="fixed bottom-0 left-0 right-0 h-28 sm:h-24 md:h-20 bg-gradient-to-t from-black via-black/98 to-black/95 border-t border-primary/30 backdrop-blur-xl flex items-center justify-center z-50 shadow-[0_-4px_30px_rgba(30,215,96,0.1)]">
+        <div className="flex flex-col items-center gap-2 sm:gap-3 animate-fade-in px-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
+            <p className="text-white text-base sm:text-lg md:text-base font-semibold text-center">Select a song to start</p>
+            <div className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse" style={{ animationDelay: '0.3s' }} />
           </div>
-          <p className="text-xs text-gray-500">Browse and tap any song to play</p>
+          <p className="text-sm sm:text-base text-muted-foreground text-center">Browse and tap any song to play</p>
         </div>
       </div>
     );
@@ -93,84 +93,103 @@ const EnhancedSpotifyPlayer = () => {
   const liked = isLiked(currentSong.id);
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-24 md:h-20 bg-gradient-to-t from-black via-black/98 to-black/95 border-t border-primary/30 backdrop-blur-xl z-50 shadow-[0_-4px_30px_rgba(var(--primary)/0.15)]">
-      <div className="h-full flex items-center justify-between px-3 md:px-4 gap-2 md:gap-4">
+    <div className="fixed bottom-0 left-0 right-0 h-28 sm:h-24 md:h-20 bg-gradient-to-t from-black via-black/98 to-black/95 border-t border-primary/30 backdrop-blur-xl z-50 shadow-[0_-4px_30px_rgba(30,215,96,0.15)]">
+      <div className="h-full flex flex-col md:flex-row items-center justify-between px-4 sm:px-5 md:px-6 gap-2 md:gap-4 py-2 md:py-0">
+        {/* Mobile Progress Bar at Top */}
+        <div className="flex md:hidden items-center gap-2 w-full order-1">
+          <span className="text-xs text-muted-foreground font-mono w-10 text-right">
+            {formatTime(localTime)}
+          </span>
+          <Slider
+            value={[localTime]}
+            min={0}
+            max={duration || 100}
+            step={0.1}
+            onValueChange={handleSeek}
+            onValueCommit={handleSeekCommit}
+            className="flex-1"
+          />
+          <span className="text-xs text-muted-foreground font-mono w-10">
+            {formatTime(duration)}
+          </span>
+        </div>
+
         {/* Left: Song Info */}
-        <div className="flex items-center gap-2 md:gap-3 min-w-0 w-[35%] md:w-[30%]">
-          <div className="relative group">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0 w-full md:w-[30%] order-2 md:order-1">
+          <div className="relative group flex-shrink-0">
             <img
               src={currentSong.imageUrl}
               alt={currentSong.title}
-              className="w-12 h-12 md:w-14 md:h-14 rounded-lg shadow-crimson ring-1 ring-primary/20 group-hover:ring-primary/40 transition-all"
+              className="w-14 h-14 sm:w-16 sm:h-16 md:w-14 md:h-14 rounded-lg shadow-spotify ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all"
             />
             {isPlaying && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-1 h-3 bg-primary-glow animate-pulse mx-0.5" />
-                <div className="w-1 h-4 bg-primary-glow animate-pulse mx-0.5" style={{ animationDelay: '0.2s' }} />
-                <div className="w-1 h-3 bg-primary-glow animate-pulse mx-0.5" style={{ animationDelay: '0.4s' }} />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
+                <div className="w-1 h-3 sm:h-4 bg-primary animate-pulse mx-0.5" />
+                <div className="w-1 h-4 sm:h-5 bg-primary animate-pulse mx-0.5" style={{ animationDelay: '0.2s' }} />
+                <div className="w-1 h-3 sm:h-4 bg-primary animate-pulse mx-0.5" style={{ animationDelay: '0.4s' }} />
               </div>
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="font-semibold text-white text-xs md:text-sm truncate hover:text-primary-glow transition-colors cursor-pointer">{currentSong.title}</div>
-            <div className="text-xs text-gray-400 truncate hover:text-accent transition-colors cursor-pointer">{currentSong.artist}</div>
+            <div className="font-bold text-white text-sm sm:text-base truncate hover:text-primary transition-colors cursor-pointer">{currentSong.title}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground truncate hover:text-accent transition-colors cursor-pointer">{currentSong.artist}</div>
           </div>
           <Button
             variant="ghost"
             size="icon"
             className={cn(
-              "h-7 w-7 md:h-8 md:w-8 flex-shrink-0 hidden sm:flex transition-all",
-              liked ? "text-primary scale-110" : "text-gray-400 hover:text-primary hover:scale-110"
+              "h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 transition-all touch-target",
+              liked ? "text-primary scale-110" : "text-muted-foreground hover:text-primary hover:scale-110"
             )}
             onClick={() => toggleLike(currentSong.id)}
           >
-            <Heart className={cn("h-3.5 w-3.5 md:h-4 md:w-4", liked && "fill-current animate-pulse-fire")} />
+            <Heart className={cn("h-5 w-5 sm:h-6 sm:w-6", liked && "fill-current")} />
           </Button>
           <AddToPlaylist
             song={currentSong}
             trigger={
-              <Button variant="ghost" size="icon" className="h-7 w-7 md:h-8 md:w-8 text-gray-400 hover:text-accent hover:scale-110 transition-all flex-shrink-0 hidden sm:flex">
-                <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-10 sm:w-10 text-muted-foreground hover:text-primary hover:scale-110 transition-all flex-shrink-0 touch-target">
+                <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
             }
           />
         </div>
         
         {/* Center: Player Controls */}
-        <div className="flex flex-col items-center w-[30%] md:w-[40%] max-w-2xl">
+        <div className="flex items-center w-auto md:w-[40%] max-w-2xl order-3 md:order-2 gap-1 sm:gap-2 md:gap-3">
           {/* Controls */}
-          <div className="flex items-center gap-1 md:gap-2 mb-1 md:mb-2">
+          <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={handlePlayModeToggle}
               className={cn(
-                "h-7 w-7 md:h-8 md:w-8 text-gray-400 hover:text-white transition-all hover:scale-110 hidden md:flex",
+                "h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-muted-foreground hover:text-white transition-all hover:scale-110 hidden sm:flex touch-target",
                 playMode === 'shuffle' && "text-primary scale-110"
               )}
             >
-              <Shuffle className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <Shuffle className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
             
             <Button
               variant="ghost"
               size="icon"
               onClick={previousSong}
-              className="h-8 w-8 md:h-9 md:w-9 text-gray-300 hover:text-white hover:scale-110 transition-all"
+              className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 text-white hover:text-primary hover:scale-110 transition-all touch-target"
             >
-              <SkipBack className="h-4 w-4 md:h-5 md:w-5" />
+              <SkipBack className="h-5 w-5 sm:h-6 sm:w-6" />
             </Button>
             
             <Button
               variant="ghost"
               size="icon"
               onClick={togglePlayPause}
-              className="h-10 w-10 md:h-11 md:w-11 bg-gradient-to-br from-accent to-primary hover:from-accent/90 hover:to-primary/90 text-white rounded-full shadow-bloody hover:shadow-fire hover:scale-110 transition-all"
+              className="h-12 w-12 sm:h-14 sm:w-14 md:h-12 md:w-12 bg-primary hover:bg-primary/90 text-black rounded-full shadow-spotify hover:scale-110 transition-all touch-target"
             >
               {isPlaying ? (
-                <Pause className="h-5 w-5 md:h-6 md:w-6" />
+                <Pause className="h-6 w-6 sm:h-7 sm:w-7 md:h-6 md:w-6" />
               ) : (
-                <Play className="h-5 w-5 md:h-6 md:w-6 ml-0.5" />
+                <Play className="h-6 w-6 sm:h-7 sm:w-7 md:h-6 md:w-6 ml-0.5" />
               )}
             </Button>
             
@@ -178,9 +197,9 @@ const EnhancedSpotifyPlayer = () => {
               variant="ghost"
               size="icon"
               onClick={nextSong}
-              className="h-8 w-8 md:h-9 md:w-9 text-gray-300 hover:text-white hover:scale-110 transition-all"
+              className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 text-white hover:text-primary hover:scale-110 transition-all touch-target"
             >
-              <SkipForward className="h-4 w-4 md:h-5 md:w-5" />
+              <SkipForward className="h-5 w-5 sm:h-6 sm:w-6" />
             </Button>
             
             <Button
@@ -188,65 +207,46 @@ const EnhancedSpotifyPlayer = () => {
               size="icon"
               onClick={handlePlayModeToggle}
               className={cn(
-                "h-7 w-7 md:h-8 md:w-8 text-gray-400 hover:text-white transition-all hover:scale-110 hidden md:flex",
+                "h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-muted-foreground hover:text-white transition-all hover:scale-110 hidden sm:flex touch-target",
                 playMode === 'repeat' && "text-primary scale-110"
               )}
             >
-              <Repeat className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <Repeat className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="hidden md:flex items-center gap-2 w-full">
-            <span className="text-xs text-gray-400 w-10 text-right font-mono">
-              {formatTime(localTime)}
-            </span>
-            <Slider
-              value={[localTime]}
-              min={0}
-              max={duration || 100}
-              step={0.1}
-              onValueChange={handleSeek}
-              onValueCommit={handleSeekCommit}
-              className="flex-1"
-            />
-            <span className="text-xs text-gray-400 w-10 font-mono">
-              {formatTime(duration)}
-            </span>
           </div>
         </div>
         
         {/* Right: Volume & Queue */}
-        <div className="flex items-center gap-1 md:gap-2 justify-end w-[35%] md:w-[30%]">
+        <div className="hidden md:flex items-center gap-2 justify-end w-[30%] order-4 md:order-3">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-7 w-7 md:h-8 md:w-8 text-gray-400 hover:text-primary hover:scale-110 transition-all">
-                <ListMusic className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 text-muted-foreground hover:text-primary hover:scale-110 transition-all touch-target">
+                <ListMusic className="h-5 w-5 md:h-6 md:w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 bg-background">
+            <SheetContent side="right" className="w-full sm:w-96 bg-black border-l border-primary/20">
               <SheetHeader>
-                <SheetTitle>Queue</SheetTitle>
+                <SheetTitle className="text-lg font-bold">Queue</SheetTitle>
               </SheetHeader>
-              <ScrollArea className="h-[calc(100vh-8rem)] mt-4">
-                <div className="space-y-2">
-                  <div className="text-sm font-semibold text-muted-foreground mb-2">Now Playing</div>
-                  <div className="flex items-center gap-3 p-2 bg-accent/10 rounded">
-                    <img src={currentSong.imageUrl} alt="" className="w-10 h-10 rounded" />
+              <ScrollArea className="h-[calc(100vh-8rem)] mt-6">
+                <div className="space-y-3">
+                  <div className="text-sm font-bold text-primary uppercase tracking-wider mb-3">Now Playing</div>
+                  <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <img src={currentSong.imageUrl} alt="" className="w-12 h-12 rounded-lg" />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{currentSong.title}</div>
+                      <div className="text-sm font-semibold truncate text-white">{currentSong.title}</div>
                       <div className="text-xs text-muted-foreground truncate">{currentSong.artist}</div>
                     </div>
                   </div>
                   
                   {queue.length > 0 && (
                     <>
-                      <div className="text-sm font-semibold text-muted-foreground mt-4 mb-2">Next in Queue</div>
+                      <div className="text-sm font-bold text-muted-foreground uppercase tracking-wider mt-6 mb-3">Next in Queue ({queue.length})</div>
                       {queue.map((song, index) => (
-                        <div key={`${song.id}-${index}`} className="flex items-center gap-3 p-2 hover:bg-accent/5 rounded">
-                          <img src={song.imageUrl} alt="" className="w-10 h-10 rounded" />
+                        <div key={`${song.id}-${index}`} className="flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg transition-all">
+                          <img src={song.imageUrl} alt="" className="w-12 h-12 rounded-lg" />
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm truncate">{song.title}</div>
+                            <div className="text-sm font-medium truncate text-white">{song.title}</div>
                             <div className="text-xs text-muted-foreground truncate">{song.artist}</div>
                           </div>
                         </div>
