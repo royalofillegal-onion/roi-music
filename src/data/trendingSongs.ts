@@ -3,6 +3,19 @@ import { Song } from './songs';
 // Trending songs that can be easily updated and managed
 export const trendingSongs: Song[] = [
   {
+    id: "Chinni Gundelo",
+    title: "Chinni Gundelo",
+    artist: "Andhra King Taluka",
+    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764302605/chinni-gundelo-andhra-king-taluka_tbnig6.jpg",
+    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298267/Chinni_Gundelo_wsdnmm.mp3",
+    duration: 219,
+    album: "Nuvvunte Chaley",
+    year: 2025,
+    genre: ".",
+    language: "telugu",
+    sync: "romantic"
+  },
+  {
   id: "suvvi-suvvi",
   title: "Suvvi Suvvi",
   artist: "OG",
