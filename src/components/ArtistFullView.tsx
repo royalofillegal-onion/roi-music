@@ -308,18 +308,18 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
           </div>
         </div>
 
-        {/* Featured Artists Section - Shows remaining featured artists */}
+        {/* Featured Artists Section - Shows all remaining featured artists */}
         {remainingFeaturedArtists.length > 0 && (
           <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 border-t border-border">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <h3 className="text-base sm:text-lg font-semibold text-foreground">Featured Artists</h3>
               <span className="text-xs sm:text-sm text-muted-foreground">
-                {remainingFeaturedArtists.length} more
+                {remainingFeaturedArtists.length} artists
               </span>
             </div>
             
-            {/* Responsive grid for featured artists */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {/* Responsive grid showing ALL featured artists */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
               {remainingFeaturedArtists.map((artist) => (
                 <div
                   key={artist.name}
@@ -348,25 +348,22 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
           </div>
         )}
 
-        {/* More Artists Section - Shows all other artists */}
+        {/* More Artists Section - Shows ALL other artists in grid */}
         {otherArtists.length > 0 && (
           <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 border-t border-border">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h3 className="text-base sm:text-lg font-semibold text-foreground">More Artists</h3>
-              <button 
-                onClick={() => navigate('/artists')}
-                className="text-accent hover:text-accent/80 text-xs sm:text-sm font-medium transition-colors"
-              >
-                View All
-              </button>
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">All Artists</h3>
+              <span className="text-xs sm:text-sm text-muted-foreground">
+                {otherArtists.length} artists
+              </span>
             </div>
             
-            {/* Horizontal scroll for more artists */}
-            <div className="flex overflow-x-auto gap-3 sm:gap-4 pb-2 scrollbar-hide">
-              {otherArtists.slice(0, 20).map((artist) => (
+            {/* Grid showing ALL other artists */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3 sm:gap-4">
+              {otherArtists.map((artist) => (
                 <div
                   key={artist.name}
-                  className="group cursor-pointer flex-shrink-0 w-28 sm:w-32 md:w-36"
+                  className="group cursor-pointer"
                   onClick={() => handleArtistClick(artist.name)}
                 >
                   <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
@@ -377,7 +374,7 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Play className="w-8 h-8 text-white fill-current drop-shadow-lg" />
+                      <Play className="w-8 h-8 md:w-10 md:h-10 text-white fill-current drop-shadow-lg" />
                     </div>
                   </div>
                   <div className="mt-2">
