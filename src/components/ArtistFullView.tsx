@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Play, Heart, Plus, ListMusic, Search } from 'lucide-react';
+import { ArrowLeft, Play, Heart, Plus, ListMusic, Search, Clock } from 'lucide-react';
 import { Song } from '@/data/songs';
 import { usePlayer } from '@/context/PlayerContext';
 import { allSongs } from '@/data/allSongs';
@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Share2 } from 'lucide-react';
+import { featuredArtists } from '@/data/artists';
 
 interface ArtistFullViewProps {
   artistName: string;
@@ -19,6 +20,7 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
   const [artistSongs, setArtistSongs] = useState<Song[]>([]);
   const [isClosing, setIsClosing] = useState(false);
   const [otherArtists, setOtherArtists] = useState<Array<{name: string, image: string}>>([]);
+  const [remainingFeaturedArtists, setRemainingFeaturedArtists] = useState<Array<{name: string, image: string}>>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +41,20 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
         }
       });
       setOtherArtists(Array.from(artistMap.values()));
+
+      // Get remaining featured artists (excluding current artist)
+      const remaining = featuredArtists
+        .filter(artist => artist.name.toLowerCase() !== artistName.toLowerCase())
+        .map(artist => {
+          const artistSong = allSongs.find(song => 
+            song.artist.toLowerCase().includes(artist.name.toLowerCase())
+          );
+          return {
+            name: artist.name,
+            image: artist.image || artistSong?.imageUrl || '/roi-assets/default-artist.png'
+          };
+        });
+      setRemainingFeaturedArtists(remaining);
     }
   }, [artistName, isOpen]);
 
@@ -193,10 +209,21 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
 
       {/* Content area with scroll */}
       <div className="flex-1 overflow-auto pb-20">
-        {/* Songs list */}
-        <div className="px-3 sm:px-4 py-4 sm:py-6">
-          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-foreground">Songs</h3>
-          <div className="space-y-2 sm:space-y-3">
+        {/* Songs list with desktop table layout */}
+        <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-foreground">Popular Tracks</h3>
+          
+          {/* Desktop Table Header */}
+          <div className="hidden md:grid md:grid-cols-[auto_1fr_auto_auto] gap-4 px-4 py-2 text-sm text-muted-foreground border-b border-border mb-2">
+            <div className="flex items-center">#</div>
+            <div>Title</div>
+            <div className="flex items-center justify-center">
+              <Clock className="w-4 h-4" />
+            </div>
+            <div className="w-24">Actions</div>
+          </div>
+
+          <div className="space-y-1">
             {artistSongs.map((song, index) => {
               const isCurrentSong = currentSong?.id === song.id;
               const isCurrentPlaying = isCurrentSong && isPlaying;
@@ -205,15 +232,15 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
                 <div
                   key={song.id}
                   className={cn(
-                    "flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg cursor-pointer transition-colors group",
+                    "flex items-center gap-2 sm:gap-3 md:grid md:grid-cols-[auto_1fr_auto_auto] md:gap-4 p-2 sm:p-3 md:px-4 md:py-3 rounded-lg cursor-pointer transition-colors group",
                     isCurrentSong 
                       ? "bg-accent/20 text-accent" 
-                      : "hover:bg-accent/5 text-foreground"
+                      : "hover:bg-accent/10 text-foreground"
                   )}
                   onClick={() => handleSongPlay(song)}
                 >
-                  {/* Song number / Play indicator */}
-                  <div className="w-6 sm:w-8 flex items-center justify-center flex-shrink-0">
+                  {/* Song number / Play indicator - Desktop layout */}
+                  <div className="w-6 sm:w-8 md:w-10 flex items-center justify-center flex-shrink-0">
                     {isCurrentPlaying ? (
                       <div className="flex items-center gap-0.5 sm:gap-1">
                         <div className="w-0.5 sm:w-1 h-2 sm:h-3 bg-accent animate-pulse" />
@@ -221,43 +248,48 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
                         <div className="w-0.5 sm:w-1 h-3 sm:h-4 bg-accent animate-pulse" style={{ animationDelay: '0.2s' }} />
                       </div>
                     ) : (
-                      <div className="relative">
+                      <div className="relative w-full flex items-center justify-center">
                         <span className="text-xs sm:text-sm text-muted-foreground group-hover:opacity-0 transition-opacity">
                           {String(index + 1).padStart(2, '0')}
                         </span>
-                        <Play className="w-3 h-3 sm:w-4 sm:h-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity absolute inset-0" />
+                        <Play className="w-3 h-3 sm:w-4 sm:h-4 text-foreground opacity-0 group-hover:opacity-100 transition-opacity absolute" />
                       </div>
                     )}
                   </div>
 
-                  {/* Song artwork */}
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden bg-accent/10 flex-shrink-0">
-                    <img 
-                      src={song.imageUrl} 
-                      alt={song.title}
-                      className="w-full h-full object-cover"
-                    />
+                  {/* Song info with artwork */}
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded overflow-hidden bg-accent/10 flex-shrink-0">
+                      <img 
+                        src={song.imageUrl} 
+                        alt={song.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className={cn(
+                        "font-medium text-sm sm:text-base md:text-base leading-tight mb-0.5",
+                        isCurrentSong ? "text-accent" : "text-foreground",
+                        "truncate"
+                      )}>
+                        {song.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground truncate md:hidden">{song.artist}</p>
+                    </div>
                   </div>
 
-                  {/* Song info */}
-                  <div className="flex-1 min-w-0 mr-2 sm:mr-3">
-                    <h4 className={cn(
-                      "font-medium text-sm sm:text-base leading-tight mb-0.5 sm:mb-1",
-                      isCurrentSong ? "text-accent" : "text-foreground",
-                      "truncate"
-                    )}>
-                      {song.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground truncate">{song.artist}</p>
+                  {/* Duration - Desktop only */}
+                  <div className="hidden md:flex items-center justify-center text-sm text-muted-foreground">
+                    {song.duration || '3:45'}
                   </div>
 
                   {/* Action buttons */}
-                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 md:w-24 justify-end">
                     <button
                       onClick={(e) => handleLike(song, e)}
                       className={cn(
                         "p-1.5 sm:p-2 rounded-full hover:bg-accent/20 transition-colors",
-                        isLiked(song.id) ? "text-red-500" : "text-muted-foreground"
+                        isLiked(song.id) ? "text-red-500" : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       <Heart className={cn("w-4 h-4 sm:w-5 sm:h-5", isLiked(song.id) && "fill-current")} />
@@ -265,7 +297,7 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
                     
                     <button
                       onClick={(e) => handleAddToQueue(song, e)}
-                      className="p-1.5 sm:p-2 rounded-full hover:bg-accent/20 transition-colors text-muted-foreground"
+                      className="p-1.5 sm:p-2 rounded-full hover:bg-accent/20 transition-colors text-muted-foreground hover:text-foreground"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
@@ -274,30 +306,24 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
               );
             })}
           </div>
-          {/* Helper text */}
-          {artistSongs.length > 0 && (
-            <p className="text-center text-xs sm:text-sm text-muted-foreground mt-4 sm:mt-6 mb-3 sm:mb-4">
-              Select a song to play
-            </p>
-          )}
         </div>
 
-        {/* Related Artists Section */}
-        {otherArtists.length > 0 && (
-          <div className="px-3 sm:px-4 py-4 sm:py-6 border-t border-border">
+        {/* Featured Artists Section - Shows remaining featured artists */}
+        {remainingFeaturedArtists.length > 0 && (
+          <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 border-t border-border">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h3 className="text-base sm:text-lg font-semibold text-foreground">Related Artists</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">Featured Artists</h3>
               <span className="text-xs sm:text-sm text-muted-foreground">
-                {otherArtists.length} artists
+                {remainingFeaturedArtists.length} more
               </span>
             </div>
             
-            {/* Grid layout for larger screens, scroll for mobile */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
-              {otherArtists.slice(0, 12).map((artist) => (
+            {/* Responsive grid for featured artists */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+              {remainingFeaturedArtists.map((artist) => (
                 <div
                   key={artist.name}
-                  className="group cursor-pointer flex-shrink-0"
+                  className="group cursor-pointer"
                   onClick={() => handleArtistClick(artist.name)}
                 >
                   <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
@@ -308,10 +334,10 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-white fill-current" />
+                      <Play className="w-8 h-8 md:w-10 md:h-10 text-white fill-current drop-shadow-lg" />
                     </div>
                   </div>
-                  <div className="mt-1.5 sm:mt-2">
+                  <div className="mt-2">
                     <h4 className="font-medium text-foreground text-xs sm:text-sm truncate group-hover:text-accent transition-colors text-center">
                       {artist.name}
                     </h4>
@@ -319,18 +345,49 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* More Artists Section - Shows all other artists */}
+        {otherArtists.length > 0 && (
+          <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 border-t border-border">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">More Artists</h3>
+              <button 
+                onClick={() => navigate('/artists')}
+                className="text-accent hover:text-accent/80 text-xs sm:text-sm font-medium transition-colors"
+              >
+                View All
+              </button>
+            </div>
             
-            {/* See more artists link */}
-            {otherArtists.length > 12 && (
-              <div className="mt-4 sm:mt-6 text-center">
-                <button 
-                  onClick={() => navigate('/artists')}
-                  className="text-accent hover:text-accent/80 text-sm sm:text-base font-medium transition-colors"
+            {/* Horizontal scroll for more artists */}
+            <div className="flex overflow-x-auto gap-3 sm:gap-4 pb-2 scrollbar-hide">
+              {otherArtists.slice(0, 20).map((artist) => (
+                <div
+                  key={artist.name}
+                  className="group cursor-pointer flex-shrink-0 w-28 sm:w-32 md:w-36"
+                  onClick={() => handleArtistClick(artist.name)}
                 >
-                  View All Artists ({otherArtists.length})
-                </button>
-              </div>
-            )}
+                  <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
+                    <img
+                      src={artist.image}
+                      alt={artist.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Play className="w-8 h-8 text-white fill-current drop-shadow-lg" />
+                    </div>
+                  </div>
+                  <div className="mt-2">
+                    <h4 className="font-medium text-foreground text-xs sm:text-sm truncate group-hover:text-accent transition-colors text-center">
+                      {artist.name}
+                    </h4>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
