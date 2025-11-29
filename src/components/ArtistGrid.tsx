@@ -28,7 +28,7 @@ const ArtistGrid = ({ title, className = "", showAll = false }: ArtistGridProps)
     });
   };
 
-  const artists = getArtistsWithImages().slice(0, showAll ? undefined : 6);
+  const artists = getArtistsWithImages().slice(0, showAll ? undefined : 5);
 
   const handleArtistClick = (artistName: string) => {
     navigate(`/artist/${encodeURIComponent(artistName)}`);
