@@ -308,22 +308,22 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
           </div>
         </div>
 
-        {/* Featured Artists Section - Shows all remaining featured artists */}
+        {/* Featured Artists Section - Horizontal scroll at bottom */}
         {remainingFeaturedArtists.length > 0 && (
           <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 border-t border-border">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <h3 className="text-base sm:text-lg font-semibold text-foreground">Featured Artists</h3>
               <span className="text-xs sm:text-sm text-muted-foreground">
-                {remainingFeaturedArtists.length} artists
+                {remainingFeaturedArtists.length} more
               </span>
             </div>
             
-            {/* Responsive grid showing ALL featured artists */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+            {/* Horizontal scrollable row showing remaining featured artists */}
+            <div className="flex overflow-x-auto gap-3 sm:gap-4 pb-2 scrollbar-hide">
               {remainingFeaturedArtists.map((artist) => (
                 <div
                   key={artist.name}
-                  className="group cursor-pointer"
+                  className="group cursor-pointer flex-shrink-0 w-32 sm:w-36 md:w-40"
                   onClick={() => handleArtistClick(artist.name)}
                 >
                   <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
@@ -348,22 +348,22 @@ const ArtistFullView = ({ artistName, isOpen, onClose }: ArtistFullViewProps) =>
           </div>
         )}
 
-        {/* More Artists Section - Shows ALL other artists in grid */}
+        {/* More Artists Section - Horizontal scroll */}
         {otherArtists.length > 0 && (
           <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 border-t border-border">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h3 className="text-base sm:text-lg font-semibold text-foreground">All Artists</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">More Artists</h3>
               <span className="text-xs sm:text-sm text-muted-foreground">
                 {otherArtists.length} artists
               </span>
             </div>
             
-            {/* Grid showing ALL other artists */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3 sm:gap-4">
+            {/* Horizontal scrollable row showing all other artists */}
+            <div className="flex overflow-x-auto gap-3 sm:gap-4 pb-2 scrollbar-hide">
               {otherArtists.map((artist) => (
                 <div
                   key={artist.name}
-                  className="group cursor-pointer"
+                  className="group cursor-pointer flex-shrink-0 w-32 sm:w-36 md:w-40"
                   onClick={() => handleArtistClick(artist.name)}
                 >
                   <div className="relative overflow-hidden rounded-lg aspect-square bg-accent/10 hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
