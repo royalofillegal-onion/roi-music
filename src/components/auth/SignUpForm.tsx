@@ -33,23 +33,14 @@ const SignUpForm = ({ loading, setLoading, onSuccess }: SignUpFormProps) => {
           data: {
             name,
           },
+          emailRedirectTo: `${window.location.origin}/`,
         },
       });
       
       if (error) {
         toast.error(error.message);
       } else if (data.user) {
-        // Create a profile for the user
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert({
-            user_id: data.user.id,
-            name,
-          });
-          
-        if (profileError) {
-          console.error('Error creating profile:', profileError);
-        }
+        // Profile will be created automatically via trigger
         
         toast.success('Account created successfully! You are now logged in.');
         // Force page reload to ensure clean auth state
@@ -66,7 +57,7 @@ const SignUpForm = ({ loading, setLoading, onSuccess }: SignUpFormProps) => {
   return (
     <form className="space-y-6" onSubmit={handleSignUp}>
       <div>
-        <label htmlFor="name" className="block text-sm font-medium mb-2">
+        <label htmlFor="name" className="block text-sm font-medium mb-2 text-foreground">
           Name
         </label>
         <Input
@@ -76,12 +67,12 @@ const SignUpForm = ({ loading, setLoading, onSuccess }: SignUpFormProps) => {
           onChange={(e) => setName(e.target.value)}
           placeholder="Your Name"
           required
-          className="bg-gray-800 border-gray-700"
+          className="bg-card border-border focus:border-music-accent"
         />
       </div>
       
       <div>
-        <label htmlFor="signup-email" className="block text-sm font-medium mb-2">
+        <label htmlFor="signup-email" className="block text-sm font-medium mb-2 text-foreground">
           Email
         </label>
         <Input
@@ -91,12 +82,12 @@ const SignUpForm = ({ loading, setLoading, onSuccess }: SignUpFormProps) => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
           required
-          className="bg-gray-800 border-gray-700"
+          className="bg-card border-border focus:border-music-accent"
         />
       </div>
       
       <div>
-        <label htmlFor="signup-password" className="block text-sm font-medium mb-2">
+        <label htmlFor="signup-password" className="block text-sm font-medium mb-2 text-foreground">
           Password
         </label>
         <Input
@@ -106,14 +97,14 @@ const SignUpForm = ({ loading, setLoading, onSuccess }: SignUpFormProps) => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           required
-          className="bg-gray-800 border-gray-700"
+          className="bg-card border-border focus:border-music-accent"
           minLength={6}
         />
       </div>
       
       <Button
         type="submit"
-        className="w-full bg-music-accent hover:bg-music-accent/90 text-black"
+        className="w-full bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-secondary text-background font-bold shadow-glow hover:shadow-lime transition-all"
         disabled={loading}
       >
         {loading ? 'Creating account...' : 'Create account'}
