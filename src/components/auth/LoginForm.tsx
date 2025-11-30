@@ -71,7 +71,7 @@ const LoginForm = ({ loading, setLoading, onSuccess, onForgotPassword }: LoginFo
   return (
     <form className="space-y-6" onSubmit={handleLogin}>
       <div>
-        <label htmlFor="email" className="block text-sm font-medium mb-2">
+        <label htmlFor="email" className="block text-sm font-medium mb-2 text-foreground">
           Email
         </label>
         <Input
@@ -81,12 +81,12 @@ const LoginForm = ({ loading, setLoading, onSuccess, onForgotPassword }: LoginFo
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
           required
-          className="bg-gray-800 border-gray-700"
+          className="bg-card border-border focus:border-music-accent"
         />
       </div>
       
       <div>
-        <label htmlFor="password" className="block text-sm font-medium mb-2">
+        <label htmlFor="password" className="block text-sm font-medium mb-2 text-foreground">
           Password
         </label>
         <Input
@@ -96,7 +96,7 @@ const LoginForm = ({ loading, setLoading, onSuccess, onForgotPassword }: LoginFo
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           required
-          className="bg-gray-800 border-gray-700"
+          className="bg-card border-border focus:border-music-accent"
         />
       </div>
       
@@ -108,9 +108,9 @@ const LoginForm = ({ loading, setLoading, onSuccess, onForgotPassword }: LoginFo
             type="checkbox"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-700 bg-gray-800 text-music-accent focus:ring-music-accent/80"
+            className="h-4 w-4 rounded border-border bg-card text-music-accent focus:ring-music-accent/80"
           />
-          <label htmlFor="remember-me" className="ml-2 text-sm text-gray-400">
+          <label htmlFor="remember-me" className="ml-2 text-sm text-muted-foreground">
             Remember me
           </label>
         </div>
@@ -119,7 +119,7 @@ const LoginForm = ({ loading, setLoading, onSuccess, onForgotPassword }: LoginFo
           type="button" 
           variant="link" 
           onClick={onForgotPassword}
-          className="text-gray-400 hover:text-white p-0 h-auto"
+          className="text-muted-foreground hover:text-foreground p-0 h-auto"
         >
           Forgot password?
         </Button>
@@ -127,7 +127,7 @@ const LoginForm = ({ loading, setLoading, onSuccess, onForgotPassword }: LoginFo
       
       <Button
         type="submit"
-        className="w-full bg-music-accent hover:bg-music-accent/90 text-black"
+        className="w-full bg-gradient-to-r from-background to-card text-foreground border-2 border-primary hover:from-primary hover:to-accent hover:text-background transition-all font-semibold shadow-md hover:shadow-glow"
         disabled={loading}
       >
         {loading ? 'Signing in...' : 'Sign in'}
