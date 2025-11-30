@@ -601,7 +601,7 @@ export const moreSongs: Song[] = [
   sync: "devotional"
 }
 ];
-/*export const newReleases: Song[] = [
+export const newReleases: Song[] = [
     moreSongs.find(s => s.id === "Urime Manase"),
     moreSongs.find(s => s.id === "Yendhukae Nannodhilaavu"),
     moreSongs.find(s => s.id === "yellipoke-shyamala"),
@@ -630,20 +630,4 @@ export const moreSongs: Song[] = [
     moreSongs.find(s => s.id === "Chamkeela Angeelesi"),
     moreSongs.find(s => s.id === "Evarevaro"),
     moreSongs.find(s => s.id === "Po Ve Po Remix"),
-].filter((s): s is Song => Boolean(s)); */
-// Shuffle helper
-function shuffle<T>(array: T[]): T[] {
-  return [...array]
-    .map(item => ({ item, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(a => a.item);
-}
-
-// 🔥 One export only: popularSongs  
-// Top-10 random + remaining songs automatically added below
-export const newReleases = (() => {
-  const shuffled = shuffle(songs);
-  const top10 = shuffled.slice(0, 10);
-  const remaining = shuffled.slice(10);
-  return [...top10, ...remaining]; // first top10 then remaining
-})();
+].filter((s): s is Song => Boolean(s)); 
