@@ -642,7 +642,7 @@ function shuffle<T>(array: T[]): T[] {
 // 🔥 One export only: popularSongs  
 // Top-10 random + remaining songs automatically added below
 export const newReleases = (() => {
-  const shuffled = shuffle(songs);
+  const shuffled = shuffle(moreSongs);
   const top10 = shuffled.slice(0, 10);
   const remaining = shuffled.slice(10);
   return [...top10, ...remaining]; // first top10 then remaining
