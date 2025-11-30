@@ -10,7 +10,7 @@ interface WelcomePopupProps {
   onClose: () => void;
 }
 
-const WelcomePopup = ({ onClose }: WelcomePopupProps) => {
+const WelcomePopup = ({ open, onClose }: WelcomePopupProps) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
