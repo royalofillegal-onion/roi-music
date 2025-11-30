@@ -63,25 +63,8 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    // Simplified banner content fetching
-    const fetchContent = async () => {
-      try {
-        const { data: bannerData, error: bannerError } = await supabase.rpc('get_time_based_content', {
-          content_type_param: 'banner'
-        });
-        
-        if (bannerError) throw bannerError;
-        
-        const currentBanner = bannerData?.find((item: any) => item.is_current_period);
-        if (currentBanner?.content_data && typeof currentBanner.content_data === 'object' && 'message' in currentBanner.content_data) {
-          setTimeBasedBanner(currentBanner.content_data.message as string);
-        }
-      } catch (error) {
-        console.error('Error fetching content:', error);
-      }
-    };
-    
-    fetchContent();
+    // Disabled until get_time_based_content function is created
+    setTimeBasedBanner('');
   }, []);
   
   // Static sections - all showing as numbered lists like Spotify

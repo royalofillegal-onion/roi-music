@@ -74,22 +74,11 @@ const AdminLive = () => {
     }
   };
 
-  // Fetch live streams
+  // Fetch live streams - Disabled until lives table is created
   const fetchLiveStreams = async () => {
     setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('lives')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setLives(data || []);
-    } catch (error) {
-      console.error('Error fetching live streams:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    setLives([]);
+    setIsLoading(false);
   };
 
   // Handle form submission
@@ -117,22 +106,8 @@ const AdminLive = () => {
         thumbnail_url: formData.thumbnail_url || null,
       };
 
-      if (editingLive) {
-        // Update existing live
-        const { error } = await supabase
-          .from('lives')
-          .update(liveData)
-          .eq('id', editingLive.id);
-
-        if (error) throw error;
-      } else {
-        // Create new live
-        const { error } = await supabase
-          .from('lives')
-          .insert(liveData);
-
-        if (error) throw error;
-      }
+      // Disabled until lives table is created
+      console.log('Lives table not yet created');
 
       // Reset form
       setFormData({
@@ -154,38 +129,14 @@ const AdminLive = () => {
     }
   };
 
-  // Toggle live status
+  // Toggle live status - Disabled until lives table is created
   const toggleLiveStatus = async (liveId: string, currentStatus: boolean) => {
-    try {
-      const { error } = await supabase
-        .from('lives')
-        .update({ is_active: !currentStatus })
-        .eq('id', liveId);
-
-      if (error) throw error;
-      
-      fetchLiveStreams();
-    } catch (error) {
-      console.error('Error toggling live status:', error);
-    }
+    console.log('Lives table not yet created');
   };
 
-  // Delete live stream
+  // Delete live stream - Disabled until lives table is created
   const deleteLive = async (liveId: string) => {
-    if (!confirm("Are you sure you want to delete this live stream?")) return;
-
-    try {
-      const { error } = await supabase
-        .from('lives')
-        .delete()
-        .eq('id', liveId);
-
-      if (error) throw error;
-      
-      fetchLiveStreams();
-    } catch (error) {
-      console.error('Error deleting live stream:', error);
-    }
+    console.log('Lives table not yet created');
   };
 
   // Start editing

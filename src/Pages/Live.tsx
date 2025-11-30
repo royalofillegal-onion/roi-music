@@ -106,13 +106,13 @@ const Live = () => {
         setUserId(session.user.id);
         
         const { data: profile } = await supabase
-          .from('users')
-          .select('name')
+          .from('profiles')
+          .select('display_name')
           .eq('user_id', session.user.id)
           .single();
         
         if (profile) {
-          setUserName(profile.name || 'Music Lover');
+          setUserName(profile.display_name || 'Music Lover');
         }
       }
     };
@@ -126,13 +126,13 @@ const Live = () => {
           setUserId(session.user.id);
           
           const { data: profile } = await supabase
-            .from('users')
-            .select('name')
+            .from('profiles')
+            .select('display_name')
             .eq('user_id', session.user.id)
             .single();
           
           if (profile) {
-            setUserName(profile.name || 'Music Lover');
+            setUserName(profile.display_name || 'Music Lover');
           }
         } else {
           setUserId(null);
