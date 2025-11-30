@@ -632,18 +632,8 @@ export const newReleases: Song[] = [
     moreSongs.find(s => s.id === "Po Ve Po Remix"),
 ].filter((s): s is Song => Boolean(s)); */
 // Shuffle helper
-function shuffle<T>(array: T[]): T[] {
-  return [...array]
-    .map(item => ({ item, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(a => a.item);
-}
-
-// 🔥 One export only: popularSongs  
-// Top-10 random + remaining songs automatically added below
 export const newReleases = (() => {
-  const shuffled = shuffle(moreSongs);
-  const top10 = shuffled.slice(0, 10);
-  const remaining = shuffled.slice(10);
-  return [...top10, ...remaining]; // first top10 then remaining
+  const top10 = moreSongs.slice(0, 10);      // first 10 songs
+  const remaining = moreSongs.slice(10);     // rest of the songs
+  return [...top10, ...remaining];           // same order, no shuffle
 })();
