@@ -990,19 +990,4 @@ export const massRapSongs: Song[] = [
   
   
 ];
-// Shuffle helper
-function shuffle<T>(array: T[]): T[] {
-  return [...array]
-    .map(item => ({ item, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(a => a.item);
-}
 
-// 🔥 One export only: popularSongs  
-// Top-10 random + remaining songs automatically added below
-export const massRapSongs = (() => {
-  const shuffled = shuffle(songs);
-  const top10 = shuffled.slice(0, 10);
-  const remaining = shuffled.slice(10);
-  return [...top10, ...remaining]; // first top10 then remaining
-})();
