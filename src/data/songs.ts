@@ -9,7 +9,7 @@ export interface Song {
   year?: number;
   genre?: string;
   language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
-  sync?: 'sad' | 'love' | 'break' | 'happy' | 'devotional' | 'feel1' | 'action' | 'romantic' | 'friend' | 'dance' | 'folk' | 'mass' | 'party' | 'classical' | 'rap' | 'moti' | '.' | 'mother' | 'normal' | 'good' | 'Rap' | 'Feel' | 'Sad' | 'Love';
+  sync?: 'sad' | 'love' | 'break' | 'happy' | 'devotional' | 'feel1' | 'action' | 'romantic' | 'friend' | 'dance' | 'folk' | 'mass' | 'party' | 'classical' | 'rap' | 'moti' | '.' | 'mother' | 'normal' | 'good' | 'Rap' | 'Feel' | 'Sad' | 'Love' | '9';
 }
 export const songs: Song[] =[
     {
