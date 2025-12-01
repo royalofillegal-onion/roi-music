@@ -157,7 +157,7 @@ const PlaylistView = () => {
   
   if (loading) {
     return (
-      <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
+      <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-music-accent"></div>
         </div>
@@ -167,7 +167,7 @@ const PlaylistView = () => {
   
   if (!playlist) {
     return (
-      <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
+      <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8">
         <div className="text-center py-16">
           <h2 className="text-xl font-semibold mb-2">Playlist not found</h2>
           <Button onClick={() => navigate(-1)} variant="outline">
@@ -204,7 +204,7 @@ const PlaylistView = () => {
   };
   
   return (
-    <div className="pb-32 md:pb-40 md:ml-16">
+    <div className="pb-32 md:pb-40">
       {/* Header */}
       <div 
         className="relative flex flex-col md:flex-row items-end md:items-end p-4 md:p-8 pt-8 md:pt-12 text-white"

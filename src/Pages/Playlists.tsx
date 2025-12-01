@@ -116,7 +116,7 @@ const Playlists = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
+      <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8">
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <Music className="h-16 w-16 text-gray-400 mb-4" />
           <h1 className="text-2xl font-bold mb-2">Sign In Required</h1>
@@ -133,7 +133,7 @@ const Playlists = () => {
   }
 
   return (
-    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
+    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>

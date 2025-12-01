@@ -54,7 +54,7 @@ const Artist = () => {
   };
 
   return (
-    <div className="pb-32 md:pb-40 md:ml-16">
+    <div className="pb-32 md:pb-40">
       {/* Header */}
       <div 
         className="relative flex flex-col md:flex-row items-end md:items-end p-4 md:p-8 pt-8 md:pt-12 text-white"

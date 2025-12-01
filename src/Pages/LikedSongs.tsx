@@ -62,7 +62,7 @@ const LikedSongs = () => {
   }
 
   return (
-    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
+    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <Heart className="h-8 w-8 mr-3 text-music-accent" />

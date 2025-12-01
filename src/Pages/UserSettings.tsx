@@ -286,7 +286,7 @@ const UserSettings = () => {
   }
 
   return (
-    <div className="pt-4 md:pt-6 pb-20 md:pb-32 lg:pb-40 px-3 md:px-4 lg:px-8 md:ml-16">
+    <div className="pt-4 md:pt-6 pb-20 md:pb-32 lg:pb-40 px-3 md:px-4 lg:px-8">
       {/* Header with ROI MUSIC branding */}
       <div className="flex items-center gap-4 mb-6">
         <div className="w-12 h-12 bg-music-accent rounded-lg flex items-center justify-center">
