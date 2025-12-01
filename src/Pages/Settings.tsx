@@ -48,21 +48,21 @@ const Settings = () => {
         
         // Load user profile
         const { data: profile } = await supabase
-          .from('users')
-          .select('name, avatar_url')
+          .from('profiles')
+          .select('display_name, avatar_url')
           .eq('user_id', session.user.id)
           .single();
           
         if (profile) {
-          setUserName(profile.name || "");
+          setUserName(profile.display_name || "");
           setAvatarUrl(profile.avatar_url || "");
           setPreviewUrl(profile.avatar_url || "");
-          setTempName(profile.name || "");
+          setTempName(profile.display_name || "");
         }
         
         // Load liked songs count
         const { count } = await supabase
-          .from('liked_songs')
+          .from('user_likes')
           .select('*', { count: 'exact', head: true })
           .eq('user_id', session.user.id);
           
@@ -87,8 +87,8 @@ const Settings = () => {
       if (!session) return;
 
       const { error } = await supabase
-        .from('users')
-        .update({ name: tempName.trim() })
+        .from('profiles')
+        .update({ display_name: tempName.trim() })
         .eq('user_id', session.user.id);
 
       if (error) throw error;
@@ -171,7 +171,7 @@ const Settings = () => {
         
       // Update user profile with new avatar URL
       const { error: updateError } = await supabase
-        .from('users')
+        .from('profiles')
         .update({ avatar_url: publicUrl })
         .eq('user_id', session.user.id);
         

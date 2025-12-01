@@ -25,15 +25,12 @@ import { getDailyRotatedSongs } from "@/utils/dailyRotation";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Song } from "@/data/songs";
-import WelcomePopup from "@/components/WelcomePopup";
-import { useWelcomePopup } from "@/hooks/useWelcomePopup";
 
 const Index = () => {
   const { playSong } = usePlayer();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
-  const { showWelcome, handleCloseWelcome } = useWelcomePopup();
   const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showFloatingSettings, setShowFloatingSettings] = useState(false);
@@ -103,7 +100,7 @@ const Index = () => {
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-32 md:pb-40 px-4 md:px-8 md:ml-16 min-h-screen">
+    <div className="relative pb-32 md:pb-40 px-4 md:px-8 md:ml-64 min-h-screen">
       {/* Time-based lighting overlay */}
       <TimeLighting />
       
@@ -211,8 +208,6 @@ const Index = () => {
         onClose={closeSectionFullView}
       />
 
-      {/* Welcome Popup */}
-      <WelcomePopup open={showWelcome} onClose={handleCloseWelcome} />
     </div>
   );
 };
