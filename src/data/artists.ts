@@ -12,6 +12,7 @@ export const displayFeaturedArtists = true; // Set to false to hide all artists
 export const featuredArtists: Artist[] = [
   { name: "Andhra King Taluka", display: true },
   { name: "Peddi", display: true },
+  { name: "Dude", display: true },
   { name: "Raju Weds Rambai", display: true },
   { name: "OG", display: true },
   { name: "Dear Comrade", display: true },
