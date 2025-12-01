@@ -29,6 +29,19 @@ export const trendingSongs: Song[] = [
   sync: "love"
   },
   {
+  id: "Boom Boom",
+  title: "Boom Boom",
+  artist: "Dude",
+  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
+  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764610233/Boom_Boom_PenduJatt.Com.Se_cwkiup.mp3",
+  duration: 240,
+  album: "Boom Boom",
+  year: 2025,
+  genre: "love",
+  language: "telugu",
+  sync: "love"
+},
+  {
   id: "Rambai Neemeedha Naku",
   title: "Rambai Neemeedha Naku",
   artist: "Raju Weds Rambai",
