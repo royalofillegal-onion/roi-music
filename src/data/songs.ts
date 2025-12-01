@@ -35,7 +35,7 @@ export const songs: Song[] =[
   album: "Chikiri Chikiri",
   year: 2025,
   genre: "love",
-  language: "telugu",
+  language: "hindi",
   sync: "love"
 },
   {
