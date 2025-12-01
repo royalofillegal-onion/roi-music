@@ -27,7 +27,7 @@ export const songs: Song[] =[
 },
   {
   id: "Peddi",
-  title: "Peddi-hindi",
+  title: "Chikiri Chikiri-hindi",
   artist: "Chikiri Chikiri",
   imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
   audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764608262/Chikiri_Chikiri_1_obxyw5.mp4",
