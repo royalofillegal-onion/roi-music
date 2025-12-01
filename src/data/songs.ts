@@ -26,7 +26,7 @@ export const songs: Song[] =[
   sync: "feel1"
 },
   {
-  id: "Peddi",
+  id: "Chikiri Chikiri-hindi",
   title: "Chikiri Chikiri-hindi",
   artist: "Peddi",
   imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
@@ -35,7 +35,59 @@ export const songs: Song[] =[
   album: "Chikiri Chikiri",
   year: 2025,
   genre: "love",
-  language: "hindi",
+  language: "telugu",
+  sync: "love"
+},
+  {
+  id: "Nee Gunde Lona",
+  title: "Nee Gunde Lona",
+  artist: "Dude",
+  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
+  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764609913/Nee_Gunde_Lona_PenduJatt.Com.Se_qbnszs.mp3",
+  duration: 274,
+  album: "Nee Gunde Lona",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "Baagundu Po",
+  title: "Baagundu Po",
+  artist: "Dude",
+  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
+  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764610246/Baagundu_Po_PenduJatt.Com.Se_xochft.mp3",
+  duration: 240,
+  album: "Baagundu Po",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+   {
+  id: "Singari",
+  title: "Singari",
+  artist: "Dude",
+  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
+  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764609945/Singari_PenduJatt.Com.Se_botju7.mp3",
+  duration: 182,
+  album: "Singari",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "love"
+},
+   {
+  id: "Naa Praanama",
+  title: "Naa Praanama",
+  artist: "Private",
+  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609626/61310_4_rgnkpf.jpg",
+  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764609636/Naa_Praanama_KoshalWorld.Com_tubywm.mp3",
+  duration: 197,
+  album: "Naa Praanama",
+  year: 2025,
+  genre: "love",
+  language: "telugu",
   sync: "love"
 },
   {
