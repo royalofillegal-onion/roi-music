@@ -17,8 +17,8 @@ export const trendingSongs: Song[] = [
   },
   {
   id: "Peddi",
-  title: "Peddi",
-  artist: "Chikiri Chikiri",
+  title: "Chikiri Chikiri",
+  artist: "Peddi",
   imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
   audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764608269/Chikiri_Chikiri_jfcks5.mp3",
   duration: 272,
