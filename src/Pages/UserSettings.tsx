@@ -52,7 +52,7 @@ const UserSettings = () => {
       setEmail(session.user.email || "");
       
       const { data, error } = await supabase
-        .from('users')
+        .from('profiles')
         .select('*')
         .eq('user_id', session.user.id)
         .single();
@@ -64,12 +64,9 @@ const UserSettings = () => {
       }
       
       if (data) {
-        setName(data.name || "");
-        setTheme(data.theme || "dark");
+        setName(data.display_name || "");
         setAvatarUrl(data.avatar_url || "");
         setPreviewUrl(data.avatar_url || "");
-        setAudioQuality((data as any).audio_quality || "High");
-        setAutoplay((data as any).autoplay !== false);
       }
     } catch (error) {
       console.error("Error in loadUserProfile:", error);
@@ -92,13 +89,10 @@ const UserSettings = () => {
       
       // Update the user profile in Supabase
       const { error } = await supabase
-        .from('users')
+        .from('profiles')
         .update({
-          name,
-          theme,
+          display_name: name,
           avatar_url: avatarUrl,
-          audio_quality: audioQuality,
-          autoplay,
           updated_at: new Date().toISOString(),
         })
         .eq('user_id', session.user.id);

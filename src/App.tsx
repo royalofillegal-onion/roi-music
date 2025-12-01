@@ -76,7 +76,7 @@ function App() {
                 ) : (
                   <>
                     <Navbar />
-                    <main className="flex-1 pb-20 md:pb-0 md:ml-16 lg:ml-20 xl:ml-64 transition-all duration-300">
+                    <main className="flex-1 pb-20 md:pb-0 md:ml-64 transition-all duration-300">
                       <Suspense fallback={<LoadingFallback />}>
                         <Routes>
                           <Route path="/" element={<Index />} />

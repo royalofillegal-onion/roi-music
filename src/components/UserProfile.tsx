@@ -63,13 +63,13 @@ const UserProfile = () => {
   const fetchUserProfile = async (user: any) => {
     try {
       const { data: profile, error } = await supabase
-        .from('users')
-        .select('name, avatar_url')
+        .from('profiles')
+        .select('display_name, avatar_url')
         .eq('user_id', user.id)
         .single();
       
-      if (profile && profile.name) {
-        setUserName(profile.name);
+      if (profile && profile.display_name) {
+        setUserName(profile.display_name);
         setAvatarUrl(profile.avatar_url || '');
       } else {
         const displayName = user.user_metadata?.name || 
@@ -79,10 +79,10 @@ const UserProfile = () => {
         setUserName(displayName);
         
         const { error: upsertError } = await supabase
-          .from('users')
+          .from('profiles')
           .upsert({ 
             user_id: user.id,
-            name: displayName,
+            display_name: displayName,
             avatar_url: user.user_metadata?.avatar_url || ''
           }, { onConflict: 'user_id' });
           
@@ -98,7 +98,7 @@ const UserProfile = () => {
   const fetchLikedSongsCount = async (userId: string) => {
     try {
       const { count, error } = await supabase
-        .from('liked_songs')
+        .from('user_likes')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId);
 
@@ -152,10 +152,10 @@ const UserProfile = () => {
           .from('avatars')
           .getPublicUrl(fileName);
         
-        await supabase.from('users').upsert({ 
+        await supabase.from('profiles').upsert({ 
           user_id: session.user.id,
           avatar_url: publicUrl,
-          name: userName
+          display_name: userName
         }, { onConflict: 'user_id' });
         
         setAvatarUrl(publicUrl);
