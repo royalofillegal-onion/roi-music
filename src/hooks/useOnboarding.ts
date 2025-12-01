@@ -1,6 +1,4 @@
-
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 
 interface OnboardingStatus {
   completed: boolean;
@@ -9,41 +7,17 @@ interface OnboardingStatus {
 }
 
 export const useOnboarding = () => {
-  const [onboardingStatus, setOnboardingStatus] = useState<OnboardingStatus | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    checkOnboardingStatus();
-  }, []);
+  const [onboardingStatus, setOnboardingStatus] = useState<OnboardingStatus | null>({
+    completed: true, // Disabled until user_onboarding table is created
+    username: null,
+    preferences: {}
+  });
+  const [loading, setLoading] = useState(false);
 
   const checkOnboardingStatus = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        setOnboardingStatus(null);
-        setLoading(false);
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('user_onboarding')
-        .select('completed, username, preferences')
-        .eq('user_id', session.user.id)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error checking onboarding status:', error);
-        setOnboardingStatus({ completed: false, username: null, preferences: {} });
-      } else {
-        setOnboardingStatus(data || { completed: false, username: null, preferences: {} });
-      }
-    } catch (error) {
-      console.error('Error in checkOnboardingStatus:', error);
-      setOnboardingStatus({ completed: false, username: null, preferences: {} });
-    } finally {
-      setLoading(false);
-    }
+    // Disabled until user_onboarding table is created
+    setOnboardingStatus({ completed: true, username: null, preferences: {} });
+    setLoading(false);
   };
 
   const markOnboardingComplete = () => {

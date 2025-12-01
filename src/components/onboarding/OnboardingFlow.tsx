@@ -5,7 +5,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Music, User, Heart, Sparkles, ArrowRight, SkipForward } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface OnboardingFlowProps {
@@ -50,103 +49,56 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
   };
 
   const handleSkip = async () => {
-    try {
-      setIsSubmitting(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        toast.error("Please log in to continue");
-        return;
-      }
-
-      await supabase
-        .from('user_onboarding')
-        .upsert({
-          user_id: session.user.id,
-          completed: true,
-          username: username || 'Music Lover',
-          preferences: { genres: selectedGenres }
-        });
-
-      toast.success("Welcome to ROI MUSIC!");
-      onComplete();
-    } catch (error) {
-      console.error('Error skipping onboarding:', error);
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    toast.success("Welcome to ROI MUSIC!");
+    onComplete();
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      handleComplete();
+      await handleComplete();
     }
   };
 
   const handleComplete = async () => {
-    try {
-      setIsSubmitting(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        toast.error("Please log in to continue");
-        return;
-      }
-
-      if (currentStep === 1 && !username.trim()) {
-        toast.error("Please enter a username");
-        return;
-      }
-
-      await supabase
-        .from('user_onboarding')
-        .upsert({
-          user_id: session.user.id,
-          completed: true,
-          username: username || 'Music Lover',
-          preferences: { genres: selectedGenres }
-        });
-
-      // Also update the users table with the username
-      await supabase
-        .from('users')
-        .upsert({
-          user_id: session.user.id,
-          name: username || 'Music Lover'
-        });
-
-      toast.success("Welcome to ROI MUSIC!");
-      onComplete();
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+    if (!username.trim() && currentStep === 1) {
+      toast.error("Please enter a username");
+      return;
     }
+
+    toast.success("Welcome to ROI MUSIC!");
+    onComplete();
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="text-center space-y-6">
-            <div className="flex justify-center space-x-4">
-              <div className="flex items-center space-x-2 bg-music-accent/20 px-4 py-2 rounded-full">
-                <Music className="h-5 w-5 text-music-accent" />
-                <span className="text-sm font-medium">Unlimited Music</span>
+          <div className="space-y-6 text-center">
+            <div className="flex justify-center">
+              <Music className="h-24 w-24 text-music-accent animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2 text-white">Discover Your Sound</h3>
+              <p className="text-gray-400">
+                Stream unlimited music, create playlists, and connect with your favorite artists
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-4 pt-4">
+              <div className="flex flex-col items-center">
+                <Heart className="h-8 w-8 text-music-accent mb-2" />
+                <span className="text-sm text-gray-400">Unlimited Likes</span>
               </div>
-              <div className="flex items-center space-x-2 bg-music-accent/20 px-4 py-2 rounded-full">
-                <Heart className="h-5 w-5 text-music-accent" />
-                <span className="text-sm font-medium">Personal Playlists</span>
+              <div className="flex flex-col items-center">
+                <Music className="h-8 w-8 text-music-accent mb-2" />
+                <span className="text-sm text-gray-400">Custom Playlists</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <Sparkles className="h-8 w-8 text-music-accent mb-2" />
+                <span className="text-sm text-gray-400">Personalized</span>
               </div>
             </div>
-            <p className="text-gray-400">
-              Discover, create, and enjoy your music journey with personalized recommendations
-              and seamless playlist management across all your devices.
-            </p>
           </div>
         );
       
@@ -154,18 +106,17 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username" className="text-white">Username</Label>
               <Input
                 id="username"
-                type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
-                className="bg-gray-800 border-gray-700 mt-1"
-                maxLength={30}
+                className="mt-2 bg-gray-800 border-gray-700 text-white"
+                maxLength={20}
               />
-              <p className="text-xs text-gray-400 mt-1">
-                This will be your display name in the app
+              <p className="text-xs text-gray-500 mt-1">
+                You can always change this later in settings
               </p>
             </div>
           </div>
@@ -174,25 +125,32 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
       case 2:
         return (
           <div className="space-y-4">
-            <p className="text-gray-400 text-sm">
-              Select genres you enjoy (you can change this later)
+            <p className="text-sm text-gray-400">
+              Select at least 3 genres to get personalized recommendations
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {genres.map((genre) => (
                 <Badge
                   key={genre}
                   variant={selectedGenres.includes(genre) ? "default" : "outline"}
-                  className={`cursor-pointer text-center py-2 px-3 transition-colors ${
-                    selectedGenres.includes(genre)
-                      ? 'bg-music-accent text-black hover:bg-music-accent/90'
-                      : 'hover:bg-gray-700'
-                  }`}
+                  className={`
+                    cursor-pointer py-2 px-4 text-center justify-center transition-all
+                    ${selectedGenres.includes(genre) 
+                      ? 'bg-music-accent text-black hover:bg-music-accent/90' 
+                      : 'border-gray-600 text-gray-400 hover:border-music-accent hover:text-music-accent'
+                    }
+                  `}
                   onClick={() => handleGenreToggle(genre)}
                 >
                   {genre}
                 </Badge>
               ))}
             </div>
+            {selectedGenres.length > 0 && (
+              <p className="text-xs text-gray-500">
+                {selectedGenres.length} genre{selectedGenres.length > 1 ? 's' : ''} selected
+              </p>
+            )}
           </div>
         );
       
@@ -202,47 +160,48 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
       <Card className="w-full max-w-md bg-gray-900 border-gray-800">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             {steps[currentStep].icon}
           </div>
-          <CardTitle className="text-xl">{steps[currentStep].title}</CardTitle>
-          <CardDescription>{steps[currentStep].description}</CardDescription>
+          <CardTitle className="text-2xl text-white">{steps[currentStep].title}</CardTitle>
+          <CardDescription className="text-gray-400">
+            {steps[currentStep].description}
+          </CardDescription>
         </CardHeader>
-        
         <CardContent className="space-y-6">
           {/* Progress Indicator */}
           <div className="flex justify-center space-x-2">
             {steps.map((_, index) => (
               <div
                 key={index}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index <= currentStep ? 'bg-music-accent' : 'bg-gray-600'
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  index <= currentStep ? 'bg-music-accent' : 'bg-gray-700'
                 }`}
               />
             ))}
           </div>
 
+          {/* Step Content */}
           {renderStepContent()}
 
-          {/* Action Buttons */}
-          <div className="flex justify-between space-x-3">
+          {/* Actions */}
+          <div className="flex space-x-3 pt-4">
             <Button
               variant="outline"
               onClick={handleSkip}
               disabled={isSubmitting}
-              className="flex-1"
+              className="flex-1 text-gray-300 border-gray-600 hover:bg-gray-800"
             >
               <SkipForward className="h-4 w-4 mr-2" />
-              Skip for now
+              Skip
             </Button>
-            
             <Button
               onClick={handleNext}
-              disabled={isSubmitting}
-              className="flex-1 bg-music-accent hover:bg-music-accent/90 text-black"
+              disabled={isSubmitting || (currentStep === 1 && !username.trim())}
+              className="flex-1 bg-music-accent hover:bg-music-accent/90 text-black font-medium"
             >
               {currentStep === steps.length - 1 ? 'Get Started' : 'Continue'}
               <ArrowRight className="h-4 w-4 ml-2" />
