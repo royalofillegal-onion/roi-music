@@ -90,7 +90,7 @@ const Artists = () => {
   }
 
   return (
-    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
+    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8">
         {/* Header Section */}
         <div className="mb-6 md:mb-8">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">

@@ -209,7 +209,7 @@ const Search = () => {
   };
   
   return (
-    <div className="pt-4 pb-32 md:pb-40 px-3 sm:px-4 md:px-8 md:ml-16 min-h-screen">
+    <div className="pt-4 pb-32 md:pb-40 px-3 sm:px-4 md:px-8 min-h-screen">
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 md:mb-6 mt-1">Search</h1>
       
       <div className="relative mb-6 sm:mb-8 max-w-xl">

@@ -58,7 +58,7 @@ const TermsAndConditions = () => {
   }
 
   return (
-    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8 md:ml-16">
+    <div className="pt-6 pb-32 md:pb-40 px-4 md:px-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
