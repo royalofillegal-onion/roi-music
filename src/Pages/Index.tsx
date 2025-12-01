@@ -100,7 +100,7 @@ const Index = () => {
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-32 md:pb-40 px-4 md:px-8 md:ml-64 min-h-screen">
+    <div className="relative pb-24 md:pb-32 px-4 md:px-8 md:ml-64 min-h-screen">
       {/* Time-based lighting overlay */}
       <TimeLighting />
       
@@ -113,7 +113,7 @@ const Index = () => {
       <FestivalPopup onClose={() => setShowFestivalPopup(false)} />
       
       {/* Header with User Profile and Site Name */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-bloody rounded-full flex items-center justify-center shadow-bloody animate-bloody-glow">
@@ -134,7 +134,7 @@ const Index = () => {
         </div>
       )}
 
-      <div className="space-y-6 md:space-y-8 lg:space-y-12">
+      <div className="space-y-4 md:space-y-6">
         {/* Hero Section with enhanced animations */}
         <HeroSection className="animate-fade-in" />
 
