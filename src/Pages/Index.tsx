@@ -100,7 +100,7 @@ const Index = () => {
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-24 md:pb-32 px-4 md:px-8 md:ml-64 min-h-screen">
+    <div className="relative pb-24 md:pb-32 px-4 md:px-8 md:ml-72 min-h-screen">
       {/* Time-based lighting overlay */}
       <TimeLighting />
       
