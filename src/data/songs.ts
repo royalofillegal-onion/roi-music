@@ -26,6 +26,19 @@ export const songs: Song[] =[
   sync: "feel1"
 },
   {
+  id: "Peddi",
+  title: "Peddi-hindi",
+  artist: "Chikiri Chikiri",
+  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
+  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764608262/Chikiri_Chikiri_1_obxyw5.mp4",
+  duration: 272,
+  album: "Chikiri Chikiri",
+  year: 2025,
+  genre: "love",
+  language: "hindi",
+  sync: "love"
+},
+  {
   id: "Nammavemo",
   title: "Nammavemo",
   artist: "Parugu",
