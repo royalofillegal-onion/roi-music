@@ -13,23 +13,8 @@ export const trendingSongs: Song[] = [
     year: 2025,
     genre: ".",
     language: "telugu",
-    sync: "romantic".
-    language: "telugu",
     sync: "romantic"
   },
-  {
-  id: "Peddi",
-  title: "Peddi",
-  artist: "Chikiri Chikiri",
-  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
-  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764608269/Chikiri_Chikiri_jfcks5.mp3",
-  duration: 272,
-  album: "Chikiri Chikiri",
-  year: 2025,
-  genre: "love",
-  language: "telugu",
-  sync: "love"
-},
   {
   id: "Rambai Neemeedha Naku",
   title: "Rambai Neemeedha Naku",
@@ -39,9 +24,7 @@ export const trendingSongs: Song[] = [
   duration: 250,
   album: "Rambai Neemeedha Naku",
   year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "romantic"
+  genre: "."
 },
   {
   id: "suvvi-suvvi",
