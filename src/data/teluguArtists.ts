@@ -622,5 +622,65 @@ export const teluguArtists = [
     topSongs: ["Pushpa", "Ala Vaikunthapurramuloo", "Rangasthalam"],
     yearsActive: "2005-Present",
     awards: ["3 Filmfare Awards", "2 Nandi Awards"]
+  },
+  {
+    id: 53,
+    name: "Andhra King Taluka",
+    image: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+    bio: "Rising Telugu music artist known for energetic and catchy compositions. Andhra King Taluka has quickly gained popularity with hit tracks like 'Chinni Gundelo', 'Puppy Shame', 'Chalu', and 'First Day First Show'. Known for blending traditional Telugu music with modern beats.",
+    genres: ["Pop", "Mass", "Contemporary", "Folk"],
+    totalSongs: 15,
+    sponsors: ["ROI Music", "Independent"],
+    topSongs: ["Chinni Gundelo", "Puppy Shame", "Chalu", "First Day First Show", "Untold Emotions"],
+    yearsActive: "2023-Present",
+    awards: ["Rising Star Award 2024", "Best New Artist Nomination"]
+  },
+  {
+    id: 54,
+    name: "OG",
+    image: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+    bio: "High-energy music producer and artist known for powerful action-packed soundtracks. OG has delivered chart-topping hits including 'Guns And Roses', 'Washi O Washi', 'The Streets Of Fire', and 'Kiss Kiss Bang Bang'. Specializes in intense cinematic music.",
+    genres: ["Action", "Mass", "Cinematic", "Rock"],
+    totalSongs: 20,
+    sponsors: ["Aditya Music", "Lahari Music"],
+    topSongs: ["Guns And Roses", "Washi O Washi", "The Streets Of Fire", "Trance of OMI", "Kiss Kiss Bang Bang"],
+    yearsActive: "2022-Present",
+    awards: ["Best Background Score 2024"]
+  },
+  {
+    id: 55,
+    name: "Kingdom",
+    image: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1746425141_j58ecx.webp",
+    bio: "Emerging Telugu artist creating soulful romantic melodies. Kingdom's signature song 'Hridayam Lopala' has touched hearts across the nation with its emotional depth and beautiful composition.",
+    genres: ["Romantic", "Melody", "Contemporary"],
+    totalSongs: 10,
+    sponsors: ["ROI Music", "Sony Music South"],
+    topSongs: ["Hridayam Lopala", "Love Theme", "Heart Beat"],
+    yearsActive: "2024-Present",
+    awards: ["Best Romantic Song Nomination 2025"]
+  },
+  {
+    id: 56,
+    name: "Dude",
+    image: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
+    bio: "Fresh and vibrant Telugu music artist known for feel-good tracks. Dude has captured the youth audience with songs like 'Nee Gunde Lona', 'Baagundu Po', and 'Singari'. Known for catchy tunes and relatable lyrics.",
+    genres: ["Pop", "Feel Good", "Youth", "Love"],
+    totalSongs: 12,
+    sponsors: ["Independent", "ROI Music"],
+    topSongs: ["Nee Gunde Lona", "Baagundu Po", "Singari"],
+    yearsActive: "2024-Present",
+    awards: ["Trending Artist 2025"]
+  },
+  {
+    id: 57,
+    name: "Peddi",
+    image: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
+    bio: "Versatile Telugu artist creating cross-language hits. Peddi's 'Chikiri Chikiri' has become a viral sensation, showcasing ability to blend Telugu and Hindi musical elements seamlessly.",
+    genres: ["Pop", "Fusion", "Dance", "Romantic"],
+    totalSongs: 8,
+    sponsors: ["Independent"],
+    topSongs: ["Chikiri Chikiri", "Chikiri Chikiri-hindi"],
+    yearsActive: "2024-Present",
+    awards: ["Viral Hit Award 2025"]
   }
 ];

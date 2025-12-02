@@ -34,6 +34,11 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
     e.stopPropagation();
     navigate(`/song-detail/${encodeURIComponent(song.id)}`);
   };
+
+  const handleNavigateToArtist = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/artist/${encodeURIComponent(song.artist)}`);
+  };
   
   const handlePlay = () => {
     playSong(song);
@@ -237,9 +242,19 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
         />
       </div>
       <div className="mt-1 flex items-start justify-between">
-        <div className="flex-1 min-w-0" onClick={handleNavigateToDetail}>
-          <h3 className="font-medium text-sm truncate hover:text-primary hover:underline cursor-pointer">{song.title}</h3>
-          <p className="text-gray-400 text-xs truncate hover:text-primary hover:underline cursor-pointer">{song.artist}</p>
+        <div className="flex-1 min-w-0">
+          <h3 
+            className="font-medium text-sm truncate hover:text-primary hover:underline cursor-pointer transition-colors"
+            onClick={handleNavigateToDetail}
+          >
+            {song.title}
+          </h3>
+          <p 
+            className="text-muted-foreground text-xs truncate hover:text-primary hover:underline cursor-pointer transition-colors"
+            onClick={handleNavigateToArtist}
+          >
+            {song.artist}
+          </p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
