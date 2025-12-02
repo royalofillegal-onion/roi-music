@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Play, Plus, Heart } from "lucide-react";
 import { 
@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import ShareSong from "@/components/ShareSong";
 import QuickAddToPlaylist from "@/components/QuickAddToPlaylist";
 import { useGuestPlaylist } from "@/hooks/useGuestPlaylist";
+import { toast } from "sonner";
 
 interface SongCardProps {
   song: Song;
@@ -29,20 +30,45 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
   const [isLikedState, setIsLikedState] = useState(() => isLiked(song.id));
   const [isLoadingLike, setIsLoadingLike] = useState(false);
   const { addToGuestPlaylist, isInGuestPlaylist } = useGuestPlaylist();
+  
+  // Long press handling
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const isLongPress = useRef(false);
 
   const handleNavigateToDetail = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     navigate(`/song-detail/${encodeURIComponent(song.id)}`);
   };
 
   const handleNavigateToArtist = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     navigate(`/artist/${encodeURIComponent(song.artist)}`);
   };
   
   const handlePlay = () => {
-    playSong(song);
+    if (!isLongPress.current) {
+      playSong(song);
+    }
   };
+
+  // Long press handlers
+  const handlePressStart = useCallback(() => {
+    isLongPress.current = false;
+    longPressTimer.current = setTimeout(() => {
+      isLongPress.current = true;
+      addToQueue(song);
+      toast.success(`"${song.title}" added to queue`);
+    }, 1000);
+  }, [song, addToQueue]);
+
+  const handlePressEnd = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  }, []);
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -200,10 +226,15 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
   return (
     <div 
       className={cn(
-        "flex flex-col w-full aspect-square group transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-md cursor-pointer relative",
+        "flex flex-col w-full aspect-square group transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-md cursor-pointer relative select-none",
         className
       )}
       onClick={handlePlay}
+      onMouseDown={handlePressStart}
+      onMouseUp={handlePressEnd}
+      onMouseLeave={handlePressEnd}
+      onTouchStart={handlePressStart}
+      onTouchEnd={handlePressEnd}
     >
       <div 
         className="relative w-full aspect-square overflow-hidden rounded-md shadow-lg mb-2"
@@ -243,18 +274,20 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
       </div>
       <div className="mt-1 flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <h3 
-            className="font-medium text-sm truncate hover:text-primary hover:underline cursor-pointer transition-colors"
+          <button 
+            className="font-medium text-sm truncate hover:text-primary hover:underline cursor-pointer transition-colors text-left w-full block"
             onClick={handleNavigateToDetail}
+            type="button"
           >
             {song.title}
-          </h3>
-          <p 
-            className="text-muted-foreground text-xs truncate hover:text-primary hover:underline cursor-pointer transition-colors"
+          </button>
+          <button 
+            className="text-muted-foreground text-xs truncate hover:text-primary hover:underline cursor-pointer transition-colors text-left w-full block"
             onClick={handleNavigateToArtist}
+            type="button"
           >
             {song.artist}
-          </p>
+          </button>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
