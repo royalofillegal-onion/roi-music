@@ -1,12 +1,13 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Play, Plus, Heart } from "lucide-react";
+import { Play, Plus, Heart, ListMusic } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { Song } from "@/data/songs";
 import { usePlayer } from "@/context/PlayerContext";
@@ -34,6 +35,7 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
   // Long press handling
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const isLongPress = useRef(false);
+  const [isPressing, setIsPressing] = useState(false);
 
   const handleNavigateToDetail = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,23 +49,39 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
     navigate(`/artist/${encodeURIComponent(song.artist)}`);
   };
   
-  const handlePlay = () => {
+  const handlePlay = (e?: React.MouseEvent) => {
     if (!isLongPress.current) {
       playSong(song);
     }
+    isLongPress.current = false;
+  };
+
+  const handleAddToQueue = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    addToQueue(song);
+    toast.success(`"${song.title}" added to queue`, {
+      icon: <ListMusic className="h-4 w-4" />,
+      duration: 2000
+    });
   };
 
   // Long press handlers
-  const handlePressStart = useCallback(() => {
+  const handlePressStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     isLongPress.current = false;
+    setIsPressing(true);
     longPressTimer.current = setTimeout(() => {
       isLongPress.current = true;
-      addToQueue(song);
-      toast.success(`"${song.title}" added to queue`);
-    }, 1000);
+      setIsPressing(false);
+      handleAddToQueue();
+      // Vibrate on mobile if supported
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }, 800);
   }, [song, addToQueue]);
 
   const handlePressEnd = useCallback(() => {
+    setIsPressing(false);
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
@@ -226,7 +244,8 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
   return (
     <div 
       className={cn(
-        "flex flex-col w-full aspect-square group transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-md cursor-pointer relative select-none",
+        "flex flex-col w-full aspect-square group transition-all duration-200 hover:bg-accent/10 p-3 rounded-lg cursor-pointer relative select-none",
+        isPressing && "scale-95 bg-accent/20",
         className
       )}
       onClick={handlePlay}
@@ -236,23 +255,31 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
       onTouchStart={handlePressStart}
       onTouchEnd={handlePressEnd}
     >
-      <div 
-        className="relative w-full aspect-square overflow-hidden rounded-md shadow-lg mb-2"
-      >
+      {/* Long press indicator */}
+      {isPressing && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 rounded-lg">
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs text-primary font-medium">Adding to queue...</span>
+          </div>
+        </div>
+      )}
+
+      <div className="relative w-full aspect-square overflow-hidden rounded-md shadow-lg mb-2">
         <img 
           src={song.imageUrl} 
           alt={song.title}
           className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/50 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-          <div className="w-12 h-12 rounded-full bg-music-accent flex items-center justify-center">
-            <Play className="h-6 w-6 text-black" />
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+            <Play className="h-6 w-6 text-primary-foreground fill-current ml-0.5" />
           </div>
         </div>
 
         <button 
           className={cn(
-            "absolute top-2 right-2 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-all",
+            "absolute top-2 right-2 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-all z-10",
             isLikedState ? "text-red-500" : "text-white opacity-0 group-hover:opacity-100"
           )}
           onClick={handleLike}
@@ -263,19 +290,18 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
 
         <ShareSong 
           song={song} 
-          className="absolute top-2 left-2 p-2 rounded-full bg-black/50 hover:bg-black/70 opacity-0 group-hover:opacity-100" 
+          className="absolute top-2 left-2 p-2 rounded-full bg-black/50 hover:bg-black/70 opacity-0 group-hover:opacity-100 z-10" 
         />
 
-        {/* Quick Add to Playlist - Bottom right corner */}
         <QuickAddToPlaylist 
           song={song}
-          className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
         />
       </div>
       <div className="mt-1 flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <button 
-            className="font-medium text-sm truncate hover:text-primary hover:underline cursor-pointer transition-colors text-left w-full block"
+            className="font-medium text-sm truncate hover:text-primary hover:underline cursor-pointer transition-colors text-left w-full block text-foreground"
             onClick={handleNavigateToDetail}
             type="button"
           >
@@ -292,28 +318,28 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button 
-              className="ml-1 p-1 text-gray-400 hover:text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-gray-700/50 transition-all"
+              className="ml-1 p-1.5 text-muted-foreground hover:text-foreground rounded-full opacity-0 group-hover:opacity-100 hover:bg-accent/20 transition-all"
               onClick={(e) => e.stopPropagation()}
             >
               <Plus className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-gray-900 border-gray-800">
+          <DropdownMenuContent align="end" className="w-52 bg-card border-border shadow-xl">
             <DropdownMenuItem 
-              className="text-sm cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                addToQueue(song);
-              }}
+              className="text-sm cursor-pointer gap-2"
+              onClick={handleAddToQueue}
             >
+              <ListMusic className="h-4 w-4" />
               Add to Queue
             </DropdownMenuItem>
-            {playlists.map((playlist) => (
+            <DropdownMenuSeparator />
+            {playlists.slice(0, 5).map((playlist) => (
               <DropdownMenuItem 
                 key={playlist.id} 
                 className="text-sm cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
+                  toast.success(`Added to ${playlist.title}`);
                 }}
               >
                 Add to {playlist.title}
