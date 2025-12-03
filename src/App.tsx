@@ -26,6 +26,7 @@ const TermsAndConditions = lazy(() => import("./Pages/TermsAndConditions"));
 const SharedSong = lazy(() => import("./Pages/SharedSong"));
 const SharedPlaylist = lazy(() => import("./Pages/SharedPlaylist"));
 const SongDetail = lazy(() => import("./Pages/SongDetail"));
+const NowPlaying = lazy(() => import("./Pages/NowPlaying"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 const UserSettings = lazy(() => import("./Pages/UserSettings"));
 const ServerMaintenance = lazy(() => import("./Pages/ServerMaintenance"));
@@ -99,6 +100,7 @@ function App() {
                           
                           {/* Song detail page */}
                           <Route path="/song-detail/:songId" element={<SongDetail />} />
+                          <Route path="/now-playing" element={<NowPlaying />} />
                           
                           {/* Enhanced song sharing routes */}
                           <Route path="/share/:hashCode" element={<SharedSong />} />
