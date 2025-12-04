@@ -14,6 +14,7 @@ export interface SongDescription {
 export interface OwnerDetails {
   id: number;
   name: string;
+  artistname:string;
   image: string;
   bio: string;
   genres: string[];
@@ -35,6 +36,7 @@ export const ownerDetails: OwnerDetails[] = [
   {
     id: 1,
     name: "Andhra King Taluka",
+    artistname:"NA",
     image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop&crop=face",
     bio: "Rising Telugu music sensation known for energetic beats and soulful melodies. Pioneer of modern Telugu hip-hop with a unique blend of traditional and contemporary sounds.",
     genres: ["Telugu Hip-Hop", "Folk Fusion", "Mass Music"],
@@ -48,7 +50,7 @@ export const ownerDetails: OwnerDetails[] = [
       youtube: "AndhraKingTalukaOfficial",
       twitter: "@aktofficial"
     },
-    linkedSongIds: ["chinni-gundelo", "song-1", "song-2", "song-3"]
+    linkedSongIds: ["chinni-gundelo", "song-1", "song-2"]
   },
   {
     id: 2,
