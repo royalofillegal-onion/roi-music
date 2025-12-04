@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Repeat, Shuffle, ListMusic, Maximize2, Minimize2, Plus, User, ChevronDown, Heart, Share2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { usePlayer } from "@/context/PlayerContext";
@@ -24,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Player = () => {
+  const navigate = useNavigate();
   const {
     currentSong,
     isPlaying,
@@ -333,19 +335,19 @@ const Player = () => {
   return (
     <div className="fixed bottom-16 left-0 right-0 md:bottom-0 md:left-16 glass-effect border-t border-gray-800 h-16 md:h-20 z-40">
       <div className="flex items-center h-full px-3 md:px-6">
-        {/* Song info with fullscreen toggle */}
+        {/* Song info - click to go to Now Playing page */}
         <div className="flex items-center flex-1 min-w-0 md:w-1/3">
           <div 
-            className="flex items-center cursor-pointer" 
-            onClick={toggleFullscreen}
+            className="flex items-center cursor-pointer group" 
+            onClick={() => navigate('/now-playing')}
           >
             <img
               src={currentSong.imageUrl}
               alt={currentSong.title}
-              className="w-10 h-10 rounded md:w-14 md:h-14"
+              className="w-10 h-10 rounded md:w-14 md:h-14 group-hover:opacity-80 transition-opacity"
             />
             <div className="ml-3 truncate">
-              <div className="font-medium truncate">{currentSong.title}</div>
+              <div className="font-medium truncate group-hover:text-primary transition-colors">{currentSong.title}</div>
               <div className="text-xs text-gray-400 truncate">{currentSong.artist}</div>
             </div>
           </div>
