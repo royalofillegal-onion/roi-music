@@ -1,5 +1,5 @@
 // Fixed import paths
-import { songs, popularSongs } from './songs';
+import { songs } from './songs';
 import { trendingSongs } from './trendingSongs';
 import { goodMorningSongs, displayGoodMorningSongs } from './goodMorningSongs';
 import { goodAfternoonSongs, displayGoodAfternoonSongs } from './goodAfternoonSongs';
@@ -8,6 +8,21 @@ import { additionalSongs } from './additionalSongs';
 import { moreSongs, newReleases } from './moreSongs';
 import { massRapSongs } from './massRapSongs';
 import { HindiSongs, displayHindiSongs } from './HindiSongs';
+import { smartHourlyShuffleSongs, hourlyShuffleSongs } from '@/utils/smartShuffle';
+
+// 🔥 Smart shuffled exports - Top 10 picks + remaining, refreshes hourly
+export const popularSongs = smartHourlyShuffleSongs(songs, 10, 'popular');
+export const shuffledTrendingSongs = smartHourlyShuffleSongs(trendingSongs, 8, 'trending');
+export const shuffledMassRapSongs = smartHourlyShuffleSongs(massRapSongs, 8, 'massrap');
+export const shuffledHindiSongs = smartHourlyShuffleSongs(HindiSongs, 8, 'hindi');
+export const shuffledMoreSongs = smartHourlyShuffleSongs(moreSongs, 8, 'more');
+export const shuffledNewReleases = smartHourlyShuffleSongs(newReleases, 6, 'newreleases');
+export const shuffledAdditionalSongs = smartHourlyShuffleSongs(additionalSongs, 8, 'additional');
+
+// Time-based shuffled songs
+export const shuffledMorningSongs = hourlyShuffleSongs(goodMorningSongs, 'morning');
+export const shuffledAfternoonSongs = hourlyShuffleSongs(goodAfternoonSongs, 'afternoon');
+export const shuffledEveningSongs = hourlyShuffleSongs(goodEveningSongs, 'evening');
 
 // Combine all songs from different files, respecting display settings
 export const allSongs = [
@@ -16,7 +31,6 @@ export const allSongs = [
   ...(displayGoodMorningSongs ? goodMorningSongs : []),
   ...(displayGoodAfternoonSongs ? goodAfternoonSongs : []),
   ...(displayGoodEveningSongs ? goodEveningSongs : []),
-  ...popularSongs, 
   ...newReleases,
   ...additionalSongs,
   ...moreSongs,
@@ -80,5 +94,16 @@ export const hindiSongsByTitle = createSongMap(HindiSongs);
 // Universal song map containing all unique songs
 export const allSongsByTitle = createSongMap(uniqueSongs);
 
-// Export organized song collections
-export { songs, trendingSongs, goodMorningSongs, goodAfternoonSongs, goodEveningSongs, popularSongs, newReleases, additionalSongs, moreSongs, massRapSongs, HindiSongs };
+// Export organized song collections (original + shuffled)
+export { 
+  songs, 
+  trendingSongs, 
+  goodMorningSongs, 
+  goodAfternoonSongs, 
+  goodEveningSongs, 
+  newReleases, 
+  additionalSongs, 
+  moreSongs, 
+  massRapSongs, 
+  HindiSongs 
+};

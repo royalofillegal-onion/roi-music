@@ -13,7 +13,15 @@ import DynamicSection from "@/components/DynamicSection";
 import ModernSongCard from "@/components/ModernSongCard";
 import { Music2 } from "lucide-react";
 
-import { trendingSongs, popularSongs, newReleases, uniqueSongs, moreSongs, massRapSongs, HindiSongs } from "@/data/allSongs";
+import { 
+  shuffledTrendingSongs, 
+  popularSongs, 
+  shuffledNewReleases, 
+  uniqueSongs, 
+  shuffledMoreSongs, 
+  shuffledMassRapSongs, 
+  shuffledHindiSongs 
+} from "@/data/allSongs";
 import ArtistGrid from "@/components/ArtistGrid";
 import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
@@ -67,13 +75,13 @@ const Index = () => {
     setTimeBasedBanner('');
   }, []);
   
-  // Static sections with different layouts
+  // Static sections with smart shuffled songs (refreshes hourly)
   const staticSections = [
-    { id: 'trending', title: 'Trending Now', songs: trendingSongs, layout: 'horizontal' as const },
+    { id: 'trending', title: 'Trending Now', songs: shuffledTrendingSongs, layout: 'horizontal' as const },
     { id: 'popular', title: 'Popular Right Now', songs: popularSongs, layout: 'horizontal' as const },
-    { id: 'massRap', title: 'Mass & Rap Hits', songs: massRapSongs, layout: 'horizontal' as const },
-    { id: 'hindi', title: 'Hindi, Tamil & English', songs: HindiSongs, layout: 'horizontal' as const },
-    { id: 'moreSongs', title: 'More Hits', songs: moreSongs, layout: 'horizontal' as const },
+    { id: 'massRap', title: 'Mass & Rap Hits', songs: shuffledMassRapSongs, layout: 'horizontal' as const },
+    { id: 'hindi', title: 'Hindi, Tamil & English', songs: shuffledHindiSongs, layout: 'horizontal' as const },
+    { id: 'moreSongs', title: 'More Hits', songs: shuffledMoreSongs, layout: 'horizontal' as const },
     { id: 'romantic', title: 'Romantic Melodies', songs: uniqueSongs.filter(song => song.sync === 'romantic' || song.sync === 'love'), layout: 'horizontal' as const },
     { id: 'dance', title: 'Dance & Party', songs: uniqueSongs.filter(song => song.sync === 'dance' || song.sync === 'party'), layout: 'horizontal' as const },
     { id: 'devotional', title: 'Devotional Songs', songs: uniqueSongs.filter(song => song.sync === 'devotional'), layout: 'horizontal' as const }
