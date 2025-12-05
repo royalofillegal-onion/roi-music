@@ -55,6 +55,7 @@ export const ownerDetails: OwnerDetails[] = [
   {
     id: 2,
     name: "S. P. Balasubrahmanyam",
+    artistname: "SPB",
     image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop&crop=face",
     bio: "Legendary playback singer known as SPB, recorded over 40,000 songs in 16 languages. Recipient of Padma Shri, Padma Bhushan, and 6 National Film Awards.",
     genres: ["Playback", "Classical", "Film Music"],
@@ -68,6 +69,7 @@ export const ownerDetails: OwnerDetails[] = [
   {
     id: 3,
     name: "Peddi",
+    artistname: "Peddi",
     image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=300&h=300&fit=crop&crop=face",
     bio: "Underground Telugu rapper making waves in the indie music scene. Known for hard-hitting lyrics and authentic street vibes.",
     genres: ["Telugu Rap", "Underground", "Street Music"],
@@ -81,6 +83,7 @@ export const ownerDetails: OwnerDetails[] = [
   {
     id: 4,
     name: "Dude",
+    artistname: "Dude",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
     bio: "Versatile artist known for genre-bending compositions. Creates music that bridges traditional Telugu sounds with modern electronic elements.",
     genres: ["Electronic", "Pop", "Fusion"],
@@ -94,6 +97,7 @@ export const ownerDetails: OwnerDetails[] = [
   {
     id: 5,
     name: "OG",
+    artistname: "OG",
     image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop&crop=face",
     bio: "The original gangster of Telugu rap scene. Pioneered the movement and continues to inspire new generation artists.",
     genres: ["Telugu Rap", "Hip-Hop", "Trap"],
