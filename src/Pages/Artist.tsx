@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Heart, Plus, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePlayer } from '@/context/PlayerContext';
-import { allSongs } from '@/data/allSongs';
+import { uniqueSongs } from '@/data/allSongs';
 import { Song } from '@/data/songs';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -18,10 +18,16 @@ const Artist = () => {
   useEffect(() => {
     if (artistName) {
       const decodedArtistName = decodeURIComponent(artistName);
-      const songs = allSongs.filter(song => 
+      // Use uniqueSongs to avoid duplicates and filter by exact artist match
+      const songs = uniqueSongs.filter(song => 
+        song.artist.toLowerCase() === decodedArtistName.toLowerCase() ||
         song.artist.toLowerCase().includes(decodedArtistName.toLowerCase())
       );
-      setArtistSongs(songs);
+      // Remove any remaining duplicates by title
+      const uniqueByTitle = songs.filter((song, index, self) =>
+        index === self.findIndex(s => s.title.toLowerCase() === song.title.toLowerCase())
+      );
+      setArtistSongs(uniqueByTitle);
     }
   }, [artistName]);
 
