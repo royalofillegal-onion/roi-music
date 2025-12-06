@@ -3,6 +3,8 @@ import { Song } from "@/data/songs";
 import { uniqueSongs } from "@/data/allSongs";
 import { showSongNotification } from "@/services/NotificationService";
 import { registerMediaSession } from "@/services/androidNotification";
+import { offlineCacheService } from "@/services/OfflineCacheService";
+import { crossfadeService } from "@/services/CrossfadeService";
 
 interface PlayerContextType {
   currentSong: Song | null;
@@ -166,11 +168,33 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isRepeating, isShuffled]);
 
-  const playSong = (song: Song) => {
+  const playSong = async (song: Song) => {
     if (!audioRef.current) return;
 
     setCurrentSong(song);
-    audioRef.current.src = song.audioUrl;
+    
+    // Try to get offline cached version first
+    let audioUrl = song.audioUrl;
+    try {
+      const offlineUrl = await offlineCacheService.getOfflineAudioUrl(song.id);
+      if (offlineUrl) {
+        audioUrl = offlineUrl;
+        console.log('Playing from offline cache:', song.title);
+      } else if (navigator.onLine) {
+        // Cache song for offline use in background
+        offlineCacheService.cacheSong({
+          id: song.id,
+          title: song.title,
+          artist: song.artist,
+          audioUrl: song.audioUrl,
+          imageUrl: song.imageUrl
+        });
+      }
+    } catch (error) {
+      console.warn('Offline cache error:', error);
+    }
+
+    audioRef.current.src = audioUrl;
     audioRef.current.load();
     
     audioRef.current.play().then(() => {
