@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SleepTimerButton } from "@/components/SleepTimerButton";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
+import { AudioSettingsButton } from "@/components/AudioSettingsButton";
 
 const Player = () => {
   const navigate = useNavigate();
