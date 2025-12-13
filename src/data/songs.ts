@@ -237,6 +237,19 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "devotional"
 },
+  {
+  id: "Kamalakucha",
+  title: "Kamalakucha",
+  artist: "Kamalakucha",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1765633030/size_m_a0hcgr.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1765633029/Ghibran_Vinaya_Karthik_Rajan_-_Kamalakucha_Sri_Venkateswara_Stotram__mp3.pm_nfueos.mp3",
+  duration: 278,
+  album: "kamalakucha",
+  year: 2025,
+  genre: "god",
+  language: "telugu",
+  sync: "devotional"
+},
 {
   id: "Hridayam Lopala",
   title: "Hridayam Lopala",
