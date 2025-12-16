@@ -151,17 +151,7 @@ import { Song } from "@/data/songs";
           <MovieAlbumsGrid title="Movie Albums" className="mb-2" />
         </div>
 
-        {/* Singers Section */}
-        <div className="animate-slide-up" style={{ animationDelay: '50ms' }}>
-          <SingersGrid title="Popular Singers" type="singers" className="mb-2" />
-        </div>
-
-        {/* Music Directors Section */}
-        <div className="animate-slide-up" style={{ animationDelay: '100ms' }}>
-          <SingersGrid title="Music Directors" type="music-directors" className="mb-2" />
-        </div>
-
-        {/* Quick Picks Grid - Enhanced for mobile */}
+         {/* Quick Picks Grid - Enhanced for mobile */}
         <DynamicSection
           title="Made for you"
           songs={quickPicks}
@@ -169,6 +159,14 @@ import { Song } from "@/data/songs";
           cardSize={isMobile ? "small" : "medium"}
           className="animate-slide-up"
         />
+
+        {/* Singers Section */}
+        <div className="animate-slide-up" style={{ animationDelay: '50ms' }}>
+          <SingersGrid title="Popular Singers" type="singers" className="mb-2" />
+        </div>
+
+        
+       
 
         {/* Main Sections */}
         {mainSections.map((section, index) => (
@@ -196,6 +194,11 @@ import { Song } from "@/data/songs";
         {/* Recently Played with enhanced styling */}
         <div className="animate-slide-up">
           <RecentlyPlayedSection />
+        </div>
+
+        {/* Music Directors Section */}
+        <div className="animate-slide-up" style={{ animationDelay: '100ms' }}>
+          <SingersGrid title="Music Directors" type="music-directors" className="mb-2" />
         </div>
 
         {/* Bottom Sections - Popular moved here */}
