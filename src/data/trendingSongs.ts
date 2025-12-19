@@ -2,6 +2,19 @@ import { Song } from './songs';
 
 // Trending songs that can be easily updated and managed
 export const trendingSongs: Song[] = [
+    {
+      id: "Sahana Sahana",
+      title: "Sahana Sahana",
+      artist: "The RajaSaab",
+      imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1766109884/IMG_20251219_072805_efxbnx.jpg",
+      audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1766109891/Sahana_Sahana_xzgekh.mp3",
+      duration: 258,
+      album: "Sahana Sahana",
+      year: 2025,
+      genre: ".",
+      language: "telugu",
+      sync: "."
+    },
   {
     id: "Chinni Gundelo",
     title: "Chinni Gundelo",
