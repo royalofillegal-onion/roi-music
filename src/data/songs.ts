@@ -41,6 +41,32 @@ export const songs: Song[] =[
   sync: "love"
 },
   {
+  id: "Rebel Saab",
+  title: "Rebel Saab",
+  artist: "The RajaSaab",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1766109884/IMG_20251219_072805_efxbnx.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1766109887/Rebel_Saab_aeal4v.mp3",
+  duration: 221,
+  album: "Rebel Saab",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "Rebel Saab",
+  title: "Rebel Saab",
+  artist: "The RajaSaab",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1766109884/IMG_20251219_072805_efxbnx.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1766109891/Sahana_Sahana_xzgekh.mp3",
+  duration: 258,
+  album: "Rebel Saab",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
   id: "Nee Gunde Lona",
   title: "Nee Gunde Lona",
   artist: "Dude",
