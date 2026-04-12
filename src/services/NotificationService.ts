@@ -10,11 +10,11 @@ export interface SongNotificationData {
 }
 
 let currentNotificationId: number | null = null;
-let notificationTimeout: NodeJS.Timeout | null = null;
+let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Custom notification element
 let customNotification: HTMLDivElement | null = null;
-let notificationTimer: NodeJS.Timeout | null = null;
+let notificationTimer: ReturnType<typeof setTimeout> | null = null;
 
 export const showSongNotification = (
   title: string,
