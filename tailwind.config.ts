@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Orbitron', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -66,17 +67,25 @@ module.exports = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        neon: {
+          cyan: "hsl(185, 100%, 50%)",
+          purple: "hsl(275, 85%, 60%)",
+          magenta: "hsl(310, 90%, 55%)",
+          blue: "hsl(220, 100%, 60%)",
+        },
       },
       backgroundImage: {
-        'gradient-bloody': 'var(--gradient-bloody)',
-        'gradient-fire': 'var(--gradient-fire)',
         'gradient-primary': 'var(--gradient-primary)',
+        'gradient-energetic': 'var(--gradient-energetic)',
         'gradient-subtle': 'var(--gradient-subtle)',
+        'gradient-cyber': 'linear-gradient(135deg, hsl(185, 100%, 50%), hsl(275, 85%, 60%))',
+        'gradient-neon': 'linear-gradient(135deg, hsl(275, 85%, 60%), hsl(310, 90%, 55%))',
       },
       boxShadow: {
-        'bloody': 'var(--shadow-bloody)',
-        'fire': 'var(--shadow-fire)',
-        'crimson': 'var(--shadow-crimson)',
+        'neon-cyan': '0 0 20px hsl(185, 100%, 50%, 0.3)',
+        'neon-purple': '0 0 20px hsl(275, 85%, 60%, 0.3)',
+        'neon-magenta': '0 0 20px hsl(310, 90%, 55%, 0.3)',
+        'cyber': '0 0 30px hsl(185, 100%, 50%, 0.2), 0 0 60px hsl(275, 85%, 60%, 0.1)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -104,13 +113,20 @@ module.exports = {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
-        "pulse-fire": {
+        "pulse-neon": {
           "0%, 100%": { opacity: "1", transform: "scale(1)" },
           "50%": { opacity: "0.8", transform: "scale(1.05)" },
         },
-        "bloody-glow": {
+        "neon-glow": {
           "0%, 100%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.3)" },
-          "50%": { boxShadow: "0 0 40px hsl(var(--primary) / 0.6)" },
+          "50%": { boxShadow: "0 0 50px hsl(var(--primary) / 0.6), 0 0 80px hsl(var(--secondary) / 0.3)" },
+        },
+        "cyber-flicker": {
+          "0%, 100%": { opacity: "1" },
+          "5%": { opacity: "0.8" },
+          "10%": { opacity: "1" },
+          "15%": { opacity: "0.6" },
+          "20%": { opacity: "1" },
         },
       },
       animation: {
@@ -119,8 +135,9 @@ module.exports = {
         "fade-in": "fade-in 0.5s ease-out",
         "slide-up": "slide-up 0.5s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
-        "pulse-fire": "pulse-fire 2s ease-in-out infinite",
-        "bloody-glow": "bloody-glow 3s ease-in-out infinite",
+        "pulse-neon": "pulse-neon 2s ease-in-out infinite",
+        "neon-glow": "neon-glow 3s ease-in-out infinite",
+        "cyber-flicker": "cyber-flicker 4s ease-in-out infinite",
       },
     },
   },
