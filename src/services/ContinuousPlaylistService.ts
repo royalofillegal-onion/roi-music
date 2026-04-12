@@ -13,7 +13,7 @@ class ContinuousPlaylistService {
   private playlist: PlaylistSong[] = [];
   private currentIndex = 0;
   private isPlaying = false;
-  private intervalId: NodeJS.Timeout | null = null;
+  private intervalId: ReturnType<typeof setInterval> | null = null;
   public onSongChange: ((song: PlaylistSong) => void) | null = null;
 
   async loadDailyPlaylist() {

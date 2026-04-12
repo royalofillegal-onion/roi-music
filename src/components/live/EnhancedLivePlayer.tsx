@@ -34,7 +34,7 @@ const EnhancedLivePlayer: React.FC<EnhancedLivePlayerProps> = ({
   const [mouseActive, setMouseActive] = useState(true);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
     
     if (mouseActive) {
       setShowControls(true);

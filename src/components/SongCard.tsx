@@ -33,7 +33,7 @@ const SongCard = ({ song, className, variant = "default" }: SongCardProps) => {
   const { addToGuestPlaylist, isInGuestPlaylist } = useGuestPlaylist();
   
   // Long press handling
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLongPress = useRef(false);
   const [isPressing, setIsPressing] = useState(false);
 
