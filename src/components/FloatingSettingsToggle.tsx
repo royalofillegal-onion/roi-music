@@ -15,16 +15,24 @@ const FloatingSettingsToggle: React.FC<FloatingSettingsToggleProps> = ({ onToggl
     <motion.div
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className={`fixed ${isMobile ? 'bottom-36 left-4' : 'bottom-20 left-4'} z-40`}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      drag
+      dragMomentum={false}
+      dragElastic={0.1}
+      className={`fixed ${isMobile ? 'bottom-36 left-4' : 'bottom-20 left-4'} z-40 cursor-grab active:cursor-grabbing`}
     >
       <Button
         onClick={onToggle}
         size="lg"
-        className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+        className="w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary hover:from-primary-glow hover:to-secondary-glow text-primary-foreground shadow-cyber hover:shadow-neon-cyan transition-all duration-300 animate-neon-glow"
       >
-        <Settings className="h-6 w-6" />
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        >
+          <Settings className="h-6 w-6" />
+        </motion.div>
       </Button>
     </motion.div>
   );
