@@ -37,46 +37,54 @@ const FeaturedPlaylistsGrid: React.FC<FeaturedPlaylistsGridProps> = ({
         setIsLoggedIn(false);
         return;
       }
-      
+
       setIsLoggedIn(true);
-      
-      // Fetch user playlists with songs
+
+      // Fetch user playlists
       const { data: playlists } = await supabase
         .from('playlists')
         .select('id, name, cover_image')
         .eq('user_id', session.user.id)
         .limit(5);
-      
-      if (playlists) {
-        const playlistsWithSongs = await Promise.all(
-          playlists.map(async (playlist) => {
-            const { data: playlistSongsData } = await supabase
-              .from('playlist_songs')
-              .select('song_id')
-              .eq('playlist_id', playlist.id);
-            
-            // Map song_ids to actual Song objects from uniqueSongs
-            const songs = playlistSongsData
-              ?.map(ps => uniqueSongs.find(s => s.id === ps.song_id))
-              .filter(Boolean) as Song[] || [];
-            
-            return {
-              ...playlist,
-              song_count: songs.length,
-              songs
-            };
-          })
-        );
+
+      if (playlists && playlists.length > 0) {
+        const playlistIds = playlists.map(p => p.id);
+
+        const { data: playlistSongsData } = await supabase
+          .from('playlist_songs')
+          .select('song_id, playlist_id')
+          .in('playlist_id', playlistIds);
+
+        const songMap = new Map(uniqueSongs.map(s => [s.id, s]));
+
+        const songsByPlaylistId: Record<string, Song[]> = {};
+        playlistIds.forEach(id => {
+          songsByPlaylistId[id] = [];
+        });
+
+        playlistSongsData?.forEach(ps => {
+          const song = songMap.get(ps.song_id);
+          if (song && songsByPlaylistId[ps.playlist_id]) {
+            songsByPlaylistId[ps.playlist_id].push(song);
+          }
+        });
+
+        const playlistsWithSongs = playlists.map(playlist => ({
+          ...playlist,
+          song_count: songsByPlaylistId[playlist.id].length,
+          songs: songsByPlaylistId[playlist.id]
+        }));
+
         setUserPlaylists(playlistsWithSongs);
       }
     };
 
     fetchUserPlaylists();
-    
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       fetchUserPlaylists();
     });
-    
+
     return () => subscription.unsubscribe();
   }, []);
 

@@ -207,18 +207,6 @@ const DynamicSection = ({
             </div>
           ))}
         </div>
-      ) : layout === 'grid' ? (
-        <div className={cn("grid gap-3 sm:gap-4 lg:gap-6", getGridCols())}>
-          {songs.slice(0, isMobile ? 6 : 16).map((song, index) => (
-            <ModernSongCard
-              key={`${song.id}-${index}`}
-              song={song}
-              size={cardSize}
-              showIndex={showRankings}
-              index={showRankings ? index + 1 : undefined}
-            />
-          ))}
-        </div>
       ) : null}
     </section>
   );

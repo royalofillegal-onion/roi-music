@@ -39,19 +39,18 @@ export const allSongs = [
 ];
 
 // Remove duplicates based on title and artist only (filter duplicates by track)
-export const uniqueSongs = allSongs.filter((song, index, self) => {
-  if (!song || !song.title || !song.artist) return false;
-  
-  // Check if this is the first occurrence of this song by title and artist only
-  const firstIndex = self.findIndex(s => 
-    s && s.title && s.artist && 
-    s.title.toLowerCase().trim() === song.title.toLowerCase().trim() && 
-    s.artist.toLowerCase().trim() === song.artist.toLowerCase().trim()
-  );
-  
-  // Only keep the first occurrence
-  return index === firstIndex;
-});
+export const uniqueSongs = (() => {
+  const seenKeys = new Set<string>();
+  return allSongs.filter(song => {
+    if (!song || !song.title || !song.artist) return false;
+
+    const key = `${song.title.toLowerCase().trim()}|${song.artist.toLowerCase().trim()}`;
+    if (seenKeys.has(key)) return false;
+
+    seenKeys.add(key);
+    return true;
+  });
+})();
 
 // Group songs by sync for better navigation
 export const songsBySync = uniqueSongs.reduce((acc, song) => {
