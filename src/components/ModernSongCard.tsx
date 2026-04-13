@@ -57,7 +57,7 @@ const ModernSongCard = ({
 
   const sizeClasses = {
     small: {
-      card: "group cursor-pointer transition-all duration-300 hover:bg-primary/5 hover:border-primary/20 hover:shadow-crimson rounded-lg p-4 border border-transparent",
+      card: "group cursor-pointer transition-all duration-500 rounded-lg p-4 border border-border/30 hover:border-neon-cyan/50 hover:shadow-neon-cyan hover:bg-neon-cyan/5 relative before:absolute before:inset-0 before:rounded-lg before:border before:border-transparent hover:before:border-neon-purple/30 before:transition-all before:duration-500",
       image: "w-20 h-20",
       playButton: "w-10 h-10",
       playIcon: "w-4 h-4",
@@ -65,7 +65,7 @@ const ModernSongCard = ({
       artist: "text-sm text-muted-foreground"
     },
     medium: {
-      card: "group cursor-pointer transition-all duration-300 hover:bg-primary/5 hover:border-primary/20 hover:shadow-crimson rounded-xl p-6 md:p-5 border border-transparent",
+      card: "group cursor-pointer transition-all duration-500 rounded-xl p-6 md:p-5 border border-border/30 hover:border-neon-cyan/50 hover:shadow-neon-cyan hover:bg-neon-cyan/5 relative overflow-visible",
       image: "w-full aspect-square",
       playButton: "w-16 h-16 md:w-16 md:h-16",
       playIcon: "w-6 h-6 md:w-6 md:h-6",
@@ -73,7 +73,7 @@ const ModernSongCard = ({
       artist: "text-lg md:text-lg text-muted-foreground"
     },
     large: {
-      card: "group cursor-pointer transition-all duration-300 hover:bg-primary/5 hover:border-primary/20 hover:shadow-crimson rounded-2xl p-6 border border-transparent",
+      card: "group cursor-pointer transition-all duration-500 rounded-2xl p-6 border border-border/30 hover:border-neon-purple/50 hover:shadow-neon-purple hover:bg-neon-purple/5 relative overflow-visible",
       image: "w-full aspect-square",
       playButton: "w-14 h-14",
       playIcon: "w-5 h-5",
@@ -163,22 +163,22 @@ const ModernSongCard = ({
     >
       <div className="space-y-4">
         <div className="relative group/image">
-          <div className={cn("rounded-lg overflow-hidden shadow-2xl", currentSize.image)}>
+          <div className={cn("rounded-lg overflow-hidden shadow-2xl ring-1 ring-border/20 group-hover:ring-neon-cyan/40 transition-all duration-500", currentSize.image)}>
             <img 
               src={song.imageUrl} 
               alt={song.title}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </div>
           
           {/* Play button overlay */}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-lg flex items-center justify-center">
             <Button
               size="sm"
               className={cn(
-                "rounded-full bg-accent hover:bg-accent/90 text-black shadow-xl transform transition-all duration-200",
+                "rounded-full bg-neon-cyan hover:bg-neon-cyan/90 text-black shadow-[0_0_25px_hsl(185,100%,50%,0.5)] transform transition-all duration-300",
                 currentSize.playButton,
-                "translate-y-2 group-hover:translate-y-0 scale-90 group-hover:scale-100"
+                "translate-y-3 group-hover:translate-y-0 scale-75 group-hover:scale-100"
               )}
             >
               <Play className={cn(currentSize.playIcon, "fill-current")} />
