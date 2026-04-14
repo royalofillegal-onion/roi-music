@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from "react";
+import React, { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Song } from "@/data/songs";
 import { uniqueSongs } from "@/data/allSongs";
-import { showSongNotification } from "@/services/NotificationService";
-import { registerMediaSession } from "@/services/androidNotification";
+import { PlaybackQueue } from "@/lib/algorithms/playbackQueue";
+import { NoRepeatShuffler, fisherYatesShuffle } from "@/lib/algorithms/fisherYatesShuffle";
+import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
+import { mediaSessionManager } from "@/services/MediaSessionService";
 import { offlineCacheService } from "@/services/OfflineCacheService";
-import { crossfadeService } from "@/services/CrossfadeService";
 
 interface PlayerContextType {
   currentSong: Song | null;
@@ -45,9 +46,12 @@ interface PlayerContextType {
   playedSongsHistory: Set<string>;
   autoPlayArtist: boolean;
   setAutoPlayArtist: (value: boolean) => void;
+  recommendations: Song[];
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
+
+const MAX_RECENTLY_PLAYED = 30;
 
 export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
@@ -55,7 +59,6 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolumeState] = useState(1);
-  const [queue, setQueue] = useState<Song[]>([]);
   const [isRepeating, setIsRepeating] = useState(false);
   const [isShuffled, setIsShuffled] = useState(false);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
@@ -65,43 +68,54 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [playOnceMode, setPlayOnceMode] = useState(false);
   const [playedSongsHistory, setPlayedSongsHistory] = useState<Set<string>>(new Set());
   const [autoPlayArtist, setAutoPlayArtist] = useState(false);
+  const [recommendations, setRecommendations] = useState<Song[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Request notification permission on load
-  useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-  }, []);
+  // Algorithm instances
+  const playbackQueueRef = useRef(new PlaybackQueue());
+  const shufflerRef = useRef(new NoRepeatShuffler(uniqueSongs));
 
-  // Handle custom notification events
-  useEffect(() => {
-    const handlePrevious = () => previousSong();
-    const handleNext = () => nextSong();
-    const handleTogglePlayPause = () => togglePlayPause();
+  // Expose queue as array for UI
+  const queue = playbackQueueRef.current.getAll();
 
-    window.addEventListener('playerPrevious', handlePrevious);
-    window.addEventListener('playerNext', handleNext);
-    window.addEventListener('playerTogglePlayPause', handleTogglePlayPause);
-
-    return () => {
-      window.removeEventListener('playerPrevious', handlePrevious);
-      window.removeEventListener('playerNext', handleNext);
-      window.removeEventListener('playerTogglePlayPause', handleTogglePlayPause);
-    };
-  }, []);
-
-  // Initialize audio element
+  // Initialize audio + Media Session handlers
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.volume = volume;
     }
 
+    // Register Spotify-like Media Session handlers
+    mediaSessionManager.registerHandlers({
+      onPlay: () => resumeSong(),
+      onPause: () => pauseSong(),
+      onNextTrack: () => nextSong(),
+      onPreviousTrack: () => previousSong(),
+      onSeekTo: (time) => seek(time),
+      onSeekForward: (offset) => {
+        if (audioRef.current) seek(audioRef.current.currentTime + offset);
+      },
+      onSeekBackward: (offset) => {
+        if (audioRef.current) seek(Math.max(0, audioRef.current.currentTime - offset));
+      },
+    });
+
+    return () => {
+      mediaSessionManager.destroy();
+    };
+  }, []);
+
+  // Audio event listeners
+  useEffect(() => {
     const audio = audioRef.current;
+    if (!audio) return;
 
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
+      // Update lock screen seek bar
+      if (audio.duration && isFinite(audio.duration)) {
+        mediaSessionManager.updatePositionState(audio.currentTime, audio.duration);
+      }
     };
 
     const handleDurationChange = () => {
@@ -110,19 +124,11 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleEnded = () => {
       if (isRepeating) {
-        // Repeat current song
         audio.currentTime = 0;
         audio.play();
         return;
       }
-      
-      if (queue.length > 0) {
-        // Play next from queue
-        nextSong();
-      } else {
-        // Play next song from all songs
-        playNextFromLibrary();
-      }
+      nextSong();
     };
 
     const handleCanPlay = () => {
@@ -142,259 +148,282 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("canplay", handleCanPlay);
     };
-  }, [queue, isRepeating, isPlaying]);
+  }, [isRepeating, isPlaying, isShuffled]);
 
   // Load liked songs from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("likedSongs");
-    if (saved) {
-      setLikedSongs(JSON.parse(saved));
+    if (saved) setLikedSongs(JSON.parse(saved));
+    
+    // Load recently played
+    const recentSaved = localStorage.getItem("recentlyPlayed");
+    if (recentSaved) {
+      try {
+        setRecentlyPlayed(JSON.parse(recentSaved));
+      } catch { /* ignore */ }
     }
   }, []);
 
-  // Save liked songs to localStorage
   useEffect(() => {
     localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
   }, [likedSongs]);
 
   // Update play mode when repeat/shuffle changes
   useEffect(() => {
-    if (isShuffled) {
-      setPlayMode('shuffle');
-    } else if (isRepeating) {
-      setPlayMode('repeat');
-    } else {
-      setPlayMode('sequence');
-    }
+    if (isShuffled) setPlayMode('shuffle');
+    else if (isRepeating) setPlayMode('repeat');
+    else setPlayMode('sequence');
   }, [isRepeating, isShuffled]);
 
-  const playSong = async (song: Song) => {
+  // Generate recommendations when current song or recently played changes
+  useEffect(() => {
+    if (currentSong || recentlyPlayed.length > 0) {
+      const recs = getHybridRecommendations(currentSong, recentlyPlayed, uniqueSongs, 20);
+      setRecommendations(recs);
+    }
+  }, [currentSong?.id, recentlyPlayed.length]);
+
+  // Custom notification events (for custom overlay)
+  useEffect(() => {
+    const handlePrevious = () => previousSong();
+    const handleNext = () => nextSong();
+    const handleToggle = () => togglePlayPause();
+
+    window.addEventListener('playerPrevious', handlePrevious);
+    window.addEventListener('playerNext', handleNext);
+    window.addEventListener('playerTogglePlayPause', handleToggle);
+
+    return () => {
+      window.removeEventListener('playerPrevious', handlePrevious);
+      window.removeEventListener('playerNext', handleNext);
+      window.removeEventListener('playerTogglePlayPause', handleToggle);
+    };
+  }, []);
+
+  const addToRecentlyPlayed = useCallback((song: Song) => {
+    setRecentlyPlayed(prev => {
+      const filtered = prev.filter(s => s.id !== song.id);
+      const updated = [song, ...filtered].slice(0, MAX_RECENTLY_PLAYED);
+      localStorage.setItem("recentlyPlayed", JSON.stringify(updated));
+      return updated;
+    });
+    setPlayedSongsHistory(prev => new Set(prev).add(song.id));
+  }, []);
+
+  const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
 
     setCurrentSong(song);
-    
-    // Try to get offline cached version first
+    addToRecentlyPlayed(song);
+
+    // Try offline cache first
     let audioUrl = song.audioUrl;
     try {
       const offlineUrl = await offlineCacheService.getOfflineAudioUrl(song.id);
       if (offlineUrl) {
         audioUrl = offlineUrl;
-        console.log('Playing from offline cache:', song.title);
       } else if (navigator.onLine) {
-        // Cache song for offline use in background
         offlineCacheService.cacheSong({
-          id: song.id,
-          title: song.title,
-          artist: song.artist,
-          audioUrl: song.audioUrl,
-          imageUrl: song.imageUrl
+          id: song.id, title: song.title, artist: song.artist,
+          audioUrl: song.audioUrl, imageUrl: song.imageUrl
         });
       }
-    } catch (error) {
-      console.warn('Offline cache error:', error);
-    }
+    } catch { /* ignore */ }
 
     audioRef.current.src = audioUrl;
     audioRef.current.load();
-    
+
     audioRef.current.play().then(() => {
       setIsPlaying(true);
-      
-      // Show notification with song info
-      showSongNotification(
-        song.title,
-        song.artist,
-        song.imageUrl,
-        song.id,
-        audioRef.current?.duration
-      );
-      
-      // Register media session for better mobile experience
-      registerMediaSession({
+
+      // Update Spotify-like Media Session (lock screen notification)
+      mediaSessionManager.updateMetadata({
         title: song.title,
         artist: song.artist,
+        album: song.album || song.artist,
         imageUrl: song.imageUrl,
         duration: audioRef.current?.duration,
-        id: song.id
       });
-      
+      mediaSessionManager.updatePlaybackState(true);
+
+      if (audioRef.current) {
+        mediaSessionManager.startPositionTracking(audioRef.current);
+      }
     }).catch((error) => {
       console.error("Error playing song:", error);
       setIsPlaying(false);
     });
-  };
+  }, [addToRecentlyPlayed]);
 
-  const pauseSong = () => {
+  const pauseSong = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       setIsPlaying(false);
-      
-      // Update media session on pause
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.playbackState = 'paused';
-      }
+      mediaSessionManager.updatePlaybackState(false);
+      mediaSessionManager.stopPositionTracking();
     }
-  };
+  }, []);
 
-  const resumeSong = () => {
+  const resumeSong = useCallback(() => {
     if (audioRef.current && currentSong) {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
-        
-        // Update media session on resume
-        if ('mediaSession' in navigator) {
-          navigator.mediaSession.playbackState = 'playing';
+        mediaSessionManager.updatePlaybackState(true);
+        if (audioRef.current) {
+          mediaSessionManager.startPositionTracking(audioRef.current);
         }
-      }).catch(() => {
-        setIsPlaying(false);
-      });
+      }).catch(() => setIsPlaying(false));
     }
-  };
+  }, [currentSong]);
 
-  const togglePlayPause = () => {
-    if (isPlaying) {
-      pauseSong();
-    } else {
-      resumeSong();
+  const togglePlayPause = useCallback(() => {
+    if (isPlaying) pauseSong();
+    else resumeSong();
+  }, [isPlaying, pauseSong, resumeSong]);
+
+  const nextSong = useCallback(() => {
+    // 1. FIFO Queue — if songs are queued, dequeue next
+    const queuedSong = playbackQueueRef.current.dequeue();
+    if (queuedSong) {
+      playSong(queuedSong);
+      return;
     }
-  };
 
-  const nextSong = () => {
-    if (queue.length > 0) {
-      const nextSong = queue[0];
-      const newQueue = queue.slice(1);
-      setQueue(newQueue);
-      playSong(nextSong);
-    } else {
-      playNextFromLibrary();
+    // 2. Shuffle mode — Fisher-Yates no-repeat shuffler
+    if (isShuffled) {
+      const shuffled = shufflerRef.current.next();
+      if (shuffled) {
+        playSong(shuffled);
+        return;
+      }
     }
-  };
 
-  const previousSong = () => {
+    // 3. Sequential mode — play next in library order
+    if (!currentSong) return;
+    const currentIndex = uniqueSongs.findIndex(s => s.id === currentSong.id);
+    const nextIndex = (currentIndex + 1) % uniqueSongs.length;
+    playSong(uniqueSongs[nextIndex]);
+  }, [currentSong, isShuffled, playSong]);
+
+  const previousSong = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime > 3) {
-      // If more than 3 seconds into song, restart it
       audioRef.current.currentTime = 0;
       return;
     }
-    
-    // Otherwise play previous song from library
-    playPreviousFromLibrary();
-  };
 
-  const playNextFromLibrary = () => {
-    if (!currentSong) return;
-    
-    const currentIndex = uniqueSongs.findIndex(song => song.id === currentSong.id);
-    const nextIndex = (currentIndex + 1) % uniqueSongs.length;
-    const nextSong = uniqueSongs[nextIndex];
-    
-    playSong(nextSong);
-  };
+    // Check history from queue
+    const prevFromHistory = playbackQueueRef.current.getPrevious();
+    if (prevFromHistory) {
+      playSong(prevFromHistory);
+      return;
+    }
 
-  const playPreviousFromLibrary = () => {
+    // Sequential fallback
     if (!currentSong) return;
-    
-    const currentIndex = uniqueSongs.findIndex(song => song.id === currentSong.id);
+    const currentIndex = uniqueSongs.findIndex(s => s.id === currentSong.id);
     const prevIndex = currentIndex === 0 ? uniqueSongs.length - 1 : currentIndex - 1;
-    const prevSong = uniqueSongs[prevIndex];
-    
-    playSong(prevSong);
-  };
+    playSong(uniqueSongs[prevIndex]);
+  }, [currentSong, playSong]);
 
-  const seek = (time: number) => {
+  const seek = useCallback((time: number) => {
     if (audioRef.current) {
       audioRef.current.currentTime = time;
       setCurrentTime(time);
     }
-  };
+  }, []);
 
-  const setVolume = (newVolume: number) => {
+  const setVolume = useCallback((newVolume: number) => {
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
       setVolumeState(newVolume);
     }
-  };
+  }, []);
 
-  const addToQueue = (song: Song) => {
-    setQueue(prev => [...prev, song]);
-  };
+  const addToQueue = useCallback((song: Song) => {
+    playbackQueueRef.current.enqueue(song);
+    // Force re-render
+    setCircularQueue([...playbackQueueRef.current.getAll()]);
+  }, []);
 
-  const clearQueue = () => {
-    setQueue([]);
-  };
+  const clearQueue = useCallback(() => {
+    playbackQueueRef.current.clear();
+    setCircularQueue([]);
+  }, []);
 
-  const toggleRepeat = () => {
+  const toggleRepeat = useCallback(() => {
     setIsRepeating(prev => !prev);
-  };
+  }, []);
 
-  const toggleLike = (songId: string) => {
-    setLikedSongs(prev => {
-      const isLiked = prev.includes(songId);
-      if (isLiked) {
-        return prev.filter(id => id !== songId);
-      } else {
-        return [...prev, songId];
+  const toggleShuffle = useCallback(() => {
+    setIsShuffled(prev => {
+      const newVal = !prev;
+      if (newVal) {
+        // Reset shuffler when enabling shuffle
+        shufflerRef.current.reset();
       }
+      return newVal;
     });
-  };
+  }, []);
 
-  const isLiked = (songId: string): boolean => {
+  const toggleLike = useCallback((songId: string) => {
+    setLikedSongs(prev => {
+      return prev.includes(songId)
+        ? prev.filter(id => id !== songId)
+        : [...prev, songId];
+    });
+  }, []);
+
+  const isLiked = useCallback((songId: string): boolean => {
     return likedSongs.includes(songId);
-  };
+  }, [likedSongs]);
 
-  const setPlaybackMode = (mode: 'sequence' | 'repeat' | 'shuffle') => {
+  const setPlaybackMode = useCallback((mode: 'sequence' | 'repeat' | 'shuffle') => {
     setPlayMode(mode);
     setIsRepeating(mode === 'repeat');
     setIsShuffled(mode === 'shuffle');
-  };
+    if (mode === 'shuffle') shufflerRef.current.reset();
+  }, []);
 
-  const toggleShuffle = () => {
-    setIsShuffled(prev => !prev);
-  };
+  const seekTo = useCallback((time: number) => seek(time), [seek]);
 
-  const seekTo = (time: number) => {
-    seek(time);
-  };
-
-  const toggleLikeSong = async (songId: string): Promise<boolean> => {
+  const toggleLikeSong = useCallback(async (songId: string): Promise<boolean> => {
     toggleLike(songId);
-    return isLiked(songId);
-  };
+    return !likedSongs.includes(songId);
+  }, [toggleLike, likedSongs]);
 
-  const setIsLiveMode = (isLive: boolean) => {
-    // Simple implementation - could be extended
+  const setIsLiveMode = useCallback((isLive: boolean) => {
     console.log('Live mode:', isLive);
-  };
+  }, []);
 
-  const playArtistSongs = (artistName: string, allSongs: Song[], startingSong?: Song) => {
-    const artistSongs = allSongs.filter(song => 
+  const playArtistSongs = useCallback((artistName: string, allSongs: Song[], startingSong?: Song) => {
+    const artistSongs = allSongs.filter(song =>
       song.artist.toLowerCase().includes(artistName.toLowerCase())
     );
     if (artistSongs.length > 0) {
       playPlaylist(artistSongs);
     }
-  };
+  }, []);
 
-  const resetPlayHistory = () => {
+  const resetPlayHistory = useCallback(() => {
     setPlayedSongsHistory(new Set());
-  };
+    shufflerRef.current.reset();
+  }, []);
 
-  const playPlaylist = (songs: Song[]) => {
+  const playPlaylist = useCallback((songs: Song[]) => {
     if (songs.length === 0) return;
-    
-    // Set queue with remaining songs
-    setQueue(songs.slice(1));
-    // Play first song
+    // FIFO: load remaining into the queue
+    playbackQueueRef.current.replace(songs.slice(1));
+    setCircularQueue([...playbackQueueRef.current.getAll()]);
     playSong(songs[0]);
-  };
+  }, [playSong]);
 
-  const value: PlayerContextType = {
+  const value: PlayerContextType = useMemo(() => ({
     currentSong,
     isPlaying,
     currentTime,
     duration,
     volume,
-    queue,
+    queue: playbackQueueRef.current.getAll(),
     isRepeating,
     isShuffled,
     likedSongs,
@@ -404,6 +433,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     playOnceMode,
     playedSongsHistory,
     autoPlayArtist,
+    recommendations,
     playSong,
     pauseSong,
     resumeSong,
@@ -427,7 +457,16 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     setPlayOnceMode,
     resetPlayHistory,
     setAutoPlayArtist,
-  };
+  }), [
+    currentSong, isPlaying, currentTime, duration, volume,
+    isRepeating, isShuffled, likedSongs, playMode, recentlyPlayed,
+    circularQueue, playOnceMode, playedSongsHistory, autoPlayArtist,
+    recommendations, playSong, pauseSong, resumeSong, togglePlayPause,
+    nextSong, previousSong, seek, seekTo, setVolume, addToQueue,
+    clearQueue, toggleRepeat, toggleShuffle, toggleLike, toggleLikeSong,
+    isLiked, setPlaybackMode, playPlaylist, setIsLiveMode,
+    playArtistSongs, setPlayOnceMode, resetPlayHistory, setAutoPlayArtist,
+  ]);
 
   return (
     <PlayerContext.Provider value={value}>
