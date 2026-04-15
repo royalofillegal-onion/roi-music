@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from "react";
-import MusicVisualizer from "@/components/MusicVisualizer";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
 import FloatingSettingsPanel from "@/components/FloatingSettingsPanel";
@@ -9,7 +8,8 @@ import FestivalPopup from "@/components/FestivalPopup";
 import TimeLighting from "@/components/TimeLighting";
 import SectionFullView from "@/components/SectionFullView";
 import DynamicSection from "@/components/DynamicSection";
-import { Music2 } from "lucide-react";
+import SpotifyLikeSection from "@/components/SpotifyLikeSection";
+import { Music2, Play, Clock, Sparkles } from "lucide-react";
 
 import { 
   shuffledTrendingSongs, 
@@ -23,26 +23,23 @@ import {
 import MovieAlbumsGrid from "@/components/MovieAlbumsGrid";
 import SingersGrid from "@/components/SingersGrid";
 import FeaturedPlaylistsGrid from "@/components/FeaturedPlaylistsGrid";
-import { playlists } from "@/data/playlists";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import UserProfile from "@/components/UserProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { getDailyRotatedSongs } from "@/utils/dailyRotation";
+import { getDailyRotatedSongs, getTimeBasedGreeting } from "@/utils/dailyRotation";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Song } from "@/data/songs";
 
-  const Index = () => {
-  const { playSong } = usePlayer();
+const Index = () => {
+  const { playSong, recentlyPlayed, recommendations } = usePlayer();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { onboardingStatus, loading: onboardingLoading, markOnboardingComplete } = useOnboarding();
-  const [timeBasedBanner, setTimeBasedBanner] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showFloatingSettings, setShowFloatingSettings] = useState(false);
-  const [showFestivalPopup, setShowFestivalPopup] = useState(false);
   const [currentFullViewSection, setCurrentFullViewSection] = useState<{
     title: string;
     songs: Song[];
@@ -54,191 +51,212 @@ import { Song } from "@/data/songs";
   });
   
   useEffect(() => {
-    // Check auth status
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsLoggedIn(!!session);
     };
-    
     checkAuth();
-    
-    // Set up auth listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsLoggedIn(!!session);
     });
-    
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    // Disabled until get_time_based_content function is created
-    setTimeBasedBanner('');
-  }, []);
-  
-  // Static sections with smart shuffled songs (refreshes hourly) - Popular moved to bottom
-  const mainSections = [
-    { id: 'trending', title: 'Trending Now', songs: shuffledTrendingSongs, layout: 'horizontal' as const },
-    { id: 'massRap', title: 'Mass & Rap Hits', songs: shuffledMassRapSongs, layout: 'horizontal' as const },
-    { id: 'romantic', title: 'Romantic Melodies', songs: uniqueSongs.filter(song => song.sync === 'romantic' || song.sync === 'love'), layout: 'horizontal' as const },
-  ];
-
-  // Bottom sections
-  const bottomSections = [
-    { id: 'moreSongs', title: 'More Hits', songs: shuffledMoreSongs, layout: 'horizontal' as const },
-    { id: 'devotional', title: 'Devotional Songs', songs: uniqueSongs.filter(song => song.sync === 'devotional'), layout: 'horizontal' as const },
-    { id: 'popular', title: 'Popular Right Now', songs: popularSongs, layout: 'horizontal' as const },
-  ];
-
+  const greeting = getTimeBasedGreeting();
   const quickPicks = getDailyRotatedSongs(6);
 
+  // Spotify-like quick access cards (recently played + recommendations mixed)
+  const quickAccessSongs = recentlyPlayed.length > 0 
+    ? recentlyPlayed.slice(0, 6) 
+    : quickPicks;
+
   const openSectionFullView = (title: string, songs: Song[]) => {
-    setCurrentFullViewSection({
-      title,
-      songs,
-      isOpen: true,
-    });
+    setCurrentFullViewSection({ title, songs, isOpen: true });
   };
 
   const closeSectionFullView = () => {
-    setCurrentFullViewSection(prev => ({
-      ...prev,
-      isOpen: false,
-    }));
+    setCurrentFullViewSection(prev => ({ ...prev, isOpen: false }));
   };
 
-  // Only show onboarding for logged-in users who haven't completed it
   const showOnboarding = isLoggedIn && onboardingStatus && !onboardingStatus.completed;
   
   return (
-    <div className="relative pb-24 md:pb-32 px-4 md:px-6 min-h-screen">
-      {/* Time-based lighting overlay */}
+    <div className="relative pb-24 md:pb-32 min-h-screen">
       <TimeLighting />
-      
-      <MusicVisualizer />
-      
-      {/* Floating Music Info Component */}
       <FloatingMusicInfo />
+      <FestivalPopup onClose={() => {}} />
       
-      {/* Festival Popup */}
-      <FestivalPopup onClose={() => setShowFestivalPopup(false)} />
-      
-      {/* Header with User Profile and Site Name */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-4">
+      {/* Spotify-like Header */}
+      <div className="sticky top-0 z-30 px-4 md:px-6 py-3 backdrop-blur-xl bg-background/70 border-b border-border/30">
+        <div className="flex items-center justify-between max-w-[1400px] mx-auto">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-bloody rounded-full flex items-center justify-center shadow-bloody animate-bloody-glow">
-              <Music2 className="w-6 h-6 text-white" />
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center shadow-lg">
+              <Music2 className="w-5 h-5 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-fire bg-clip-text text-transparent">ROI MUSIC</h1>
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              ROI MUSIC
+            </h1>
           </div>
+          <UserProfile />
         </div>
-        <UserProfile />
-      </div>
-      
-      {/* Time-based Banner */}
-      {timeBasedBanner && (
-        <div className="mb-6 p-4 bg-gradient-bloody rounded-xl border border-primary/30 backdrop-blur-sm shadow-crimson">
-          <p className="text-center text-sm md:text-base font-medium text-primary-glow">
-            {timeBasedBanner}
-          </p>
-        </div>
-      )}
-
-      <div className="space-y-5 md:space-y-7">
-
-        {/* Movie Albums Grid */}
-        <div className="animate-slide-up">
-          <MovieAlbumsGrid title="Movie Albums" className="mb-2" />
-        </div>
-
-         {/* Quick Picks Grid - Enhanced for mobile */}
-        <DynamicSection
-          title="Made for you"
-          songs={quickPicks}
-          layout={isMobile ? "grid" : "horizontal"}
-          cardSize={isMobile ? "small" : "medium"}
-          className="animate-slide-up"
-        />
-
-        {/* Singers Section */}
-        <div className="animate-slide-up" style={{ animationDelay: '50ms' }}>
-          <SingersGrid title="Popular Singers" type="singers" className="mb-2" />
-        </div>
-
-        
-       
-
-        {/* Main Sections */}
-        {mainSections.map((section, index) => (
-          <div 
-            key={section.id}
-            className="animate-slide-up hover-scale transition-all duration-300"
-            style={{ animationDelay: `${index * 100}ms` }}
-          >
-            <DynamicSection
-              title={section.title}
-              songs={section.songs}
-              layout={section.layout}
-              cardSize="small"
-              onViewAll={() => openSectionFullView(section.title, section.songs)}
-              className="transition-all duration-300"
-            />
-          </div>
-        ))}
-
-        {/* Featured Playlists Section - Dynamic sync-based playlists */}
-        <div className="animate-slide-up">
-          <FeaturedPlaylistsGrid title="Featured Playlists" />
-        </div>
-
-        {/* Recently Played with enhanced styling */}
-        <div className="animate-slide-up">
-          <RecentlyPlayedSection />
-        </div>
-
-        {/* Music Directors Section */}
-        <div className="animate-slide-up" style={{ animationDelay: '100ms' }}>
-          <SingersGrid title="Music Directors" type="music-directors" className="mb-2" />
-        </div>
-
-        {/* Bottom Sections - Popular moved here */}
-        {bottomSections.map((section, index) => (
-          <div 
-            key={section.id}
-            className="animate-slide-up hover-scale transition-all duration-300"
-            style={{ animationDelay: `${index * 50}ms` }}
-          >
-            <DynamicSection
-              title={section.title}
-              songs={section.songs}
-              layout={section.layout}
-              cardSize="small"
-              onViewAll={() => openSectionFullView(section.title, section.songs)}
-              className="transition-all duration-300"
-            />
-          </div>
-        ))}
       </div>
 
-      {/* Onboarding Flow - Only show for logged-in users */}
+      <div className="px-4 md:px-6 max-w-[1400px] mx-auto">
+        {/* Greeting Section - Spotify style */}
+        <div className="pt-6 pb-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">{greeting}</h2>
+        </div>
+
+        {/* Quick Access Grid - Spotify's 2-column compact cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 mb-8">
+          {quickAccessSongs.map((song, index) => (
+            <div
+              key={`quick-${song.id}-${index}`}
+              className="flex items-center gap-3 rounded-md bg-card/80 hover:bg-card cursor-pointer group transition-all duration-200 overflow-hidden h-14 md:h-16"
+              onClick={() => playSong(song)}
+            >
+              <img
+                src={song.imageUrl}
+                alt={song.title}
+                className="w-14 h-14 md:w-16 md:h-16 object-cover flex-shrink-0"
+              />
+              <span className="font-semibold text-sm md:text-base text-foreground truncate pr-2 flex-1">
+                {song.title}
+              </span>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity pr-3">
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-lg">
+                  <Play className="w-4 h-4 text-primary-foreground ml-0.5" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-8">
+          {/* Made For You - Recommendations */}
+          {recommendations.length > 0 && (
+            <DynamicSection
+              title="Made For You"
+              songs={recommendations.slice(0, 12)}
+              layout="horizontal"
+              cardSize="small"
+              className="animate-slide-up"
+            />
+          )}
+
+          {/* Movie Albums */}
+          <div className="animate-slide-up">
+            <MovieAlbumsGrid title="Movie Albums" className="mb-2" />
+          </div>
+
+          {/* Trending Now */}
+          <DynamicSection
+            title="Trending Now"
+            songs={shuffledTrendingSongs}
+            layout="horizontal"
+            cardSize="small"
+            onViewAll={() => openSectionFullView("Trending Now", shuffledTrendingSongs)}
+            className="animate-slide-up"
+          />
+
+          {/* Popular Singers */}
+          <div className="animate-slide-up">
+            <SingersGrid title="Popular Singers" type="singers" className="mb-2" />
+          </div>
+
+          {/* Mass & Rap */}
+          <DynamicSection
+            title="Mass & Rap Hits"
+            songs={shuffledMassRapSongs}
+            layout="horizontal"
+            cardSize="small"
+            onViewAll={() => openSectionFullView("Mass & Rap Hits", shuffledMassRapSongs)}
+            className="animate-slide-up"
+          />
+
+          {/* Romantic */}
+          <DynamicSection
+            title="Romantic Melodies"
+            songs={uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love')}
+            layout="horizontal"
+            cardSize="small"
+            onViewAll={() => openSectionFullView("Romantic Melodies", uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love'))}
+            className="animate-slide-up"
+          />
+
+          {/* Featured Playlists */}
+          <div className="animate-slide-up">
+            <FeaturedPlaylistsGrid title="Featured Playlists" />
+          </div>
+
+          {/* Recently Played */}
+          <div className="animate-slide-up">
+            <RecentlyPlayedSection />
+          </div>
+
+          {/* Music Directors */}
+          <div className="animate-slide-up">
+            <SingersGrid title="Music Directors" type="music-directors" className="mb-2" />
+          </div>
+
+          {/* Hindi Songs */}
+          <DynamicSection
+            title="Hindi Hits"
+            songs={shuffledHindiSongs}
+            layout="horizontal"
+            cardSize="small"
+            onViewAll={() => openSectionFullView("Hindi Hits", shuffledHindiSongs)}
+            className="animate-slide-up"
+          />
+
+          {/* More Hits */}
+          <DynamicSection
+            title="More Hits"
+            songs={shuffledMoreSongs}
+            layout="horizontal"
+            cardSize="small"
+            onViewAll={() => openSectionFullView("More Hits", shuffledMoreSongs)}
+            className="animate-slide-up"
+          />
+
+          {/* Devotional */}
+          <DynamicSection
+            title="Devotional Songs"
+            songs={uniqueSongs.filter(s => s.sync === 'devotional')}
+            layout="horizontal"
+            cardSize="small"
+            onViewAll={() => openSectionFullView("Devotional Songs", uniqueSongs.filter(s => s.sync === 'devotional'))}
+            className="animate-slide-up"
+          />
+
+          {/* Popular Right Now */}
+          <DynamicSection
+            title="Popular Right Now"
+            songs={popularSongs}
+            layout="horizontal"
+            cardSize="small"
+            onViewAll={() => openSectionFullView("Popular Right Now", popularSongs)}
+            className="animate-slide-up"
+          />
+        </div>
+      </div>
+
+      {/* Onboarding */}
       {!onboardingLoading && showOnboarding && (
         <OnboardingFlow onComplete={markOnboardingComplete} />
       )}
       
-      {/* Floating Settings Components */}
       <FloatingSettingsPanel 
         isVisible={showFloatingSettings}
         onToggle={setShowFloatingSettings}
       />
 
-      {/* Section Full View */}
       <SectionFullView
         title={currentFullViewSection.title}
         songs={currentFullViewSection.songs}
         isOpen={currentFullViewSection.isOpen}
         onClose={closeSectionFullView}
       />
-
     </div>
   );
 };
