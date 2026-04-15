@@ -194,8 +194,9 @@ const Player = () => {
   if (!currentSong) {
     return (
       <div className="fixed bottom-16 left-0 right-0 md:bottom-0 md:left-16 glass-effect h-16 flex items-center px-4">
-        <div className="w-full text-center text-sm text-gray-400">
-          Select a song to play
+        <div className="w-full text-center text-sm text-muted-foreground flex items-center justify-center gap-2">
+          <Music className="h-4 w-4 animate-pulse" />
+          <span>Select a song to play</span>
         </div>
       </div>
     );
@@ -531,7 +532,9 @@ const Player = () => {
   
   // Regular player UI
   return (
-    <div className="fixed bottom-16 left-0 right-0 md:bottom-0 md:left-16 glass-effect border-t border-gray-800 h-16 md:h-20 z-40">
+    <div className="fixed bottom-16 left-0 right-0 md:bottom-0 md:left-16 glass-effect border-t border-border/50 h-16 md:h-20 z-40 group/player">
+      {/* Rainbow accent line at top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 opacity-80" />
       <div className="flex items-center h-full px-3 md:px-6">
         {/* Song info - click to go to Now Playing page */}
         <div className="flex items-center flex-1 min-w-0 md:w-1/3">

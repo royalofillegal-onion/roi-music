@@ -5,6 +5,8 @@
  * 
  * Audio category: Sets up proper media session for "audio" type playback
  * so the OS treats it as music (not a generic notification).
+ * 
+ * Enhanced with rainbow gradient colors and RoiMusic branding.
  */
 
 export interface MediaSessionCallbacks {
@@ -30,6 +32,7 @@ export interface NowPlayingInfo {
 class MediaSessionManager {
   private callbacks: MediaSessionCallbacks | null = null;
   private positionInterval: ReturnType<typeof setInterval> | null = null;
+  private artworkCanvas: HTMLCanvasElement | null = null;
 
   /**
    * Register all media session action handlers (call once on app init).
@@ -69,7 +72,6 @@ class MediaSessionManager {
       callbacks.onSeekBackward(details.seekOffset ?? 10);
     });
 
-    // Try to set stop handler (not supported everywhere)
     try {
       navigator.mediaSession.setActionHandler('stop', () => {
         callbacks.onPause();
@@ -80,22 +82,116 @@ class MediaSessionManager {
   }
 
   /**
+   * Create enhanced artwork with rainbow border and RoiMusic branding.
+   * This generates a canvas-based image for the notification.
+   */
+  private async createEnhancedArtwork(imageUrl: string, size: number): Promise<string> {
+    return new Promise((resolve) => {
+      if (!this.artworkCanvas) {
+        this.artworkCanvas = document.createElement('canvas');
+      }
+      const canvas = this.artworkCanvas;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(imageUrl);
+        return;
+      }
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        // Rainbow gradient background border
+        const gradient = ctx.createLinearGradient(0, 0, size, size);
+        gradient.addColorStop(0, '#ff0000');
+        gradient.addColorStop(0.17, '#ff7700');
+        gradient.addColorStop(0.33, '#ffff00');
+        gradient.addColorStop(0.5, '#00ff00');
+        gradient.addColorStop(0.67, '#0077ff');
+        gradient.addColorStop(0.83, '#8b00ff');
+        gradient.addColorStop(1, '#ff0099');
+
+        // Fill rainbow border
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, size, size);
+
+        // Draw album art with padding for border
+        const borderWidth = Math.floor(size * 0.04);
+        const artSize = size - borderWidth * 2;
+        const radius = Math.floor(size * 0.06);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(borderWidth, borderWidth, artSize, artSize, radius);
+        ctx.clip();
+        ctx.drawImage(img, borderWidth, borderWidth, artSize, artSize);
+        ctx.restore();
+
+        // RoiMusic branding at bottom
+        const bannerHeight = Math.floor(size * 0.12);
+        const bannerY = size - bannerHeight - borderWidth;
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+        ctx.fillRect(borderWidth, bannerY, artSize, bannerHeight);
+
+        // Rainbow text for "ROI MUSIC"
+        const fontSize = Math.floor(size * 0.055);
+        ctx.font = `bold ${fontSize}px 'Inter', system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const textGradient = ctx.createLinearGradient(
+          size * 0.3, bannerY, size * 0.7, bannerY + bannerHeight
+        );
+        textGradient.addColorStop(0, '#00e5ff');
+        textGradient.addColorStop(0.5, '#d946ef');
+        textGradient.addColorStop(1, '#f97316');
+
+        ctx.fillStyle = textGradient;
+        ctx.fillText('♪ ROI MUSIC', size / 2, bannerY + bannerHeight / 2);
+
+        try {
+          resolve(canvas.toDataURL('image/png'));
+        } catch {
+          resolve(imageUrl);
+        }
+      };
+      img.onerror = () => resolve(imageUrl);
+      img.src = imageUrl;
+    });
+  }
+
+  /**
    * Update the Now Playing metadata (album art, title, artist).
    * This is what appears on the lock screen / notification shade.
+   * Enhanced with rainbow-bordered artwork and RoiMusic branding.
    */
-  updateMetadata(info: NowPlayingInfo): void {
+  async updateMetadata(info: NowPlayingInfo): Promise<void> {
     if (!('mediaSession' in navigator)) return;
 
     const artwork: MediaImage[] = [];
+    const sizes = [96, 128, 192, 256, 384, 512];
+
     if (info.imageUrl) {
-      artwork.push(
-        { src: info.imageUrl, sizes: '96x96', type: 'image/jpeg' },
-        { src: info.imageUrl, sizes: '128x128', type: 'image/jpeg' },
-        { src: info.imageUrl, sizes: '192x192', type: 'image/jpeg' },
-        { src: info.imageUrl, sizes: '256x256', type: 'image/jpeg' },
-        { src: info.imageUrl, sizes: '384x384', type: 'image/jpeg' },
-        { src: info.imageUrl, sizes: '512x512', type: 'image/jpeg' }
-      );
+      // Try to create enhanced artwork with rainbow border
+      try {
+        const enhanced512 = await this.createEnhancedArtwork(info.imageUrl, 512);
+        if (enhanced512.startsWith('data:')) {
+          // Use enhanced version for all sizes
+          for (const s of sizes) {
+            artwork.push({ src: enhanced512, sizes: `${s}x${s}`, type: 'image/png' });
+          }
+        } else {
+          for (const s of sizes) {
+            artwork.push({ src: info.imageUrl, sizes: `${s}x${s}`, type: 'image/jpeg' });
+          }
+        }
+      } catch {
+        for (const s of sizes) {
+          artwork.push({ src: info.imageUrl, sizes: `${s}x${s}`, type: 'image/jpeg' });
+        }
+      }
     }
 
     navigator.mediaSession.metadata = new MediaMetadata({
@@ -116,7 +212,6 @@ class MediaSessionManager {
 
   /**
    * Update the position state (seek bar on lock screen).
-   * Call this on every timeupdate for accurate seek bar.
    */
   updatePositionState(currentTime: number, duration: number, playbackRate: number = 1): void {
     if (!('mediaSession' in navigator)) return;

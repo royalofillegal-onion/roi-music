@@ -236,7 +236,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     audioRef.current.play().then(() => {
       setIsPlaying(true);
 
-      // Update Spotify-like Media Session (lock screen notification)
+      // Update Spotify-like Media Session (lock screen notification with rainbow art)
       mediaSessionManager.updateMetadata({
         title: song.title,
         artist: song.artist,
