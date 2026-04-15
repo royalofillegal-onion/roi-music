@@ -373,8 +373,17 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const toggleLike = useCallback((songId: string) => {
+    const song = uniqueSongs.find(s => s.id === songId);
     setLikedSongs(prev => {
-      return prev.includes(songId)
+      const isCurrentlyLiked = prev.includes(songId);
+      if (song) {
+        if (isCurrentlyLiked) {
+          userPreferenceLearner.recordUnlike(song);
+        } else {
+          userPreferenceLearner.recordLike(song);
+        }
+      }
+      return isCurrentlyLiked
         ? prev.filter(id => id !== songId)
         : [...prev, songId];
     });
