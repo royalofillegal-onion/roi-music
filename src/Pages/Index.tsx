@@ -63,11 +63,69 @@ const Index = () => {
 
   const greeting = getTimeBasedGreeting();
   const quickPicks = getDailyRotatedSongs(6);
+  const hasLearned = userPreferenceLearner.hasEnoughData();
 
-  // Spotify-like quick access cards (recently played + recommendations mixed)
-  const quickAccessSongs = recentlyPlayed.length > 0 
-    ? recentlyPlayed.slice(0, 6) 
-    : quickPicks;
+  // Reorder quick access based on preferences
+  const quickAccessSongs = useMemo(() => {
+    const base = recentlyPlayed.length > 0 
+      ? recentlyPlayed.slice(0, 6) 
+      : quickPicks;
+    return hasLearned ? userPreferenceLearner.reorderSongs(base) : base;
+  }, [recentlyPlayed, quickPicks, hasLearned]);
+
+  // Adaptively reorder song sections based on user preferences
+  const reorderedTrending = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledTrendingSongs) : shuffledTrendingSongs,
+    [hasLearned]
+  );
+  const reorderedMassRap = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledMassRapSongs) : shuffledMassRapSongs,
+    [hasLearned]
+  );
+  const reorderedMore = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledMoreSongs) : shuffledMoreSongs,
+    [hasLearned]
+  );
+  const reorderedHindi = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledHindiSongs) : shuffledHindiSongs,
+    [hasLearned]
+  );
+  const reorderedPopular = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(popularSongs) : popularSongs,
+    [hasLearned]
+  );
+  const romanticSongs = useMemo(() => {
+    const base = uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love');
+    return hasLearned ? userPreferenceLearner.reorderSongs(base) : base;
+  }, [hasLearned]);
+  const devotionalSongs = useMemo(() => {
+    const base = uniqueSongs.filter(s => s.sync === 'devotional');
+    return hasLearned ? userPreferenceLearner.reorderSongs(base) : base;
+  }, [hasLearned]);
+
+  // Dynamically order sections based on learned mood preferences
+  const sectionOrder = useMemo(() => {
+    if (!hasLearned) return ['trending', 'massrap', 'romantic', 'hindi', 'more', 'devotional', 'popular'];
+    return userPreferenceLearner.getSectionOrder({
+      trending: ['happy', 'dance', 'party'],
+      massrap: ['mass', 'rap', 'action'],
+      romantic: ['romantic', 'love'],
+      hindi: ['happy', 'love', 'dance'],
+      more: ['feel1', 'normal', 'good'],
+      devotional: ['devotional'],
+      popular: ['happy', 'dance', 'mass'],
+    });
+  }, [hasLearned]);
+
+  const sectionDataMap: Record<string, { title: string; songs: Song[] }> = {
+    trending: { title: 'Trending Now', songs: reorderedTrending },
+    massrap: { title: 'Mass & Rap Hits', songs: reorderedMassRap },
+    romantic: { title: 'Romantic Melodies', songs: romanticSongs },
+    hindi: { title: 'Hindi Hits', songs: reorderedHindi },
+    more: { title: 'More Hits', songs: reorderedMore },
+    devotional: { title: 'Devotional Songs', songs: devotionalSongs },
+    popular: { title: 'Popular Right Now', songs: reorderedPopular },
+  };
 
   const openSectionFullView = (title: string, songs: Song[]) => {
     setCurrentFullViewSection({ title, songs, isOpen: true });
