@@ -6,6 +6,7 @@ import { NoRepeatShuffler, fisherYatesShuffle } from "@/lib/algorithms/fisherYat
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { mediaSessionManager } from "@/services/MediaSessionService";
 import { offlineCacheService } from "@/services/OfflineCacheService";
+import { userPreferenceLearner } from "@/services/UserPreferenceLearner";
 
 interface PlayerContextType {
   currentSong: Song | null;
