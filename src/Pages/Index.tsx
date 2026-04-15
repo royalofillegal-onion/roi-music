@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
 import FloatingSettingsPanel from "@/components/FloatingSettingsPanel";
@@ -8,13 +8,11 @@ import FestivalPopup from "@/components/FestivalPopup";
 import TimeLighting from "@/components/TimeLighting";
 import SectionFullView from "@/components/SectionFullView";
 import DynamicSection from "@/components/DynamicSection";
-import SpotifyLikeSection from "@/components/SpotifyLikeSection";
-import { Music2, Play, Clock, Sparkles } from "lucide-react";
+import { Music2, Play, Sparkles } from "lucide-react";
 
 import { 
   shuffledTrendingSongs, 
   popularSongs, 
-  shuffledNewReleases, 
   uniqueSongs, 
   shuffledMoreSongs, 
   shuffledMassRapSongs, 
@@ -29,6 +27,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import UserProfile from "@/components/UserProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getDailyRotatedSongs, getTimeBasedGreeting } from "@/utils/dailyRotation";
+import { userPreferenceLearner } from "@/services/UserPreferenceLearner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Song } from "@/data/songs";
