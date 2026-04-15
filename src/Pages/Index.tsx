@@ -190,15 +190,21 @@ const Index = () => {
         </div>
 
         <div className="space-y-8">
-          {/* Made For You - Recommendations */}
+          {/* Made For You - AI-learned Recommendations */}
           {recommendations.length > 0 && (
-            <DynamicSection
-              title="Made For You"
-              songs={recommendations.slice(0, 12)}
-              layout="horizontal"
-              cardSize="small"
-              className="animate-slide-up"
-            />
+            <div className="animate-slide-up">
+              <DynamicSection
+                title={hasLearned ? "✨ Personalized For You" : "Made For You"}
+                songs={recommendations.slice(0, 12)}
+                layout="horizontal"
+                cardSize="small"
+              />
+              {hasLearned && (
+                <p className="text-xs text-muted-foreground mt-1 px-4 sm:px-6 lg:px-8">
+                  Based on your listening history
+                </p>
+              )}
+            </div>
           )}
 
           {/* Movie Albums */}
@@ -206,40 +212,44 @@ const Index = () => {
             <MovieAlbumsGrid title="Movie Albums" className="mb-2" />
           </div>
 
-          {/* Trending Now */}
-          <DynamicSection
-            title="Trending Now"
-            songs={shuffledTrendingSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Trending Now", shuffledTrendingSongs)}
-            className="animate-slide-up"
-          />
+          {/* Dynamically ordered sections based on user preferences */}
+          {sectionOrder.slice(0, 2).map((sectionId) => {
+            const section = sectionDataMap[sectionId];
+            if (!section || !section.songs.length) return null;
+            return (
+              <DynamicSection
+                key={sectionId}
+                title={section.title}
+                songs={section.songs}
+                layout="horizontal"
+                cardSize="small"
+                onViewAll={() => openSectionFullView(section.title, section.songs)}
+                className="animate-slide-up"
+              />
+            );
+          })}
 
           {/* Popular Singers */}
           <div className="animate-slide-up">
             <SingersGrid title="Popular Singers" type="singers" className="mb-2" />
           </div>
 
-          {/* Mass & Rap */}
-          <DynamicSection
-            title="Mass & Rap Hits"
-            songs={shuffledMassRapSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Mass & Rap Hits", shuffledMassRapSongs)}
-            className="animate-slide-up"
-          />
-
-          {/* Romantic */}
-          <DynamicSection
-            title="Romantic Melodies"
-            songs={uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love')}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Romantic Melodies", uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love'))}
-            className="animate-slide-up"
-          />
+          {/* Middle sections */}
+          {sectionOrder.slice(2, 4).map((sectionId) => {
+            const section = sectionDataMap[sectionId];
+            if (!section || !section.songs.length) return null;
+            return (
+              <DynamicSection
+                key={sectionId}
+                title={section.title}
+                songs={section.songs}
+                layout="horizontal"
+                cardSize="small"
+                onViewAll={() => openSectionFullView(section.title, section.songs)}
+                className="animate-slide-up"
+              />
+            );
+          })}
 
           {/* Featured Playlists */}
           <div className="animate-slide-up">
@@ -256,45 +266,22 @@ const Index = () => {
             <SingersGrid title="Music Directors" type="music-directors" className="mb-2" />
           </div>
 
-          {/* Hindi Songs */}
-          <DynamicSection
-            title="Hindi Hits"
-            songs={shuffledHindiSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Hindi Hits", shuffledHindiSongs)}
-            className="animate-slide-up"
-          />
-
-          {/* More Hits */}
-          <DynamicSection
-            title="More Hits"
-            songs={shuffledMoreSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("More Hits", shuffledMoreSongs)}
-            className="animate-slide-up"
-          />
-
-          {/* Devotional */}
-          <DynamicSection
-            title="Devotional Songs"
-            songs={uniqueSongs.filter(s => s.sync === 'devotional')}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Devotional Songs", uniqueSongs.filter(s => s.sync === 'devotional'))}
-            className="animate-slide-up"
-          />
-
-          {/* Popular Right Now */}
-          <DynamicSection
-            title="Popular Right Now"
-            songs={popularSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Popular Right Now", popularSongs)}
-            className="animate-slide-up"
-          />
+          {/* Remaining sections */}
+          {sectionOrder.slice(4).map((sectionId) => {
+            const section = sectionDataMap[sectionId];
+            if (!section || !section.songs.length) return null;
+            return (
+              <DynamicSection
+                key={sectionId}
+                title={section.title}
+                songs={section.songs}
+                layout="horizontal"
+                cardSize="small"
+                onViewAll={() => openSectionFullView(section.title, section.songs)}
+                className="animate-slide-up"
+              />
+            );
+          })}
         </div>
       </div>
 
