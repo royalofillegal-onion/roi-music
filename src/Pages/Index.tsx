@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import FloatingMusicInfo from "@/components/FloatingMusicInfo";
 import FloatingSettingsPanel from "@/components/FloatingSettingsPanel";
@@ -8,13 +8,11 @@ import FestivalPopup from "@/components/FestivalPopup";
 import TimeLighting from "@/components/TimeLighting";
 import SectionFullView from "@/components/SectionFullView";
 import DynamicSection from "@/components/DynamicSection";
-import SpotifyLikeSection from "@/components/SpotifyLikeSection";
-import { Music2, Play, Clock, Sparkles } from "lucide-react";
+import { Music2, Play, Sparkles } from "lucide-react";
 
 import { 
   shuffledTrendingSongs, 
   popularSongs, 
-  shuffledNewReleases, 
   uniqueSongs, 
   shuffledMoreSongs, 
   shuffledMassRapSongs, 
@@ -29,6 +27,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import UserProfile from "@/components/UserProfile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getDailyRotatedSongs, getTimeBasedGreeting } from "@/utils/dailyRotation";
+import { userPreferenceLearner } from "@/services/UserPreferenceLearner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Song } from "@/data/songs";
@@ -64,11 +63,69 @@ const Index = () => {
 
   const greeting = getTimeBasedGreeting();
   const quickPicks = getDailyRotatedSongs(6);
+  const hasLearned = userPreferenceLearner.hasEnoughData();
 
-  // Spotify-like quick access cards (recently played + recommendations mixed)
-  const quickAccessSongs = recentlyPlayed.length > 0 
-    ? recentlyPlayed.slice(0, 6) 
-    : quickPicks;
+  // Reorder quick access based on preferences
+  const quickAccessSongs = useMemo(() => {
+    const base = recentlyPlayed.length > 0 
+      ? recentlyPlayed.slice(0, 6) 
+      : quickPicks;
+    return hasLearned ? userPreferenceLearner.reorderSongs(base) : base;
+  }, [recentlyPlayed, quickPicks, hasLearned]);
+
+  // Adaptively reorder song sections based on user preferences
+  const reorderedTrending = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledTrendingSongs) : shuffledTrendingSongs,
+    [hasLearned]
+  );
+  const reorderedMassRap = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledMassRapSongs) : shuffledMassRapSongs,
+    [hasLearned]
+  );
+  const reorderedMore = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledMoreSongs) : shuffledMoreSongs,
+    [hasLearned]
+  );
+  const reorderedHindi = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(shuffledHindiSongs) : shuffledHindiSongs,
+    [hasLearned]
+  );
+  const reorderedPopular = useMemo(
+    () => hasLearned ? userPreferenceLearner.reorderSongs(popularSongs) : popularSongs,
+    [hasLearned]
+  );
+  const romanticSongs = useMemo(() => {
+    const base = uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love');
+    return hasLearned ? userPreferenceLearner.reorderSongs(base) : base;
+  }, [hasLearned]);
+  const devotionalSongs = useMemo(() => {
+    const base = uniqueSongs.filter(s => s.sync === 'devotional');
+    return hasLearned ? userPreferenceLearner.reorderSongs(base) : base;
+  }, [hasLearned]);
+
+  // Dynamically order sections based on learned mood preferences
+  const sectionOrder = useMemo(() => {
+    if (!hasLearned) return ['trending', 'massrap', 'romantic', 'hindi', 'more', 'devotional', 'popular'];
+    return userPreferenceLearner.getSectionOrder({
+      trending: ['happy', 'dance', 'party'],
+      massrap: ['mass', 'rap', 'action'],
+      romantic: ['romantic', 'love'],
+      hindi: ['happy', 'love', 'dance'],
+      more: ['feel1', 'normal', 'good'],
+      devotional: ['devotional'],
+      popular: ['happy', 'dance', 'mass'],
+    });
+  }, [hasLearned]);
+
+  const sectionDataMap: Record<string, { title: string; songs: Song[] }> = {
+    trending: { title: 'Trending Now', songs: reorderedTrending },
+    massrap: { title: 'Mass & Rap Hits', songs: reorderedMassRap },
+    romantic: { title: 'Romantic Melodies', songs: romanticSongs },
+    hindi: { title: 'Hindi Hits', songs: reorderedHindi },
+    more: { title: 'More Hits', songs: reorderedMore },
+    devotional: { title: 'Devotional Songs', songs: devotionalSongs },
+    popular: { title: 'Popular Right Now', songs: reorderedPopular },
+  };
 
   const openSectionFullView = (title: string, songs: Song[]) => {
     setCurrentFullViewSection({ title, songs, isOpen: true });
@@ -133,15 +190,21 @@ const Index = () => {
         </div>
 
         <div className="space-y-8">
-          {/* Made For You - Recommendations */}
+          {/* Made For You - AI-learned Recommendations */}
           {recommendations.length > 0 && (
-            <DynamicSection
-              title="Made For You"
-              songs={recommendations.slice(0, 12)}
-              layout="horizontal"
-              cardSize="small"
-              className="animate-slide-up"
-            />
+            <div className="animate-slide-up">
+              <DynamicSection
+                title={hasLearned ? "✨ Personalized For You" : "Made For You"}
+                songs={recommendations.slice(0, 12)}
+                layout="horizontal"
+                cardSize="small"
+              />
+              {hasLearned && (
+                <p className="text-xs text-muted-foreground mt-1 px-4 sm:px-6 lg:px-8">
+                  Based on your listening history
+                </p>
+              )}
+            </div>
           )}
 
           {/* Movie Albums */}
@@ -149,40 +212,44 @@ const Index = () => {
             <MovieAlbumsGrid title="Movie Albums" className="mb-2" />
           </div>
 
-          {/* Trending Now */}
-          <DynamicSection
-            title="Trending Now"
-            songs={shuffledTrendingSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Trending Now", shuffledTrendingSongs)}
-            className="animate-slide-up"
-          />
+          {/* Dynamically ordered sections based on user preferences */}
+          {sectionOrder.slice(0, 2).map((sectionId) => {
+            const section = sectionDataMap[sectionId];
+            if (!section || !section.songs.length) return null;
+            return (
+              <DynamicSection
+                key={sectionId}
+                title={section.title}
+                songs={section.songs}
+                layout="horizontal"
+                cardSize="small"
+                onViewAll={() => openSectionFullView(section.title, section.songs)}
+                className="animate-slide-up"
+              />
+            );
+          })}
 
           {/* Popular Singers */}
           <div className="animate-slide-up">
             <SingersGrid title="Popular Singers" type="singers" className="mb-2" />
           </div>
 
-          {/* Mass & Rap */}
-          <DynamicSection
-            title="Mass & Rap Hits"
-            songs={shuffledMassRapSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Mass & Rap Hits", shuffledMassRapSongs)}
-            className="animate-slide-up"
-          />
-
-          {/* Romantic */}
-          <DynamicSection
-            title="Romantic Melodies"
-            songs={uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love')}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Romantic Melodies", uniqueSongs.filter(s => s.sync === 'romantic' || s.sync === 'love'))}
-            className="animate-slide-up"
-          />
+          {/* Middle sections */}
+          {sectionOrder.slice(2, 4).map((sectionId) => {
+            const section = sectionDataMap[sectionId];
+            if (!section || !section.songs.length) return null;
+            return (
+              <DynamicSection
+                key={sectionId}
+                title={section.title}
+                songs={section.songs}
+                layout="horizontal"
+                cardSize="small"
+                onViewAll={() => openSectionFullView(section.title, section.songs)}
+                className="animate-slide-up"
+              />
+            );
+          })}
 
           {/* Featured Playlists */}
           <div className="animate-slide-up">
@@ -199,45 +266,22 @@ const Index = () => {
             <SingersGrid title="Music Directors" type="music-directors" className="mb-2" />
           </div>
 
-          {/* Hindi Songs */}
-          <DynamicSection
-            title="Hindi Hits"
-            songs={shuffledHindiSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Hindi Hits", shuffledHindiSongs)}
-            className="animate-slide-up"
-          />
-
-          {/* More Hits */}
-          <DynamicSection
-            title="More Hits"
-            songs={shuffledMoreSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("More Hits", shuffledMoreSongs)}
-            className="animate-slide-up"
-          />
-
-          {/* Devotional */}
-          <DynamicSection
-            title="Devotional Songs"
-            songs={uniqueSongs.filter(s => s.sync === 'devotional')}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Devotional Songs", uniqueSongs.filter(s => s.sync === 'devotional'))}
-            className="animate-slide-up"
-          />
-
-          {/* Popular Right Now */}
-          <DynamicSection
-            title="Popular Right Now"
-            songs={popularSongs}
-            layout="horizontal"
-            cardSize="small"
-            onViewAll={() => openSectionFullView("Popular Right Now", popularSongs)}
-            className="animate-slide-up"
-          />
+          {/* Remaining sections */}
+          {sectionOrder.slice(4).map((sectionId) => {
+            const section = sectionDataMap[sectionId];
+            if (!section || !section.songs.length) return null;
+            return (
+              <DynamicSection
+                key={sectionId}
+                title={section.title}
+                songs={section.songs}
+                layout="horizontal"
+                cardSize="small"
+                onViewAll={() => openSectionFullView(section.title, section.songs)}
+                className="animate-slide-up"
+              />
+            );
+          })}
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { NoRepeatShuffler, fisherYatesShuffle } from "@/lib/algorithms/fisherYat
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { mediaSessionManager } from "@/services/MediaSessionService";
 import { offlineCacheService } from "@/services/OfflineCacheService";
+import { userPreferenceLearner } from "@/services/UserPreferenceLearner";
 
 interface PlayerContextType {
   currentSong: Song | null;
@@ -178,8 +179,25 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   // Generate recommendations when current song or recently played changes
   useEffect(() => {
     if (currentSong || recentlyPlayed.length > 0) {
-      const recs = getHybridRecommendations(currentSong, recentlyPlayed, uniqueSongs, 20);
-      setRecommendations(recs);
+      // Combine algorithm-based + preference-learner recommendations
+      const hybridRecs = getHybridRecommendations(currentSong, recentlyPlayed, uniqueSongs, 20);
+      const learnedRecs = userPreferenceLearner.getPersonalizedSongs(uniqueSongs, 20);
+      
+      // Merge: interleave learned and hybrid, deduplicate
+      const seen = new Set<string>();
+      const merged: typeof hybridRecs = [];
+      const maxLen = Math.max(hybridRecs.length, learnedRecs.length);
+      for (let i = 0; i < maxLen && merged.length < 25; i++) {
+        if (i < learnedRecs.length && !seen.has(learnedRecs[i].id)) {
+          seen.add(learnedRecs[i].id);
+          merged.push(learnedRecs[i]);
+        }
+        if (i < hybridRecs.length && !seen.has(hybridRecs[i].id)) {
+          seen.add(hybridRecs[i].id);
+          merged.push(hybridRecs[i]);
+        }
+      }
+      setRecommendations(merged.slice(0, 25));
     }
   }, [currentSong?.id, recentlyPlayed.length]);
 
@@ -212,6 +230,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
+
+    // Record preference for the PREVIOUS song before switching
+    if (currentSong && audioRef.current) {
+      const listenedDuration = audioRef.current.currentTime;
+      userPreferenceLearner.recordPlay(currentSong, listenedDuration);
+    }
 
     setCurrentSong(song);
     addToRecentlyPlayed(song);
@@ -253,7 +277,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Error playing song:", error);
       setIsPlaying(false);
     });
-  }, [addToRecentlyPlayed]);
+  }, [addToRecentlyPlayed, currentSong]);
 
   const pauseSong = useCallback(() => {
     if (audioRef.current) {
@@ -366,8 +390,17 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const toggleLike = useCallback((songId: string) => {
+    const song = uniqueSongs.find(s => s.id === songId);
     setLikedSongs(prev => {
-      return prev.includes(songId)
+      const isCurrentlyLiked = prev.includes(songId);
+      if (song) {
+        if (isCurrentlyLiked) {
+          userPreferenceLearner.recordUnlike(song);
+        } else {
+          userPreferenceLearner.recordLike(song);
+        }
+      }
+      return isCurrentlyLiked
         ? prev.filter(id => id !== songId)
         : [...prev, songId];
     });
