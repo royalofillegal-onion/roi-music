@@ -214,6 +214,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
 
+    // Record preference for the PREVIOUS song before switching
+    if (currentSong && audioRef.current) {
+      const listenedDuration = audioRef.current.currentTime;
+      userPreferenceLearner.recordPlay(currentSong, listenedDuration);
+    }
+
     setCurrentSong(song);
     addToRecentlyPlayed(song);
 
@@ -254,7 +260,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Error playing song:", error);
       setIsPlaying(false);
     });
-  }, [addToRecentlyPlayed]);
+  }, [addToRecentlyPlayed, currentSong]);
 
   const pauseSong = useCallback(() => {
     if (audioRef.current) {
