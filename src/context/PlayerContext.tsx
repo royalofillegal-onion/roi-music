@@ -179,8 +179,25 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   // Generate recommendations when current song or recently played changes
   useEffect(() => {
     if (currentSong || recentlyPlayed.length > 0) {
-      const recs = getHybridRecommendations(currentSong, recentlyPlayed, uniqueSongs, 20);
-      setRecommendations(recs);
+      // Combine algorithm-based + preference-learner recommendations
+      const hybridRecs = getHybridRecommendations(currentSong, recentlyPlayed, uniqueSongs, 20);
+      const learnedRecs = userPreferenceLearner.getPersonalizedSongs(uniqueSongs, 20);
+      
+      // Merge: interleave learned and hybrid, deduplicate
+      const seen = new Set<string>();
+      const merged: typeof hybridRecs = [];
+      const maxLen = Math.max(hybridRecs.length, learnedRecs.length);
+      for (let i = 0; i < maxLen && merged.length < 25; i++) {
+        if (i < learnedRecs.length && !seen.has(learnedRecs[i].id)) {
+          seen.add(learnedRecs[i].id);
+          merged.push(learnedRecs[i]);
+        }
+        if (i < hybridRecs.length && !seen.has(hybridRecs[i].id)) {
+          seen.add(hybridRecs[i].id);
+          merged.push(hybridRecs[i]);
+        }
+      }
+      setRecommendations(merged.slice(0, 25));
     }
   }, [currentSong?.id, recentlyPlayed.length]);
 
