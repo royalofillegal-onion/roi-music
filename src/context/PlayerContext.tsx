@@ -72,6 +72,15 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [recommendations, setRecommendations] = useState<Song[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Refs to always hold latest callbacks (avoids stale closures in Media Session)
+  const callbackRefs = useRef({
+    resumeSong: () => {},
+    pauseSong: () => {},
+    nextSong: () => {},
+    previousSong: () => {},
+    seek: (time: number) => {},
+  });
+
   // Algorithm instances
   const playbackQueueRef = useRef(new PlaybackQueue());
   const shufflerRef = useRef(new NoRepeatShuffler(uniqueSongs));
@@ -79,25 +88,25 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   // Expose queue as array for UI
   const queue = playbackQueueRef.current.getAll();
 
-  // Initialize audio + Media Session handlers
+  // Initialize audio element once
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.volume = volume;
     }
 
-    // Register Spotify-like Media Session handlers
+    // Register Media Session handlers that delegate to refs (never stale)
     mediaSessionManager.registerHandlers({
-      onPlay: () => resumeSong(),
-      onPause: () => pauseSong(),
-      onNextTrack: () => nextSong(),
-      onPreviousTrack: () => previousSong(),
-      onSeekTo: (time) => seek(time),
+      onPlay: () => callbackRefs.current.resumeSong(),
+      onPause: () => callbackRefs.current.pauseSong(),
+      onNextTrack: () => callbackRefs.current.nextSong(),
+      onPreviousTrack: () => callbackRefs.current.previousSong(),
+      onSeekTo: (time) => callbackRefs.current.seek(time),
       onSeekForward: (offset) => {
-        if (audioRef.current) seek(audioRef.current.currentTime + offset);
+        if (audioRef.current) callbackRefs.current.seek(audioRef.current.currentTime + offset);
       },
       onSeekBackward: (offset) => {
-        if (audioRef.current) seek(Math.max(0, audioRef.current.currentTime - offset));
+        if (audioRef.current) callbackRefs.current.seek(Math.max(0, audioRef.current.currentTime - offset));
       },
     });
 
