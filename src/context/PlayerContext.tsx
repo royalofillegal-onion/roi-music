@@ -160,7 +160,16 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [isRepeating, isPlaying, isShuffled]);
 
-  // Load liked songs from localStorage
+
+  // Keep callback refs always pointing to the latest functions
+  useEffect(() => {
+    callbackRefs.current.resumeSong = resumeSong;
+    callbackRefs.current.pauseSong = pauseSong;
+    callbackRefs.current.nextSong = nextSong;
+    callbackRefs.current.previousSong = previousSong;
+    callbackRefs.current.seek = seek;
+  });
+
   useEffect(() => {
     const saved = localStorage.getItem("likedSongs");
     if (saved) setLikedSongs(JSON.parse(saved));
