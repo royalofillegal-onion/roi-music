@@ -6,7 +6,7 @@ export interface Song {
   movie?: string; // Movie name (same as artist for now)
   imageUrl: string;
   audioUrl: string;
-  duration: number; // in seconds/
+  duration: number; // in seconds
   album?: string;
   year?: number;
   genre?: string;
@@ -14,309 +14,7 @@ export interface Song {
   sync?: 'sad' | 'love' | 'break' | 'happy' | 'devotional' | 'feel1' | 'action' | 'romantic' | 'friend' | 'dance' | 'folk' | 'mass' | 'party' | 'classical' | 'rap' | 'moti' | '.' | 'mother' | 'normal' | 'good' | 'Rap' | 'Feel' | 'Sad' | 'Love' | '9';
 }
 export const songs: Song[] =[
-    //18 Pages
     {
-    id: "Yedurangula Vaana",
-    title: "Yedurangula Vaana",
-    artist: "18 Pages",
-    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1743417356/16712135423689_h4r5p5.jpg",
-    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1743416935/Yedurangula_Vaana_128_Kbps_f9ppps.mp3",
-    duration: 265,
-    album: "18 Pages",
-    year: 2022,
-    genre: "Love",
-    language: "telugu",
-    sync: "love"
-  },
-  //OG
-   {
-  id: "suvvi-suvvi",
-  title: "Suvvi Suvvi",
-  artist: "OG",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756834705/IMG_20250902_230806_xw0rxf.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756834521/They_Call_Him_OG_-_Suvvi_Suvvi_Lyric_Video_Pawan_Kalyan_Sujeeth_Thaman_S_DVV_Danayya_vamobe.mp3",
-  duration: 281,
-  album: "Suvvi Suvvi",
-  year: 2025,
-  genre: "Love it ",
-  language: "telugu",
-  sync: "romantic"
-},
-  {
-  id: "Hungry Cheetah OG Glimpse",
-  title: "Hungry Cheetah OG Glimpse",
-  artist: "OG",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755087729/iSongs.info_01_-_Hungry_Cheetah_OG_Glimpse_nuclxx.mp3",
-  duration: 119,
-  album: "Hungry Cheetah OG Glimpse",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "rap"
-},
- {
-    id: "6d313dfd-4814-4c9f-92f0-9fcb2fd7203b",
-    title: "Firestorm",
-    artist: "OG",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755087734/iSongs.info_02_-_Firestorm_mmu1pg.mp3",
-    duration: 240,
-    album: "Firestorm",
-    year: 2025,
-    genre: ".",
-    language: "telugu",
-    sync: "action"
-  },
-   {
-  id: "Guns And Roses",
-  title: "Guns And Roses",
-  artist: "OG",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298876/Guns_And_Roses_ozfrvx.mp3",
-  duration: 257,
-  album: "Guns And Roses",
-  year: 2025,
-  genre: "."
-},
-{
-  id: "Washi O Washi",
-  title: "Washi O Washi",
-  artist: "OG",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298819/Washi_O_Washi_ghjrsd.mp3",
-  duration: 112,
-  album: "Washi O Washi",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "The Streets Of Fire",
-  title: "The Streets Of Fire",
-  artist: "OG",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298848/In_The_Streets_Of_Fire_yg549b.mp3",
-  duration: 119,
-  album: "The Streets Of Fire",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Trance of OMI",
-  title: "Trance of OMI",
-  artist: "OG",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298857/Trance_of_OMI_ki4rob.mp3",
-  duration: 173,
-  album: "Trance of OMI",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Kiss Kiss Bang Bang",
-  title: "Kiss Kiss Bang Bang",
-  artist: "OG",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298858/Kiss_Kiss_Bang_Bang_wwtyeo.mp3",
-  duration: 257,
-  album: "Kiss Kiss Bang Bang",
-  year: 2025,
-  genre: "."
-},
-//Monica
- {
-  id: "Monica Telugu",
-  title: "Monica Telugu",
-  artist: "Monica",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741575/59317_4_eoh8rw.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754741635/Monica_Telugu_KoshalWorld.Com_itvbc7.mp3",
-  duration: 188,
-  album: "Monica Telugu",
-  year: 2025,
-  genre: "rap",
-  language: "telugu",
-  sync: "mass"
-},
-//Kingdom
-{
-  id: "trending5",
-  title: "Hridayam Lopala",
-  artist: "Kingdom",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1746425141_j58ecx.webp",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740891/Hridayam_Lopala_yq1sdw.mp3",
-  duration: 134,
-  album: "Hridayam Lopala",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-{
-  id: "Ragile Ragile",
-  title: "Ragile Ragile",
-  artist: "Kingdom",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1753770287_a22f0j.webp",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740895/Ragile_Ragile_w8dp1e.mp3",
-  duration: 329,
-  album: "Ragile Ragile",
-  year: 2025,
-  genre: "action",
-  language: "telugu",
-  sync: "mass"
-},
-{
-  id: "Hridayam Lopala",
-  title: "Hridayam Lopala",
-  artist: "Kingdom",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1746425141_j58ecx.webp",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740891/Hridayam_Lopala_yq1sdw.mp3",
-  duration: 134,
-  album: "Hridayam Lopala",
-  year: 2025,
-  genre: "love",
-  language: "telugu",
-  sync: "romantic"
-},
-{
-  id: "Anna Antene",
-  title: "Anna Antene",
-  artist: "Kingdom",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740914/kingdom-tamil-2025_x4ijhc.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740894/Anna_Antene_iv7m6y.mp3",
-  duration: 278,
-  album: "Anna Antene",
-  year: 2025,
-  genre: "blood",
-  language: "telugu",
-  sync: "love"
-},
-
-  //Return of the Dargon
-  {
-  id: "Yendhukae Nannodhilaavu",
-  title: "Yendhukae Nannodhilaavu",
-  artist: "Return of the Dargon",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755939650/Return-Of-The-Dragon-Telugu-2025-Yendhukae-Nannodhilaavu-250x250_p53pfr.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755939685/iSongs.info_03_-_Yendhukae_Nannodhilaavu_tumpal.mp3",
-  duration: 258,
-  album: "Yendhukae Nannodhilaavu",
-  year: 2025,
-  genre: "love",
-  language: "telugu",
-  sync: "sad"
-},
-{
-  id: "db7f1b4b-9f04-4ec3-9cdd-7c77090b7e56",
-  title: "Madhuvaramae",
-  artist: "Return of the Dargon",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755939650/Return-Of-The-Dragon-Telugu-2025-Yendhukae-Nannodhilaavu-250x250_p53pfr.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755939688/iSongs.info_02_-_Madhuvaramae_rkpzlv.mp3",
-  duration: 218,
-  album: "Madhuvaramae",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-{
-  id: "rise-of-dragon",
-  title: "Rise Of Dragon",
-  artist: "Return of the Dargon",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755939650/Return-Of-The-Dragon-Telugu-2025-Yendhukae-Nannodhilaavu-250x250_p53pfr.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755939685/iSongs.info_03_-_Yendhukae_Nannodhilaavu_tumpal.mp3",
-  duration: 210,
-  album: "Rise Of Dragon",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "rap"
-},
-  //Andhra King Taluka
-  {
-    id: "Chinni Gundelo",
-    title: "Chinni Gundelo",
-    artist: "Andhra King Taluka",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764302605/chinni-gundelo-andhra-king-taluka_tbnig6.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298267/Chinni_Gundelo_wsdnmm.mp3",
-    duration: 219,
-    album: "Nuvvunte Chaley",
-    year: 2025,
-    genre: ".",
-    language: "telugu",
-    sync: "romantic"
-  },
-  {
-    id: "trending2",
-    title: "Nuvvunte Chaley",
-    artist: "Andhra King Taluka",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754743776/Nuvvunte_Chaley_gvcrva.mp3",
-    duration: 240,
-    album: "Nuvvunte Chaley",
-    year: 2025,
-    genre: ".",
-    language: "telugu",
-    sync: "sad"
-  },
-  {
-  id: "Untold Emotions",
-  title: "Untold Emotions",
-  artist: "Andhra King Taluka",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298323/Untold_Emotions_zzyhrl.mp3",
-  duration: 276,
-  album: "Untold Emotions",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Puppy Shame",
-  title: "Puppy Shame",
-  artist: "Andhra King Taluka",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298288/Puppy_Shame_zv1i4t.mp3",
-  duration: 214,
-  album: "Andhra King Taluka",
-  year: 2025,
-  genre: "."
-},
-{
-  id: "Chalu",
-  title: "Chalu",
-  artist: "Andhra King Taluka",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298339/Chalu_h3lay1.mp3",
-  duration: 269,
-  album: "Chalu",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "First Day First Show",
-  title: "First Day First Show",
-  artist: "Andhra King Taluka",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298358/First_Day_First_Show_tnev6d.mp3",
-  duration: 176,
-  album: "First Day First Show",
-  year: 2025,
-  genre: "."
-},
-//Kubera
-{
-  id: "trending6",
-  title: "Naa Koduka",
-  artist: "Kubera",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kuberaa-Telugu-2025-20250624153504-500x500_gappsa.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752628194/Naa_Koduka_d5ocut.mp3",
-  duration: 285,
-  album: "Naa Koduka",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "love"
-},
-{
   id: "Poyiraa Mama",
   title: "Poyiraa Mama",
   artist: "Kubera",
@@ -328,845 +26,6 @@ export const songs: Song[] =[
   genre: "Sad",
   language: "telugu",
   sync: "feel1"
-},
-{
-  id: "Pippi Pippi Dum Dum",
-  title: "Pippi Pippi Dum Dum",
-  artist: "Kubera",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kubera-Telugu-2024-20241117001625-500x500_wufd8d.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752628194/Naa_Koduka_d5ocut.mp3",
-  duration: 227,
-  album: "Pippi Pippi Dum Dum",
-  year: 2025,
-  genre: "good",
-  language: "telugu",
-  sync: "happy"
-},
-{
-  id: "add-012",
-  title: "Naa Koduka",
-  artist: "Kubera",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kuberaa-Telugu-2025-20250624153504-500x500_gappsa.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752628194/Naa_Koduka_d5ocut.mp3",
-  duration: 285,
-  album: "Naa Koduka",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "romantic"
-},
-{
-  id: "add-014",
-  title: "Anaganaga Kadha",
-  artist: "Kubera",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kubera-Telugu-2024-20241117001625-500x500_wufd8d.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752628191/Anaganaga_Kadha_eelfc2.mp3",
-  duration: 202,
-  album: "Anaganaga Kadha",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-//Arjun Reddy
-{
-  id: "Telisineyn Na Nuvvey",
-  title: "Telisineyn Na Nuvvey",
-  artist: "Arjun Reddy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755913600/Telisiney_Na_Nuvvey_-_SenSongsMp3.Co_fqniw8.mp3",
-  duration: 252,
-  album: "Telisineyn Na Nuvvey",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "break"
-},
-{
-  id: "Oopiri Aaguthunnadey",
-  title: "Oopiri Aaguthunnadey",
-  artist: "Arjun Reddy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345054/Oopiri_Aaguthunnadey_PenduJatt.Com.Se_jesbuy.mp3",
-  duration: 244,
-  album: "Oopiri Aaguthunnadey",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-{
-  id: "Emitemitemo",
-  title: "Emitemitemo",
-  artist: "Arjun Reddy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345050/Emitemitemo_PenduJatt.Com.Se_josscd.mp3",
-  duration: 203,
-  album: "Emitemitemo",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-{
-  id: "5a23d0e1-2387-4c55-a293-5032d47eaad1",
-  title: "Mari Mari",
-  artist: "Arjun Reddy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345053/Mari_Mari_PenduJatt.Com.Se_mui80r.mp3",
-  duration: 174,
-  album: "Mari Mari",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-  {
-  id: "2be75c4f-d4af-4be9-bd2e-d423f781f411",
-  title: "Gundelonaa",
-  artist: "Arjun Reddy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345053/Gundelonaa_PenduJatt.Com.Se_nrjwen.mp3",
-  duration: 235,
-  album: "Gundelonaa",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-  {
-  id: "ce588104-805d-470d-b56f-554449456efa",
-  title: "Dhooram",
-  artist: "Arjun Reddy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345049/Dhooram_PenduJatt.Com.Se_vayuwm.mp3",
-  duration: 180,
-  album: "Dhooram",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-//Araya 2
-  {
-    id: "Uppenantha",
-    title: "Uppenantha",
-    artist: "Arya 2",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745143475/5b3c1a4a17f0986815b689ff90fcc0a8_f5l8en.jpg",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745143413/2-Uppenantha-SenSongsMp3.Co_1_la1ohs.mp3",
-    duration: 272,
-    album: "Arya 2",
-    year: 2009,
-    genre: "Romantic",
-    language: "telugu",
-    sync: "break"
-  },
-  {
-    id: "Mr Perfect",
-    title: "Mr Perfect",
-    artist: "Arya 2",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745143474/size_m_ytunzl.webp",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745143390/1-_Mr._Perfect-SenSongsMp3.Co_1_vdojf3.mp3",
-    duration: 240,
-    album: "Arya 2",
-    year: 2009,
-    genre: "Romantic",
-    language: "telugu",
-    sync: "happy"
-  },
-  {
-    id: "My Love Is Gone",
-    title: "My Love Is Gone",
-    artist: "Araya 2",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745143474/arya-2-indian-movie-poster_jl3eqb.webp",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745143401/6-My_Love_Is_Gone-SenSongsMp3.Co_1_vqkwrz.mp3",
-    duration: 289,
-    album: "Chill Vibes",
-    year: 2009,
-    genre: "Break Vibes",
-    language: "telugu",
-    sync: "break"
-  },
-  //Ardhashathabdam
-  {
-    id: "ye Kannuulu Chudani Chitrame",
-    title: "ye Kannuulu Chudani Chitrame",
-    artist: "Ardhashathabdam",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1746958145/Ardhashathabdam-Telugu-2021-20210325224654-500x500_b5ymiz.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1746958235/Ye_Kannulu_Choodani_-_SenSongsMp3.Com_ggkghh.mp3",
-    duration: 290,
-    album: "Feel It",
-    year: 2021,
-    genre: "love",
-    language: "telugu",
-    sync: "love"
-  },
-  //Parugu
-  {
-  id: "Nammavemo",
-  title: "Nammavemo",
-  artist: "Parugu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304782/Nammavemo-SenSongsMp3.Com_f5rm9u.mp3",
-  duration: 288,
-  album: "Nammavemo",
-  year: 2025,
-  genre: "."
-},
-{
-  id: "Parugulu",
-  title: "Parugulu",
-  artist: "Parugu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304773/Parugulu-SenSongsMp3.Com_1_uuuzzf.mp3",
-  duration: 260,
-  album: "Parugulu",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: " Yelageyalaga",
-  title: " Yelageyalaga",
-  artist: "Parugu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304759/Yelageyalaga-SenSongsMp3.Com_v6vao0.mp3",
-  duration: 262,
-  album: " Yelageyalaga",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Hrudayam",
-  title: "Hrudayam",
-  artist: "Parugu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304772/Hrudayam-SenSongsMp3.Com_wzi89d.mp3",
-  duration: 228,
-  album: "Hrudayam",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Manakanna Podiche",
-  title: "Manakanna Podiche",
-  artist: "Parugu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304781/Manakanna_Podiche-SenSongsMp3.Com_i17gwc.mp3",
-  duration: 280,
-  album: "Manakanna Podiche",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Chal Chal",
-  title: "Chal Chal",
-  artist: "Parugu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304788/Chal_Chal-SenSongsMp3.Com_fpjeao.mp3",
-  duration: 277,
-  album: "Chal Chal",
-  year: 2025,
-  genre: "."
-},
-  //Bommarillu
-  {
-  id: "Bommanu Geesthey",
-  title: "Bommanu Geesthey",
-  artist: "Bommarillu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304723/Bommanu_Geesthey-SenSongsMp3.Co_dr7mod.mp3",
-  duration: 237,
-  album: "Bommanu Geesthey",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "We Have Romeo",
-  title: "We Have Romeo",
-  artist: "Bommarillu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304700/We_Have_Romeo-SenSongsMp3.Co_xixps4.mp3",
-  duration: 235,
-  album: "We Have Romeo",
-  year: 2025,
-  genre: "."
-},{
-  id: "Nammaka Tappani",
-  title: "Nammaka Tappani",
-  artist: "Bommarillu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304716/Nammaka_Tappani-SenSongsMp3.Co_wue3xa.mp3",
-  duration: 275,
-  album: "Nammaka Tappani",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Apudo Ipudo",
-  title: "Apudo Ipudo",
-  artist: "Bommarillu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304721/Apudo_Ipudo-SenSongsMp3.Co_ehnshm.mp3",
-  duration: 243,
-  album: "Apudo Ipudo",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Laalu Dharvaja",
-  title: "Laalu Dharvaja",
-  artist: "Bommarillu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304727/Laalu_Dharvaja-SenSongsMp3.Co_cxduuh.mp3",
-  duration: 293,
-  album: "Laalu Dharvaja",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Kaani Ippudu",
-  title: "Kaani Ippudu",
-  artist: "Bommarillu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304729/Kaani_Ippudu-SenSongsMp3.Co_ftb7vi.mp3",
-  duration: 316,
-  album: "Kaani Ippudu",
-  year: 2025,
-  genre: "."
-},
-//Malli Malli Idi Rani Roju
-{
-    id: "Varinche Prema",
-    title: "Varinche Prema",
-    artist: "Malli Malli Idi Rani Roju",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559946/Varinche_Prema_avbppn.mp3",
-    duration: 270,
-    album: "Varinche Prema",
-    year: 2025,
-    genre: "Love",
-    language: "telugu",
-    sync: "break"
-   },
-{
-  id: "add-007",
-  title: "Yenno Yenno",
-  artist: "Malli Malli Idi Rani Roju",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559960/Yenno_Yenno_lgmgcj.mp3",
-  duration: 270,
-  album: "Yenno Yenno",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "romantic"
-},
-  {
-  id: "add-008",
-  title: "Marhaba",
-  artist: "Malli Malli Idi Rani Roju",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559950/Marhaba_koy9jr.mp3",
-  duration: 280,
-  album: "Marhaba",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "happy"
-},
-  {
-  id: "add-009",
-  title: "Choti Zindagi",
-  artist: "Malli Malli Idi Rani Roju",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559951/Choti_Jindagi_vb7eji.mp3",
-  duration: 249,
-  album: "Choti Zindagi",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-  {
-  id: "add-010",
-  title: "Gathama Gathama",
-  artist: "Malli Malli Idi Rani Roju",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559944/Gathama_Gathama_cuulno.mp3",
-  duration: 178,
-  album: "Gathama Gathama",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "dance"
-},
-//Animal
-{
-    id: "Evarevaro",
-    title: "Evarevaro",
-    artist: "Animal",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169667/Evarevaro-Soul-Version-From-ANIMAL-Telugu-2023-20231223151007-500x500_geciwj.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169847/ANIMAL__Evarevaro_Full_Video_-_Ranbir_K_Rashmika_Anil_K_Bobby_D_Sandeep_V_Vishal_M_Bhushan_K_qbszwc.mp3",
-    duration: 248,
-    album: "Evarevaro",
-    year: 2025,
-    genre: "feel",
-    language: "telugu",
-    sync: "sad"
-  },
-  {
-    "id": "song190",
-    "title": "Nanna Nuv Naa Pranam",
-    "artist": "Animal",
-    "imageUrl": "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
-    "audioUrl": "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169862/Full_Video__Nanna_Nuv_Naa_Pranam_ANIMAL_Ranbir_K_Rashmika_Sonu_Nigam_AnanthaS_Sandeep_Reddy_V_qyk37k.mp3",
-    "duration": 320,
-    "album": "Nanna Nuv Naa Pranam",
-    "year": 2025,
-    "genre": "rap"
-  },
-  {
-    "id": "song191",
-    "title": "Ney Veyrey",
-    "artist": "Animal",
-    "imageUrl": "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
-    "audioUrl": "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169832/ANIMAL_Telugu_Ney_Veyrey___Ranbir_Kapoor_Rashmika_M_Karthik_ShreyasP_AnanthaS_Sandeep_Reddy_V_z1dlqa.mp3",
-    "duration": 272,
-    "album": "Ney Veyrey",
-    "year": 2025,
-    "genre": "rap"
-  },
-{
-    id: "Ammayi",
-    title: "Ammayi",
-    artist: "Animal",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169827/ANIMAL__Ammayi_Full_Video_Ranbir_K_Rashmika_Raghav_Pritam_Anantha_Sandeep_Reddy_V_Bhushan_K_tritnc.mp3",
-    duration: 275,
-    album: "Ammayi",
-    year: 2025,
-    genre: "good",
-    language: "telugu",
-    sync: "folk"
-  },
-  {
-    id: "song189",
-    title: "Kashmeeru ANIMAL ",
-    artist: "Animal",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169862/Full_Video_Kashmeeru_ANIMAL_Ranbir_K_Rashmika_Sandeep_V_Shreya_G_Yazin_N_Bhushan_K_koo3di.mp3",
-    duration: 217,
-    album: "Kashmeeru ANIMAL ",
-    year: 2025,
-    genre: "rap"
-  },
-  //3(Moonu)
-  {
-    id: "Why This Kolaveri Di",
-    title: "Why This Kolaveri Di",
-    artist: "3(Moonu)",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747320161/Why-This-Kolaveri-Di-The-Soup-of-Love--Tamil-2011-20200807101420-500x500_ljgqiq.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747320074/iSongs.info_09_-_Why_This_Kolaveri_Di_zclg5f.mp3",
-    duration: 260,
-    album: "3(Moonu)",
-    year: 2025,
-    genre: "Mood",
-    language: "telugu",
-    sync: "sad"
-  },
-  {
-    id: "Po Ve Po Remix",
-    title: "Po Ve Po Remix",
-    artist: "3(Moonu)",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747320161/3-2012jpeg_tzy92o.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747320073/iSongs.info_05_-_Po_Ve_Po_Remix_zkiumo.mp3",
-    duration: 222,
-    album: "3(Moomu)",
-    year: 20225,
-    genre: "Mood",
-    language: "telugu",
-    sync: "break"
-  },
-  {
-    id: "A Life Full Of Love",
-    title: "A Life Full Of Love",
-    artist: "3(Moonu)",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747320161/3-2012jpeg_tzy92o.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747320094/iSongs.info_01_-_A_Life_Full_Of_Love_w9oog0.mp3",
-    duration: 116,
-    album: "3(Moonu)",
-    year: 2025,
-    genre: "Mood",
-    language: "telugu",
-    sync: "sad"
-  },
-  //8 Vasantal
-  {
-  id: "andhamaa-andhamaa",
-  title: "Andhamaa Andhamaa",
-  artist: "8 Vasantalu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755941762/8-Vasantalu-2025-Parichayamila-250x250_cpn2x1.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755941781/Andhamaa_Andhamaa_ytethq.mp3",
-  duration: 276,
-  album: "Andhamaa Andhamaa",
-  year: 2025,
-  genre: "Love it ",
-  language: "telugu",
-  sync: "Love"
-},
-  {
-  id: "parichayamila",
-  title: "Parichayamila",
-  artist: "8 Vasantalu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755941762/8-Vasantalu-2025-Parichayamila-250x250_cpn2x1.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755941781/Parichayamila_iwhbd4.mp3",
-  duration: 204,
-  album: "Parichayamila",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "Feel"
-},
-//Amaran
-{
-    id: "Hey Rangule",
-    title: "Hey Rangule",
-    artist: "Amaran",
-    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1744980197/images_11_vi2n82.jpg",
-    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1744980264/Hey_Rangule_Telugu_KoshalWorld.Com_ppy5la.mp3",
-    duration: 229,
-    album: "Unexpected",
-    year: 2024,
-    genre: "Feel It",
-    language:"telugu",
-    sync: "love"
-  },
-  //Andala Rakshasi
-  {
-  id: "eYe Mantramo",
-  title: "Ye Mantramo",
-  artist: "Andala Rakshasi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093144/iSongs.info_04_-_Ye_Mantramo_g1li9o.mp3",
-  duration: 167,
-  album: "Ye Mantramo",
-  year: 2025,
-  genre: "."
-},
- {
-    id: "Yemito",
-    title: "Yemito",
-    artist: "Andala Rakshasi",
-    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1743436807/Andala-Rakshasi-2012jpeg_sl2cx9.jpg",
-    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1743436814/Yemito_-_SenSongsmp3.Co_jk9o7m.mp3",
-    duration: 250,
-    album: "Andala Rakshasi",
-    year: 2012,
-    genre: "Melody",
-    language: "telugu",
-    sync: "love"
-  },
-  {
-  id: "Vennante",
-  title: "Vennante",
-  artist: "Andala Rakshasi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093145/iSongs.info_06_-_Vennante_kqv463.mp3",
-  duration: 207,
-  album: "Vennante",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Ne Ninnu Chera",
-  title: "Ne Ninnu Chera",
-  artist: "Andala Rakshasi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093133/iSongs.info_03_-_Ne_Ninnu_Chera_isovdm.mp3",
-  duration: 209,
-  album: "Ne Ninnu Chera",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Manasa Marchipo",
-  title: "Manasa Marchipo",
-  artist: "Andala Rakshasi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093147/iSongs.info_05_-_Manasa_Marchipo_gb0j3s.mp3",
-  duration: 268,
-  album: "Manasa Marchipo",
-  year: 2025,
-  genre: "."
-},
-  {
-  id: "Manasu Palike",
-  title: "Manasu Palike",
-  artist: "Andala Rakshasi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093143/iSongs.info_02_-_Manasu_Palike_mshtqp.mp3",
-  duration: 228,
-  album: "Manasu Palike",
-  year: 2025,
-  genre: "."
-},
-//A1 Express
-{
-    id: "Single Kingulam",
-    title: "Single Kingulam",
-    artist: "A1 Express",
-    imageUrl: "https://res.cloudinary.com/dl8dmkhmv/image/upload/v1743870091/download_2_b76xdp.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1743866885/Single_Kingulam_-_SenSongsMp3.Com_1_qvvwsw.mp3",
-    duration: 220,
-    album: "A1 Express",
-    year: 2021,
-    genre: "Folk",
-    language: "telugu",
-    sync: "rap"
-  },
-  //Agent
-  {
-  id: "502f1361-bb38-487a-bdb2-224c58c27147",
-  title: "Wild Saala",
-  artist: "Agent",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344685/Wild_Saala_xpbucd.mp3",
-  duration: 94,
-  album: "Wild Saala",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-  {
-  id: "3eeb3055-54fd-4651-9912-e37d2dcdd8f3",
-  title: "Endhe Endhe",
-  artist: "Agent",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344680/Endhe_Endhe_z0ofov.mp3",
-  duration: 214,
-  album: "Endhe Endhe",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-  {
-  id: "1fec8165-32e2-4678-afd5-b3b88dcd4374",
-  title: "Malli Malli",
-  artist: "Agent",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344680/Malli_Malli_evhzvc.mp3",
-  duration: 193,
-  album: "Malli Malli",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-//A Aa
-{
-  id: "rang-de",
-  title: "Rang De ",
-  artist: "A Aa",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940727/iSongs.info_02_-_Rang_De_rlq5px.mp3",
-  duration: 241,
-  album: "Rang De ",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "happy"
-},
-  {
-  id: "anasuya-kosam",
-  title: "Anasuya Kosam",
-  artist: "A Aa",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940735/iSongs.info_03_-_Anasuya_Kosam_qu2hdg.mp3",
-  duration: 204,
-  album: "Anasuya Kosam",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-  {
-  id: "mummy-returns",
-  title: "Mummy Returns",
-  artist: "A Aa",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940741/iSongs.info_04_-_Mummy_Returns_dpwxv2.mp3",
-  duration: 173,
-  album: "Mummy Returns",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-},
-  {
-  id: "yaa-yaa",
-  title: "Yaa Yaa",
-  artist: "A Aa",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940742/iSongs.info_01_-_Yaa_Yaa_ehpcyl.mp3",
-  duration: 239,
-  album: "Yaa Yaa",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "."
-}
-
-];
-// Shuffle helper
-function shuffle<T>(array: T[]): T[] {
-  return [...array]
-    .map(item => ({ item, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(a => a.item);
-}
-
-// 🔥 One export only: popularSongs  
-// Top-10 random + remaining songs automatically added below
-export const popularSongs = (() => {
-  const shuffled = shuffle(songs);
-  const top10 = shuffled.slice(0, 10);
-  const remaining = shuffled.slice(10);
-  return [...top10, ...remaining]; // first top10 then remaining
-})();
-
-  audioUrl: string;
-  duration: number; // in seconds
-  album?: string;
-  year?: number;
-  genre?: string;
-  language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
-  sync?: 'sad' | 'love' | 'break' | 'happy' | 'devotional' | 'feel1' | 'action' | 'romantic' | 'friend' | 'dance' | 'folk' | 'mass' | 'party' | 'classical' | 'rap' | 'moti' | '.' | 'mother' | 'normal' | 'good' | 'Rap' | 'Feel' | 'Sad' | 'Love' | '9';
-}
-export const songs: Song[] =[
-    
-{
-      id: "Sahana Sahana",
-      title: "Sahana Sahana",
-      artist: "The RajaSaab",
-      imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1766109884/IMG_20251219_072805_efxbnx.jpg",
-      audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1766109891/Sahana_Sahana_xzgekh.mp3",
-      duration: 258,
-      album: "Sahana Sahana",
-      year: 2025,
-      genre: ".",
-      language: "telugu",
-      sync: "."
-    },
-  
-  {
-  id: "Peddi",
-  title: "Chikiri Chikiri",
-  artist: "Peddi",
-  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
-  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764608269/Chikiri_Chikiri_jfcks5.mp3",
-  duration: 272,
-  album: "Chikiri Chikiri",
-  year: 2025,
-  genre: "love",
-  language: "telugu",
-  sync: "love"
-  },
-  {
-  id: "Boom Boom",
-  title: "Boom Boom",
-  artist: "Dude",
-  imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
-  audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1764610233/Boom_Boom_PenduJatt.Com.Se_cwkiup.mp3",
-  duration: 240,
-  album: "Boom Boom",
-  year: 2025,
-  genre: "love",
-  language: "telugu",
-  sync: "love"
-},
-  {
-  id: "Rambai Neemeedha Naku",
-  title: "Rambai Neemeedha Naku",
-  artist: "Raju Weds Rambai",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764306173/Raju-Weds-Rambai-2025_rdz0no.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764306183/Rambai_Neemeedha_Naku_zo4kfr.mp3",
-  duration: 250,
-  album: "Rambai Neemeedha Naku",
-  year: 2025,
-  genre: "."
-},
- 
-  {
-  id: "vibe-undi",
-  title: "Vibe Undi",
-  artist: "Mirai",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755944038/Mirai-2025-Vibe-Undi-250x250_n1oiqz.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755944069/Vibe_Undi_g25hgd.mp3",
-  duration: 202,
-  album: "Vibe Undi",
-  year: 2025,
-  genre: "rap",
-  language: "telugu",
-  sync: "rap"
-},
-   {
-  id: "mallika-gandha",
-  title: "Mallika Gandha",
-  artist: "Mallika Gandhi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757091523/60396_4_pzrtin.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757091533/Mallika_Gandha_KoshalWorld.Com_yzw9ct.mp3",
-  duration: 261,
-  album: "Mallika Gandha",
-  year: 2025,
-  genre: "Love it ",
-  language: "telugu",
-  sync: "love"
-},
-  
-
-  
-  {
-    id: "trending4",
-    title: "Om Namo Bhagavate Vasudevaya",
-    artist: "Mahavatar Narsimha",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754701000/IMG_20250809_062624_f6ogak.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757091961/Om_Namo_Bhagavate_Vasudevaya_Telugu_KoshalWorld.Com_nfbtai.mp3",
-    duration: 216,
-    album: "Mahavatar Narsimha",
-    year: 2025,
-    genre: "Love it",
-    language: "hindi",
-    sync: "devotional"
-  },
- 
-  {
-    id: "trending3",
-    title: "Minnalvala",
-    artist: "Narivetta",
-    imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752507033/Minnalvala-From-Narivetta-Malayalam-2025-20250416150421-500x500_cixjbx.jpg",
-    audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752507065/Minnalvala_qocusu.mp3",
-    duration: 299,
-    album: "Love",
-    year: 2025,
-    genre: "Romance",
-    language: "tamil",
-    sync: "romantic"
-  },
-  
-  {
-  id: "trending7",
-  title: "Viral Vayyari",
-  artist: "Viral Vayyari",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741749/Junior-2025_rxo3fe.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754741760/Viral_Vayyari_ivbxka.mp3",
-  duration: 290,
-  album: "Viral Vayyari",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "action"
 },
   {
   id: "Chikiri Chikiri-hindi",
@@ -1247,13 +106,127 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "love"
 },
-  
-  
-  
-  
- 
-  
-  
+  {
+  id: "Nammavemo",
+  title: "Nammavemo",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304782/Nammavemo-SenSongsMp3.Com_f5rm9u.mp3",
+  duration: 288,
+  album: "Nammavemo",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Puppy Shame",
+  title: "Puppy Shame",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298288/Puppy_Shame_zv1i4t.mp3",
+  duration: 214,
+  album: "Andhra King Taluka",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Bommanu Geesthey",
+  title: "Bommanu Geesthey",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304723/Bommanu_Geesthey-SenSongsMp3.Co_dr7mod.mp3",
+  duration: 237,
+  album: "Bommanu Geesthey",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Chalu",
+  title: "Chalu",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298339/Chalu_h3lay1.mp3",
+  duration: 269,
+  album: "Chalu",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "First Day First Show",
+  title: "First Day First Show",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298358/First_Day_First_Show_tnev6d.mp3",
+  duration: 176,
+  album: "First Day First Show",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Guns And Roses",
+  title: "Guns And Roses",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298876/Guns_And_Roses_ozfrvx.mp3",
+  duration: 257,
+  album: "Guns And Roses",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Untold Emotions",
+  title: "Untold Emotions",
+  artist: "Andhra King Taluka",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754743786/andhrakingtaluka-20250515112950-23300_mu8zny.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298323/Untold_Emotions_zzyhrl.mp3",
+  duration: 276,
+  album: "Untold Emotions",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Washi O Washi",
+  title: "Washi O Washi",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298819/Washi_O_Washi_ghjrsd.mp3",
+  duration: 112,
+  album: "Washi O Washi",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "The Streets Of Fire",
+  title: "The Streets Of Fire",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298848/In_The_Streets_Of_Fire_yg549b.mp3",
+  duration: 119,
+  album: "The Streets Of Fire",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Trance of OMI",
+  title: "Trance of OMI",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298857/Trance_of_OMI_ki4rob.mp3",
+  duration: 173,
+  album: "Trance of OMI",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Kiss Kiss Bang Bang",
+  title: "Kiss Kiss Bang Bang",
+  artist: "OG",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755087726/OG-2025-Firestorm-250x250_pu9b4q.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298858/Kiss_Kiss_Bang_Bang_wwtyeo.mp3",
+  duration: 257,
+  album: "Kiss Kiss Bang Bang",
+  year: 2025,
+  genre: "."
+},
   {
   id: "alara-chanchalamaina",
   title: "Alara Chanchalamaina",
@@ -1293,8 +266,74 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "devotional"
 },
-
-  
+{
+  id: "Hridayam Lopala",
+  title: "Hridayam Lopala",
+  artist: "Kingdom",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740913/size_m_1746425141_j58ecx.webp",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740891/Hridayam_Lopala_yq1sdw.mp3",
+  duration: 134,
+  album: "Hridayam Lopala",
+  year: 2025,
+  genre: "love",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
+  id: "eYe Mantramo",
+  title: "Ye Mantramo",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093144/iSongs.info_04_-_Ye_Mantramo_g1li9o.mp3",
+  duration: 167,
+  album: "Ye Mantramo",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Vennante",
+  title: "Vennante",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093145/iSongs.info_06_-_Vennante_kqv463.mp3",
+  duration: 207,
+  album: "Vennante",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Ne Ninnu Chera",
+  title: "Ne Ninnu Chera",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093133/iSongs.info_03_-_Ne_Ninnu_Chera_isovdm.mp3",
+  duration: 209,
+  album: "Ne Ninnu Chera",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Manasa Marchipo",
+  title: "Manasa Marchipo",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093147/iSongs.info_05_-_Manasa_Marchipo_gb0j3s.mp3",
+  duration: 268,
+  album: "Manasa Marchipo",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Manasu Palike",
+  title: "Manasu Palike",
+  artist: "Andala Rakshasi",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1757093128/Andala-Rakshasi-2012-250x250_nv5jct.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1757093143/iSongs.info_02_-_Manasu_Palike_mshtqp.mp3",
+  duration: 228,
+  album: "Manasu Palike",
+  year: 2025,
+  genre: "."
+},
 {
   id: "Om Namah Shivaya",
   title: "Om Namah Shivaya",
@@ -1334,7 +373,32 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "romantic"
 },
-  
+  {
+  id: "andhamaa-andhamaa",
+  title: "Andhamaa Andhamaa",
+  artist: "8 Vasantalu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755941762/8-Vasantalu-2025-Parichayamila-250x250_cpn2x1.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755941781/Andhamaa_Andhamaa_ytethq.mp3",
+  duration: 276,
+  album: "Andhamaa Andhamaa",
+  year: 2025,
+  genre: "Love it ",
+  language: "telugu",
+  sync: "Love"
+},
+  {
+  id: "parichayamila",
+  title: "Parichayamila",
+  artist: "8 Vasantalu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755941762/8-Vasantalu-2025-Parichayamila-250x250_cpn2x1.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755941781/Parichayamila_iwhbd4.mp3",
+  duration: 204,
+  album: "Parichayamila",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "Feel"
+},
 {
   id: "kannamma",
   title: "Kannamma",
@@ -1491,7 +555,19 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "action"
 },
-
+{
+  id: "Pippi Pippi Dum Dum",
+  title: "Pippi Pippi Dum Dum",
+  artist: "Kubera",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kubera-Telugu-2024-20241117001625-500x500_wufd8d.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752628194/Naa_Koduka_d5ocut.mp3",
+  duration: 227,
+  album: "Pippi Pippi Dum Dum",
+  year: 2025,
+  genre: "good",
+  language: "telugu",
+  sync: "happy"
+},
   {
   id: "ranguladdhukunna",
   title: "Ranguladdhukunna",
@@ -1531,7 +607,19 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "Sad"
 },
-
+{
+    id: "ye Kannuulu Chudani Chitrame",
+    title: "ye Kannuulu Chudani Chitrame",
+    artist: "Ardhashathabdam",
+    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1746958145/Ardhashathabdam-Telugu-2021-20210325224654-500x500_b5ymiz.jpg",
+    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1746958235/Ye_Kannulu_Choodani_-_SenSongsMp3.Com_ggkghh.mp3",
+    duration: 290,
+    album: "Feel It",
+    year: 2021,
+    genre: "love",
+    language: "telugu",
+    sync: "love"
+  },
   {
     id: "Kanulu Chadire",
     title: "Kanulu Chadire",
@@ -1610,7 +698,19 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "dance"
 },
-
+{
+  id: "Anna Antene",
+  title: "Anna Antene",
+  artist: "Kingdom",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754740914/kingdom-tamil-2025_x4ijhc.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754740894/Anna_Antene_iv7m6y.mp3",
+  duration: 278,
+  album: "Anna Antene",
+  year: 2025,
+  genre: "blood",
+  language: "telugu",
+  sync: "love"
+},
   {
   id: "Komma Uyyala",
   title: "Komma Uyyala",
@@ -1663,7 +763,19 @@ export const songs: Song[] =[
     language: "telugu",
     sync: "sad"
   },
-  
+  {
+    id: "Hey Rangule",
+    title: "Hey Rangule",
+    artist: "Amaran",
+    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1744980197/images_11_vi2n82.jpg",
+    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1744980264/Hey_Rangule_Telugu_KoshalWorld.Com_ppy5la.mp3",
+    duration: 229,
+    album: "Unexpected",
+    year: 2024,
+    genre: "Feel It",
+    language:"telugu",
+    sync: "love"
+  },
   {
     id: "Kumkumala",
     title: "Kumkumala",
@@ -1742,8 +854,32 @@ export const songs: Song[] =[
     language:"telugu",
     sync: "love"
   },
-  
- 
+  {
+    id: "Yedurangula Vaana",
+    title: "Yedurangula Vaana",
+    artist: "18 Pages",
+    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1743417356/16712135423689_h4r5p5.jpg",
+    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1743416935/Yedurangula_Vaana_128_Kbps_f9ppps.mp3",
+    duration: 265,
+    album: "18 Pages",
+    year: 2022,
+    genre: "Love",
+    language: "telugu",
+    sync: "love"
+  },
+  {
+    id: "Yemito",
+    title: "Yemito",
+    artist: "Andala Rakshasi",
+    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1743436807/Andala-Rakshasi-2012jpeg_sl2cx9.jpg",
+    audioUrl: "https://res.cloudinary.com/dykzuljjr/video/upload/v1743436814/Yemito_-_SenSongsmp3.Co_jk9o7m.mp3",
+    duration: 250,
+    album: "Andala Rakshasi",
+    year: 2012,
+    genre: "Melody",
+    language: "telugu",
+    sync: "love"
+  },
   {
     id: "Hilesso Hilessa",
     title: "Hilesso Hilessa",
@@ -1783,7 +919,19 @@ export const songs: Song[] =[
     language: "telugu",
     sync: "love"
   },
-  
+  {
+    id: "Mr Perfect",
+    title: "Mr Perfect",
+    artist: "Arya 2",
+    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745143474/size_m_ytunzl.webp",
+    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745143390/1-_Mr._Perfect-SenSongsMp3.Co_1_vdojf3.mp3",
+    duration: 240,
+    album: "Arya 2",
+    year: 2009,
+    genre: "Romantic",
+    language: "telugu",
+    sync: "happy"
+  },
   {
     id: "Meenu",
     title: "Meenu",
@@ -1992,7 +1140,19 @@ export const songs: Song[] =[
     language: "telugu",
     sync: "love"
   },
-  
+  {
+    id: "Ammayi",
+    title: "Ammayi",
+    artist: "Animal",
+    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
+    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169827/ANIMAL__Ammayi_Full_Video_Ranbir_K_Rashmika_Raghav_Pritam_Anantha_Sandeep_Reddy_V_Bhushan_K_tritnc.mp3",
+    duration: 275,
+    album: "Ammayi",
+    year: 2025,
+    genre: "good",
+    language: "telugu",
+    sync: "folk"
+  },
   {
     id: "Hanuman Chalisa",
     title: "Hanuman Chalisa",
@@ -2528,7 +1688,45 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "."
 },
-  
+  {
+  id: "5a23d0e1-2387-4c55-a293-5032d47eaad1",
+  title: "Mari Mari",
+  artist: "Arjun Reddy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345053/Mari_Mari_PenduJatt.Com.Se_mui80r.mp3",
+  duration: 174,
+  album: "Mari Mari",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "2be75c4f-d4af-4be9-bd2e-d423f781f411",
+  title: "Gundelonaa",
+  artist: "Arjun Reddy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345053/Gundelonaa_PenduJatt.Com.Se_nrjwen.mp3",
+  duration: 235,
+  album: "Gundelonaa",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "ce588104-805d-470d-b56f-554449456efa",
+  title: "Dhooram",
+  artist: "Arjun Reddy",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345046/images_12_ykyjsh.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345049/Dhooram_PenduJatt.Com.Se_vayuwm.mp3",
+  duration: 180,
+  album: "Dhooram",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
   {
   id: "d1a724cb-9ec3-4396-9af6-e3b25347dda2",
   title: "Hey Nenila",
@@ -2724,7 +1922,19 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "."
 },
- 
+ {
+  id: "db7f1b4b-9f04-4ec3-9cdd-7c77090b7e56",
+  title: "Madhuvaramae",
+  artist: "Return of the Dargon",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755939650/Return-Of-The-Dragon-Telugu-2025-Yendhukae-Nannodhilaavu-250x250_p53pfr.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755939688/iSongs.info_02_-_Madhuvaramae_rkpzlv.mp3",
+  duration: 218,
+  album: "Madhuvaramae",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
   
   {
   id: "yegiri-pove",
@@ -2830,7 +2040,58 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "."
 },
-  
+  {
+  id: "rang-de",
+  title: "Rang De ",
+  artist: "A Aa",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940727/iSongs.info_02_-_Rang_De_rlq5px.mp3",
+  duration: 241,
+  album: "Rang De ",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
+},
+  {
+  id: "anasuya-kosam",
+  title: "Anasuya Kosam",
+  artist: "A Aa",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940735/iSongs.info_03_-_Anasuya_Kosam_qu2hdg.mp3",
+  duration: 204,
+  album: "Anasuya Kosam",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "mummy-returns",
+  title: "Mummy Returns",
+  artist: "A Aa",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940741/iSongs.info_04_-_Mummy_Returns_dpwxv2.mp3",
+  duration: 173,
+  album: "Mummy Returns",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "yaa-yaa",
+  title: "Yaa Yaa",
+  artist: "A Aa",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940742/iSongs.info_01_-_Yaa_Yaa_ehpcyl.mp3",
+  duration: 239,
+  album: "Yaa Yaa",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
   {
   id: "rendu-kallu",
   title: "Rendu Kallu",
@@ -3052,7 +2313,45 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "."
 },
-  
+  {
+  id: "502f1361-bb38-487a-bdb2-224c58c27147",
+  title: "Wild Saala",
+  artist: "Agent",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344685/Wild_Saala_xpbucd.mp3",
+  duration: 94,
+  album: "Wild Saala",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "3eeb3055-54fd-4651-9912-e37d2dcdd8f3",
+  title: "Endhe Endhe",
+  artist: "Agent",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344680/Endhe_Endhe_z0ofov.mp3",
+  duration: 214,
+  album: "Endhe Endhe",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
+  {
+  id: "1fec8165-32e2-4678-afd5-b3b88dcd4374",
+  title: "Malli Malli",
+  artist: "Agent",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344680/Malli_Malli_evhzvc.mp3",
+  duration: 193,
+  album: "Malli Malli",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "."
+},
   {
   id: "78f557f0-21fc-40fd-8515-9040d18e5812",
   title: "Osi Pellama",
@@ -3393,8 +2692,71 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "."
 },
-  
-  
+  {
+  id: "add-007",
+  title: "Yenno Yenno",
+  artist: "Malli Malli Idi Rani Roju",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559960/Yenno_Yenno_lgmgcj.mp3",
+  duration: 270,
+  album: "Yenno Yenno",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
+  {
+  id: "add-008",
+  title: "Marhaba",
+  artist: "Malli Malli Idi Rani Roju",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559950/Marhaba_koy9jr.mp3",
+  duration: 280,
+  album: "Marhaba",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "happy"
+},
+  {
+  id: "add-009",
+  title: "Choti Zindagi",
+  artist: "Malli Malli Idi Rani Roju",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559951/Choti_Jindagi_vb7eji.mp3",
+  duration: 249,
+  album: "Choti Zindagi",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
+  {
+  id: "add-010",
+  title: "Gathama Gathama",
+  artist: "Malli Malli Idi Rani Roju",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559936/Malli-Malli-Idi-Rani-Roju-2014jpeg_kfga1k.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559944/Gathama_Gathama_cuulno.mp3",
+  duration: 178,
+  album: "Gathama Gathama",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "dance"
+},
+  {
+  id: "add-012",
+  title: "Naa Koduka",
+  artist: "Kubera",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kuberaa-Telugu-2025-20250624153504-500x500_gappsa.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752628194/Naa_Koduka_d5ocut.mp3",
+  duration: 285,
+  album: "Naa Koduka",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "romantic"
+},
   {
   id: "cce65d4a-0ed5-4b58-b21c-c6e4c9b265be",
   title: "Amma Amma ,Nee Vennela",
@@ -3408,7 +2770,19 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "mother"
 },
-  
+  {
+  id: "add-014",
+  title: "Anaganaga Kadha",
+  artist: "Kubera",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752628146/Kubera-Telugu-2024-20241117001625-500x500_wufd8d.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752628191/Anaganaga_Kadha_eelfc2.mp3",
+  duration: 202,
+  album: "Anaganaga Kadha",
+  year: 2025,
+  genre: ".",
+  language: "telugu",
+  sync: "sad"
+},
   
   {
   id: "add-016",
@@ -5178,8 +4552,39 @@ export const songs: Song[] =[
     "year": 2025,
     "genre": "Love it "
   },
-  
-  
+  {
+    "id": "song189",
+    "title": "Kashmeeru ANIMAL ",
+    "artist": "Animal",
+    "imageUrl": "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
+    "audioUrl": "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169862/Full_Video_Kashmeeru_ANIMAL_Ranbir_K_Rashmika_Sandeep_V_Shreya_G_Yazin_N_Bhushan_K_koo3di.mp3",
+    "duration": 217,
+    "album": "Kashmeeru ANIMAL ",
+    "year": 2025,
+    "genre": "rap"
+  },
+  {
+    "id": "song190",
+    "title": "Nanna Nuv Naa Pranam",
+    "artist": "Animal",
+    "imageUrl": "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
+    "audioUrl": "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169862/Full_Video__Nanna_Nuv_Naa_Pranam_ANIMAL_Ranbir_K_Rashmika_Sonu_Nigam_AnanthaS_Sandeep_Reddy_V_qyk37k.mp3",
+    "duration": 320,
+    "album": "Nanna Nuv Naa Pranam",
+    "year": 2025,
+    "genre": "rap"
+  },
+  {
+    "id": "song191",
+    "title": "Ney Veyrey",
+    "artist": "Animal",
+    "imageUrl": "https://res.cloudinary.com/dkhbceri0/image/upload/v1748169643/Animal-2023_v47iqv.jpg",
+    "audioUrl": "https://res.cloudinary.com/dkhbceri0/video/upload/v1748169832/ANIMAL_Telugu_Ney_Veyrey___Ranbir_Kapoor_Rashmika_M_Karthik_ShreyasP_AnanthaS_Sandeep_Reddy_V_z1dlqa.mp3",
+    "duration": 272,
+    "album": "Ney Veyrey",
+    "year": 2025,
+    "genre": "rap"
+  },
   {
     "id": "song194",
     "title": "Nene Nanine",
@@ -5852,8 +5257,115 @@ export const songs: Song[] =[
   language: "telugu",
   sync: "devotional"
 },
-  
-  
+  {
+  id: "We Have Romeo",
+  title: "We Have Romeo",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304700/We_Have_Romeo-SenSongsMp3.Co_xixps4.mp3",
+  duration: 235,
+  album: "We Have Romeo",
+  year: 2025,
+  genre: "."
+},{
+  id: "Nammaka Tappani",
+  title: "Nammaka Tappani",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304716/Nammaka_Tappani-SenSongsMp3.Co_wue3xa.mp3",
+  duration: 275,
+  album: "Nammaka Tappani",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Apudo Ipudo",
+  title: "Apudo Ipudo",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304721/Apudo_Ipudo-SenSongsMp3.Co_ehnshm.mp3",
+  duration: 243,
+  album: "Apudo Ipudo",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Laalu Dharvaja",
+  title: "Laalu Dharvaja",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304727/Laalu_Dharvaja-SenSongsMp3.Co_cxduuh.mp3",
+  duration: 293,
+  album: "Laalu Dharvaja",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Kaani Ippudu",
+  title: "Kaani Ippudu",
+  artist: "Bommarillu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304650/Bommarillu-2006jpeg_kukod8.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304729/Kaani_Ippudu-SenSongsMp3.Co_ftb7vi.mp3",
+  duration: 316,
+  album: "Kaani Ippudu",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Parugulu",
+  title: "Parugulu",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304773/Parugulu-SenSongsMp3.Com_1_uuuzzf.mp3",
+  duration: 260,
+  album: "Parugulu",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: " Yelageyalaga",
+  title: " Yelageyalaga",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304759/Yelageyalaga-SenSongsMp3.Com_v6vao0.mp3",
+  duration: 262,
+  album: " Yelageyalaga",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Hrudayam",
+  title: "Hrudayam",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304772/Hrudayam-SenSongsMp3.Com_wzi89d.mp3",
+  duration: 228,
+  album: "Hrudayam",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Manakanna Podiche",
+  title: "Manakanna Podiche",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304781/Manakanna_Podiche-SenSongsMp3.Com_i17gwc.mp3",
+  duration: 280,
+  album: "Manakanna Podiche",
+  year: 2025,
+  genre: "."
+},
+  {
+  id: "Chal Chal",
+  title: "Chal Chal",
+  artist: "Parugu",
+  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764304751/Parugu-2008jpeg-300x300_tlxzja.jpg",
+  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764304788/Chal_Chal-SenSongsMp3.Com_fpjeao.mp3",
+  duration: 277,
+  album: "Chal Chal",
+  year: 2025,
+  genre: "."
+},
   {
   id: "Ala Ala",
   title: "Ala Ala",
@@ -5864,1385 +5376,6 @@ export const songs: Song[] =[
   album: "Ala Ala",
   year: 2025,
   genre: "."
-},
-//breakk
-/*Breakup&alonetheme*/
-    
-    
-{
-  id: "nee-choopule",
-  title: "Nee Choopule",
-  artist: "Endukante Premanta",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940448/Endukante-Premanta0_edtvam.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940474/Nee_Choopule_xr6tu5.mp3",
-  duration: 362,
-  album: "Nee Choopule",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-{
-  id: "yellipoke-shyamala",
-  title: "Yellipoke Shyamala",
-  artist: "A Aa",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755940721/A-Aa-2016-250x250_m7p2yd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755940736/iSongs.info_05_-_Yellipoke_Shyamala_yi74ac.mp3",
-  duration: 215,
-  album: "Yellipoke Shyamala",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-   
-   {
-    id: "Mawaa Enthaina",
-    title: "Mawaa Enthaina",
-    artist: " Guntur Kaaram",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747553184/Guntur-Kaaram-2023-Mawaa-Enthaina_jsbadm.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747553299/Mawaa_Enthaina_tx8ory.mp3",
-    duration: 174,
-    album: "Mawaa Enthaina",
-    year: 2025,
-    genre: "Mass",
-    language: "telugu",
-    sync: "sad"
-  },
-    {
-  id: "balarama-narsayyo",
-  title: "Balarama Narsayyo",
-  artist: "Balagam",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232080/Balagam-2023_mdkjdy.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232089/Balarama_Narsayyo_vdig5s.mp3",
-  duration: 279,
-  album: "Balarama Narsayyo",
-  year: 2023,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-   {
-     id: "Thanu",
-     title: "Thanu",
-     artist: "HIT 3",
-     imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1747215703/wirl2nhuerncbhixa6eh.jpg",
-     audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1747215204/aihawlod7kzdhv10ho0m.mp3",
-     duration: 248,
-     album: "HIT3",
-     year: 2025,
-     genre: "action",
-     language: "telugu",
-     sync: "break"
-   },
-   {
-    id: "Mari Antaga",
-    title: "Mari Antaga",
-    artist: "seethamma vakitlo sirimalle chettu",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747289488/Seethamma-Vakitlo-Sirimalle-Chettu-2012-500x500_bturzy.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747289625/iSongs.info_Mari_Antaga_gu9j9u.mp3",
-    album: "seethamma vakitlo sirimalle chettu",
-    duration: 228,
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "sad"
-  },
-  {
-    id: "Ayyayyo",
-    title: "Ayyayyo",
-    artist: "Mem Famous",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747314866/Ayyayyo-From-Mem-Famous-Telugu-2023-20230414184725-500x500_amu8dp.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747314562/iSongs.info_01_-_Ayyayyo_ywm7va.mp3",
-    duration: 222,
-    album: "Mem Famous",
-    year: 2025,
-    genre: "Love it ",
-    language: "telugu",
-    sync: "sad"
-  },
-    {
-  id: "thoduga-ma-thodundi",
-  title: "Thoduga Ma Thodundi",
-  artist: "Balagam",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232080/Balagam-2023_mdkjdy.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232101/Thoduga_Ma_Thodundi_e9zyhs.mp3",
-  duration: 379,
-  album: "Thoduga Ma Thodundi",
-  year: 2025,
-  genre: "feel",
-  language: "telugu",
-  sync: "sad"
-},
-    {
-  id: "dikka-dishum",
-  title: "Dikka Dishum",
-  artist: "Ravanasura",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232276/Dikka_Dishum_cxryln.mp3",
-  duration: 197,
-  album: "Dikka Dishum",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-    {
-    id: "Katha Kaadhey",
-    title: "Katha Kaadhey",
-    artist: "Remo",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747319908/Remo-Telugu-Original-Motion-Picture-Soundtrack--Telugu-2016-20210522202710-500x500_x32d8x.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747319809/iSongs.info_03_-_Katha_Kaadhey_v8edpy.mp3",
-    duration: 245,
-    album: "Remo",
-    year: 2025,
-    genre: "Feel",
-    language: "telugu",
-    sync: "sad"
-  },
-   
-  {
-    id: "Pranam pothunna",
-    title: "Pranam pothunna",
-    artist: "Love Today",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747286451/Love-Today-2022_xdvygz.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747286336/iSongs.info_02_-_Pranam_Pothunna_zksvla.mp3",
-    album: "Love Today",
-    duration: 231,
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "sad"
-  },
-  {
-    id: "Ayyayyo Sad",
-    title: "Ayyayyo Sad ",
-    artist: "Mem Famous",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747314866/Ayyayyo-From-Mem-Famous-Telugu-2023-20230414184725-500x500_amu8dp.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747314534/iSongs.info_09_-_Ayyayyo_Sad_fm0yjt.mp3",
-    duration: 144,
-    album: "Mem Famous",
-    year: 2025,
-    genre: "Love it ",
-    language: "telugu",
-    sync: "break"
-  },
-  {
-    id: "Bhairava Anthem",
-    title: "Bhairava Anthem",
-    artist: "Kalki 2898 AD",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747317424/kalki-bhairava_ott_1440x1440_1718519196_jyjcab.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747317177/iSongs.info_05_-_Bhairava_Anthem_f4g3dv.mp3",
-    duration: 102,
-    album: "Kalki 2898 AD",
-    year: 2025,
-    genre: "theme",
-    language: "telugu",
-    sync: "moti"
-  },
-  
-  {
-    id: "Sailaja Sailaja",
-    title: "Sailaja Sailaja",
-    artist: "Nenu Sailaja",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747320563/sddefault_y74k8d.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747320527/Sailaja_Sailaja_-_SenSongsmp3.Co_bpllnb.mp3",
-    duration: 234,
-    album: "Nenu Sailaja",
-    year: 2025,
-    genre: "Break",
-    language: "telugu",
-    sync: "sad"
-  },
-  {
-    id: "Life of Pandu From Thiru",
-    title: "Life of Pandu From Thiru",
-    artist: "Thiru",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747586214/Life-of-Pandu-From-Thiru-Telugu-2022-20220817151417-500x500_r4zwre.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747586432/Life_of_Pandu_From_Thiru_jl7tfh.mp3",
-    duration: 234,
-    album: "Life of Pandu From Thiru",
-    year: 2025,
-    genre: "Pop",
-    language: "telugu",
-    sync: "sad"
-  },
-    {
-  id: "devari",
-  title: "Devari",
-  artist: "Ugram",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232398/Ugram-2023_iuao9o.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232407/Devari_cqzbnn.mp3",
-  duration: 208,
-  album: "Devari",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-   {
-    id: "Pillaa Raa",
-    title: "Pillaa Raa",
-    artist: "Rx 100",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747587342/size_m_1529938421_xaif59.webp",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747587392/Pillaa_Raa_Female_Version_-_SenSongsMp3.Co_hr7plv.mp3",
-    duration: 246,
-    album: " Pillaa Raa",
-    year: 2025,
-    genre: "Feel",
-    language: "telugu",
-    sync: "break"
-  },
-   {
-    id: "Megham Karigena",
-    title: "Megham Karigena",
-    artist: "Thiru",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747586214/Thiru_20220824115558_q0sww7.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747586420/Megham_Karigena_Telugu_-_Official_Video_Song_Thiru_Dhanush_Anirudh_Sun_Pictures_sejvrk.mp3",
-    duration: 282,
-    album: "Megham Karigena",
-    year: 2025,
-    genre: "Pop",
-    language: "telugu",
-    sync: "sad"
-  },
-  
-    {
-  id: "Yevarini Yevaritho",
-  title: "Yevarini Yevaritho",
-  artist: " Das Ka Dhamki",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344189/images_vlnja7.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344215/Yevarini_Yevaritho_if6v6y.mp3",
-  duration: 138,
-  album: "Yevarini Yevaritho",
-  year: 2025,
-  genre: "feel",
-  language: "telugu",
-  sync: "sad"
-},
-    {
-  id: "premisthunna",
-  title: "Premisthunna",
-  artist: "Baby",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232569/Baby-2023_znc7bo.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232603/Premisthunna_bgt1zz.mp3",
-  duration: 396,
-  album: "Premisthunna",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-    {
-  id: "uyyaalo-uyyaala",
-  title: "Uyyaalo Uyyaala",
-  artist: "Bhagavanth Kesari",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233229/Bhagavanth-Kesari-songs-download-naa-songs-download_xjxrzd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233242/Uyyaalo_Uyyaala_dlcbkm.mp3",
-  duration: 257,
-  album: "Uyyaalo Uyyaala",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-    
-  {
-  id: "Ori Vaari",
-  title: "Ori Vaari",
-  artist: "Dasara",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344787/Dasara-2023_aaxtut.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344793/2-Ori_Vaari_jgdjdd.mp3",
-  duration: 204,
-  album: "Ori Vaari",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-  {
-  id: "Saradaga Kasepaina",
-  title: "Saradaga Kasepaina",
-  artist: "Paagal",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344898/Paagal-2021-jpeg_ktfxvx.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344904/Saradaga_Kasepaina_lepgvv.mp3",
-  duration: 284,
-  album: "Saradaga Kasepaina",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-  {
-  id: "Chamkeela Angeelesi",
-  title: "Chamkeela Angeelesi",
-  artist: "Dasara",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344787/Dasara-2023_aaxtut.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344793/3-Chamkeela_Angeelesi_nni47o.mp3",
-  duration: 195,
-  album: "Chamkeela Angeelesi",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "Feel"
-},
-  {
-  id: "Ee Single Chinnode",
-  title: "Ee Single Chinnode",
-  artist: "Paagal",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344898/Paagal-2021-jpeg_ktfxvx.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344909/Ee_Single_Chinnode_z9ll9m.mp3",
-  duration: 245,
-  album: "Ee Single Chinnode",
-  year: 2025,
-  genre: "Love it ",
-  language: "telugu",
-  sync: "Feel"
-},
-  {
-  id: "Gaaju Bomma",
-  title: "Gaaju Bomma",
-  artist: "Hi Nana",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344934/images_9_kiydoy.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344943/Gaaju_Bomma_bozrp8.mp3",
-  duration: 264,
-  album: "Gaaju Bomma",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "Feel"
-},
-    
-  
-  {
-  id: "Yemainado",
-  title: "Yemainado",
-  artist: "Mr Majnu",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345533/Mr-Majnu-2018jpeg_mdwnht.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345542/Yemainado_-_SenSongsMp3.Co_vrag0y.mp3",
-  duration: 196,
-  album: "Yemainado",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "sad"
-},
-  {
-  id: "Urime Manase",
-  title: "Urime Manase",
-  artist: "Krishnarjuna Yudham",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345784/Krishnarjuna-Yudham-2018jpeg-300x300_pju6ml.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345803/Urime_Manase_-_SenSongsMp3.Co_iipnc9.mp3",
-  duration: 227,
-  album: "Urime Manase",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-  {
-  id: "Ela Ela",
-  title: "Ela Ela",
-  artist: "Krishnarjuna Yudham",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755345784/Krishnarjuna-Yudham-2018jpeg-300x300_pju6ml.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755345814/Ela_Ela_-_SenSongsMp3.Co_fe3y2s.mp3",
-  duration: 227,
-  album: "Ela Ela",
-  year: 2025,
-  genre: "Love it ",
-  language: "telugu",
-  sync: "sad"
-},
-     {
-  id: "kantipapakasirinda",
-  title: "Kantipapakasirinda",
-  artist: "Raju Bhai",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756195643/Raju-Bhai-2007jpeg_offwas.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756195645/Kantipapakasirinda.Co_uwiqfh.mp3",
-  duration: 97,
-  album: "Kantipapakasirinda",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "devotional"
-},
-     {
-  id: "evvare-nuvvu",
-  title: "Evvare Nuvvu",
-  artist: "Raju Bhai",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756195643/Raju-Bhai-2007jpeg_offwas.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756195649/Evvare_Nuvvu_Remix.Co_tmakn2.mp3",
-  duration: 286,
-  album: "Evvare Nuvvu",
-  year: 2025,
-  genre: "Love",
-  language: "telugu",
-  sync: "sad"
-},
-    {
-  id: "yetu-pone",
-  title: "Yetu Pone",
-  artist: "Dear Comrade",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756195813/Dear-Comrade-2019jpeg_k4hnkr.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756195812/Yetu_Pone_-_SenSongsMp3.Co_vuevg8.mp3",
-  duration: 247,
-  album: "Yetu Pone",
-  year: 2025,
-  genre: "pain",
-  language: "telugu",
-  sync: "sad"
-},
-      {
-  id: "orayyo",
-  title: "Orayyo",
-  artist: "Rangasthalam",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196108/Rangasthalam-2018-250x250_tsc9bf.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196117/iSongs.info_06_-_Orayyo_tswyxm.mp3",
-  duration: 315,
-  album: "Orayyo",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "sad"
-},
-    {
-  id: "murari-vaa",
-  title: "Murari Vaa",
-  artist: "Sarkaru Vaari Paata",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196373/Sarkaru-Vaari-Paata-2022-3_zevqgb.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196377/Murari_Vaa_zwxsje.mp3",
-  duration: 257,
-  album: "Murari Vaa",
-  year: 2025,
-  genre: "Feel",
-  language: "telugu",
-  sync: "devotional"
-},
- {
-  id: "vinaraa",
-  title: "Vinaraa",
-  artist: "Sallar",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756231216/Sallar-2021-jpeg_gc7u3e.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756231221/Vinaraa_oyjo1v.mp3",
-  duration: 195,
-  album: "Vinaraa",
-  year: 2025,
-  genre: "love",
-  language: "telugu",
-  sync: "devotional"
-},
-//mass
-
-
-  
-
- {
-  id: "Viral Vayyari",
-  title: "Viral Vayyari",
-  artist: "Viral Vayyari",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1754741749/Junior-2025_rxo3fe.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1754741760/Viral_Vayyari_ivbxka.mp3",
-  duration: 290,
-  album: "Viral Vayyari",
-  year: 2025,
-  genre: "rap",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "rabbaru-gaajulu",
-  title: "Rabbaru Gaajulu",
-  artist: "Yamadonga",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440718/Rabbaru_Gaajulu-SenSongsMp3.Co_adruil.mp3",
-  duration: 318,
-  album: "Rabbaru Gaajulu",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "mass"
-},
-{
-    id: "Salaam Rocky Bhai",
-    title: "Salaam Rocky Bhai",
-    artist: "KGF 1",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745142115/KGF-2-Jpeg_yfnllu.jpg",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745136985/Salaam_Rocky_Bhai_-_SenSongsMp3.Co_wrhsr6.mp3",
-    duration: 270,
-    album: "KGF Chapter 1",
-    year: 2018,
-    genre: "Mass",
-    language:"telugu",
-    sync: "mass"
-  },
-  {
-    id: "Ticket Eh Konakunda",
-    title: "Ticket Eh Konakunda",
-    artist: "Dj Tillu 2",
-    imageUrl: "https://res.cloudinary.com/dl8dmkhmv/image/upload/v1743870405/images_1_h6vhmu.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1743867094/Ticket_Eh_Konakunda_cpxfbo.mp3",
-    duration: 230,
-    album: "DJ Tillu 2",
-    year: 2024,
-    genre: "Party",
-    language: "telugu",
-    sync: "rap"
-  },
-   {
-    id: "Crazy Feeling",
-    title: "Crazy Feeling",
-    artist: "Nenu Sailaja",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747320564/Nenu-Sailaja-Telugu-2015-500x500_ivnk3t.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747320543/Crazy_Feeling_-_SenSongsmp3.Co_giim0q.mp3",
-    duration: 210,
-    album: "Nenu Sailaja",
-    year: 2025,
-    genre: "Break",
-    language :"telugu",
-    sync: "mass"
-  },
-  
-  {
-    id: "Dheera Dheera",
-    title: "Dheera Dheera",
-    artist: "KGF 1",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745142299/IMG_20250420_151440_imuefn.jpg",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745136994/Dheera_Dheera_-_SenSongsMp3.Co_bgwgxe.mp3",
-    duration: 300,
-    album: "KGF Chapter 1",
-    year: 2018,
-    genre: "Mass",
-    language: "telugu",
-    sync: "mass"
-  },
-  {
-  id: "naachore",
-  title: "Naachore",
-  artist: "Yamadonga",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440723/Naachore-SenSongsMp3.Co_oqq99f.mp3",
-  duration: 293,
-  album: "Naachore",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-    id: "Radhika",
-    title: "Radhika",
-    artist: "Dj Tillu 2",
-    imageUrl: "https://res.cloudinary.com/dl8dmkhmv/image/upload/v1743870922/images_2_i0ol8j.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1743867082/Radhika_my4jpd.mp3",
-    duration: 215,
-    album: "DJ Tillu 2",
-    year: 2024,
-    genre: "Love",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-    id: "Paala Pitta",
-    title: "Paala Pitta",
-    artist: "Maharshi",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745145200/size_m_1556507026_bntvkc.webp",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745145096/Paala_Pitta_-_SenSongsMp3.Co_geh9mf.mp3",
-    duration: 250,
-    album: "Maharshi",
-    year: 2019,
-    genre: "Folk",
-    language: "telugu",
-    sync: "dance"
-  },
-  {
-    id: "Bujjikanna",
-    title: "Bujjikanna",
-    artist: "Love Today",
-    imageUrl: "https://res.cloudinary.com/dykzuljjr/image/upload/v1743417531/16712506771622_pzuipy.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1743867065/Bujjikanna_128_Kbps_wj0lmh.mp3",
-    duration: 235,
-    album: "Love Today",
-    year: 2022,
-    genre: "Romantic",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-  id: "young-yama",
-  title: "Young Yama",
-  artist: "Yamadonga",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756440722/Yamadonga-jpeg-300x300_r9unh8.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756440726/Young_Yama-SenSongsMp3.Co_bs6zmi.mp3",
-  duration: 293,
-  album: "Young Yama",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-    id: "Lucky Bhaskar (Title song)",
-    title: "Lucky Bhaskar (Title song)",
-    artist: "Lucky Bhaskar",
-    imageUrl: "https://res.cloudinary.com/dl8dmkhmv/image/upload/v1743869643/download_qyluvw.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1743866865/Lucky_Baskhar_cgx23b.mp3",
-    duration: 210,
-    album: "Lucky Bhaskar",
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-    id: "Kissik",
-    title: "Kissik",
-    artist: "pushpa 2",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747474202/Pushpa-2-Naa-Songs-Download-Pushpa-2-songs-allu-arjun-rashmika-mandana-sree-leela-devi-sri-prasad_tdjul9.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747474290/Kissik_jc1fjv.mp3",
-    duration: 242,
-    album: "pushpa 2",
-    year: 2025,
-    genre: "mass"
-  },
-  {
-    id: "Poratame",
-    title: "Poratame",
-    artist: "HIT 3",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1747215703/kvn462gfwx8lvawud2av.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1747215195/nipx5wfejlujborhdaiz.mp3",
-    duration: 175,
-    album: "HIT3",
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "mass"
-  },
-  {
-  id: "b37d4e58-0a70-4753-bac0-088bbddeeeff",
-  title: "Jinthaak",
-  artist: "Dhamaka",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344506/images_3_ef1i6h.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344519/Jinthaak_zwaiot.mp3",
-  duration: 222,
-  album: "Jinthaak",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "a6f3a7f8-5e05-4d04-b66c-a18876cc0b1d",
-  title: "Mass Raja",
-  artist: "Dhamaka",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344506/images_3_ef1i6h.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344529/Mass_Raja_jxgsyf.mp3",
-  duration: 224,
-  album: "Mass Raja",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "samarale-sariovna",
-  title: "Samarale Sariovna",
-  artist: "Tiger Nageswara Rao",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233471/Samarale_Sariovna_qmnrad.mp3",
-  duration: 256,
-  album: "Samarale Sariovna",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-  id: "fa9cf5d0-06c4-419e-8bca-bd962a5429ba",
-  title: "Nee Chuttu Chuttu",
-  artist: "Skanda",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344831/35907_4_y8vd2h.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344834/Nee_Chuttu_Chuttu_KoshalWorld.Com_ufdquo.mp3",
-  duration: 266,
-  album: "Nee Chuttu Chuttu",
-  year: 2025,
-  genre: "Love it ",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "8998484d-ef22-4e89-a271-9cfde8390970",
-  title: "Odiyamma",
-  artist: "Hi Nana",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344934/images_9_kiydoy.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344938/Odiyamma_f350jq.mp3",
-  duration: 197,
-  album: "Odiyamma",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "ganesh-anthem",
-  title: "Ganesh Anthem",
-  artist: "Bhagavanth Kesari",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233229/Bhagavanth-Kesari-songs-download-naa-songs-download_xjxrzd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233248/Ganesh_Anthem_gbm4mb.mp3",
-  duration: 276,
-  album: "Ganesh Anthem",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "veedu",
-  title: "Veedu",
-  artist: "Tiger Nageswara Rao",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233462/Veedu_huq3rf.mp3",
-  duration: 196,
-  album: "Veedu",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-  id: "ek-dum-ek-dum",
-  title: "Ek Dum Ek Dum",
-  artist: "Tiger Nageswara Rao",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233443/Tiger-Nageswara-Rao-Songs_yvxuiq.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233462/Ek_Dum_Ek_Dum_bdcasj.mp3",
-  duration: 256,
-  album: "Ek Dum Ek Dum",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "705649e7-3308-436a-8d44-7bd7ac29cec3",
-  title: "Jai Balayya",
-  artist: " Veera Simha Reddy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344253/images_2_trfg40.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344448/Jai_Balayya_dwhxof.mp3",
-  duration: 229,
-  album: "Jai Balayya",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-  id: "03e70546-d2e9-4cd8-8bec-1c17be9327dd",
-  title: "Rama Krishna",
-  artist: "Agent",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344677/images_6_em46gm.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344680/Rama_Krishna_axumcc.mp3",
-  duration: 193,
-  album: "Rama Krishna",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-  id: "roar-of-kesari",
-  title: "Roar of Kesari",
-  artist: "Bhagavanth Kesari",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756233229/Bhagavanth-Kesari-songs-download-naa-songs-download_xjxrzd.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233246/Roar_of_Kesari_mz4ouh.mp3",
-  duration: 199,
-  album: "Roar of Kesari",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "a1ad23db-3e7c-4a2c-8149-a2fe7eb594e1",
-  title: "Poonakaalu Loading",
-  artist: " Waltair Veerayya",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755344865/Waltair-Veerayya-2023-1_sr9i1n.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755344872/Poonakaalu_Loading_x1tdco.mp3",
-  duration: 200,
-  album: "Poonakaalu Loading",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-    id: "The Range of Daaku",
-    title: "The Range of Daaku",
-    artist: "Daaku Maharaj",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1744595191/MV5BMzJhNDJkODUtNDU4ZC00ZjBhLWI0NDItZGJmNDNmYTllNDI2XkEyXkFqcGc_._V1__xjfe3s.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1744595016/The_Rage_of_Daaku_tyw9xi.mp3",
-    duration: 258,
-    album: "Daaku Maharaj",
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "mass"
-  },
-  {
-    id: "Dabidi Dibidi",
-    title: "Dabidi Dibidi",
-    artist: "Daaku Maharaj",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1744595188/Daaku-Maharaaj-Telugu-2024-20250103122655-500x500_vaipkp.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1744595011/Dabidi_Dibidi_khmna9.mp3",
-    duration: 262,
-    album: "Daaku Maharaj",
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-  id: "dummare-dumma",
-  title: "Dummare Dumma",
-  artist: "Skanda",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232943/Skanda-Official-Image_qh9uwd.webp",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233194/Dummare_Dumma_vqvuzy.mp3",
-  duration: 240,
-  album: "Dummare Dumma",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-    id: "Oo Antava Oo Oo Antava",
-    title: "Oo Antava Oo Oo Antava",
-    artist: "pushpa 1",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747474202/Pushpa-The-Rise-Telugu-2023-20230403210942-500x500_jo4amt.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747474271/Oo_Antava_Oo_Oo_Antava_vfylns.mp3",
-    duration: 227,
-    album: "Pushpa 1",
-    year: 2025,
-    genre: "Mass",
-    language: "telugu",
-    sync: "mass"
-  },
-  {
-    id: "collage papa",
-    title: "collage papa",
-    artist: "Mad",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747496942/download_1_m4bzub.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747497250/College_Papa_pr4lsx.mp3",
-    duration: 245,
-    album: "Mad",
-    year: 2025,
-    genre: "Thrill",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-  id: "gandarabai",
-  title: "Gandarabai",
-  artist: "Skanda",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232943/Skanda-Official-Image_qh9uwd.webp",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756233191/Gandarabai_wzrk6i.mp3",
-  duration: 248,
-  album: "Gandarabai",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-    id: "Padara Padara",
-    title: "Padara Padara",
-    artist: "Maharshi",
-    imageUrl: "https://res.cloudinary.com/dcso0vsxw/image/upload/v1745145201/size_m_1556103610_z7eenm.webp",
-    audioUrl: "https://res.cloudinary.com/dcso0vsxw/video/upload/v1745145101/Padara_Padara_-_SenSongsMp3.Co_g7o8uh.mp3",
-    album: "Maharshi",
-    duration: 291,
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "moti"
-  },
-  {
-    id: "Jaragandi",
-    title: "Jaragandi",
-    artist: "GAME CHANGER",
-    imageUrl: "https://res.cloudinary.com/dv83upinz/image/upload/v1744594794/game_changer_hin_jaragandi_ott-new_1440_1711480488_tycljn.jpg",
-    audioUrl: "https://res.cloudinary.com/dv83upinz/video/upload/v1744594642/Jaragandi_psnpcm.mp3",
-    album: "GAME CHANGER",
-    duration: 246,
-    year: 2025,
-    genre: "Title Track",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-    id: "Ta Takkara Takka Takkara",
-    title: "Ta Takkara Takka Takkara",
-    artist: "Kalki 2898 AD",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747317424/kalki_complex_hindi_ott_1440_1719566382_wjj1du.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747317176/iSongs.info_03_-_Ta_Takkara_Takka_Takkara_Bit_j25aox.mp3",
-    duration: 207,
-    album: "Kalki 2898 AD",
-    year: 2025,
-    genre: "theme",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-    id: "Red Sea",
-    title: "Red Sea",
-    artist: "Devara",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747319192/Devara-Part-1-Telugu-Telugu-2024-20240926171010-500x500_qkdjba.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747319114/iSongs.info_05_-_Red_Sea_z9qbpq.mp3",
-    duration: 202,
-    album: "Devara",
-    year: 2025,
-    genre: "mass",
-    language: "telugu",
-    sync: "mass"
-  },
-  {
-  id: "rage-of-bholaa",
-  title: "Rage Of Bholaa",
-  artist: "Bholaa Shankar",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232714/bhola-shankar-naa-songs-chiranjeevi-tamanna-1_gdkno2.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232731/Rage_Of_Bholaa_m1sms1.mp3",
-  duration: 180,
-  album: "Rage Of Bholaa",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-    id: "Ayudha Pooja",
-    title: "Ayudha Pooja",
-    artist: "Devara",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747319192/Devara-Part-1-Telugu-Telugu-2024-20240926171010-500x500_qkdjba.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747319062/iSongs.info_06_-_Ayudha_Pooja_fsioi8.mp3",
-    duration: 174,
-    album: "Devara",
-    year: 2025,
-    genre: "mass",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-    id: "Eyy Bidda Idhi Naa Adda",
-    title: "Eyy Bidda Idhi Naa Adda",
-    artist: "pushpa 1",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747474202/size_m_1637298894_cxtrt1.webp",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747474279/Eyy_Bidda_Idhi_Naa_Adda_zrseqz.mp3",
-    duration: 224,
-    album: "pushpa 1",
-    year: 2025,
-    genre: "mass",
-    language: "telugu",
-    sync: "moti"
-  },
-  {
-  id: "bholaa-mania",
-  title: "Bholaa Mania",
-  artist: "Bhola Shankar",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232714/bhola-shankar-naa-songs-chiranjeevi-tamanna-1_gdkno2.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232725/Bholaa_Mania_clkthn.mp3",
-  duration: 234,
-  album: "Bholaa Mania",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-    id: "proude to single",
-    title: "proude to single",
-    artist: "Mad",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747496942/download_ujcemt.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747497250/Proudse_Single_fuxtta.mp3",
-    duration: 198,
-    album: "Mad",
-    year: 2025,
-    genre: "Thrill",
-    language: "telugu",
-    sync: "moti"
-  },
-  {
-    id: "peelings",
-    title: "peelings",
-    artist: "pushpa 2",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747474202/Pushpa-2-Naa-Songs-Download-Pushpa-2-songs-allu-arjun-rashmika-mandana-sree-leela-devi-sri-prasad_tdjul9.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747474284/Peelings_v0al2w.mp3",
-    duration: 251,
-    album: "pushpa 2",
-    year: 2025,
-    genre: "mass",
-    language: "telugu",
-    sync: "mass"
-  },
-  {
-  id: "kottara-kottu-teenumaaru",
-  title: "Kottara Kottu Teenumaaru",
-  artist: "Bhola Shankar",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232714/bhola-shankar-naa-songs-chiranjeevi-tamanna-1_gdkno2.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232722/Kottara_Kottu_Teenumaaru_ti8ry7.mp3",
-  duration: 216,
-  album: "Kottara Kottu Teenumaaru",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-    id: "Dammunte Pattukora",
-    title: "Dammunte Pattukora",
-    artist: "pushpa 2",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747474202/Dammunte-Pattukora-Pushpa-2-The-Rule-pagalall.com__hazb3m.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747474267/Dammunte_Pattukora_kbaqdg.mp3",
-    duration: 93,
-    album: "pushpa 2",
-    year: 2025,
-    genre: "mass",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-    id: "Dakko Dakko Meka",
-    title: "Dakko Dakko Meka",
-    artist: "pushpa 1",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747474203/Pushpa-The-Rise-Telugu-2021-20211216115409-500x500_qmsmpc.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747474296/Dakko_Dakko_Meka_xzxcys.mp3",
-    duration: 300,
-    album: "pushpa1",
-    year: 2025,
-    genre: "mass",
-    language: "telugu",
-    sync: "moti"
-  },
-  {
-  id: "kodukulara",
-  title: "Kodukulara",
-  artist: "Balagam",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232080/Balagam-2023_mdkjdy.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232090/Kodukulara_wyejit.mp3",
-  duration: 82,
-  album: "Kodukulara",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-    id: "Ramana Aei",
-    title: "Ramana Aei",
-    artist: " Guntur Kaaram",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747549749/Guntur-Kaaram-2023-Ramana-Aei_sywnvb.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747553322/Ramana_Aei_qpoip8.mp3",
-    duration: 161,
-    album: "Ramana Aei",
-    year: 2025,
-    genre: "Mass",
-    language: "telugu",
-    sync: "mass"
-  },
-  {
-    id: "My Name is Billa",
-    title: "My Name is Billa",
-    artist: "Billa",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1748168856/size_m_3_s7fepx.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1748168904/My_Name_is_Billa-SenSongsMp3.Co_xjwjcx.mp3",
-    duration: 237,
-    album: "My Name is Billa",
-    year: 2025,
-    genre: "mass"
-  },
-  {
-    id: "Kurchi Madathapetti",
-    title: "Kurchi Madathapetti",
-    artist: " Guntur Kaaram",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1747549747/Guntur-Karam-Naa-Songs-Download-Mahesh-Babu-Sree-Leela-Thaman-S-Guntir-Karam-Songs_vemw4n.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1747553320/Kurchi_Madathapetti_e94dlk.mp3",
-    duration: 223,
-    album: "Kurchi Madathapetti",
-    year: 2025,
-    genre: "Mass",
-    language: "telugu",
-    sync: "rap"
-  },
-  {
-  id: "raavanasura-anthem",
-  title: "Raavanasura Anthem",
-  artist: "Raavanasura",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232222/Raavanasura_Anthem_btez1j.mp3",
-  duration: 237,
-  album: "Raavanasura Anthem",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "ravanasura",
-  title: "Ravanasura",
-  artist: "Raavanasura",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232199/Ravanasura-2023_vvzltm.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232271/Ravanasura_nrwxs5.mp3",
-  duration: 224,
-  album: "Ravanasura",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "head-up-high",
-  title: "Head Up High",
-  artist: "Custody",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232436/custody-naa-songs_gfmhp1.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232444/Head_Up_High_c8svzu.mp3",
-  duration: 251,
-  album: "Head Up High",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "moti"
-},
-  {
-    id: "Ga Eega Eega Eega",
-    title: "Ga Eega Eega Eega",
-    artist: "Ega",
-    imageUrl: "https://res.cloudinary.com/dkhbceri0/image/upload/v1748173265/artworks-000021125924-8cpgcs-t1080x1080_fvsj75.jpg",
-    audioUrl: "https://res.cloudinary.com/dkhbceri0/video/upload/v1748173317/Ga_Eega_Eega_Eega_-_SenSongsmp3.Co_majvth.mp3",
-    duration: 287,
-    album: "Ga Eega Eega Eega",
-    year: 2025,
-    genre: "mass",
-    language: "telugu",
-    sync: "rap"
-  },
-   {
-  id: "Katamarayuda",
-  title: "Katamarayuda",
-  artist: " Atharintiki Dharedhi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559913/19._Attarintiki_Daredi_ACD_jstwrc.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559801/Katamarayuda_zcuo6d.mp3",
-  duration: 65,
-  album: "Katamarayuda",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-  id: "Rakaasi Rakaasi",
-  title: "Rakaasi Rakaasi",
-  artist: "Rabasa",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1755086624/Rabhasa-2014jpeg-300x300_fu86u4.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1755086628/Rakaasi_Rakaasi_PenduJatt.Com.Se_v14geo.mp3",
-  duration: 251,
-  album: "Rakaasi Rakaasi",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "dance"
-},
-{
-  id: "Kirraaku",
-  title: "Kirraaku",
-  artist: " Atharintiki Dharedhi",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1752559913/19._Attarintiki_Daredi_ACD_jstwrc.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1752559810/Kirraaku_eh5dop.mp3",
-  duration: 237,
-  album: "Kirraaku",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass",
-},
-  {
-  id: "ammunni-rukkumanee",
-  title: "Ammunni Rukkumanee",
-  artist: "Custody",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232436/custody-naa-songs_gfmhp1.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232446/Ammunni_Rukkumanee_pxzxyn.mp3",
-  duration: 197,
-  album: "Ammunni Rukkumanee",
-  year: 2025,
-  genre: ".",
-  language: "telugu",
-  sync: "mass"
-},
-  
-  {
-  id: "azaadi",
-  title: "Azaadi",
-  artist: "Spy",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756232506/Spy-2023_fjdyna.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756232514/Azaadi_qtynbq.mp3",
-  duration: 208,
-  album: "Azaadi",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "moti"
-},
-  {
-  id: "comrade-anthem",
-  title: "Comrade Anthem",
-  artist: "Dear Comrade",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756195813/Dear-Comrade-2019jpeg_k4hnkr.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756195813/Comrade_Anthem_-_SenSongsMp3.Co_ex1far.mp3",
-  duration: 208,
-  album: "Comrade Anthem",
-  year: 2025,
-  genre: "Energetic",
-  language: "telugu",
-  sync: "moti"
-},
-    {
-  id: "bengal-tiger",
-  title: "Bengal Tiger",
-  artist: "Bengal Tiger",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756195898/Bengal-Tiger-2015jpeg-300x300_ybe6ap.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756195938/Bengal_Tiger_-_SenSongsMp3.Co_wcsx67.mp3",
-  duration: 242,
-  album: "Bengal Tiger",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "rap"
-},
-   {
-  id: "aasia-khantamlo",
-  title: "Aasia Khantamlo",
-  artist: "Bengal Tiger",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756195898/Bengal-Tiger-2015jpeg-300x300_ybe6ap.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756195988/Aasia_Khantamlo_-_SenSongsMp3.Co_pgasw4.mp3",
-  duration: 262,
-  album: "Aasia Khantamlo",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "moti"
-},
-   {
-  id: "aasia-khantamlo",
-  title: "Aasia Khantamlo",
-  artist: "Bengal Tiger",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756195898/Bengal-Tiger-2015jpeg-300x300_ybe6ap.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756195988/Aasia_Khantamlo_-_SenSongsMp3.Co_pgasw4.mp3",
-  duration: 262,
-  album: "Aasia Khantamlo",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "moti"
-},
-  {
-  id: "jigelu-rani",
-  title: "Jigelu Rani",
-  artist: "Rangasthalam",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196108/Rangasthalam-2018-250x250_tsc9bf.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196115/iSongs.info_05_-_Jigelu_Rani_np7sfi.mp3",
-  duration: 305,
-  album: "Jigelu Rani",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-  id: "aa-gattununtaava",
-  title: "Aa Gattununtaava",
-  artist: "Rangasthalam",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196108/Rangasthalam-2018-250x250_tsc9bf.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196115/iSongs.info_04_-_Aa_Gattununtaava_bgcvnh.mp3",
-  duration: 189,
-  album: "Aa Gattununtaava",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "mass"
-},
-  {
-  id: "ranga-ranga-rangasthalana",
-  title: "Ranga Ranga Rangasthalana",
-  artist: "Rangasthalam",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196108/Rangasthalam-2018-250x250_tsc9bf.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196116/iSongs.info_02_-_Ranga_Ranga_Rangasthalana_je6i35.mp3",
-  duration: 303,
-  album: "Ranga Ranga Rangasthalana",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "action"
-},
-  {
-  id: "sarkaru-vaari-paata",
-  title: "Sarkaru Vaari Paata",
-  artist: "Sarkaru Vaari Paata",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196373/Sarkaru-Vaari-Paata-2022-3_zevqgb.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196378/Sarkaru_Vaari_Paata_l62vn4.mp3",
-  duration: 153,
-  album: "Sarkaru Vaari Paata",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "rap"
-},
-    {
-  id: "ma-ma-mahesha",
-  title: "Ma Ma Mahesha",
-  artist: "Sarkaru Vaari Paata",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196373/Sarkaru-Vaari-Paata-2022-3_zevqgb.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196378/Ma_Ma_Mahesha_j88f4q.mp3",
-  duration: 250,
-  album: "Ma Ma Mahesha",
-  year: 2025,
-  genre: "Mass",
-  language: "telugu",
-  sync: "rap"
-},
-  {
-  id: "penny",
-  title: "Penny",
-  artist: "Sarkaru Vaari Paata",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756196373/Sarkaru-Vaari-Paata-2022-3_zevqgb.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756196379/Penny_mfnwmf.mp3",
-  duration: 287,
-  album: "Penny",
-  year: 2025,
-  genre: "fun",
-  language: "telugu",
-  sync: "action"
-},
-  {
-  id: "prathi-kadalo",
-  title: "Prathi Kadalo",
-  artist: "Sallar",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756231216/Sallar-2021-jpeg_gc7u3e.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756231221/Prathi_Kadalo_aofdru.mp3",
-  duration: 183,
-  album: "Prathi Kadalo",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "action"
-},
-  {
-  id: "sound-of-salaar",
-  title: "Sound of Salaar",
-  artist: "Sallar",
-  imageUrl: "https://res.cloudinary.com/dilqrz7sw/image/upload/v1756231216/Sallar-2021-jpeg_gc7u3e.jpg",
-  audioUrl: "https://res.cloudinary.com/dilqrz7sw/video/upload/v1756231231/Sound_of_Salaar_co0onx.mp3",
-  duration: 176,
-  album: "Sound of Salaar",
-  year: 2025,
-  genre: "mass",
-  language: "telugu",
-  sync: "rap"
 }
 ];
 
