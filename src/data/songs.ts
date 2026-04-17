@@ -4,12 +4,6 @@ export interface Song {
   artist: string; // Movie name
   singer?: string; // Actual singer name
   movie?: string; // Movie name (same as artist for now)
-  imageUrl: string;export interface Song {
-  id: string;
-  title: string;
-  artist: string; // Movie name
-  singer?: string; // Actual singer name
-  movie?: string; // Movie name (same as artist for now)
   imageUrl: string;
   audioUrl: string;
   duration: number; // in seconds
