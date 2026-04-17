@@ -6,7 +6,7 @@ export interface Song {
   movie?: string; // Movie name (same as artist for now)
   imageUrl: string;
   audioUrl: string;
-  duration: number; // in seconds
+  duration: number; // in seconds/
   album?: string;
   year?: number;
   genre?: string;
