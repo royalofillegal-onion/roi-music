@@ -1,50 +1,117 @@
 
 import { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LoginForm from '@/components/auth/LoginForm';
 import SignUpForm from '@/components/auth/SignUpForm';
 import ResetPasswordForm from '@/components/auth/ResetPasswordForm';
 import TermsAcceptance from '@/components/auth/TermsAcceptance';
 import { Loader2, User } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup' | 'reset'>('login');
+  const [isChecking, setIsChecking] = useState(true);
   const [showTerms, setShowTerms] = useState(false);
   const navigate = useNavigate();
-  const { session, loading: authLoading } = useAuth();
 
+  // Check if user needs to accept terms
   useEffect(() => {
     const termsAccepted = localStorage.getItem('terms_accepted');
     const privacyAccepted = localStorage.getItem('privacy_accepted');
-    if (!termsAccepted || !privacyAccepted) setShowTerms(true);
+    
+    if (!termsAccepted || !privacyAccepted) {
+      setShowTerms(true);
+      setIsChecking(false);
+      return;
+    }
+    
+    // If terms are accepted, proceed with normal auth check
+    checkAuthState();
   }, []);
 
-  const handleTermsAccepted = () => setShowTerms(false);
-  const handleAuthSuccess = () => navigate('/', { replace: true });
-  const handleResetPassword = () => setAuthMode('reset');
-  const handleBackToLogin = () => setAuthMode('login');
+  const checkAuthState = async () => {
+    // Set up auth listener first
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth: Auth state changed:", event);
+      // Redirect to home page if logged in
+      if (event === 'SIGNED_IN' && session) {
+        console.log("Auth: User signed in, redirecting to home");
+        // Use window.location for mobile APK compatibility
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 100);
+      }
+    });
 
-  // Wait for the session check to finish before deciding what to render.
-  if (authLoading) {
+    // Then check for existing session
+    try {
+      setIsChecking(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Also check localStorage for session data (for better persistence)
+      const storedSession = localStorage.getItem('auth.session');
+      
+      if (session) {
+        console.log("Auth: User is already logged in, redirecting to home");
+        window.location.href = '/';
+      } else if (storedSession) {
+        console.log("Auth: Attempting to restore session from localStorage");
+        try {
+          const parsedSession = JSON.parse(storedSession);
+          const { data, error } = await supabase.auth.setSession({
+            access_token: parsedSession.access_token,
+            refresh_token: parsedSession.refresh_token,
+          });
+          
+          if (error) {
+            console.error("Failed to restore session:", error);
+            localStorage.removeItem('auth.session');
+          } else if (data.session) {
+            console.log("Auth: Session restored successfully");
+            window.location.href = '/';
+          }
+        } catch (error) {
+          console.error("Failed to parse stored session:", error);
+          localStorage.removeItem('auth.session');
+        }
+      }
+    } catch (error) {
+      console.error("Error checking session:", error);
+    } finally {
+      setIsChecking(false);
+    }
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  };
+
+  const handleTermsAccepted = () => {
+    setShowTerms(false);
+    checkAuthState();
+  };
+
+  const handleAuthSuccess = () => {
+    navigate('/');
+  };
+  
+  const handleResetPassword = () => {
+    setAuthMode('reset');
+  };
+  
+  const handleBackToLogin = () => {
+    setAuthMode('login');
+  };
+
+  if (isChecking) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="animate-spin h-8 w-8 text-music-accent" />
       </div>
     );
   }
-
-  // Already signed in → straight to home (Spotify-style).
-  if (session && !showTerms) {
-    return <Navigate to="/" replace />;
-  }
-
-  if (showTerms) {
-    return <TermsAcceptance onAccept={handleTermsAccepted} loading={loading} />;
-  }
-
 
   if (showTerms) {
     return <TermsAcceptance onAccept={handleTermsAccepted} loading={loading} />;
