@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PlayerProvider } from "./context/PlayerContext";
 import { SidebarProvider, useSidebarState } from "./context/SidebarContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Player from "./components/Player";
 import SplashScreen from "./components/SplashScreen";
@@ -42,15 +44,12 @@ const queryClient = new QueryClient({
   },
 });
 
-// Inner component to access sidebar context
+// Inner component to access sidebar + auth context
 function AppContent() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [splashDone, setSplashDone] = useState(false);
   const { isCollapsed } = useSidebarState();
+  const { loading: authLoading } = useAuth();
   const isMobile = useIsMobile();
-
-  const handleSplashFinish = () => {
-    setShowSplash(false);
-  };
 
   const LoadingFallback = () => (
     <div className="flex items-center justify-center h-screen bg-background text-foreground">
@@ -61,72 +60,67 @@ function AppContent() {
     </div>
   );
 
-  // Check if maintenance is active
   const maintenanceActive = isMaintenanceActive();
-
-  // Dynamic margin for desktop sidebar
   const mainMargin = isMobile ? "" : isCollapsed ? "ml-16" : "ml-64";
 
+  // Splash stays up until BOTH the visual animation finished AND the session
+  // restore completed — so users land directly on Home with no flash of /auth.
+  const showSplash = !splashDone || authLoading;
+
+  // Wrap a route element behind auth.
+  const guarded = (el: React.ReactNode) => <ProtectedRoute>{el}</ProtectedRoute>;
+
   return (
-    <BrowserRouter>
-      <div className="flex flex-col min-h-screen bg-background text-foreground">
-        {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-        
-        {/* Show maintenance page if maintenance is active */}
-        {maintenanceActive ? (
-          <main className="flex-1">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      {showSplash && <SplashScreen onFinish={() => setSplashDone(true)} />}
+
+      {maintenanceActive ? (
+        <main className="flex-1">
+          <Suspense fallback={<LoadingFallback />}>
+            <ServerMaintenance />
+          </Suspense>
+        </main>
+      ) : (
+        <>
+          <Navbar />
+          <main className={`flex-1 pb-20 md:pb-0 transition-all duration-300 ${mainMargin}`}>
             <Suspense fallback={<LoadingFallback />}>
-              <ServerMaintenance />
+              <Routes>
+                {/* Public auth + sharing + legal */}
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/terms" element={<TermsAndConditions />} />
+                <Route path="/maintenance" element={<ServerMaintenance />} />
+                <Route path="/share/:hashCode" element={<SharedSong />} />
+                <Route path="/song/:songId" element={<SharedSong />} />
+                <Route path="/s/:hashCode" element={<SharedSong />} />
+                <Route path="/shared/:hashCode" element={<SharedSong />} />
+                <Route path="/music/:hashCode" element={<SharedSong />} />
+                <Route path="/track/:hashCode" element={<SharedSong />} />
+                <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
+
+                {/* Protected app routes */}
+                <Route path="/" element={guarded(<Index />)} />
+                <Route path="/search" element={guarded(<Search />)} />
+                <Route path="/playlists" element={guarded(<Playlists />)} />
+                <Route path="/playlist/:id" element={guarded(<PlaylistView />)} />
+                <Route path="/liked" element={guarded(<LikedSongs />)} />
+                <Route path="/artists" element={guarded(<Artists />)} />
+                <Route path="/artist/:artistName" element={guarded(<Artist />)} />
+                <Route path="/live" element={guarded(<Live />)} />
+                <Route path="/settings" element={guarded(<Settings />)} />
+                <Route path="/user-settings" element={guarded(<UserSettings />)} />
+                <Route path="/feedback" element={guarded(<Feedback />)} />
+                <Route path="/song-detail/:songId" element={guarded(<SongDetail />)} />
+                <Route path="/now-playing" element={guarded(<NowPlaying />)} />
+
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </Suspense>
           </main>
-        ) : (
-          <>
-            <Navbar />
-            <main className={`flex-1 pb-20 md:pb-0 transition-all duration-300 ${mainMargin}`}>
-              <Suspense fallback={<LoadingFallback />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/playlists" element={<Playlists />} />
-                  <Route path="/playlist/:id" element={<PlaylistView />} />
-                  <Route path="/liked" element={<LikedSongs />} />
-                  <Route path="/artists" element={<Artists />} />
-                  <Route path="/artist/:artistName" element={<Artist />} />
-                  <Route path="/live" element={<Live />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/user-settings" element={<UserSettings />} />
-                  <Route path="/feedback" element={<Feedback />} />
-                  <Route path="/terms" element={<TermsAndConditions />} />
-                  
-                  {/* Maintenance route */}
-                  <Route path="/maintenance" element={<ServerMaintenance />} />
-                  
-                  {/* Song detail page */}
-                  <Route path="/song-detail/:songId" element={<SongDetail />} />
-                  <Route path="/now-playing" element={<NowPlaying />} />
-                  
-                  {/* Enhanced song sharing routes */}
-                  <Route path="/share/:hashCode" element={<SharedSong />} />
-                  <Route path="/song/:songId" element={<SharedSong />} />
-                  <Route path="/s/:hashCode" element={<SharedSong />} />
-                  <Route path="/shared/:hashCode" element={<SharedSong />} />
-                  <Route path="/music/:hashCode" element={<SharedSong />} />
-                  <Route path="/track/:hashCode" element={<SharedSong />} />
-                  
-                  {/* Shared playlist route */}
-                  <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
-                  
-                  {/* Catch-all route */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </main>
-            <Player />
-          </>
-        )}
-      </div>
-    </BrowserRouter>
+          <Player />
+        </>
+      )}
+    </div>
   );
 }
 
@@ -134,13 +128,17 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <PlayerProvider>
-          <SidebarProvider>
-            <TooltipProvider>
-              <AppContent />
-            </TooltipProvider>
-          </SidebarProvider>
-        </PlayerProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <PlayerProvider>
+              <SidebarProvider>
+                <TooltipProvider>
+                  <AppContent />
+                </TooltipProvider>
+              </SidebarProvider>
+            </PlayerProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>
   );

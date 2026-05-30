@@ -40,11 +40,8 @@ const SignUpForm = ({ loading, setLoading, onSuccess }: SignUpFormProps) => {
       if (error) {
         toast.error(error.message);
       } else if (data.user) {
-        // Profile will be created automatically via trigger
-        
         toast.success('Account created successfully! You are now logged in.');
-        // Force page reload to ensure clean auth state
-        window.location.href = '/';
+        onSuccess();
       }
     } catch (error) {
       console.error('Error during signup:', error);
