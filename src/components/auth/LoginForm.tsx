@@ -27,18 +27,36 @@ const LoginForm = ({ loading, setLoading, onSuccess, onForgotPassword }: LoginFo
     
     try {
       setLoading(true);
-
+      
+      // Clean up any existing auth state first
+      try {
+        localStorage.removeItem('auth.session');
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch (cleanupError) {
+        console.log('Cleanup warning:', cleanupError);
+      }
+      
+      // Sign in with proper mobile compatibility
       const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
+      
       if (error) {
+        console.error('Login error:', error);
         toast.error(error.message);
       } else if (data?.session && data?.user) {
+        // Store authentication data for better persistence
+        if (rememberMe) {
+          localStorage.setItem('auth.session', JSON.stringify(data.session));
+        }
+        
         toast.success('Logged in successfully');
-        // AuthContext listener picks up the SIGNED_IN event; just navigate.
-        onSuccess();
+        
+        // Use window.location for mobile APK compatibility
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 500);
       } else {
         toast.error('Invalid login response');
       }
