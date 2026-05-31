@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      password_otps: {
+        Row: {
+          attempts: number
+          code_hash: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          used: boolean
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          used?: boolean
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          used?: boolean
+        }
+        Relationships: []
+      }
       playlist_songs: {
         Row: {
           created_at: string
@@ -51,28 +81,31 @@ export type Database = {
           cover_image: string | null
           created_at: string
           description: string | null
+          firebase_uid: string | null
           id: string
           name: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           cover_image?: string | null
           created_at?: string
           description?: string | null
+          firebase_uid?: string | null
           id?: string
           name: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           cover_image?: string | null
           created_at?: string
           description?: string | null
+          firebase_uid?: string | null
           id?: string
           name?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -81,46 +114,52 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           display_name: string | null
+          firebase_uid: string | null
           id: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          firebase_uid?: string | null
           id?: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          firebase_uid?: string | null
           id?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
       user_likes: {
         Row: {
           created_at: string
+          firebase_uid: string | null
           id: string
           song_id: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
+          firebase_uid?: string | null
           id?: string
           song_id: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
+          firebase_uid?: string | null
           id?: string
           song_id?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
