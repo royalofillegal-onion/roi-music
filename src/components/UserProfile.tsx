@@ -114,15 +114,17 @@ const UserProfile = () => {
     try {
       setIsLoading(true);
       const { error } = await supabase.auth.signOut();
-      
       if (!error) {
-        localStorage.removeItem('auth.session');
-        localStorage.removeItem('supabase.auth.token');
+        try {
+          localStorage.removeItem('auth.session');
+          localStorage.removeItem('supabase.auth.token');
+        } catch { /* ignore */ }
         setIsLoggedIn(false);
         setUserName('Guest User');
         setAvatarUrl('');
         setLikedCount(0);
-        navigate('/');
+        // Send the user to the login screen, Spotify-style.
+        window.location.href = '/auth';
       }
     } catch (err) {
       console.error('Error during sign out:', err);
