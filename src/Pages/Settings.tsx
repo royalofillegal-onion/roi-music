@@ -9,8 +9,10 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 
 const Settings = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
@@ -36,37 +38,40 @@ const Settings = () => {
 
   useEffect(() => {
     checkAuthAndLoadProfile();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.uid]);
 
   const checkAuthAndLoadProfile = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session) {
+      if (user) {
         setIsLoggedIn(true);
-        setUserEmail(session.user.email || "");
-        
-        // Load user profile
+        setUserEmail(user.email || "");
+
         const { data: profile } = await supabase
-          .from('profiles')
-          .select('display_name, avatar_url')
-          .eq('user_id', session.user.id)
-          .single();
-          
+          .from("profiles")
+          .select("display_name, avatar_url")
+          .eq("firebase_uid", user.uid)
+          .maybeSingle();
+
         if (profile) {
           setUserName(profile.display_name || "");
           setAvatarUrl(profile.avatar_url || "");
           setPreviewUrl(profile.avatar_url || "");
           setTempName(profile.display_name || "");
+        } else {
+          const fallback = user.displayName || user.email?.split("@")[0] || "";
+          setUserName(fallback);
+          setTempName(fallback);
         }
-        
-        // Load liked songs count
+
         const { count } = await supabase
-          .from('user_likes')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', session.user.id);
-          
+          .from("user_likes")
+          .select("*", { count: "exact", head: true })
+          .eq("firebase_uid", user.uid);
+
         setLikedCount(count || 0);
+      } else {
+        setIsLoggedIn(false);
       }
     } catch (error) {
       console.error("Error loading profile:", error);
@@ -76,20 +81,21 @@ const Settings = () => {
   };
 
   const handleSaveName = async () => {
-    if (!tempName.trim()) {
-      return;
-    }
+    if (!tempName.trim() || !user) return;
 
     try {
       setSaving(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) return;
 
       const { error } = await supabase
-        .from('profiles')
-        .update({ display_name: tempName.trim() })
-        .eq('user_id', session.user.id);
+        .from("profiles")
+        .upsert(
+          {
+            firebase_uid: user.uid,
+            display_name: tempName.trim(),
+            avatar_url: avatarUrl || null,
+          },
+          { onConflict: "firebase_uid" }
+        );
 
       if (error) throw error;
 
