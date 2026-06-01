@@ -141,63 +141,59 @@ const Settings = () => {
   };
 
   const uploadAvatar = async (file: File) => {
+    if (!user) return;
     try {
       setUploading(true);
-      
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        return;
-      }
-      
-      // Create a unique file name
-      const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-      const fileName = `${session.user.id}/${Date.now()}.${fileExt}`;
-      
-      // Delete old avatar if exists
-      if (avatarUrl) {
-        const oldFileName = avatarUrl.split('/').pop();
+
+      const fileExt = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const fileName = `${user.uid}/${Date.now()}.${fileExt}`;
+
+      // Delete old avatar if it lives in our bucket
+      if (avatarUrl && avatarUrl.includes("/avatars/")) {
+        const oldFileName = avatarUrl.split("/").pop();
         if (oldFileName) {
-          const oldPath = `${session.user.id}/${oldFileName}`;
-          await supabase.storage.from('avatars').remove([oldPath]);
+          await supabase.storage.from("avatars").remove([`${user.uid}/${oldFileName}`]);
         }
       }
-      
-      // Upload the file to Supabase Storage
+
       const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: true
-        });
-        
+        .from("avatars")
+        .upload(fileName, file, { cacheControl: "3600", upsert: true });
+
       if (uploadError) {
         console.error("Error uploading avatar:", uploadError);
         return;
       }
-      
-      // Get the public URL for the uploaded file
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
-        
-      // Update user profile with new avatar URL
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("avatars").getPublicUrl(fileName);
+
       const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('user_id', session.user.id);
-        
+        .from("profiles")
+        .upsert(
+          {
+            firebase_uid: user.uid,
+            avatar_url: publicUrl,
+            display_name: userName || user.email?.split("@")[0] || "User",
+          },
+          { onConflict: "firebase_uid" }
+        );
+
       if (updateError) {
         console.error("Error updating avatar:", updateError);
         return;
       }
-        
+
       setAvatarUrl(publicUrl);
       setPreviewUrl(publicUrl);
-      
     } catch (error: any) {
       console.error("Error in uploadAvatar:", error);
     } finally {
+      setUploading(false);
+    }
+  };
+
       setUploading(false);
     }
   };
