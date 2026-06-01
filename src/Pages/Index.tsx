@@ -28,9 +28,7 @@ const Index = () => {
   }, [recentlyPlayed]);
 
   const likedSet: Set<string> = useMemo(() => {
-    const set = new Set<string>();
-    (likedSongs || []).forEach((s: any) => set.add(s.id));
-    return set;
+    return new Set<string>(Array.isArray(likedSongs) ? likedSongs : []);
   }, [likedSongs]);
 
   return (
@@ -158,7 +156,7 @@ const Index = () => {
                   </button>
 
                   <button
-                    onClick={() => toggleLike?.(song)}
+                    onClick={() => toggleLike?.(song.id)}
                     className="p-2 rounded-full hover:bg-white/10 transition-colors"
                     aria-label={liked ? "Unlike" : "Like"}
                   >
