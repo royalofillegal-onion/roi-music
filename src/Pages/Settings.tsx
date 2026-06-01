@@ -194,9 +194,7 @@ const Settings = () => {
     }
   };
 
-      setUploading(false);
-    }
-  };
+
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
