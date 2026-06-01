@@ -11,22 +11,33 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 
+const getInitials = (name: string, email?: string) => {
+  const source = (name || email || "U").trim();
+  if (!source) return "U";
+  const parts = source.split(/[\s@._-]+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return source.substring(0, 2).toUpperCase();
+};
+
 const Settings = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [userName, setUserName] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [previewUrl, setPreviewUrl] = useState("");
+
+  const initialName =
+    user?.displayName || user?.email?.split("@")[0] || "";
+  const initialAvatar = user?.photoURL || "";
+
+  const [userEmail, setUserEmail] = useState(user?.email || "");
+  const [userName, setUserName] = useState(initialName);
+  const [avatarUrl, setAvatarUrl] = useState(initialAvatar);
+  const [previewUrl, setPreviewUrl] = useState(initialAvatar);
   const [likedCount, setLikedCount] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [editingName, setEditingName] = useState(false);
-  const [tempName, setTempName] = useState("");
+  const [tempName, setTempName] = useState(initialName);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Feedback form state
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
@@ -36,49 +47,44 @@ const Settings = () => {
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
+  const isLoggedIn = !!user;
+
+  // Load profile in background — UI already populated from Firebase user
   useEffect(() => {
-    checkAuthAndLoadProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [{ data: profile }, { count }] = await Promise.all([
+          supabase
+            .from("profiles")
+            .select("display_name, avatar_url")
+            .eq("firebase_uid", user.uid)
+            .maybeSingle(),
+          supabase
+            .from("user_likes")
+            .select("*", { count: "exact", head: true })
+            .eq("firebase_uid", user.uid),
+        ]);
+        if (cancelled) return;
+        if (profile?.display_name) {
+          setUserName(profile.display_name);
+          setTempName(profile.display_name);
+        }
+        if (profile?.avatar_url) {
+          setAvatarUrl(profile.avatar_url);
+          setPreviewUrl(profile.avatar_url);
+        }
+        setLikedCount(count || 0);
+      } catch (e) {
+        console.error("Error loading profile:", e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user?.uid]);
 
-  const checkAuthAndLoadProfile = async () => {
-    try {
-      if (user) {
-        setIsLoggedIn(true);
-        setUserEmail(user.email || "");
-
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("display_name, avatar_url")
-          .eq("firebase_uid", user.uid)
-          .maybeSingle();
-
-        if (profile) {
-          setUserName(profile.display_name || "");
-          setAvatarUrl(profile.avatar_url || "");
-          setPreviewUrl(profile.avatar_url || "");
-          setTempName(profile.display_name || "");
-        } else {
-          const fallback = user.displayName || user.email?.split("@")[0] || "";
-          setUserName(fallback);
-          setTempName(fallback);
-        }
-
-        const { count } = await supabase
-          .from("user_likes")
-          .select("*", { count: "exact", head: true })
-          .eq("firebase_uid", user.uid);
-
-        setLikedCount(count || 0);
-      } else {
-        setIsLoggedIn(false);
-      }
-    } catch (error) {
-      console.error("Error loading profile:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSaveName = async () => {
     if (!tempName.trim() || !user) return;
@@ -135,66 +141,60 @@ const Settings = () => {
   };
 
   const uploadAvatar = async (file: File) => {
+    if (!user) return;
     try {
       setUploading(true);
-      
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        return;
-      }
-      
-      // Create a unique file name
-      const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-      const fileName = `${session.user.id}/${Date.now()}.${fileExt}`;
-      
-      // Delete old avatar if exists
-      if (avatarUrl) {
-        const oldFileName = avatarUrl.split('/').pop();
+
+      const fileExt = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const fileName = `${user.uid}/${Date.now()}.${fileExt}`;
+
+      // Delete old avatar if it lives in our bucket
+      if (avatarUrl && avatarUrl.includes("/avatars/")) {
+        const oldFileName = avatarUrl.split("/").pop();
         if (oldFileName) {
-          const oldPath = `${session.user.id}/${oldFileName}`;
-          await supabase.storage.from('avatars').remove([oldPath]);
+          await supabase.storage.from("avatars").remove([`${user.uid}/${oldFileName}`]);
         }
       }
-      
-      // Upload the file to Supabase Storage
+
       const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: true
-        });
-        
+        .from("avatars")
+        .upload(fileName, file, { cacheControl: "3600", upsert: true });
+
       if (uploadError) {
         console.error("Error uploading avatar:", uploadError);
         return;
       }
-      
-      // Get the public URL for the uploaded file
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
-        
-      // Update user profile with new avatar URL
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("avatars").getPublicUrl(fileName);
+
       const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('user_id', session.user.id);
-        
+        .from("profiles")
+        .upsert(
+          {
+            firebase_uid: user.uid,
+            avatar_url: publicUrl,
+            display_name: userName || user.email?.split("@")[0] || "User",
+          },
+          { onConflict: "firebase_uid" }
+        );
+
       if (updateError) {
         console.error("Error updating avatar:", updateError);
         return;
       }
-        
+
       setAvatarUrl(publicUrl);
       setPreviewUrl(publicUrl);
-      
     } catch (error: any) {
       console.error("Error in uploadAvatar:", error);
     } finally {
       setUploading(false);
     }
   };
+
+
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
@@ -257,13 +257,8 @@ const Settings = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
+
+
 
   if (!isLoggedIn) {
     return (
