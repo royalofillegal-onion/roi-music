@@ -5,7 +5,7 @@ import { PlaybackQueue } from "@/lib/algorithms/playbackQueue";
 import { NoRepeatShuffler, fisherYatesShuffle } from "@/lib/algorithms/fisherYatesShuffle";
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { mediaSessionManager } from "@/services/MediaSessionService";
-import { clearSongNotification, showSongNotification } from "@/services/NotificationService";
+import { clearSongNotification, ensureMediaNotificationPermission, showSongNotification } from "@/services/NotificationService";
 import { offlineCacheService } from "@/services/OfflineCacheService";
 import { userPreferenceLearner } from "@/services/UserPreferenceLearner";
 
@@ -256,6 +256,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
 
+    void ensureMediaNotificationPermission();
+
     // Record preference for the PREVIOUS song before switching
     if (currentSong && audioRef.current) {
       const listenedDuration = audioRef.current.currentTime;
@@ -333,6 +335,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const resumeSong = useCallback(() => {
     if (audioRef.current && currentSong) {
+      void ensureMediaNotificationPermission();
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         mediaSessionManager.updatePlaybackState(true);
