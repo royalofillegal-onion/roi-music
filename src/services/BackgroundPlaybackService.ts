@@ -93,31 +93,12 @@ class BackgroundPlaybackService {
   }
 
   private setupMediaSessionHandling() {
-    if (!this.config.enableMediaSession || !('mediaSession' in navigator)) {
-      return;
-    }
-
-    // Enhance media session for better background support
-    navigator.mediaSession.setActionHandler('play', () => {
-      this.notifyPlaybackEvent('play');
-    });
-
-    navigator.mediaSession.setActionHandler('pause', () => {
-      this.notifyPlaybackEvent('pause');
-    });
-
-    navigator.mediaSession.setActionHandler('previoustrack', () => {
-      this.notifyPlaybackEvent('previoustrack');
-    });
-
-    navigator.mediaSession.setActionHandler('nexttrack', () => {
-      this.notifyPlaybackEvent('nexttrack');
-    });
-
-    // Handle seek events for better control
-    navigator.mediaSession.setActionHandler('seekto', (details) => {
-      this.notifyPlaybackEvent('seekto', { seekTime: details.seekTime });
-    });
+    // NOTE: Media Session action handlers are owned exclusively by
+    // `MediaSessionService` (registered from PlayerContext). Registering them
+    // here too would overwrite the working handlers with no-ops and break the
+    // pause / next / previous buttons on the lock-screen / Chrome notification.
+    // Intentionally a no-op.
+    return;
   }
 
   private signalBackgroundState(isBackground: boolean) {
