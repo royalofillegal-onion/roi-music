@@ -231,17 +231,27 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     const handlePrevious = () => previousSong();
     const handleNext = () => nextSong();
     const handleToggle = () => togglePlayPause();
+    const handleServiceWorkerMessage = (event: MessageEvent) => {
+      const action = event.data?.action;
+      if (event.data?.type !== 'MEDIA_NOTIFICATION_ACTION') return;
+
+      if (action === 'previous') previousSong();
+      if (action === 'next') nextSong();
+      if (action === 'play' || action === 'pause') togglePlayPause();
+    };
 
     window.addEventListener('playerPrevious', handlePrevious);
     window.addEventListener('playerNext', handleNext);
     window.addEventListener('playerTogglePlayPause', handleToggle);
+    navigator.serviceWorker?.addEventListener('message', handleServiceWorkerMessage);
 
     return () => {
       window.removeEventListener('playerPrevious', handlePrevious);
       window.removeEventListener('playerNext', handleNext);
       window.removeEventListener('playerTogglePlayPause', handleToggle);
+      navigator.serviceWorker?.removeEventListener('message', handleServiceWorkerMessage);
     };
-  }, []);
+  }, [nextSong, previousSong, togglePlayPause]);
 
   const addToRecentlyPlayed = useCallback((song: Song) => {
     setRecentlyPlayed(prev => {
