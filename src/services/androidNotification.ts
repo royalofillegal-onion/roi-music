@@ -43,7 +43,7 @@ export const showAndroidNotification = (title: string, message: string) => {
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification(title, {
           body: message,
-          icon: '/icon-192.png'
+          icon: '/icon-192x192.png'
         });
       }
     }
@@ -94,8 +94,8 @@ export const registerMediaSession = (data: MediaSessionData) => {
         artist: data.artist,
         album: 'ROI MUSIC',
         artwork: [
-          { src: data.imageUrl || '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: data.imageUrl || '/icon-512.png', sizes: '512x512', type: 'image/png' }
+          { src: data.imageUrl || '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: data.imageUrl || '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
         ]
       });
       
