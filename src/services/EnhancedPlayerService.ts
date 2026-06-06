@@ -45,16 +45,10 @@ class EnhancedPlayerService {
       }
     });
 
-    // Listen for audio focus changes (mobile)
-    if ('mediaSession' in navigator) {
-      navigator.mediaSession.setActionHandler('play', () => {
-        this.resumePlayback();
-      });
+    // Media Session action handlers are owned by MediaSessionService
+    // (registered from PlayerContext). Do NOT register them here — it would
+    // overwrite the working handlers and break notification buttons.
 
-      navigator.mediaSession.setActionHandler('pause', () => {
-        this.pausePlayback();
-      });
-    }
   }
 
   async playSong(song: Song, onTimeUpdate?: (time: number) => void, onDurationChange?: (duration: number) => void, onEnded?: () => void) {
