@@ -228,16 +228,20 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Custom notification events (for custom overlay)
   useEffect(() => {
-    const handlePrevious = () => previousSong();
-    const handleNext = () => nextSong();
-    const handleToggle = () => togglePlayPause();
+    const handlePrevious = () => callbackRefs.current.previousSong();
+    const handleNext = () => callbackRefs.current.nextSong();
+    const handleToggle = () => {
+      if (audioRef.current?.paused) callbackRefs.current.resumeSong();
+      else callbackRefs.current.pauseSong();
+    };
     const handleServiceWorkerMessage = (event: MessageEvent) => {
       const action = event.data?.action;
       if (event.data?.type !== 'MEDIA_NOTIFICATION_ACTION') return;
 
-      if (action === 'previous') previousSong();
-      if (action === 'next') nextSong();
-      if (action === 'play' || action === 'pause') togglePlayPause();
+      if (action === 'previous') callbackRefs.current.previousSong();
+      if (action === 'next') callbackRefs.current.nextSong();
+      if (action === 'play') callbackRefs.current.resumeSong();
+      if (action === 'pause') callbackRefs.current.pauseSong();
     };
 
     window.addEventListener('playerPrevious', handlePrevious);
@@ -251,7 +255,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       window.removeEventListener('playerTogglePlayPause', handleToggle);
       navigator.serviceWorker?.removeEventListener('message', handleServiceWorkerMessage);
     };
-  }, [nextSong, previousSong, togglePlayPause]);
+  }, []);
 
   const addToRecentlyPlayed = useCallback((song: Song) => {
     setRecentlyPlayed(prev => {
