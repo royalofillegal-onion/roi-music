@@ -5,6 +5,7 @@ import { PlaybackQueue } from "@/lib/algorithms/playbackQueue";
 import { NoRepeatShuffler, fisherYatesShuffle } from "@/lib/algorithms/fisherYatesShuffle";
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { mediaSessionManager } from "@/services/MediaSessionService";
+import { clearSongNotification, showSongNotification } from "@/services/NotificationService";
 import { offlineCacheService } from "@/services/OfflineCacheService";
 import { userPreferenceLearner } from "@/services/UserPreferenceLearner";
 
@@ -169,6 +170,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     callbackRefs.current.previousSong = previousSong;
     callbackRefs.current.seek = seek;
   });
+
+  useEffect(() => {
+    return () => {
+      clearSongNotification();
+    };
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("likedSongs");
