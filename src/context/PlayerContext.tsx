@@ -5,6 +5,7 @@ import { PlaybackQueue } from "@/lib/algorithms/playbackQueue";
 import { NoRepeatShuffler, fisherYatesShuffle } from "@/lib/algorithms/fisherYatesShuffle";
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { mediaSessionManager } from "@/services/MediaSessionService";
+import { clearSongNotification, ensureMediaNotificationPermission, showSongNotification } from "@/services/NotificationService";
 import { offlineCacheService } from "@/services/OfflineCacheService";
 import { userPreferenceLearner } from "@/services/UserPreferenceLearner";
 
@@ -171,6 +172,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
+    return () => {
+      clearSongNotification();
+    };
+  }, []);
+
+  useEffect(() => {
     const saved = localStorage.getItem("likedSongs");
     if (saved) setLikedSongs(JSON.parse(saved));
     
@@ -221,18 +228,32 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Custom notification events (for custom overlay)
   useEffect(() => {
-    const handlePrevious = () => previousSong();
-    const handleNext = () => nextSong();
-    const handleToggle = () => togglePlayPause();
+    const handlePrevious = () => callbackRefs.current.previousSong();
+    const handleNext = () => callbackRefs.current.nextSong();
+    const handleToggle = () => {
+      if (audioRef.current?.paused) callbackRefs.current.resumeSong();
+      else callbackRefs.current.pauseSong();
+    };
+    const handleServiceWorkerMessage = (event: MessageEvent) => {
+      const action = event.data?.action;
+      if (event.data?.type !== 'MEDIA_NOTIFICATION_ACTION') return;
+
+      if (action === 'previous') callbackRefs.current.previousSong();
+      if (action === 'next') callbackRefs.current.nextSong();
+      if (action === 'play') callbackRefs.current.resumeSong();
+      if (action === 'pause') callbackRefs.current.pauseSong();
+    };
 
     window.addEventListener('playerPrevious', handlePrevious);
     window.addEventListener('playerNext', handleNext);
     window.addEventListener('playerTogglePlayPause', handleToggle);
+    navigator.serviceWorker?.addEventListener('message', handleServiceWorkerMessage);
 
     return () => {
       window.removeEventListener('playerPrevious', handlePrevious);
       window.removeEventListener('playerNext', handleNext);
       window.removeEventListener('playerTogglePlayPause', handleToggle);
+      navigator.serviceWorker?.removeEventListener('message', handleServiceWorkerMessage);
     };
   }, []);
 
@@ -248,6 +269,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
+
+    void ensureMediaNotificationPermission();
 
     // Record preference for the PREVIOUS song before switching
     if (currentSong && audioRef.current) {
@@ -287,6 +310,14 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
         duration: audioRef.current?.duration,
       });
       mediaSessionManager.updatePlaybackState(true);
+      showSongNotification(
+        song.title,
+        song.artist,
+        song.imageUrl,
+        song.id,
+        song.duration,
+        true,
+      );
 
       if (audioRef.current) {
         mediaSessionManager.startPositionTracking(audioRef.current);
@@ -303,20 +334,39 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       setIsPlaying(false);
       mediaSessionManager.updatePlaybackState(false);
       mediaSessionManager.stopPositionTracking();
+      if (currentSong) {
+        showSongNotification(
+          currentSong.title,
+          currentSong.artist,
+          currentSong.imageUrl,
+          currentSong.id,
+          duration || currentSong.duration,
+          false,
+        );
+      }
     }
-  }, []);
+  }, [currentSong, duration]);
 
   const resumeSong = useCallback(() => {
     if (audioRef.current && currentSong) {
+      void ensureMediaNotificationPermission();
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         mediaSessionManager.updatePlaybackState(true);
+        showSongNotification(
+          currentSong.title,
+          currentSong.artist,
+          currentSong.imageUrl,
+          currentSong.id,
+          duration || currentSong.duration,
+          true,
+        );
         if (audioRef.current) {
           mediaSessionManager.startPositionTracking(audioRef.current);
         }
       }).catch(() => setIsPlaying(false));
     }
-  }, [currentSong]);
+  }, [currentSong, duration]);
 
   const togglePlayPause = useCallback(() => {
     if (isPlaying) pauseSong();

@@ -8,6 +8,7 @@ import App from './App.tsx'
 import './index.css'
 import { PlayerProvider } from './context/PlayerContext'
 import { initializeContentProtection } from './utils/contentProtection'
+import { ensureMediaNotificationPermission } from './services/NotificationService'
 
 // Initialize content protection
 initializeContentProtection();
@@ -16,7 +17,7 @@ initializeContentProtection();
 const requestNotificationPermission = async () => {
   if ('Notification' in window && Notification.permission === 'default') {
     try {
-      await Notification.requestPermission();
+      await ensureMediaNotificationPermission();
     } catch (e) {
       console.log('Notification permission request failed:', e);
     }

@@ -166,8 +166,8 @@ class BackgroundPlaybackService {
         artist: metadata.artist,
         album: metadata.album || 'ROI MUSIC',
         artwork: metadata.artwork || [
-          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }
+          { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
         ]
       });
     }
