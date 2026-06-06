@@ -294,6 +294,14 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
         duration: audioRef.current?.duration,
       });
       mediaSessionManager.updatePlaybackState(true);
+      showSongNotification(
+        song.title,
+        song.artist,
+        song.imageUrl,
+        song.id,
+        song.duration,
+        true,
+      );
 
       if (audioRef.current) {
         mediaSessionManager.startPositionTracking(audioRef.current);
@@ -310,20 +318,38 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       setIsPlaying(false);
       mediaSessionManager.updatePlaybackState(false);
       mediaSessionManager.stopPositionTracking();
+      if (currentSong) {
+        showSongNotification(
+          currentSong.title,
+          currentSong.artist,
+          currentSong.imageUrl,
+          currentSong.id,
+          duration || currentSong.duration,
+          false,
+        );
+      }
     }
-  }, []);
+  }, [currentSong, duration]);
 
   const resumeSong = useCallback(() => {
     if (audioRef.current && currentSong) {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         mediaSessionManager.updatePlaybackState(true);
+        showSongNotification(
+          currentSong.title,
+          currentSong.artist,
+          currentSong.imageUrl,
+          currentSong.id,
+          duration || currentSong.duration,
+          true,
+        );
         if (audioRef.current) {
           mediaSessionManager.startPositionTracking(audioRef.current);
         }
       }).catch(() => setIsPlaying(false));
     }
-  }, [currentSong]);
+  }, [currentSong, duration]);
 
   const togglePlayPause = useCallback(() => {
     if (isPlaying) pauseSong();
