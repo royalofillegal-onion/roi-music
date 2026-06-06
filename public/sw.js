@@ -131,6 +131,34 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+
+  if (event.data && event.data.type === 'SHOW_NOW_PLAYING') {
+    const payload = event.data.payload || {};
+    const options = {
+      body: payload.artist || 'Now playing',
+      icon: payload.imageUrl || '/icon-192x192.png',
+      badge: '/icon-192x192.png',
+      tag: 'roi-music-now-playing',
+      renotify: true,
+      silent: true,
+      data: {
+        url: '/',
+        songId: payload.id,
+      },
+    };
+
+    event.waitUntil(
+      self.registration.showNotification(payload.title || 'ROI MUSIC', options)
+    );
+  }
+
+  if (event.data && event.data.type === 'CLEAR_NOW_PLAYING') {
+    event.waitUntil(
+      self.registration.getNotifications({ tag: 'roi-music-now-playing' }).then((notifications) => {
+        notifications.forEach((notification) => notification.close());
+      })
+    );
+  }
 });
 
 // Background sync for offline functionality
