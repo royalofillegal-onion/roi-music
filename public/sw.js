@@ -141,6 +141,11 @@ self.addEventListener('message', (event) => {
       tag: 'roi-music-now-playing',
       renotify: true,
       silent: true,
+      actions: [
+        { action: 'previous', title: 'Previous' },
+        { action: payload.isPlaying ? 'pause' : 'play', title: payload.isPlaying ? 'Pause' : 'Play' },
+        { action: 'next', title: 'Next' },
+      ],
       data: {
         url: '/',
         songId: payload.id,
@@ -223,10 +228,20 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   
   const urlToOpen = event.notification.data?.url || '/';
+  const action = event.action;
   
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
+        if (action) {
+          clientList.forEach((client) => {
+            client.postMessage({
+              type: 'MEDIA_NOTIFICATION_ACTION',
+              action,
+            });
+          });
+        }
+
         // Check if there's already a window/tab open
         for (const client of clientList) {
           if (client.url === urlToOpen && 'focus' in client) {
