@@ -2,16 +2,34 @@
 import React, { Suspense, lazy, useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { PlayerProvider } from "./context/PlayerContext";
 import { SidebarProvider, useSidebarState } from "./context/SidebarContext";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import Player from "./components/Player";
 import SplashScreen from "./components/SplashScreen";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { isMaintenanceActive } from "./config/maintenance";
 import { useIsMobile } from "./hooks/use-mobile";
+import { Loader2 } from "lucide-react";
+
+// Public routes (anything else requires login)
+const PUBLIC_ROUTES = ["/auth", "/forgot-password", "/terms", "/share", "/song/", "/s/", "/shared/", "/music/", "/track/", "/shared-playlist"];
+
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+  if (loading) {
+    return (
+      <div className="min-h-screen grid place-items-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  if (!user) return <Navigate to="/auth" replace state={{ from: location.pathname }} />;
+  return <>{children}</>;
+}
 
 // Lazy load pages
 const Index = lazy(() => import("./Pages/Index"));
@@ -97,40 +115,42 @@ function AppContent() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-      <Navbar />
-      <main className={`flex-1 pb-20 md:pb-0 transition-all duration-300 ${mainMargin}`}>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/playlists" element={<Playlists />} />
-            <Route path="/playlist/:id" element={<PlaylistView />} />
-            <Route path="/liked" element={<LikedSongs />} />
-            <Route path="/artists" element={<Artists />} />
-            <Route path="/artist/:artistName" element={<Artist />} />
-            <Route path="/live" element={<Live />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/user-settings" element={<UserSettings />} />
-            <Route path="/feedback" element={<Feedback />} />
-            <Route path="/terms" element={<TermsAndConditions />} />
-            <Route path="/maintenance" element={<ServerMaintenance />} />
-            <Route path="/song-detail/:songId" element={<SongDetail />} />
-            <Route path="/now-playing" element={<NowPlaying />} />
-            <Route path="/share/:hashCode" element={<SharedSong />} />
-            <Route path="/song/:songId" element={<SharedSong />} />
-            <Route path="/s/:hashCode" element={<SharedSong />} />
-            <Route path="/shared/:hashCode" element={<SharedSong />} />
-            <Route path="/music/:hashCode" element={<SharedSong />} />
-            <Route path="/track/:hashCode" element={<SharedSong />} />
-            <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </main>
-      <Player />
-    </div>
+    <RequireAuth>
+      <div className="flex flex-col min-h-screen bg-background text-foreground">
+        {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+        <Navbar />
+        <main className={`flex-1 pb-20 md:pb-0 transition-all duration-300 ${mainMargin}`}>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/playlists" element={<Playlists />} />
+              <Route path="/playlist/:id" element={<PlaylistView />} />
+              <Route path="/liked" element={<LikedSongs />} />
+              <Route path="/artists" element={<Artists />} />
+              <Route path="/artist/:artistName" element={<Artist />} />
+              <Route path="/live" element={<Live />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/user-settings" element={<UserSettings />} />
+              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/terms" element={<TermsAndConditions />} />
+              <Route path="/maintenance" element={<ServerMaintenance />} />
+              <Route path="/song-detail/:songId" element={<SongDetail />} />
+              <Route path="/now-playing" element={<NowPlaying />} />
+              <Route path="/share/:hashCode" element={<SharedSong />} />
+              <Route path="/song/:songId" element={<SharedSong />} />
+              <Route path="/s/:hashCode" element={<SharedSong />} />
+              <Route path="/shared/:hashCode" element={<SharedSong />} />
+              <Route path="/music/:hashCode" element={<SharedSong />} />
+              <Route path="/track/:hashCode" element={<SharedSong />} />
+              <Route path="/shared-playlist/:encodedData" element={<SharedPlaylist />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </main>
+        <Player />
+      </div>
+    </RequireAuth>
   );
 }
 
