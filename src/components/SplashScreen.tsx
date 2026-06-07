@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState, useRef } from "react";
-import { showAndroidNotification } from "@/services/androidNotification";
 
 const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
   const [lineWidth, setLineWidth] = useState(0);
@@ -20,7 +19,6 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
           playPromise
             .then(() => {
               console.log('Loading audio started successfully');
-              showAndroidNotification('ROI MUSIC', 'Loading your music experience...');
             })
             .catch(error => {
               console.log('Auto-play blocked, setting up user interaction handler:', error);
@@ -32,7 +30,6 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
                   audioRef.current.play()
                     .then(() => {
                       console.log('Audio started after user interaction');
-                      showAndroidNotification('ROI MUSIC', 'Loading your music experience...');
                     })
                     .catch(e => console.log('Audio play failed:', e));
                 }
