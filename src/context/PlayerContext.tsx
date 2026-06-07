@@ -93,6 +93,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.volume = volume;
+      // Keep audio playing in background / lock screen
+      audioRef.current.preload = "auto";
+      (audioRef.current as any).playsInline = true;
+      audioRef.current.setAttribute("playsinline", "true");
+      audioRef.current.setAttribute("webkit-playsinline", "true");
+      audioRef.current.setAttribute("x-webkit-airplay", "allow");
     }
 
     // Register Media Session handlers that delegate to refs (never stale)
