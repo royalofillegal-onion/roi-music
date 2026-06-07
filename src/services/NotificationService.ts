@@ -9,198 +9,108 @@ export interface SongNotificationData {
   duration?: number; // Changed from string to number
 }
 
-interface NowPlayingPayload extends SongNotificationData {
-  isPlaying: boolean;
-}
-
 let currentNotificationId: number | null = null;
 let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Custom notification element
 let customNotification: HTMLDivElement | null = null;
 let notificationTimer: ReturnType<typeof setTimeout> | null = null;
-let browserNotification: Notification | null = null;
-
-const NOW_PLAYING_TAG = 'roi-music-now-playing';
-
-const formatDuration = (duration?: number) => {
-  if (!duration || Number.isNaN(duration)) return '--:--';
-  return `${Math.floor(duration / 60)}:${Math.floor(duration % 60).toString().padStart(2, '0')}`;
-};
-
-const clearCustomNotificationTimer = () => {
-  if (notificationTimer) {
-    clearTimeout(notificationTimer);
-    notificationTimer = null;
-  }
-};
-
-const postToServiceWorker = async (message: Record<string, unknown>) => {
-  if (!('serviceWorker' in navigator)) return false;
-
-  try {
-    const registration = await navigator.serviceWorker.ready;
-    const worker = registration.active || navigator.serviceWorker.controller;
-    if (!worker) return false;
-
-    worker.postMessage(message);
-    return true;
-  } catch (error) {
-    console.log('Service worker messaging failed:', error);
-    return false;
-  }
-};
-
-const renderCustomNotification = ({
-  title,
-  artist,
-  imageUrl,
-  duration,
-  isPlaying,
-}: NowPlayingPayload) => {
-  if (customNotification) {
-    customNotification.remove();
-    customNotification = null;
-  }
-
-  clearCustomNotificationTimer();
-
-  customNotification = document.createElement('div');
-  customNotification.className = 'fixed top-4 right-4 z-50 min-w-[320px] max-w-[400px] rounded-lg border border-border bg-card/95 text-card-foreground shadow-2xl backdrop-blur-xl';
-
-  customNotification.innerHTML = `
-    <div class="flex items-center gap-3 p-4">
-      <img src="${imageUrl || '/icon-192x192.png'}" alt="Album cover" class="interactive h-12 w-12 rounded-md object-cover" />
-      <div class="min-w-0 flex-1">
-        <div class="truncate text-sm font-semibold">${title}</div>
-        <div class="truncate text-xs text-muted-foreground">${artist}</div>
-      </div>
-      <button id="closeNotification" class="rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent/15 hover:text-accent-foreground" aria-label="Close notification">&times;</button>
-    </div>
-    <div class="flex items-center justify-between gap-2 border-t border-border px-4 py-3">
-      <button id="prevBtn" class="rounded-full p-2 text-foreground transition-colors hover:bg-accent/15" aria-label="Previous track">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/>
-        </svg>
-      </button>
-      <button id="playPauseBtn" class="rounded-full p-2 text-foreground transition-colors hover:bg-accent/15" aria-label="${isPlaying ? 'Pause' : 'Play'}">
-        ${isPlaying
-          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>'
-          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'}
-      </button>
-      <button id="nextBtn" class="rounded-full p-2 text-foreground transition-colors hover:bg-accent/15" aria-label="Next track">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-        </svg>
-      </button>
-      <div class="ml-2 text-xs text-muted-foreground">${formatDuration(duration)}</div>
-    </div>
-  `;
-
-  const closeBtn = customNotification.querySelector('#closeNotification');
-  const prevBtn = customNotification.querySelector('#prevBtn');
-  const playPauseBtn = customNotification.querySelector('#playPauseBtn');
-  const nextBtn = customNotification.querySelector('#nextBtn');
-
-  closeBtn?.addEventListener('click', () => {
-    clearSongNotification();
-  });
-
-  prevBtn?.addEventListener('click', () => {
-    window.dispatchEvent(new CustomEvent('playerPrevious'));
-  });
-
-  playPauseBtn?.addEventListener('click', () => {
-    window.dispatchEvent(new CustomEvent('playerTogglePlayPause'));
-  });
-
-  nextBtn?.addEventListener('click', () => {
-    window.dispatchEvent(new CustomEvent('playerNext'));
-  });
-
-  document.body.appendChild(customNotification);
-
-  notificationTimer = setTimeout(() => {
-    if (customNotification) {
-      customNotification.remove();
-      customNotification = null;
-    }
-  }, 10000);
-};
-
-const showBrowserNowPlayingNotification = async (payload: NowPlayingPayload) => {
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
-  const pushedToServiceWorker = await postToServiceWorker({
-    type: 'SHOW_NOW_PLAYING',
-    payload,
-  });
-
-  if (pushedToServiceWorker) return;
-
-  try {
-    browserNotification?.close();
-    browserNotification = new Notification(payload.title, {
-      body: payload.artist,
-      icon: payload.imageUrl || '/icon-192x192.png',
-      tag: NOW_PLAYING_TAG,
-      silent: true,
-    });
-  } catch (error) {
-    console.log('Browser notification failed:', error);
-  }
-};
-
-export const ensureMediaNotificationPermission = async () => {
-  if (!('Notification' in window)) return 'unsupported';
-  if (Notification.permission === 'granted') return 'granted';
-  if (Notification.permission === 'denied') return 'denied';
-
-  try {
-    return await Notification.requestPermission();
-  } catch (error) {
-    console.log('Notification permission request failed:', error);
-    return Notification.permission;
-  }
-};
 
 export const showSongNotification = (
   title: string,
   artist: string,
   imageUrl?: string,
   songId?: string,
-  duration?: number,
-  isPlaying: boolean = true,
+  duration?: number
 ) => {
   try {
-    const payload: NowPlayingPayload = {
-      title,
-      artist,
-      imageUrl,
-      id: songId || title,
-      duration,
-      isPlaying,
-    };
+    // Remove existing notification
+    if (customNotification) {
+      customNotification.remove();
+      customNotification = null;
+    }
 
-    renderCustomNotification(payload);
-    void showBrowserNowPlayingNotification(payload);
+    // Clear existing timer
+    if (notificationTimer) {
+      clearTimeout(notificationTimer);
+      notificationTimer = null;
+    }
+
+    // Create custom notification with controls
+    customNotification = document.createElement('div');
+    customNotification.className = 'fixed top-4 right-4 bg-black/90 text-white p-4 rounded-lg shadow-lg z-50 min-w-[320px] max-w-[400px]';
+    
+    const durationText = duration ? `${Math.floor(duration / 60)}:${Math.floor(duration % 60).toString().padStart(2, '0')}` : '--:--';
+    
+    customNotification.innerHTML = `
+      <div class="flex items-center gap-3">
+        <img src="${imageUrl || '/icon-192x192.png'}" alt="Album cover" class="w-12 h-12 rounded-md object-cover" />
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-sm truncate">${title}</div>
+          <div class="text-gray-300 text-xs truncate">${artist}</div>
+        </div>
+        <button id="closeNotification" class="text-gray-400 hover:text-white text-lg">&times;</button>
+      </div>
+      <div class="flex items-center justify-between mt-3 gap-2">
+        <button id="prevBtn" class="p-2 hover:bg-white/10 rounded-full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/>
+          </svg>
+        </button>
+        <button id="playPauseBtn" class="p-2 hover:bg-white/10 rounded-full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </button>
+        <button id="nextBtn" class="p-2 hover:bg-white/10 rounded-full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+          </svg>
+        </button>
+        <div class="text-xs text-gray-300 ml-2">${durationText}</div>
+      </div>
+    `;
+
+    // Add event listeners
+    const closeBtn = customNotification.querySelector('#closeNotification');
+    const prevBtn = customNotification.querySelector('#prevBtn');
+    const playPauseBtn = customNotification.querySelector('#playPauseBtn');
+    const nextBtn = customNotification.querySelector('#nextBtn');
+
+    closeBtn?.addEventListener('click', () => {
+      if (customNotification) {
+        customNotification.remove();
+        customNotification = null;
+      }
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('playerPrevious'));
+    });
+
+    playPauseBtn?.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('playerTogglePlayPause'));
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('playerNext'));
+    });
+
+    // Add to document
+    document.body.appendChild(customNotification);
+
+    // Auto-close after 10 seconds
+    notificationTimer = setTimeout(() => {
+      if (customNotification) {
+        customNotification.remove();
+        customNotification = null;
+      }
+    }, 10000);
 
     console.log('Custom notification shown:', title);
   } catch (error) {
     console.log('Custom notification failed:', error);
   }
-};
-
-export const clearSongNotification = () => {
-  if (customNotification) {
-    customNotification.remove();
-    customNotification = null;
-  }
-
-  clearCustomNotificationTimer();
-  browserNotification?.close();
-  browserNotification = null;
-  void postToServiceWorker({ type: 'CLEAR_NOW_PLAYING' });
 };
 
 export const preNotifyNextSong = (

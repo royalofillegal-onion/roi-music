@@ -131,39 +131,6 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-
-  if (event.data && event.data.type === 'SHOW_NOW_PLAYING') {
-    const payload = event.data.payload || {};
-    const options = {
-      body: payload.artist || 'Now playing',
-      icon: payload.imageUrl || '/icon-192x192.png',
-      badge: '/icon-192x192.png',
-      tag: 'roi-music-now-playing',
-      renotify: true,
-      silent: true,
-      actions: [
-        { action: 'previous', title: 'Previous' },
-        { action: payload.isPlaying ? 'pause' : 'play', title: payload.isPlaying ? 'Pause' : 'Play' },
-        { action: 'next', title: 'Next' },
-      ],
-      data: {
-        url: '/',
-        songId: payload.id,
-      },
-    };
-
-    event.waitUntil(
-      self.registration.showNotification(payload.title || 'ROI MUSIC', options)
-    );
-  }
-
-  if (event.data && event.data.type === 'CLEAR_NOW_PLAYING') {
-    event.waitUntil(
-      self.registration.getNotifications({ tag: 'roi-music-now-playing' }).then((notifications) => {
-        notifications.forEach((notification) => notification.close());
-      })
-    );
-  }
 });
 
 // Background sync for offline functionality
@@ -228,20 +195,10 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   
   const urlToOpen = event.notification.data?.url || '/';
-  const action = event.action;
   
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        if (action) {
-          clientList.forEach((client) => {
-            client.postMessage({
-              type: 'MEDIA_NOTIFICATION_ACTION',
-              action,
-            });
-          });
-        }
-
         // Check if there's already a window/tab open
         for (const client of clientList) {
           if (client.url === urlToOpen && 'focus' in client) {

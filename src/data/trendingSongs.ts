@@ -15,19 +15,6 @@ export const trendingSongs: Song[] = [
       language: "telugu",
       sync: "."
     },
-    {
-    id: "Thella Pori",
-    title: "Thella Pori",
-    artist: "Deewana",
-    imageUrl: "https://res.cloudinary.com/duux8y9nt/image/upload/v1780757824/Screenshot_2026-06-06_201452_akdmlh.png",
-    audioUrl: "https://res.cloudinary.com/duux8y9nt/video/upload/v1780757813/thella-pori-song-deewana-telugu-movie-harshith-smeha-eswar-sreekanth_itvfzw.mp3",
-    duration: 252,
-    album: "Thella pori",
-    year: 2026,
-    genre: ".",
-    language: "telugu",
-    sync: "melody"
-  },
   {
     id: "Chinni Gundelo",
     title: "Chinni Gundelo",

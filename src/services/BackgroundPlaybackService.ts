@@ -93,12 +93,31 @@ class BackgroundPlaybackService {
   }
 
   private setupMediaSessionHandling() {
-    // NOTE: Media Session action handlers are owned exclusively by
-    // `MediaSessionService` (registered from PlayerContext). Registering them
-    // here too would overwrite the working handlers with no-ops and break the
-    // pause / next / previous buttons on the lock-screen / Chrome notification.
-    // Intentionally a no-op.
-    return;
+    if (!this.config.enableMediaSession || !('mediaSession' in navigator)) {
+      return;
+    }
+
+    // Enhance media session for better background support
+    navigator.mediaSession.setActionHandler('play', () => {
+      this.notifyPlaybackEvent('play');
+    });
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+      this.notifyPlaybackEvent('pause');
+    });
+
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      this.notifyPlaybackEvent('previoustrack');
+    });
+
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      this.notifyPlaybackEvent('nexttrack');
+    });
+
+    // Handle seek events for better control
+    navigator.mediaSession.setActionHandler('seekto', (details) => {
+      this.notifyPlaybackEvent('seekto', { seekTime: details.seekTime });
+    });
   }
 
   private signalBackgroundState(isBackground: boolean) {
@@ -166,8 +185,8 @@ class BackgroundPlaybackService {
         artist: metadata.artist,
         album: metadata.album || 'ROI MUSIC',
         artwork: metadata.artwork || [
-          { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
+          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }
         ]
       });
     }

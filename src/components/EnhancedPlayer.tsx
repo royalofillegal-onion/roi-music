@@ -230,8 +230,7 @@ const EnhancedPlayer = () => {
           currentSong.artist,
           currentSong.imageUrl,
           currentSong.id,
-          currentSong.duration,
-          isPlaying,
+          currentSong.duration // Pass duration as number
         );
       }
     }
@@ -268,8 +267,7 @@ const EnhancedPlayer = () => {
         currentSong.artist,
         currentSong.imageUrl,
         currentSong.id,
-        currentSong.duration,
-        true,
+        currentSong.duration // Pass duration as number
       );
     }
   }, [isPlaying]);
