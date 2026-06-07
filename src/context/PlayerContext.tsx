@@ -167,7 +167,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isRepeating, isPlaying, isShuffled]);
 
 
-  // Keep callback refs always pointing to the latest functions
+  // Keep callback refs always pointing to the latest functions so the
+  // notification (Media Session) prev / next / play / pause buttons always
+  // invoke the SAME handlers the in-app Player UI uses.
   useEffect(() => {
     callbackRefs.current.resumeSong = resumeSong;
     callbackRefs.current.pauseSong = pauseSong;
@@ -175,6 +177,31 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     callbackRefs.current.previousSong = previousSong;
     callbackRefs.current.seek = seek;
   });
+
+  // Mirror player state to the system notification at all times.
+  // Any place that flips isPlaying / currentSong (UI buttons, queue auto-advance,
+  // toggles, etc.) will now also update the notification icon + metadata.
+  useEffect(() => {
+    if (!currentSong) return;
+    mediaSessionManager.updateMetadata({
+      title: currentSong.title,
+      artist: currentSong.artist,
+      album: currentSong.album || currentSong.artist,
+      imageUrl: currentSong.imageUrl,
+      duration: audioRef.current?.duration,
+    });
+  }, [currentSong]);
+
+  useEffect(() => {
+    mediaSessionManager.updatePlaybackState(isPlaying);
+    if (isPlaying && audioRef.current) {
+      mediaSessionManager.startPositionTracking(audioRef.current);
+    } else {
+      mediaSessionManager.stopPositionTracking();
+    }
+  }, [isPlaying]);
+
+
 
   useEffect(() => {
     const saved = localStorage.getItem("likedSongs");
