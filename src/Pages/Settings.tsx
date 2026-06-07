@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
+import NotificationSettings from "@/components/NotificationSettings";
 
 const getInitials = (name: string, email?: string) => {
   const source = (name || email || "U").trim();
@@ -560,6 +561,10 @@ const Settings = () => {
         </Card>
       </div>
       
+      <div className="container mx-auto p-4 md:pl-24 space-y-6">
+        <NotificationSettings />
+      </div>
+
       <div className="container mx-auto p-4 pt-16 pb-24 md:pb-4 md:pl-24 space-y-6">
         {/* App Information */}
         <Card>
