@@ -561,6 +561,10 @@ const Settings = () => {
         </Card>
       </div>
       
+      <div className="container mx-auto p-4 md:pl-24 space-y-6">
+        <NotificationSettings />
+      </div>
+
       <div className="container mx-auto p-4 pt-16 pb-24 md:pb-4 md:pl-24 space-y-6">
         {/* App Information */}
         <Card>
