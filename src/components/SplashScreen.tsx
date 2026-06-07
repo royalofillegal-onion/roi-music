@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState, useRef } from "react";
-import { showAndroidNotification } from "@/services/androidNotification";
 
 const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
   const [lineWidth, setLineWidth] = useState(0);
