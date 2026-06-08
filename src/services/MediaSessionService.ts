@@ -170,37 +170,40 @@ class MediaSessionManager {
   async updateMetadata(info: NowPlayingInfo): Promise<void> {
     if (!('mediaSession' in navigator)) return;
 
-    const artwork: MediaImage[] = [];
     const sizes = [96, 128, 192, 256, 384, 512];
+    const baseArtwork: MediaImage[] = info.imageUrl
+      ? sizes.map((s) => ({ src: info.imageUrl!, sizes: `${s}x${s}`, type: 'image/jpeg' }))
+      : [];
 
-    if (info.imageUrl) {
-      // Try to create enhanced artwork with rainbow border
-      try {
-        const enhanced512 = await this.createEnhancedArtwork(info.imageUrl, 512);
-        if (enhanced512.startsWith('data:')) {
-          // Use enhanced version for all sizes
-          for (const s of sizes) {
-            artwork.push({ src: enhanced512, sizes: `${s}x${s}`, type: 'image/png' });
-          }
-        } else {
-          for (const s of sizes) {
-            artwork.push({ src: info.imageUrl, sizes: `${s}x${s}`, type: 'image/jpeg' });
-          }
-        }
-      } catch {
-        for (const s of sizes) {
-          artwork.push({ src: info.imageUrl, sizes: `${s}x${s}`, type: 'image/jpeg' });
-        }
-      }
-    }
-
+    // Set metadata IMMEDIATELY (synchronously) so the OS shows the
+    // notification with correct title/artist + transport controls right away.
+    // Without this, async artwork generation can delay or block the
+    // notification from ever appearing on some Android browsers.
     navigator.mediaSession.metadata = new MediaMetadata({
       title: info.title,
       artist: info.artist,
       album: info.album || 'ROI Music',
-      artwork,
+      artwork: baseArtwork,
     });
+
+    // Then asynchronously upgrade to rainbow-bordered artwork (best-effort).
+    if (info.imageUrl) {
+      try {
+        const enhanced = await this.createEnhancedArtwork(info.imageUrl, 512);
+        if (enhanced.startsWith('data:')) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: info.title,
+            artist: info.artist,
+            album: info.album || 'ROI Music',
+            artwork: sizes.map((s) => ({ src: enhanced, sizes: `${s}x${s}`, type: 'image/png' })),
+          });
+        }
+      } catch {
+        // keep base artwork
+      }
+    }
   }
+
 
   /**
    * Update playback state (playing / paused).
