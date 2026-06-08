@@ -202,17 +202,8 @@ class MediaSessionManager {
         // keep base artwork
       }
     }
-    return;
-
-    // legacy block kept for type compat (unreachable)
-    // eslint-disable-next-line no-unreachable
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: info.title,
-      artist: info.artist,
-      album: info.album || 'ROI Music',
-      artwork,
-    });
   }
+
 
   /**
    * Update playback state (playing / paused).
