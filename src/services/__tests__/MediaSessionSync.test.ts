@@ -46,22 +46,14 @@ function installMediaSessionStub() {
 
 describe("Notification ↔ Player sync", () => {
   let env: ReturnType<typeof installMediaSessionStub>;
-  let player: {
-    isPlaying: boolean;
-    currentSong: { title: string; artist: string } | null;
-    onPlay: ReturnType<typeof vi.fn>;
-    onPause: ReturnType<typeof vi.fn>;
-    onNext: ReturnType<typeof vi.fn>;
-    onPrev: ReturnType<typeof vi.fn>;
-    onSeek: ReturnType<typeof vi.fn>;
-  };
+  let player: any;
 
   beforeEach(() => {
     env = installMediaSessionStub();
 
     player = {
       isPlaying: false,
-      currentSong: null,
+      currentSong: null as { title: string; artist: string } | null,
       onPlay: vi.fn(() => { player.isPlaying = true; mediaSessionManager.updatePlaybackState(true); }),
       onPause: vi.fn(() => { player.isPlaying = false; mediaSessionManager.updatePlaybackState(false); }),
       onNext: vi.fn(() => {
