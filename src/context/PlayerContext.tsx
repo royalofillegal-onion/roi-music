@@ -99,9 +99,15 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       audioRef.current.setAttribute("playsinline", "true");
       audioRef.current.setAttribute("webkit-playsinline", "true");
       audioRef.current.setAttribute("x-webkit-airplay", "allow");
+      audioRef.current.crossOrigin = "anonymous";
+      // Attach to DOM — required on some mobile browsers for the Media
+      // Session notification + transport controls to appear reliably.
+      audioRef.current.style.display = "none";
+      try { document.body.appendChild(audioRef.current); } catch { /* ignore */ }
     }
 
-    // Register Media Session handlers that delegate to refs (never stale)
+    // Register Media Session handlers that delegate to refs (never stale).
+    // The notification PLAY / PAUSE / NEXT / PREV / SEEK buttons fire these.
     mediaSessionManager.registerHandlers({
       onPlay: () => callbackRefs.current.resumeSong(),
       onPause: () => callbackRefs.current.pauseSong(),
@@ -116,10 +122,29 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       },
     });
 
-    return () => {
-      mediaSessionManager.destroy();
-    };
+    // Intentionally NO cleanup — handlers must outlive React StrictMode
+    // double-mount so the OS notification controls keep working.
   }, []);
+
+  // Defensive re-register on every song change in case any other code
+  // (background services, third-party libs) overwrote the action handlers.
+  useEffect(() => {
+    if (!currentSong) return;
+    mediaSessionManager.registerHandlers({
+      onPlay: () => callbackRefs.current.resumeSong(),
+      onPause: () => callbackRefs.current.pauseSong(),
+      onNextTrack: () => callbackRefs.current.nextSong(),
+      onPreviousTrack: () => callbackRefs.current.previousSong(),
+      onSeekTo: (time) => callbackRefs.current.seek(time),
+      onSeekForward: (offset) => {
+        if (audioRef.current) callbackRefs.current.seek(audioRef.current.currentTime + offset);
+      },
+      onSeekBackward: (offset) => {
+        if (audioRef.current) callbackRefs.current.seek(Math.max(0, audioRef.current.currentTime - offset));
+      },
+    });
+  }, [currentSong?.id]);
+
 
   // Audio event listeners
   useEffect(() => {
