@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import NotificationSettings from "@/components/NotificationSettings";
+import NotificationSyncStatus from "@/components/NotificationSyncStatus";
 
 const getInitials = (name: string, email?: string) => {
   const source = (name || email || "U").trim();
@@ -563,6 +564,7 @@ const Settings = () => {
       
       <div className="container mx-auto p-4 md:pl-24 space-y-6">
         <NotificationSettings />
+        <NotificationSyncStatus />
       </div>
 
       <div className="container mx-auto p-4 pt-16 pb-24 md:pb-4 md:pl-24 space-y-6">
