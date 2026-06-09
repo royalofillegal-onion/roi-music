@@ -42,38 +42,54 @@ class MediaSessionManager {
 
     this.callbacks = callbacks;
 
+    const emit = (action: string, extra?: Record<string, unknown>) => {
+      try {
+        window.dispatchEvent(new CustomEvent('mediasession:action', {
+          detail: { action, at: Date.now(), ...extra },
+        }));
+      } catch { /* ignore */ }
+    };
+
     navigator.mediaSession.setActionHandler('play', () => {
+      emit('play');
       callbacks.onPlay();
     });
 
     navigator.mediaSession.setActionHandler('pause', () => {
+      emit('pause');
       callbacks.onPause();
     });
 
     navigator.mediaSession.setActionHandler('nexttrack', () => {
+      emit('next');
       callbacks.onNextTrack();
     });
 
     navigator.mediaSession.setActionHandler('previoustrack', () => {
+      emit('previous');
       callbacks.onPreviousTrack();
     });
 
     navigator.mediaSession.setActionHandler('seekto', (details) => {
       if (details.seekTime !== undefined) {
+        emit('seekto', { seekTime: details.seekTime });
         callbacks.onSeekTo(details.seekTime);
       }
     });
 
     navigator.mediaSession.setActionHandler('seekforward', (details) => {
+      emit('seekforward');
       callbacks.onSeekForward(details.seekOffset ?? 10);
     });
 
     navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+      emit('seekbackward');
       callbacks.onSeekBackward(details.seekOffset ?? 10);
     });
 
     try {
       navigator.mediaSession.setActionHandler('stop', () => {
+        emit('stop');
         callbacks.onPause();
       });
     } catch {
