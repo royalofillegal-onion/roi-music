@@ -1,75 +1,65 @@
+## Goal
 
-## Scope & honest caveats
+Stay on the current React + Vite + Lovable Cloud (Supabase) stack — no MERN restructure. Fill in the missing pieces from the endpoint list you posted, add an in-app Admin panel at `/admin`, write the docs, and fix a real security gap I found along the way.
 
-You chose Firebase auth despite the warnings. This plan implements it cleanly, but please accept these realities up front:
+## What I'll do, in order
 
-1. **Existing user accounts will not migrate.** Every user currently in Supabase Auth must re-sign-up under Firebase. Their playlists / liked songs are tied to Supabase `auth.uid()` UUIDs that Firebase will never reproduce.
-2. **Firebase web `apiKey` is public.** Putting it in `.env` does not hide it — it ends up in the JS bundle. That's normal and safe for Firebase, but don't expect "secrecy" from the env file.
-3. **Firebase has no native email-OTP password reset.** I'll build a custom one: a Supabase edge function (kept just for this) generates a 6-digit OTP, emails it via Lovable Emails, and verifies it. Resetting the password itself requires the **Firebase Admin SDK** in an edge function, which needs a `FIREBASE_SERVICE_ACCOUNT_JSON` secret you'll need to paste once.
-4. **RLS on existing tables (`playlists`, `user_likes`, `profiles`) will stop working** because they check `auth.uid()` which is empty under Firebase. To keep your data layer working, I'll **disable RLS** on those four tables and store the Firebase UID as a plain `text` column. This is less secure than RLS — anyone with the anon key could in theory read/write all rows. (This is a direct consequence of leaving Supabase Auth.)
+### 1. Security fix (must do first)
+`playlists`, `playlist_songs`, `profiles`, `user_likes` all have **RLS disabled** right now. Any logged-in user can read/modify any other user's data. One migration that:
+- Enables RLS on all four tables
+- Adds owner-scoped policies (`auth.uid() = user_id` for write, profiles readable by everyone, playlists readable when `is_public` or owner)
+- Adds missing GRANTs
 
-If any of those four are dealbreakers, stop me here and I'll switch back to Lovable Cloud.
+### 2. Map the endpoints you listed onto Supabase
 
----
+No Express server. Instead, a clean service layer in `src/services/api/` that mirrors the endpoint list:
 
-## Stage 1 — Auth migration (Firebase + OTP reset + login-only chrome)
+| Your endpoint | Implementation |
+|---|---|
+| `POST /api/auth/register` | `supabase.auth.signUp` (already wired) |
+| `POST /api/auth/login` | `supabase.auth.signInWithPassword` (already wired) |
+| `GET /api/songs` | `songsApi.list({ page, limit, genre, lang })` — paginated query on `songs` table |
+| `GET /api/songs/:id` | `songsApi.get(id)` |
+| `POST /api/song/upload` | Edge function `upload-song` + Storage bucket `songs` (audio) + `covers` (images). Admin-only. |
+| `POST /api/playlist/create` | `playlistsApi.create` |
+| `GET /api/playlist/:id` | `playlistsApi.get` with joined songs |
+| `POST /api/like-song` | `likesApi.toggle(songId)` |
+| `GET /api/search?q=` | `searchApi.search(q)` — full-text across songs/artists/playlists |
 
-**Firebase setup**
-- Install `firebase` package.
-- Create `src/lib/firebase.ts` reading config from `import.meta.env.VITE_FIREBASE_*`.
-- Add `.env` with the 7 Firebase keys you provided (prefixed `VITE_FIREBASE_…`) and update `.env.example`.
-- Create `src/context/AuthContext.tsx` (Firebase) exposing `user`, `signIn`, `signUp`, `signInWithGoogle`, `signOut`, `requestPasswordOtp`, `verifyOtpAndResetPassword`.
+Files: `src/services/api/{songs,playlists,likes,search,upload}.ts` + barrel `index.ts`.
 
-**New auth screens** (`/auth`, login-only chrome)
-- Rebuild `src/Pages/Auth.tsx`: glassmorphism card, purple/pink gradient bg, tabs for Login / Sign Up, "Continue with Google" button, "Forgot password?" link.
-- Wrap `/auth` in a layout that does NOT render `Navbar`, `Player`, `FloatingMusicInfo`, or any sidebar.
-- New `/forgot-password` flow (single page, 3 steps): enter email → enter 6-digit OTP → set new password → success → redirect to `/auth`.
+### 3. In-app Admin panel at `/admin`
 
-**OTP edge functions** (using existing Lovable Cloud for email + admin SDK)
-- `supabase/functions/send-password-otp/index.ts`: generates 6-digit code, stores in new `password_otps` table (email, code_hash, expires_at, used), sends via Lovable transactional email.
-- `supabase/functions/verify-otp-and-reset/index.ts`: verifies code, calls Firebase Admin SDK `auth.updateUser()` to set new password. Requires `FIREBASE_SERVICE_ACCOUNT_JSON` secret.
-- New migration: `password_otps` table + grants + a cleanup policy.
+Protected route gated by a new `user_roles` table + `has_role()` security-definer function (per platform standard — never store role on profile).
 
-**Data layer adjustments**
-- Add `firebase_uid TEXT` to `profiles`, `playlists`, `user_likes`, `playlist_songs` (keep existing `user_id uuid` for back-compat but stop writing to it).
-- Disable RLS on those tables and grant `SELECT, INSERT, UPDATE, DELETE` to `anon`.
-- Update every `supabase.from(...).eq('user_id', authUser.id)` call site to use `firebase_uid` from the Firebase context.
+Pages:
+- `/admin` — dashboard (totals: users, songs, playlists, likes)
+- `/admin/songs` — list, create, edit, delete songs; upload audio + cover
+- `/admin/users` — list users, grant/revoke admin
+- `/admin/playlists` — moderate public playlists
 
-**Remove old Supabase auth usage**
-- Delete imports of `supabase.auth.*` from `Auth.tsx`, `LoginForm.tsx`, `SignUpForm.tsx`, `ResetPasswordForm.tsx`, `useOnboarding`, `UserProfile`, `Navbar`, etc.
-- Replace with `useAuth()` from new context.
+### 4. Storage buckets
+- `songs` (private, signed URLs) — audio files
+- `covers` (public) — song/playlist cover art
+- `avatars` (public) — user avatars
 
-## Stage 2 — Home screen redesign (`src/Pages/Index.tsx`)
+### 5. Docs
+Create:
+- `docs/API_Documentation.md` — the service-layer "endpoints", inputs, outputs, auth requirements
+- `docs/Database_Schema.md` — every table, columns, RLS policies, relationships
+- `docs/Deployment_Guide.md` — Lovable Cloud specifics, publish flow, env, edge function deploy notes
 
-- Top header: ROI Music logo (left), greeting "Good Morning/Afternoon/Evening, {displayName}" + subtitle, notification bell + search + avatar (right).
-- Hero carousel: Embla autoplay, 3D stacked-card effect (scale + translate neighbors), gradient overlay, centered play button.
-- Quick Actions row: 6 pill cards (Recently Played, Favorites, Downloads, Playlists, AI Mix, Discover Weekly) with gradient backgrounds.
-- Trending Now: horizontal scroll, hover zoom.
-- Recommended For You: reuse existing `UserPreferenceLearner` to sort.
-- Genres row: 10 chips (Rock, Pop, Hip-Hop, EDM, Telugu, Tamil, Hindi, Lofi, Chill, Workout) linking to filtered Search.
+## What I will NOT do
+- Will not create `client/ + server/ + admin-panel/` folders — Lovable runs one React app, an Express server can't run here.
+- Will not touch the existing music player, notification sync, or Media Session work — that's already done and shipped.
+- Will not migrate auth away from Firebase (your project uses Firebase for auth + Supabase for data; I'll keep that working).
 
-## Stage 3 — Now Playing redesign (`src/Pages/NowPlaying.tsx`)
+## Open question I still need answered
 
-- Full-screen, dynamic blurred album-art background.
-- Rotating circular album image (CSS `@keyframes spin`, paused when not playing).
-- Draggable progress bar using existing shadcn `Slider`.
-- Controls row: shuffle / prev / play-pause (large gradient circle) / next / repeat.
-- Action row: favorite, download, share, queue.
-- **Skipped to keep scope sane:** lyrics swipe, AI DJ, social feed — these are separate large features; we'll do them in follow-up messages.
+**Scope priority** — this is ~5-7 turns of work. Pick one to do first, the rest follow:
+1. Security fix only (the RLS gap is real and 15 min of work)
+2. Security fix + service layer (`src/services/api/*`) so the endpoint list is callable from React
+3. Security fix + service layer + Admin panel
+4. Everything above + the three docs
 
----
-
-## What I will NOT do in this pass
-- Lyrics screen, AI DJ, mood detection, social/follow, collaborative playlists, in-app equalizer — each is its own multi-day feature.
-- Migrating existing Supabase user accounts to Firebase (technically impossible without users re-setting passwords).
-
-## Order of operations
-1. You confirm this plan.
-2. I'll request the `FIREBASE_SERVICE_ACCOUNT_JSON` secret (needed for admin-SDK password reset).
-3. I implement Stage 1 (auth) end-to-end and verify.
-4. Then Stage 2 (Home), then Stage 3 (Now Playing).
-
-## Files touched (approx)
-- New: `src/lib/firebase.ts`, `src/context/AuthContext.tsx`, `src/Pages/ForgotPassword.tsx`, `src/components/auth/AuthLayout.tsx`, `supabase/functions/send-password-otp/`, `supabase/functions/verify-otp-and-reset/`, `.env`, `.env.example`, migration for `password_otps` + RLS changes.
-- Rewritten: `src/Pages/Auth.tsx`, `src/Pages/Index.tsx`, `src/Pages/NowPlaying.tsx`, `src/components/auth/LoginForm.tsx`, `src/components/auth/SignUpForm.tsx`, `src/components/auth/ResetPasswordForm.tsx`.
-- Adjusted: `src/App.tsx` (routes + auth provider + login-only layout), every file currently calling `supabase.auth.*` or filtering by `user_id`.
+Reply with `1`, `2`, `3`, or `4` and I'll start.
