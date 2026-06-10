@@ -1,24 +1,24 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import {
-  User as FirebaseUser,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  signOut as fbSignOut,
-  updateProfile,
-} from "firebase/auth";
-import { firebaseAuth, googleProvider } from "@/lib/firebase";
 import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@supabase/supabase-js";
+
+// Compatibility shape — many components read user.uid / displayName / photoURL.
+export interface AppUser {
+  uid: string;
+  id: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+}
 
 interface AuthContextValue {
-  user: FirebaseUser | null;
+  user: AppUser | null;
+  session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, displayName?: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
-  // OTP password reset
   requestPasswordOtp: (email: string) => Promise<void>;
   verifyOtpAndResetPassword: (email: string, otp: string, newPassword: string) => Promise<void>;
 }
@@ -31,68 +31,86 @@ export const useAuth = () => {
   return ctx;
 };
 
-/** Convenience hook — returns the Firebase UID string (or null). */
 export const useAuthUid = () => useAuth().user?.uid ?? null;
 
-async function ensureProfile(user: FirebaseUser) {
-  // Upsert profile row keyed by firebase_uid
-  await supabase.from("profiles").upsert(
-    {
-      firebase_uid: user.uid,
-      display_name: user.displayName ?? user.email?.split("@")[0] ?? "User",
-      avatar_url: user.photoURL ?? null,
-    },
-    { onConflict: "firebase_uid" }
-  );
+function toAppUser(session: Session | null): AppUser | null {
+  const u = session?.user;
+  if (!u) return null;
+  const meta = (u.user_metadata || {}) as Record<string, any>;
+  return {
+    uid: u.id,
+    id: u.id,
+    email: u.email ?? null,
+    displayName:
+      meta.display_name || meta.name || meta.full_name || u.email?.split("@")[0] || null,
+    photoURL: meta.avatar_url || meta.picture || null,
+  };
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(firebaseAuth, async (u) => {
-      setUser(u);
-      setLoading(false);
-      if (u) {
-        try { await ensureProfile(u); } catch (e) { console.warn("ensureProfile failed", e); }
-      }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+      setUser(toAppUser(s));
     });
-    return unsub;
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      setSession(s);
+      setUser(toAppUser(s));
+      setLoading(false);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    await signInWithEmailAndPassword(firebaseAuth, email, password);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
   }, []);
 
   const signUp = useCallback(async (email: string, password: string, displayName?: string) => {
-    const cred = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-    if (displayName) await updateProfile(cred.user, { displayName });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/`,
+        data: displayName ? { display_name: displayName, name: displayName } : undefined,
+      },
+    });
+    if (error) throw error;
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
-    await signInWithPopup(firebaseAuth, googleProvider);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/` },
+    });
+    if (error) throw error;
   }, []);
 
   const signOut = useCallback(async () => {
-    await fbSignOut(firebaseAuth);
+    await supabase.auth.signOut();
   }, []);
 
   const requestPasswordOtp = useCallback(async (email: string) => {
-    const { data, error } = await supabase.functions.invoke("send-password-otp", {
-      body: { email },
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/forgot-password`,
     });
-    if (error) throw new Error(error.message);
-    if (data?.error) throw new Error(data.error);
+    if (error) throw error;
   }, []);
 
   const verifyOtpAndResetPassword = useCallback(
     async (email: string, otp: string, newPassword: string) => {
-      const { data, error } = await supabase.functions.invoke("verify-otp-and-reset", {
-        body: { email, otp, newPassword },
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: "recovery",
       });
-      if (error) throw new Error(error.message);
-      if (data?.error) throw new Error(data.error);
+      if (verifyError) throw verifyError;
+      const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+      if (updateError) throw updateError;
     },
     []
   );
@@ -101,6 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider
       value={{
         user,
+        session,
         loading,
         signIn,
         signUp,

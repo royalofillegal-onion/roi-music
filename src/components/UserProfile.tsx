@@ -55,12 +55,12 @@ const UserProfile = () => {
         supabase
           .from("profiles")
           .select("display_name, avatar_url")
-          .eq("firebase_uid", user.uid)
+          .eq("user_id", user.uid)
           .maybeSingle(),
         supabase
           .from("user_likes")
           .select("*", { count: "exact", head: true })
-          .eq("firebase_uid", user.uid),
+          .eq("user_id", user.uid),
       ]);
       if (cancelled) return;
       if (profile) {
