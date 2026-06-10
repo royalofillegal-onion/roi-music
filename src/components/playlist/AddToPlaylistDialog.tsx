@@ -13,7 +13,7 @@ interface Playlist {
   id: string;
   name: string;
   description: string | null;
-  cover_image: string | null;
+  cover_url: string | null;
 }
 
 interface AddToPlaylistDialogProps {
@@ -46,7 +46,7 @@ const AddToPlaylistDialog = ({ open, onOpenChange, song }: AddToPlaylistDialogPr
 
       const { data, error } = await supabase
         .from('playlists')
-        .select('id, name, description, cover_image')
+        .select('id, name, description, cover_url')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false });
 
@@ -153,7 +153,7 @@ const AddToPlaylistDialog = ({ open, onOpenChange, song }: AddToPlaylistDialogPr
                     >
                       <div className="flex items-center space-x-3">
                         <img
-                          src={playlist.cover_image || `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=100&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`}
+                          src={playlist.cover_url || `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=100&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`}
                           alt={playlist.name}
                           className="w-10 h-10 rounded object-cover"
                         />

@@ -25,7 +25,7 @@ interface Playlist {
   id: string;
   name: string;
   description: string | null;
-  cover_image: string | null;
+  cover_url: string | null;
   user_id: string;
   song_count?: number;
 }
@@ -97,7 +97,7 @@ const AddToPlaylist = ({ song, trigger }: AddToPlaylistProps) => {
         .insert({
           user_id: session.user.id,
           name: newPlaylistName.trim(),
-          cover_image: `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`
+          cover_url: `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`
         })
         .select()
         .single();
@@ -254,7 +254,7 @@ const AddToPlaylist = ({ song, trigger }: AddToPlaylistProps) => {
                     >
                       <div className="flex items-center w-full">
                         <img 
-                          src={playlist.cover_image || '/roi-assets/default-playlist-cover.png'} 
+                          src={playlist.cover_url || '/roi-assets/default-playlist-cover.png'} 
                           alt={playlist.name}
                           className="w-8 h-8 object-cover rounded mr-3 flex-shrink-0" 
                         />

@@ -48,7 +48,7 @@ const CreatePlaylistDialog = ({ onPlaylistCreated, open, onOpenChange }: CreateP
           user_id: session.user.id,
           name: name.trim(),
           description: description.trim() || null,
-          cover_image: `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`
+          cover_url: `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`
         });
 
       if (error) throw error;

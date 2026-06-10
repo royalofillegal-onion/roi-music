@@ -61,12 +61,12 @@ const Settings = () => {
           supabase
             .from("profiles")
             .select("display_name, avatar_url")
-            .eq("firebase_uid", user.uid)
+            .eq("user_id", user.uid)
             .maybeSingle(),
           supabase
             .from("user_likes")
             .select("*", { count: "exact", head: true })
-            .eq("firebase_uid", user.uid),
+            .eq("user_id", user.uid),
         ]);
         if (cancelled) return;
         if (profile?.display_name) {
@@ -98,11 +98,11 @@ const Settings = () => {
         .from("profiles")
         .upsert(
           {
-            firebase_uid: user.uid,
+            user_id: user.uid,
             display_name: tempName.trim(),
             avatar_url: avatarUrl || null,
           },
-          { onConflict: "firebase_uid" }
+          { onConflict: "user_id" }
         );
 
       if (error) throw error;
@@ -175,11 +175,11 @@ const Settings = () => {
         .from("profiles")
         .upsert(
           {
-            firebase_uid: user.uid,
+            user_id: user.uid,
             avatar_url: publicUrl,
             display_name: userName || user.email?.split("@")[0] || "User",
           },
-          { onConflict: "firebase_uid" }
+          { onConflict: "user_id" }
         );
 
       if (updateError) {

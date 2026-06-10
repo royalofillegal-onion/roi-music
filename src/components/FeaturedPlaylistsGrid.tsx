@@ -10,7 +10,7 @@ import { uniqueSongs } from "@/data/allSongs";
 interface UserPlaylist {
   id: string;
   name: string;
-  cover_image: string | null;
+  cover_url: string | null;
   song_count: number;
   songs: Song[];
 }
@@ -43,27 +43,28 @@ const FeaturedPlaylistsGrid: React.FC<FeaturedPlaylistsGridProps> = ({
       // Fetch user playlists with songs
       const { data: playlists } = await supabase
         .from('playlists')
-        .select('id, name, cover_image')
+        .select('id, name, cover_url')
         .eq('user_id', session.user.id)
         .limit(5);
       
       if (playlists) {
-        const playlistsWithSongs = await Promise.all(
-          playlists.map(async (playlist) => {
+        const playlistsWithSongs: UserPlaylist[] = await Promise.all(
+          playlists.map(async (playlist: any) => {
             const { data: playlistSongsData } = await supabase
               .from('playlist_songs')
               .select('song_id')
               .eq('playlist_id', playlist.id);
             
-            // Map song_ids to actual Song objects from uniqueSongs
-            const songs = playlistSongsData
-              ?.map(ps => uniqueSongs.find(s => s.id === ps.song_id))
-              .filter(Boolean) as Song[] || [];
+            const songs = (playlistSongsData || [])
+              .map((ps: any) => uniqueSongs.find(s => s.id === ps.song_id))
+              .filter(Boolean) as Song[];
             
             return {
-              ...playlist,
+              id: playlist.id,
+              name: playlist.name,
+              cover_url: playlist.cover_url,
               song_count: songs.length,
-              songs
+              songs,
             };
           })
         );
@@ -161,9 +162,9 @@ const FeaturedPlaylistsGrid: React.FC<FeaturedPlaylistsGridProps> = ({
               style={{ animationDelay: `${(featuredPlaylists.length + index) * 50}ms` }}
             >
               <div className="relative aspect-square rounded-xl overflow-hidden mb-2 shadow-lg group-hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-primary/20 to-secondary/20">
-                {playlist.cover_image ? (
+                {playlist.cover_url ? (
                   <img
-                    src={playlist.cover_image}
+                    src={playlist.cover_url}
                     alt={playlist.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />

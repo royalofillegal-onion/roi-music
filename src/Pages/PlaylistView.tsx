@@ -81,7 +81,7 @@ const PlaylistView = () => {
                 id: supabasePlaylist.id,
                 title: supabasePlaylist.name,
                 description: supabasePlaylist.description,
-                coverImage: supabasePlaylist.cover_image || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+                coverImage: supabasePlaylist.cover_url || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
                 songs: songsList
               });
               setPlaylistSongs(songsList);

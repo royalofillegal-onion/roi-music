@@ -12,7 +12,7 @@ interface Playlist {
   id: string;
   name: string;
   description: string | null;
-  cover_image: string | null;
+  cover_url: string | null;
   song_count?: number;
 }
 
@@ -59,7 +59,7 @@ const Playlists = () => {
           id, 
           name, 
           description, 
-          cover_image,
+          cover_url,
           playlist_songs(count)
         `)
         .eq('user_id', session.user.id)
@@ -68,10 +68,13 @@ const Playlists = () => {
       if (playlistsError) throw playlistsError;
 
       // Transform data to include song count
-      const playlistsWithCount = playlistsData?.map(playlist => ({
-        ...playlist,
-        song_count: playlist.playlist_songs?.[0]?.count || 0
-      })) || [];
+      const playlistsWithCount: Playlist[] = (playlistsData || []).map((playlist: any) => ({
+        id: playlist.id,
+        name: playlist.name,
+        description: playlist.description,
+        cover_url: playlist.cover_url,
+        song_count: playlist.playlist_songs?.[0]?.count || 0,
+      }));
 
       setPlaylists(playlistsWithCount);
     } catch (error) {
@@ -188,7 +191,7 @@ const Playlists = () => {
             >
               <div className="relative mb-4">
                 <img
-                  src={playlist.cover_image || `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`}
+                  src={playlist.cover_url || `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&auto=format&fit=crop&q=60&ixlib=rb-4.0.3`}
                   alt={playlist.name}
                   className="w-full aspect-square rounded-lg object-cover"
                 />
