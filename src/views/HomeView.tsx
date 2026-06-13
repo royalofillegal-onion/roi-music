@@ -119,7 +119,7 @@ export function HomeView({ onOpenSearch }: { onOpenSearch?: () => void } = {}) {
           onClick={onOpenSearch}
           className="text-sm font-medium text-fuchsia-400 hover:text-fuchsia-300"
         >
-          View all
+          Search Here
         </button>
       </div>
 
