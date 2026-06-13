@@ -27,7 +27,7 @@ export const trendingSongs: Song[] = [
     genre: ".",
     language: "telugu",
     sync: "romantic"
-  )
+  }
 ];
 
 // Export individual songs for easy access and modification
