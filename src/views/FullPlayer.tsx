@@ -337,8 +337,8 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
 
           {tab === "credits" && (
             <ul className="text-sm space-y-2 text-white/80">
-              <li><span className="text-white/50 w-24 inline-block">Artist</span>{currentSong.singer || currentSong.artist}</li>
-              <li><span className="text-white/50 w-24 inline-block">Album</span>{currentSong.album || "—"}</li>
+              <li><span className="text-white/50 w-24 inline-block">Album</span>{currentSong.singer || currentSong.artist}</li>
+              <li><span className="text-white/50 w-24 inline-block">Song</span>{currentSong.album || "—"}</li>
               <li><span className="text-white/50 w-24 inline-block">Year</span>{currentSong.year || "—"}</li>
               <li><span className="text-white/50 w-24 inline-block">Language</span>{currentSong.language || "—"}</li>
               <li><span className="text-white/50 w-24 inline-block">Genre</span>{currentSong.genre || "—"}</li>
