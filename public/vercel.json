@@ -1,0 +1,33 @@
+
+{
+  "rewrites": [
+    {
+      "source": "/share/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/s/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/song/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/shared/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/music/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/track/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
