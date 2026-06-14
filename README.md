@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: https://roi-music.app
+**URL**: https://roimusic.netlify.app
 
 ## How can I edit this code?
 
