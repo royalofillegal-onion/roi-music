@@ -2,6 +2,19 @@ import type { Song } from "./Song";
 
 export const TrendingSongs: Song[] = [
   {
+      id: "Choodu Choodu",
+      title: "Choodu Choodu",
+      artist: "Godari Gattupaina",
+      imageUrl: "https://res.cloudinary.com/dd6xwej67/image/upload/v1781363420/Godari-Gattupaina-Telugu-2026-20260505103547-500x500-1_mrv3zu.jpg",
+      audioUrl: "https://res.cloudinary.com/dd6xwej67/video/upload/v1781363631/Choodu-Choodu-Naga-Vamshi-NaaSongs_cxbtlg.mp3",
+      duration: 333,
+      album: "Sahana Sahana",
+      year: 2026,
+      genre: "Melody",
+      language: "telugu",
+      sync: "love"
+    },
+  {
     "id": "Sahana Sahana",
     "title": "Sahana Sahana",
     "artist": "The RajaSaab",
