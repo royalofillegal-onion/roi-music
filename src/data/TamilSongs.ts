@@ -15,7 +15,7 @@ export const TamilSongs: Song[] = [
     "sync": "romantic"
   },
   {
-    "id": "e1",
+    "id": "Nigth Changes",
     "title": "Nigth Changes",
     "artist": ".",
     "imageUrl": "https://res.cloudinary.com/duux8y9nt/image/upload/v1781535307/IMG_20260615_202457_ew8xao.jpg",
