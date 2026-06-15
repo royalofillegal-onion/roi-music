@@ -15,8 +15,8 @@ export const TamilSongs: Song[] = [
     "sync": "romantic"
   },
   {
-    "id": "Nigth Changes",
-    "title": "Nigth Changes",
+    "id": "Night Changes",
+    "title": "Night Changes",
     "artist": ".",
     "imageUrl": "https://res.cloudinary.com/duux8y9nt/image/upload/v1781535307/IMG_20260615_202457_ew8xao.jpg",
     "audioUrl": "https://res.cloudinary.com/duux8y9nt/video/upload/v1781535231/Night_Changes_x_Tu_Jaane_Na_Mashup_KoshalWorld.Com_eujuom.mp3",
