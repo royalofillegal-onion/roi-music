@@ -10,7 +10,7 @@ export interface Playlist {
 }
 
 // Pick a deterministic sample of songs for the starter playlist.
-const sample = uniqueSongs.slice(0, 12);
+const sample = uniqueSongs.slice(1, 12);
 
 export const playlists: Playlist[] = [
   {
