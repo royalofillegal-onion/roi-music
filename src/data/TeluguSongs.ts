@@ -2,6 +2,19 @@ import type { Song } from "./Song";
 
 export const TeluguSongs: Song[] = [
   {
+    "id": "yemi-cheyamanduve",
+    "title": "Yemi Cheyamanduve",
+    "artist": "Priyuralu Pilichindi",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574183/Priyuralu-Pilichindi-2000jpeg_svqdmr.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781574180/01_-_Yemi_Cheyamanduve_-_SenSongsMp3.co_y0yxtj.mp3",
+    "duration": 360,
+    "album": "Priyuralu Pilichindi",
+    "year": 2000,
+    "genre": "Romantic Melody",
+    "language": "Telugu",
+    "sync": "Feel"
+  },
+  {
     "id": "Poyiraa Mama",
     "title": "Poyiraa Mama",
     "artist": "Kubera",
@@ -5159,5 +5172,57 @@ export const TeluguSongs: Song[] = [
   genre: "mass",
   language: "telugu",
   sync: "rap"
-}
+},
+  {
+    "id": "yemaaye-naa-kavitna",
+    "title": "Yemaaye Naa Kavitna",
+    "artist": "Priyuralu Pilichindi",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574183/Priyuralu-Pilichindi-2000jpeg_svqdmr.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781574177/06_-_Yemaaye_Naa_Kavitna_-_SenSongsMp3.co_ur1xfy.mp3",
+    "duration": 313,
+    "album": "Priyuralu Pilichindi",
+    "year": 2000,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
+    "id": "smaiyai",
+    "title": "Smaiyai",
+    "artist": "Priyuralu Pilichindi",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574183/Priyuralu-Pilichindi-2000jpeg_svqdmr.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781574181/05_-_Smaiyai_-_SenSongsMp3.co_hqzqsx.mp3",
+    "duration": 310,
+    "album": "Priyuralu Pilichindi",
+    "year": 2000,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
+    "id": "palike-gorinka",
+    "title": "Palike Gorinka",
+    "artist": "Priyuralu Pilichindi",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574183/Priyuralu-Pilichindi-2000jpeg_svqdmr.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781574183/03_-_Palike_Gorinka_-_SenSongsMp3.co_sq9xwm.mp3",
+    "duration": 281,
+    "album": "Priyuralu Pilichindi",
+    "year": 2000,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
+    "id": "thongi-choose",
+    "title": "Thongi Choose",
+    "artist": "Priyuralu Pilichindi",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574183/Priyuralu-Pilichindi-2000jpeg_svqdmr.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781574184/04_-_Thongi_Choose_-_SenSongsMp3.co_s1umn3.mp3",
+    "duration": 319,
+    "album": "Priyuralu Pilichindi",
+    "year": 2000,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  }
 ];
