@@ -5991,5 +5991,31 @@ export const TeluguSongs: Song[] = [
     "genre": ".",
     "language": "Telugu",
     "sync": "."
+  },
+  {
+    "id": "Vaa-Re-Vaa-Vaa-Re-Vaa",
+    "title": "Vaa Re Vaa Vaa Re Vaa",
+    "artist": "Lenin",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781624491/Lenin-Naa-Songs-Download-Akhil-Akkineni-Bagyasree-Borse-Lenin-2026-Telugu-Movie-Songs_kydkki.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781624718/Vaa_Re_Vaa_Vaa_Re_Vaa_janhln.mp3",
+    "duration": 188,
+    "album": "Vaa Re Vaa Vaa Re Vaa",
+    "year": 2026,
+    "genre": ".",
+    "language": "telugu",
+    "sync": "."
+  },
+  {
+    "id": "Soul-of-Lenin",
+    "title": "Soul of Lenin",
+    "artist": "Lenin",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781624491/Lenin-Naa-Songs-Download-Akhil-Akkineni-Bagyasree-Borse-Lenin-2026-Telugu-Movie-Songs_kydkki.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781624706/Soul_of_Lenin_rzxgkh.mp3",
+    "duration": 140,
+    "album": "Soul of Lenin",
+    "year": 2026,
+    "genre": ".",
+    "language": "telugu",
+    "sync": "."
   }
 ];
