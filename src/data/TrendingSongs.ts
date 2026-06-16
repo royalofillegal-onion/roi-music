@@ -2,6 +2,19 @@ import type { Song } from "./Song";
 
 export const TrendingSongs: Song[] = [
   {
+    "id": "Yetta Yetta",
+    "title": "Yetta Yetta",
+    "artist": "Lenin",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781624491/Lenin-Naa-Songs-Download-Akhil-Akkineni-Bagyasree-Borse-Lenin-2026-Telugu-Movie-Songs_kydkki.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781624497/Yetta_Yetta_zxa4az.mp3",
+    "duration": 205,
+    "album": "Yetta Yetta",
+    "year": 2026,
+    "genre": "Melody,Flok,Romantic",
+    "language": "telugu",
+    "sync": "Romantic,Love,Feel Love"
+  },
+  {
     "id": "Sahana Sahana",
     "title": "Sahana Sahana",
     "artist": "The RajaSaab",
