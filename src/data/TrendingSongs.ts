@@ -54,6 +54,32 @@ export const TrendingSongs: Song[] = [
     "sync": "love"
   },
   {
+    "id": "hellallallo",
+    "title": "Hellallallo",
+    "artist": "Peddi",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781451263/Peddi-Songs-Download-Ram-Charan-Tej-jahnvi-Kapoor-shruthi-hassan-ar-rahaman-peddi-naa-songs-2026_kuncpb.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781451288/Hellallallo_risuij.mp3",
+    "duration": 228,
+    "album": "Hellallallo",
+    "year": 2026,
+    "genre": "Mass, Dance, Folk, Festival",
+    "language": "Telugu",
+    "sync": "Mass, Dance, Folk, Festival"
+  },
+  {
+    "id": "rai-rai-raa-raa",
+    "title": "Rai Rai Raa Raa",
+    "artist": "Peddi",
+    "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781451263/Peddi-Songs-Download-Ram-Charan-Tej-jahnvi-Kapoor-shruthi-hassan-ar-rahaman-peddi-naa-songs-2026_kuncpb.jpg",
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781451286/Rai_Rai_Raa_Raa_fx0epg.mp3",
+    "duration": 264,
+    "album": "Rai Rai Raa Raa",
+    "year": 2026,
+    "genre": "Mass, Hero Elevation, Dance, Folk",
+    "language": "Telugu",
+    "sync": "Mass, Hero Elevation, Dance, Folk"
+  },
+  {
     "id": "suvvi-suvvi",
     "title": "Suvvi Suvvi",
     "artist": "OG",
