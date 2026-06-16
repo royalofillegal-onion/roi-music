@@ -15,58 +15,6 @@ export const TrendingSongs: Song[] = [
     "sync": "Romantic,Love,Feel Love"
   },
   {
-    "id": "Sahana Sahana",
-    "title": "Sahana Sahana",
-    "artist": "The RajaSaab",
-    "imageUrl": "https://res.cloudinary.com/dilqrz7sw/image/upload/v1766109884/IMG_20251219_072805_efxbnx.jpg",
-    "audioUrl": "https://res.cloudinary.com/dilqrz7sw/video/upload/v1766109891/Sahana_Sahana_xzgekh.mp3",
-    "duration": 258,
-    "album": "Sahana Sahana",
-    "year": 2025,
-    "genre": ".",
-    "language": "telugu",
-    "sync": "."
-  },
-  {
-    "id": "Chinni Gundelo",
-    "title": "Chinni Gundelo",
-    "artist": "Andhra King Taluka",
-    "imageUrl": "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764302605/chinni-gundelo-andhra-king-taluka_tbnig6.jpg",
-    "audioUrl": "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298267/Chinni_Gundelo_wsdnmm.mp3",
-    "duration": 219,
-    "album": "Nuvvunte Chaley",
-    "year": 2025,
-    "genre": ".",
-    "language": "telugu",
-    "sync": "romantic"
-  },
-  {
-    "id": "Peddi",
-    "title": "Chikiri Chikiri",
-    "artist": "Peddi",
-    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
-    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1764608269/Chikiri_Chikiri_jfcks5.mp3",
-    "duration": 272,
-    "album": "Chikiri Chikiri",
-    "year": 2025,
-    "genre": "love",
-    "language": "telugu",
-    "sync": "love"
-  },
-  {
-    "id": "Boom Boom",
-    "title": "Boom Boom",
-    "artist": "Dude",
-    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
-    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1764610233/Boom_Boom_PenduJatt.Com.Se_cwkiup.mp3",
-    "duration": 240,
-    "album": "Boom Boom",
-    "year": 2025,
-    "genre": "love",
-    "language": "telugu",
-    "sync": "love"
-  },
-  {
     "id": "hellallallo",
     "title": "Hellallallo",
     "artist": "Peddi",
@@ -1895,5 +1843,57 @@ export const TrendingSongs: Song[] = [
     "album": "Rambai Neemeedha Naku",
     "year": 2025,
     "genre": "."
+  },
+  {
+    "id": "Sahana Sahana",
+    "title": "Sahana Sahana",
+    "artist": "The RajaSaab",
+    "imageUrl": "https://res.cloudinary.com/dilqrz7sw/image/upload/v1766109884/IMG_20251219_072805_efxbnx.jpg",
+    "audioUrl": "https://res.cloudinary.com/dilqrz7sw/video/upload/v1766109891/Sahana_Sahana_xzgekh.mp3",
+    "duration": 258,
+    "album": "Sahana Sahana",
+    "year": 2025,
+    "genre": ".",
+    "language": "telugu",
+    "sync": "."
+  },
+  {
+    "id": "Chinni Gundelo",
+    "title": "Chinni Gundelo",
+    "artist": "Andhra King Taluka",
+    "imageUrl": "https://res.cloudinary.com/dilqrz7sw/image/upload/v1764302605/chinni-gundelo-andhra-king-taluka_tbnig6.jpg",
+    "audioUrl": "https://res.cloudinary.com/dilqrz7sw/video/upload/v1764298267/Chinni_Gundelo_wsdnmm.mp3",
+    "duration": 219,
+    "album": "Nuvvunte Chaley",
+    "year": 2025,
+    "genre": ".",
+    "language": "telugu",
+    "sync": "romantic"
+  },
+  {
+    "id": "Peddi",
+    "title": "Chikiri Chikiri",
+    "artist": "Peddi",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1764608257/Peddi-2025_i5pzhr.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1764608269/Chikiri_Chikiri_jfcks5.mp3",
+    "duration": 272,
+    "album": "Chikiri Chikiri",
+    "year": 2025,
+    "genre": "love",
+    "language": "telugu",
+    "sync": "love"
+  },
+  {
+    "id": "Boom Boom",
+    "title": "Boom Boom",
+    "artist": "Dude",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1764609908/Dude-2025-Baagundu-Po-250x250_am0wji.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1764610233/Boom_Boom_PenduJatt.Com.Se_cwkiup.mp3",
+    "duration": 240,
+    "album": "Boom Boom",
+    "year": 2025,
+    "genre": "love",
+    "language": "telugu",
+    "sync": "love"
   }
 ];
