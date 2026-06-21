@@ -15,7 +15,7 @@ export const EnglishSongs: Song[] = [
     "album": "Night Changes",
     "year": 2014,
     "genre": "pop",
-    "language": "English",
+    "language": "english",
     "sync": "flok"
   }
 ];
