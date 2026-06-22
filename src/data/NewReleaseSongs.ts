@@ -7,10 +7,16 @@ import { uniqueSongs } from "./allSongs";
  * Unknown IDs are ignored safely.
  */
 export const newReleaseSongIds: string[] = [
+  "oriya-pilla-sid-sriram",
+  "veera-jayadheera-deepak-blue-lakshmi-meghana",
   "Thassadiya-Chinmayi",
   "Niluvanivvade",
+  "neno-butterfly-sublahshini",
   "jigithara-karthik",
+  "gunde-pelipothondhe-anurag-kulkarni",
+  "aura-hiphop-tamizha",
   "Yetta Yetta",
+  "pavazha-malli-sai-abhyankkar-shruti-haasan",
 ];
 
 /** Resolve the ID list against the full catalog. */
