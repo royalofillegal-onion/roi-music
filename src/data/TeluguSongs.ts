@@ -3705,7 +3705,7 @@ export const TeluguSongs: Song[] = [
   "genre": ".",
   "language": "Telugu",
   "sync": "."
-}
+},
   {
     "id": "yentha-sakkagunnaave",
     "title": "Yentha Sakkagunnaave",
