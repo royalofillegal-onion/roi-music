@@ -4,7 +4,7 @@ export const TeluguSongs: Song[] = [
   {
     "id": "yemi-cheyamanduve",
     "title": "Yemi Cheyamanduve",
-    "artist": "Priyuralu Pilichindi",
+    "artist": "Priyuralu Pilichind",
     "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574183/Priyuralu-Pilichindi-2000jpeg_svqdmr.jpg",
     "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781574180/01_-_Yemi_Cheyamanduve_-_SenSongsMp3.co_y0yxtj.mp3",
     "duration": 360,
