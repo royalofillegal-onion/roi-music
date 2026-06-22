@@ -119,6 +119,19 @@ export const TeluguSongs: Song[] = [
     "sync": "Romantic, Melody, Duet, Love"
   },
   {
+  "id": "jorsey-anuj-gurwara-rita",
+  "title": "Jorsey (Anuj Gurwara, Rita)",
+  "artist": "Magadheera",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782121047/Magadheera-2009jpeg-300x300_wx9adi.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782121071/Jorsey-SenSongsMp3.Com_otcfcu.mp3",
+  "duration": 279,
+  "album": "Jorsey",
+  "year": 2009,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
+  {
     "id": "aakasam-yenatido",
     "title": "Aakasam Yenatido",
     "artist": "Nireekshana",
@@ -534,6 +547,19 @@ export const TeluguSongs: Song[] = [
     "language": "telugu",
     "sync": "love"
   },
+  {
+  "id": "panchadhara-bomma-deepugeetha-madhuri",
+  "title": "Panchadhara Bomma ( Deepu,Geetha Madhuri)",
+  "artist": "Magadheera",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782121047/Magadheera-2009jpeg-300x300_wx9adi.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782121075/Panchadhara_Bomma-SenSongsMp3.Com_c4r1pa.mp3",
+  "duration": 287,
+  "album": "Panchadhara Bomma",
+  "year": 2009,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
   {
     "id": "Adhento Gaani Vunnapaatuga",
     "title": "Adhento Gaani Vunnapaatuga",
@@ -5317,6 +5343,19 @@ export const TeluguSongs: Song[] = [
   sync: "rap"
 },
   {
+  "id": "dheera-dheera-mmkeeravani-nikitha-nigam",
+  "title": "Dheera Dheera ( M.M.Keeravani, Nikitha Nigam)",
+  "artist": "Magadheera",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782121047/Magadheera-2009jpeg-300x300_wx9adi.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782121068/Dheera_Dheera_Dheera-SenSongsMp3.Com_wochei.mp3",
+  "duration": 290,
+  "album": "Dheera Dheera",
+  "year": 2009,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
+  {
   id: "aa-gattununtaava",
   title: "Aa Gattununtaava",
   artist: "Rangasthalam",
@@ -5511,6 +5550,19 @@ export const TeluguSongs: Song[] = [
     "sync": "Rainy,claim,Feel"
   },
   {
+  "id": "bangaru-kodi-petta-ranjith-sai-shivani",
+  "title": "Bangaru Kodi Petta (Ranjith, Sai Shivani)",
+  "artist": "Magadheera",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782121047/Magadheera-2009jpeg-300x300_wx9adi.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782121072/Bangaru_Kodipetta-SenSongsMp3.Com_kfrw0a.mp3",
+  "duration": 364,
+  "album": "Bangaru Kodi Petta Remix",
+  "year": 2009,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
+  {
     "id": "o-baby",
     "title": "O Baby",
     "artist": "Aadavari Matalaku Ardhale",
@@ -5588,6 +5640,19 @@ export const TeluguSongs: Song[] = [
     "language": "Telugu",
     "sync": "."
   },
+      {
+  "id": "naakosam-nuvvu-daler-mahendi-geetha-madhuri",
+  "title": "Naakosam Nuvvu (Daler Mahendi, Geetha Madhuri)",
+  "artist": "Magadheera",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782121047/Magadheera-2009jpeg-300x300_wx9adi.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782121074/Nakosam_Nuvu-SenSongsMp3.Com_ufhsct.mp3",
+  "duration": 234,
+  "album": "Naakosam Nuvvu",
+  "year": 2009,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
   {
     "id": "thalachi-thalachi-choosthe",
     "title": "Thalachi Thalachi Choosthe",
@@ -5874,6 +5939,19 @@ export const TeluguSongs: Song[] = [
     "language": "Telugu",
     "sync": "."
   },
+  {
+  "id": "magadheera-title-song-jassie-gift",
+  "title": "Magadheera Title Song (Jassie Gift)",
+  "artist": "Magadheera",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782121047/Magadheera-2009jpeg-300x300_wx9adi.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782121089/Rolling_Title_Music-SenSongsMp3.Com_zsujgi.mp3",
+  "duration": 179,
+  "album": "Magadheera Title Song",
+  "year": 2009,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
   {
     "id": "ko-ante-koti",
     "title": "Ko Ante Koti",
