@@ -6290,5 +6290,31 @@ export const TeluguSongs: Song[] = [
     "genre": ".",
     "language": "Telugu",
     "sync": "."
+  },
+  {
+    "id": "Niluvanivvade",
+    "title": "Niluvanivvade (Vijai Bulganin)",
+    "artist": "Flok",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782116014/Niluvanivvade-song-ShanmukhJaswanth-Chandana-Payaavula_wu6bkt.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782116018/Niluvanivvade_bbgmct.mp3",
+    "duration": 326,
+    "album": "Niluvanivvade",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
+    "id": "Thassadiya-Chinmayi",
+    "title": "Thassadiya Chinmayi(Chinmayi Sripada,Punya Selva)",
+    "artist": "Maa Inti Bangaaram",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115984/Maa-Inti-Bangaaram-2026_ss8thz.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115987/Thassadiya-Chinmayi-Sripada-NaaSongs_qv81bt.mp3",
+    "duration": 215,
+    "album": "Thassadiya Chinmayi",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
   }
 ];
