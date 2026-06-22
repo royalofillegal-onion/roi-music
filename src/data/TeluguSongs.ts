@@ -184,6 +184,19 @@ export const TeluguSongs: Song[] = [
     "sync": "Romantic, Melody, Love"
   },
   {
+  "id": "kanne-pillavani-spbalu-psusheela",
+  "title": "Kanne Pillavani  (SP.Balu, P.Susheela)",
+  "artist": "Aakali Rajyam",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782122085/Aakali-Rajyam-1981jpeg_ekwpf1.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782122069/01_-_Kanne_Pillavani_www.SenSongsMp3.co_uhl4lr.mp3",
+  "duration": 317,
+  "album": "Kanne Pillavani",
+  "year": 1981,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
+  {
     "id": "Rebel Saab",
     "title": "Rebel Saab",
     "artist": "The RajaSaab",
@@ -3680,6 +3693,19 @@ export const TeluguSongs: Song[] = [
     "language": "telugu",
     "sync": "folk"
   },
+{
+  "id": "tuhe-raja-sjanaki",
+  "title": "Tuhe Raja (S.Janaki)",
+  "artist": "Aakali Rajyam",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782122085/Aakali-Rajyam-1981jpeg_ekwpf1.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782122067/03_-_Tuhe_Raja_www.SenSongsMp3.co_wxrjpn.mp3",
+  "duration": 286,
+  "album": "Tuhe Raja",
+  "year": 1981,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+}
   {
     "id": "yentha-sakkagunnaave",
     "title": "Yentha Sakkagunnaave",
@@ -4200,6 +4226,19 @@ export const TeluguSongs: Song[] = [
     language: "telugu",
     sync: "sad"
   },
+{
+  "id": "gusthaa-rangaiah",
+  "title": "Gusthaa Rangaiah",
+  "artist": "Aakali Rajyam",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782122085/Aakali-Rajyam-1981jpeg_ekwpf1.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782122073/02_-_Gusthaa_Rangaiah_www.SenSongsMp3.co_dvng8f.mp3",
+  "duration": 302,
+  "album": "Gusthaa Rangaiah",
+  "year": 1981,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
     {
   id: "Yevarini Yevaritho",
   title: "Yevarini Yevaritho",
@@ -4357,6 +4396,7 @@ export const TeluguSongs: Song[] = [
   language: "telugu",
   sync: "sad"
 },
+
   {
   id: "Ela Ela",
   title: "Ela Ela",
@@ -5355,6 +5395,19 @@ export const TeluguSongs: Song[] = [
   "language": "Telugu",
   "sync": "."
 },
+    {
+  "id": "kooti-kosam-spbalu",
+  "title": "Kooti Kosam (SP.Balu)",
+  "artist": "Aakali Rajyam",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782122085/Aakali-Rajyam-1981jpeg_ekwpf1.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782122064/05_-_Kooti_Kosam_www.SenSongsMp3.co_mzyelh.mp3",
+  "duration": 139,
+  "album": "Kooti Kosam",
+  "year": 1981,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
   {
   id: "aa-gattununtaava",
   title: "Aa Gattununtaava",
@@ -5978,6 +6031,19 @@ export const TeluguSongs: Song[] = [
     "language": "Telugu",
     "sync": "."
   },
+    {
+  "id": "sapaatu-yetu-ledhu-spbalu",
+  "title": "Sapaatu Yetu Ledhu (SP.Balu)",
+  "artist": "Aakali Rajyam",
+  "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782122085/Aakali-Rajyam-1981jpeg_ekwpf1.jpg",
+  "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782122073/04_-_Sapaatu_Yetu_Ledhu_www.SenSongsMp3.co_meolra.mp3",
+  "duration": 365,
+  "album": "Sapaatu Yetu Ledhu",
+  "year": 1981,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
   {
     "id": "chukkalle-tochave",
     "title": "Chukkalle Tochave",
