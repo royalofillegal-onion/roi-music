@@ -29,7 +29,7 @@ export const TamilSongs: Song[] = [
   },
   {
     "id": "pavazha-malli-sai-abhyankkar-shruti-haasan",
-    "title": "Pavazha Malli (Sai Abhyankkar‬,Shruti Haasan)",
+    "title": "Pavazha Malli (Sai Abhyankkar,Shruti Haasan)",
     "artist": "Pavazha Malli",
     "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115752/Pavazha-Malli-Song-Download_edcoig.jpg",
     "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115755/Pavazha_Malli_m22ysd.mp3",
