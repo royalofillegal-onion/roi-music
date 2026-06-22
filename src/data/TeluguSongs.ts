@@ -834,6 +834,19 @@ export const TeluguSongs: Song[] = [
     "sync": "love"
   },
   {
+    "id": "gunde-pelipothondhe-anurag-kulkarni",
+    "title": "Gunde Pelipothondhe (Anurag Kulkarni)",
+    "artist": "Srinivasa Mangapuram",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115713/Srinivasa-Mangapuram-Naa-Songs-Download_pwwcjf.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115716/Gunde_Pelipothondhe_jpjyr7.mp3",
+    "duration": 212,
+    "album": "Gunde Pelipothondhe",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
     "id": "Hilesso Hilessa",
     "title": "Hilesso Hilessa",
     "artist": "Thandel",
@@ -1770,6 +1783,19 @@ export const TeluguSongs: Song[] = [
     "sync": "."
   },
   {
+    "id": "neno-butterfly-sublahshini",
+    "title": "Neno Butterfly (Sublahshini)",
+    "artist": "Vishwanath And Sons",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115694/Surya-Vishwanath-And-Sons-Telugu-Songs_w3jjlp.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115696/Neno_Butterfly_c56ufl.mp3",
+    "duration": 204,
+    "album": "Neno Butterfly",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
     "id": "fa8b0890-bfa3-4adc-b7c4-00bb8b3e79ab",
     "title": "Kanne Kanne",
     "artist": "Arjun Suravaram",
@@ -2015,6 +2041,32 @@ export const TeluguSongs: Song[] = [
     "genre": ".",
     "language": "telugu",
     "sync": "happy"
+  },
+  {
+    "id": "oriya-pilla-sid-sriram",
+    "title": "Oriya Pilla (Sid Sriram)",
+    "artist": "Comrade Kalyan",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115434/Comrade-Kalyan-2026_kc0qkb.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115437/Oriya_Pilla_glgryt.mp3",
+    "duration": 276,
+    "album": "Oriya Pilla",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
+    "id": "veera-jayadheera-deepak-blue-lakshmi-meghana",
+    "title": "Veera Jayadheera (Deepak Blue, Lakshmi Meghana)",
+    "artist": "Bharata Varsha",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115472/Bharata-Varsha-2026_kvo6lr.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115476/Veera_Jayadheera_hivyoe.mp3",
+    "duration": 281,
+    "album": "Veera Jayadheera",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
   },
   {
     "id": "anasuya-kosam",
@@ -6312,6 +6364,32 @@ export const TeluguSongs: Song[] = [
     "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115987/Thassadiya-Chinmayi-Sripada-NaaSongs_qv81bt.mp3",
     "duration": 215,
     "album": "Thassadiya Chinmayi",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
+    "id": "manga-manga-lv-revanth",
+    "title": "Manga Manga (LV Revanth)",
+    "artist": "Srinivasa Mangapuram",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115713/Srinivasa-Mangapuram-Naa-Songs-Download_pwwcjf.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115717/Manga_Manga_azb9ed.mp3",
+    "duration": 189,
+    "album": "Manga Manga",
+    "year": 2026,
+    "genre": ".",
+    "language": "Telugu",
+    "sync": "."
+  },
+  {
+    "id": "alelle-alelle-gv-prakash-kumar-hari-priya",
+    "title": "Alelle Alelle  (GV Prakash Kumar, Hari Priya)",
+    "artist": "Srinivasa Mangapuram",
+    "imageUrl": "https://res.cloudinary.com/dykzuljjr/image/upload/v1782115713/Srinivasa-Mangapuram-Naa-Songs-Download_pwwcjf.jpg",
+    "audioUrl": "https://res.cloudinary.com/dykzuljjr/video/upload/v1782115716/Alelle_Alelle_ynpfdi.mp3",
+    "duration": 333,
+    "album": "Alelle Alelle",
     "year": 2026,
     "genre": ".",
     "language": "Telugu",
