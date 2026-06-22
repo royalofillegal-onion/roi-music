@@ -7,9 +7,10 @@ import { uniqueSongs } from "./allSongs";
  * Unknown IDs are ignored safely.
  */
 export const newReleaseSongIds: string[] = [
-  "Rebel Saab",
-  "Poyiraa Mama",
-  "yemi-cheyamanduve",
+  "Thassadiya-Chinmayi",
+  "Niluvanivvade",
+  "jigithara-karthik",
+  "Yetta Yetta",
 ];
 
 /** Resolve the ID list against the full catalog. */
