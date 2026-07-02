@@ -393,6 +393,70 @@ export function HomeView({
         </div>
       </div>
 
+      
+
+      {/* Playlists — Spotify-style square cards with mosaic covers */}
+      <section className="mt-10">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold">Playlists</h2>
+          <span className="text-xs text-white/45">{playlists.length} curated</span>
+        </div>
+        {playlists.length === 0 ? (
+          <p className="mt-3 text-sm text-white/55">No playlists yet.</p>
+        ) : (
+          <div className="mt-4 -mx-5">
+            <div className="flex gap-4 overflow-x-auto px-5 pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {playlists.map((p) => {
+                const songs = getPlaylistSongs(p);
+                const covers = (p as any).covers as string[] | undefined;
+                return (
+                  <article
+                    key={"pl-" + p.id}
+                    onClick={() => songs.length > 0 && playPlaylist(songs as any)}
+                    className="snap-start shrink-0 w-40 cursor-pointer group"
+                  >
+                    <div className="relative w-40 h-40 rounded-2xl overflow-hidden border border-white/10 shadow-xl">
+                      {covers && covers.length >= 4 ? (
+                        <div className="grid grid-cols-2 grid-rows-2 h-full w-full">
+                          {covers.slice(0, 4).map((c, i) => (
+                            <img key={i} src={c} alt="" className="h-full w-full object-cover" loading="lazy" />
+                          ))}
+                        </div>
+                      ) : (
+                        <img
+                          src={p.cover}
+                          alt={p.name}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      <span className="absolute top-2 left-2 text-lg drop-shadow">
+                        {(p as any).emoji || "🎵"}
+                      </span>
+                      <button
+                        aria-label="Play"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (songs.length > 0) playPlaylist(songs as any);
+                        }}
+                        className="absolute bottom-2 right-2 grid h-10 w-10 place-items-center rounded-full bg-fuchsia-500 text-white shadow-lg opacity-90 group-hover:opacity-100 group-hover:scale-105 transition"
+                      >
+                        <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
+                      </button>
+                    </div>
+                    <p className="mt-2 text-sm font-semibold truncate">{p.name}</p>
+                    <p className="text-[11px] text-white/55 truncate">
+                      {songs.length} songs · {(p as any).description || ""}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </section>
+
       {/* Recommendations */}
       {/* New Releases */}
       {/* Recommendations */}
@@ -465,68 +529,6 @@ export function HomeView({
                     <p className="mt-2 text-xs font-semibold truncate">{song.title}</p>
                     <p className="text-[11px] text-white/55 truncate">
                       {song.singer || song.artist}
-                    </p>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </section>
-
-      {/* Playlists — Spotify-style square cards with mosaic covers */}
-      <section className="mt-10">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold">Playlists</h2>
-          <span className="text-xs text-white/45">{playlists.length} curated</span>
-        </div>
-        {playlists.length === 0 ? (
-          <p className="mt-3 text-sm text-white/55">No playlists yet.</p>
-        ) : (
-          <div className="mt-4 -mx-5">
-            <div className="flex gap-4 overflow-x-auto px-5 pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {playlists.map((p) => {
-                const songs = getPlaylistSongs(p);
-                const covers = (p as any).covers as string[] | undefined;
-                return (
-                  <article
-                    key={"pl-" + p.id}
-                    onClick={() => songs.length > 0 && playPlaylist(songs as any)}
-                    className="snap-start shrink-0 w-40 cursor-pointer group"
-                  >
-                    <div className="relative w-40 h-40 rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-                      {covers && covers.length >= 4 ? (
-                        <div className="grid grid-cols-2 grid-rows-2 h-full w-full">
-                          {covers.slice(0, 4).map((c, i) => (
-                            <img key={i} src={c} alt="" className="h-full w-full object-cover" loading="lazy" />
-                          ))}
-                        </div>
-                      ) : (
-                        <img
-                          src={p.cover}
-                          alt={p.name}
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                        />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                      <span className="absolute top-2 left-2 text-lg drop-shadow">
-                        {(p as any).emoji || "🎵"}
-                      </span>
-                      <button
-                        aria-label="Play"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (songs.length > 0) playPlaylist(songs as any);
-                        }}
-                        className="absolute bottom-2 right-2 grid h-10 w-10 place-items-center rounded-full bg-fuchsia-500 text-white shadow-lg opacity-90 group-hover:opacity-100 group-hover:scale-105 transition"
-                      >
-                        <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
-                      </button>
-                    </div>
-                    <p className="mt-2 text-sm font-semibold truncate">{p.name}</p>
-                    <p className="text-[11px] text-white/55 truncate">
-                      {songs.length} songs · {(p as any).description || ""}
                     </p>
                   </article>
                 );
