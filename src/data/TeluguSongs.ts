@@ -2,6 +2,19 @@ import type { Song } from "./Song";
 
 export const TeluguSongs: Song[] = [
  {
+  "id": "irumudi-kattu-ananthu",
+  "title": "Irumudi Kattu (Ananthu)",
+  "artist": "Irumudi",
+  "imageUrl": "https://res.cloudinary.com/dv83upinz/image/upload/v1783012200/oatndg2kbn8u6qs67xtz.jpg",
+  "audioUrl": "https://res.cloudinary.com/dv83upinz/video/upload/v1783012313/o5cgwgydbmzhwmfnemz2.mp3",
+  "duration": 254,
+  "album": "Irumudi Kattu",
+  "year": 1900,
+  "genre": "Devotional",
+  "language": "Telugu",
+  "sync": "Melodic Trap, Devotional, rap, emotional feel"
+},
+ {
     "id": "Ragile Ragile",
     "title": "Ragile Ragile",
     "artist": "Kingdom",
