@@ -33,8 +33,6 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
     isPlaying,
     currentTime,
     duration,
-    volume,
-    setVolume,
     seek,
     togglePlayPause,
     nextSong,
@@ -46,6 +44,9 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
     toggleLike,
     isLiked,
     playSong,
+    continuousPlay,
+    toggleContinuousPlay,
+    continuousUntil,
   } = usePlayer();
 
   const [tab, setTab] = useState<Tab>("lyrics");
