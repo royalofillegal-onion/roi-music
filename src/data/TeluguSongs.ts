@@ -15,6 +15,32 @@ export const TeluguSongs: Song[] = [
   "sync": "Melodic Trap, Devotional, rap, emotional feel"
 },
  {
+  "id": "anaga-anaga-america-sanjith-hegde",
+  "title": "Anaga Anaga America (Sanjith Hegde)",
+  "artist": "Vintara Saradaga",
+  "imageUrl": "https://res.cloudinary.com/dv83upinz/image/upload/v1783012808/d2b5kpndriv8lqrxkruf.jpg",
+  "audioUrl": "https://res.cloudinary.com/dv83upinz/video/upload/v1783013032/svj85stpzefwenand3ax.mp3",
+  "duration": 244,
+  "album": "Anaga Anaga America",
+  "year": 2026,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
+ {
+  "id": "chingari-sid-sriram-lipsika-bhashyam",
+  "title": "Chingari (Sid Sriram, Lipsika Bhashyam)",
+  "artist": "Vintara Saradaga",
+  "imageUrl": "https://res.cloudinary.com/dv83upinz/image/upload/v1783012808/d2b5kpndriv8lqrxkruf.jpg",
+  "audioUrl": "https://res.cloudinary.com/dv83upinz/video/upload/v1783013092/waxbca7ebwmzimip0gmi.mp3",
+  "duration": 253,
+  "album": "Chingari",
+  "year": 2026,
+  "genre": ".",
+  "language": "Telugu",
+  "sync": "."
+},
+ {
     "id": "Ragile Ragile",
     "title": "Ragile Ragile",
     "artist": "Kingdom",
