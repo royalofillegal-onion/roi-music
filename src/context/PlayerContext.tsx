@@ -89,6 +89,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     } catch { return true; }
   });
   const [continuousUntil, setContinuousUntil] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const loadTokenRef = useRef(0);
   const watchdogRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
