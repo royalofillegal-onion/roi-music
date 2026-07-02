@@ -254,7 +254,7 @@ export function HomeView({
           onClick={onOpenSearch}
           className="text-sm font-medium text-fuchsia-400 hover:text-fuchsia-300"
         >
-          Search Here
+          🔍 Search
         </button>
       </div>
 
