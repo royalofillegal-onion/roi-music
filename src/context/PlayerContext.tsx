@@ -82,7 +82,13 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [playedSongsHistory, setPlayedSongsHistory] = useState<Set<string>>(new Set());
   const [autoPlayArtist, setAutoPlayArtist] = useState(false);
   const [recommendations, setRecommendations] = useState<Song[]>([]);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [continuousPlay, setContinuousPlay] = useState<boolean>(() => {
+    try {
+      const v = localStorage.getItem("continuousPlay");
+      return v === null ? true : v === "1";
+    } catch { return true; }
+  });
+  const [continuousUntil, setContinuousUntil] = useState<number | null>(null);
   const loadTokenRef = useRef(0);
   const watchdogRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
