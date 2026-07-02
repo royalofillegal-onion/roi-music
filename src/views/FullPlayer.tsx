@@ -10,9 +10,15 @@ import {
   SkipForward,
   Shuffle,
   Repeat,
-  Volume2,
+  Infinity as InfinityIcon,
 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
+import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
+import { uniqueSongs } from "@/data/allSongs";
+import { getLyricsForSong } from "@/data/lyrics";
+import { buildShareUrl } from "@/lib/shareLink";
+import { toast } from "sonner";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { uniqueSongs } from "@/data/allSongs";
