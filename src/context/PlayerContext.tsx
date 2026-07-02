@@ -57,6 +57,9 @@ interface PlayerContextType {
   autoPlayArtist: boolean;
   setAutoPlayArtist: (value: boolean) => void;
   recommendations: Song[];
+  continuousPlay: boolean;
+  toggleContinuousPlay: () => void;
+  continuousUntil: number | null; // epoch ms when the current 1h window expires
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
