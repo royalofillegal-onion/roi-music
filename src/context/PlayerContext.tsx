@@ -685,6 +685,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     setPlayOnceMode,
     resetPlayHistory,
     setAutoPlayArtist,
+    continuousPlay,
+    toggleContinuousPlay,
+    continuousUntil,
   }), [
     currentSong, isPlaying, currentTime, duration, volume,
     isRepeating, isShuffled, likedSongs, playMode, recentlyPlayed,
@@ -694,6 +697,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     clearQueue, toggleRepeat, toggleShuffle, toggleLike, toggleLikeSong,
     isLiked, setPlaybackMode, playPlaylist, setIsLiveMode,
     playArtistSongs, setPlayOnceMode, resetPlayHistory, setAutoPlayArtist,
+    continuousPlay, toggleContinuousPlay, continuousUntil,
   ]);
 
   return (
