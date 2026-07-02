@@ -148,12 +148,13 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Cover */}
-        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10">
+        {/* Cover — only the image key-swaps for a smooth fade on track change */}
+        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10 relative">
           <img
+            key={currentSong.id}
             src={currentSong.imageUrl}
             alt={currentSong.title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover animate-in fade-in zoom-in-95 duration-300"
           />
         </div>
 
