@@ -8,6 +8,7 @@ import { uniqueSongs } from "./allSongs";
  */
 export const newReleaseSongIds: string[] = [
   "irumudi-kattu-ananthu",
+  "chingari-sid-sriram-lipsika-bhashyam",
   "oriya-pilla-sid-sriram",
   "veera-jayadheera-deepak-blue-lakshmi-meghana",
   "Thassadiya-Chinmayi",
