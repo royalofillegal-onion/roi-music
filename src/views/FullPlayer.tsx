@@ -10,7 +10,7 @@ import {
   SkipForward,
   Shuffle,
   Repeat,
-  Volume2,
+  Infinity as InfinityIcon,
 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
 import { Slider } from "@/components/ui/slider";
@@ -33,8 +33,6 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
     isPlaying,
     currentTime,
     duration,
-    volume,
-    setVolume,
     seek,
     togglePlayPause,
     nextSong,
@@ -46,6 +44,9 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
     toggleLike,
     isLiked,
     playSong,
+    continuousPlay,
+    toggleContinuousPlay,
+    continuousUntil,
   } = usePlayer();
 
   const [tab, setTab] = useState<Tab>("lyrics");
@@ -147,12 +148,13 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Cover */}
-        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10">
+        {/* Cover — only the image key-swaps for a smooth fade on track change */}
+        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10 relative">
           <img
+            key={currentSong.id}
             src={currentSong.imageUrl}
             alt={currentSong.title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover animate-in fade-in zoom-in-95 duration-300"
           />
         </div>
 
@@ -281,19 +283,51 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Volume + audio settings */}
-        <div className="mt-5 flex items-center gap-3">
-          <Volume2 className="h-4 w-4 text-white/60" />
-          <Slider
-            value={[volume]}
-            min={0}
-            max={1}
-            step={0.01}
-            onValueChange={(v) => setVolume(v[0])}
-            className="flex-1"
-          />
-          {null}
-        </div>
+        {/* Non-stop 1H toggle (replaces volume) */}
+        <button
+          onClick={toggleContinuousPlay}
+          className={cn(
+            "mt-5 w-full flex items-center gap-3 rounded-2xl px-4 py-3 border transition",
+            continuousPlay
+              ? "bg-gradient-to-r from-fuchsia-600/40 to-purple-600/40 border-fuchsia-400/50 text-white"
+              : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
+          )}
+          aria-pressed={continuousPlay}
+        >
+          <span
+            className={cn(
+              "grid h-9 w-9 place-items-center rounded-full",
+              continuousPlay ? "bg-fuchsia-500 text-white" : "bg-white/10 text-white/70"
+            )}
+          >
+            <InfinityIcon className="h-5 w-5" />
+          </span>
+          <div className="flex-1 text-left">
+            <p className="text-sm font-semibold">
+              Non-stop Play {continuousPlay ? "· ON" : "· OFF"}
+            </p>
+            <p className="text-[11px] text-white/60">
+              {continuousPlay
+                ? continuousUntil
+                  ? `Auto-plays for ${Math.max(1, Math.ceil((continuousUntil - Date.now()) / 60000))} min and keeps going`
+                  : "Auto-plays for 1 hour and keeps going"
+                : "Tap to keep music playing non-stop"}
+            </p>
+          </div>
+          <span
+            className={cn(
+              "relative h-6 w-11 rounded-full transition",
+              continuousPlay ? "bg-fuchsia-500" : "bg-white/15"
+            )}
+          >
+            <span
+              className={cn(
+                "absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform",
+                continuousPlay ? "translate-x-5" : "translate-x-0.5"
+              )}
+            />
+          </span>
+        </button>
 
         {/* Tabs */}
         <div className="mt-8 border-b border-white/10">

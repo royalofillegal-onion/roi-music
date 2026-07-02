@@ -57,6 +57,9 @@ interface PlayerContextType {
   autoPlayArtist: boolean;
   setAutoPlayArtist: (value: boolean) => void;
   recommendations: Song[];
+  continuousPlay: boolean;
+  toggleContinuousPlay: () => void;
+  continuousUntil: number | null; // epoch ms when the current 1h window expires
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -79,6 +82,13 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [playedSongsHistory, setPlayedSongsHistory] = useState<Set<string>>(new Set());
   const [autoPlayArtist, setAutoPlayArtist] = useState(false);
   const [recommendations, setRecommendations] = useState<Song[]>([]);
+  const [continuousPlay, setContinuousPlay] = useState<boolean>(() => {
+    try {
+      const v = localStorage.getItem("continuousPlay");
+      return v === null ? true : v === "1";
+    } catch { return true; }
+  });
+  const [continuousUntil, setContinuousUntil] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const loadTokenRef = useRef(0);
   const watchdogRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -575,6 +585,58 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     shufflerRef.current.reset();
   }, []);
 
+  const toggleContinuousPlay = useCallback(() => {
+    setContinuousPlay((prev) => {
+      const next = !prev;
+      try { localStorage.setItem("continuousPlay", next ? "1" : "0"); } catch { /* ignore */ }
+      if (next) setContinuousUntil(Date.now() + 60 * 60 * 1000);
+      else setContinuousUntil(null);
+      return next;
+    });
+  }, []);
+
+  // When continuous play is ON and a song is playing, guarantee a fresh 1h window.
+  useEffect(() => {
+    if (continuousPlay && isPlaying) {
+      setContinuousUntil((prev) => prev && prev > Date.now() ? prev : Date.now() + 60 * 60 * 1000);
+    }
+  }, [continuousPlay, isPlaying, currentSong?.id]);
+
+  // Persist current session so a full page reload can restore the song.
+  useEffect(() => {
+    if (!currentSong) return;
+    try {
+      localStorage.setItem(
+        "playerSession",
+        JSON.stringify({ id: currentSong.id, t: currentTime, at: Date.now() })
+      );
+    } catch { /* ignore */ }
+  }, [currentSong?.id, Math.floor(currentTime)]);
+
+  // On mount: restore the last song (paused; browsers block autoplay without gesture).
+  useEffect(() => {
+    if (currentSong) return;
+    try {
+      const raw = localStorage.getItem("playerSession");
+      if (!raw) return;
+      const { id, t } = JSON.parse(raw);
+      const song = uniqueSongs.find((s) => s.id === id);
+      const audio = audioRef.current;
+      if (song && audio) {
+        setCurrentSong(song);
+        audio.src = song.audioUrl;
+        audio.load();
+        const onMeta = () => {
+          audio.currentTime = Math.max(0, Number(t) || 0);
+          audio.removeEventListener("loadedmetadata", onMeta);
+        };
+        audio.addEventListener("loadedmetadata", onMeta);
+      }
+    } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
   const playPlaylist = useCallback((songs: Song[]) => {
     if (songs.length === 0) return;
     // FIFO: load remaining into the queue
@@ -623,6 +685,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     setPlayOnceMode,
     resetPlayHistory,
     setAutoPlayArtist,
+    continuousPlay,
+    toggleContinuousPlay,
+    continuousUntil,
   }), [
     currentSong, isPlaying, currentTime, duration, volume,
     isRepeating, isShuffled, likedSongs, playMode, recentlyPlayed,
@@ -632,6 +697,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     clearQueue, toggleRepeat, toggleShuffle, toggleLike, toggleLikeSong,
     isLiked, setPlaybackMode, playPlaylist, setIsLiveMode,
     playArtistSongs, setPlayOnceMode, resetPlayHistory, setAutoPlayArtist,
+    continuousPlay, toggleContinuousPlay, continuousUntil,
   ]);
 
   return (
