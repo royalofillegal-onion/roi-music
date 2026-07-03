@@ -121,8 +121,6 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
         background:
           "radial-gradient(120% 80% at 50% -10%, #4a1f7a 0%, #21093e 50%, #0a0418 100%)",
       }}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
     >
       <div className="mx-auto max-w-[560px] px-5 pt-4 pb-32">
         {/* Top bar */}
@@ -148,13 +146,17 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Cover — only the image key-swaps for a smooth fade on track change */}
-        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10 relative">
+        {/* Cover — swipe on the image swaps tracks; page scrolls freely elsewhere */}
+        <div
+          className="mt-6 mx-auto w-full aspect-square max-w-[360px] sm:max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10 relative touch-pan-y select-none"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <img
             key={currentSong.id}
             src={currentSong.imageUrl}
             alt={currentSong.title}
-            className="h-full w-full object-cover animate-in fade-in zoom-in-95 duration-300"
+            className="h-full w-full object-cover animate-in fade-in zoom-in-95 duration-300 pointer-events-none"
           />
         </div>
 
@@ -283,35 +285,35 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Non-stop 1H toggle (replaces volume) */}
+        {/* Non-stop toggle (replaces volume) — compact 10-min window */}
         <button
           onClick={toggleContinuousPlay}
           className={cn(
-            "mt-5 w-full flex items-center gap-3 rounded-2xl px-4 py-3 border transition",
+            "mt-4 w-full flex items-center gap-2.5 rounded-xl px-3 py-2 border transition",
             continuousPlay
-              ? "bg-gradient-to-r from-fuchsia-600/40 to-purple-600/40 border-fuchsia-400/50 text-white"
+              ? "bg-gradient-to-r from-fuchsia-600/35 to-purple-600/35 border-fuchsia-400/40 text-white"
               : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
           )}
           aria-pressed={continuousPlay}
         >
           <span
             className={cn(
-              "grid h-9 w-9 place-items-center rounded-full",
+              "grid h-7 w-7 shrink-0 place-items-center rounded-full",
               continuousPlay ? "bg-fuchsia-500 text-white" : "bg-white/10 text-white/70"
             )}
           >
-            <InfinityIcon className="h-5 w-5" />
+            <InfinityIcon className="h-4 w-4" />
           </span>
-          <div className="flex-1 text-left">
-            <p className="text-sm font-semibold">
+          <div className="flex-1 text-left min-w-0">
+            <p className="text-xs font-semibold leading-tight">
               Non-stop Play {continuousPlay ? "· ON" : "· OFF"}
             </p>
-            <p className="text-[11px] text-white/60">
+            <p className="text-[10px] text-white/55 leading-tight truncate">
               {continuousPlay
                 ? continuousUntil
-                  ? `Auto-plays for ${Math.max(1, Math.ceil((continuousUntil - Date.now()) / 60000))} min and keeps going`
-                  : "Auto-plays for 1 hour and keeps going"
-                : "Tap to keep music playing non-stop"}
+                  ? `Auto-refreshes every ${Math.max(1, Math.ceil((continuousUntil - Date.now()) / 60000))} min`
+                  : "Auto-refreshes every 10 min"
+                : "Tap for non-stop autoplay"}
             </p>
           </div>
           <span
