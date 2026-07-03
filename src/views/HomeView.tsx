@@ -196,6 +196,25 @@ export function HomeView({
 
       <LibrarySheet open={libraryOpen} onOpenChange={setLibraryOpen} />
 
+      {(() => {
+        const p = playlists.find((x) => x.id === openPlaylistId);
+        if (!p) return null;
+        const list = getPlaylistSongs(p);
+        return (
+          <SongListSheet
+            open={!!openPlaylistId}
+            onOpenChange={(v) => !v && setOpenPlaylistId(null)}
+            title={p.name}
+            subtitle={(p as any).description}
+            cover={p.cover}
+            covers={(p as any).covers}
+            emoji={(p as any).emoji}
+            songs={list as any}
+            kind="Playlist"
+          />
+        );
+      })()}
+
       <FloatingMascot />
 
       {/* New Releases — compact horizontal pill cards */}
@@ -413,7 +432,7 @@ export function HomeView({
                 return (
                   <article
                     key={"pl-" + p.id}
-                    onClick={() => songs.length > 0 && playPlaylist(songs as any)}
+                    onClick={() => setOpenPlaylistId(p.id)}
                     className="snap-start shrink-0 w-40 cursor-pointer group"
                   >
                     <div className="relative w-40 h-40 rounded-2xl overflow-hidden border border-white/10 shadow-xl">
