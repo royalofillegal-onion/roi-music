@@ -3,6 +3,8 @@ import { Search, X, Play, Clock } from "lucide-react";
 import { uniqueSongs } from "@/data/allSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import { cn } from "@/lib/utils";
+import { SongListSheet } from "@/components/SongListSheet";
+import { Marquee } from "@/components/Marquee";
 
 /* Emoji-tagged genre browse tiles (Spotify-style colored cards). */
 const GENRE_TILES: Array<{
@@ -80,6 +82,8 @@ export function SearchView({ onClose }: { onClose: () => void }) {
   const [q, setQ] = useState("");
   const [genre, setGenre] = useState<string | null>(null);
   const [recent, setRecent] = useState<string[]>([]);
+  const [openArtist, setOpenArtist] = useState<{ name: string; image: string } | null>(null);
+  const [openAlbum, setOpenAlbum] = useState<{ name: string; image: string; artist: string } | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -193,6 +197,11 @@ export function SearchView({ onClose }: { onClose: () => void }) {
     };
   }, [q]);
 
+  const openArtistSheet = (name: string, image: string) => {
+    inputRef.current?.blur();
+    setOpenArtist({ name, image });
+    pushRecent(name);
+  };
   const playArtist = (name: string) => {
     inputRef.current?.blur();
     const list = base.filter(
@@ -200,6 +209,11 @@ export function SearchView({ onClose }: { onClose: () => void }) {
     );
     if (list.length > 0) playPlaylist(list as any);
     pushRecent(name);
+  };
+  const openAlbumSheet = (album: string, image: string, artist: string) => {
+    inputRef.current?.blur();
+    setOpenAlbum({ name: album, image, artist });
+    pushRecent(album);
   };
   const playAlbum = (album: string) => {
     inputRef.current?.blur();
@@ -212,6 +226,17 @@ export function SearchView({ onClose }: { onClose: () => void }) {
     playSong(s);
     pushRecent(s.title);
   };
+
+  const artistSongs = useMemo(() => {
+    if (!openArtist) return [];
+    return base.filter(
+      (s) => (s.singer || s.artist || "").toLowerCase() === openArtist.name.toLowerCase()
+    );
+  }, [openArtist]);
+  const albumSongs = useMemo(() => {
+    if (!openAlbum) return [];
+    return base.filter((s) => (s.album || "").toLowerCase() === openAlbum.name.toLowerCase());
+  }, [openAlbum]);
 
   const genreTile = genre ? GENRE_TILES.find((g) => g.key === genre) : null;
 
