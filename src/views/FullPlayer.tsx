@@ -285,35 +285,35 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Non-stop 1H toggle (replaces volume) */}
+        {/* Non-stop toggle (replaces volume) — compact 10-min window */}
         <button
           onClick={toggleContinuousPlay}
           className={cn(
-            "mt-5 w-full flex items-center gap-3 rounded-2xl px-4 py-3 border transition",
+            "mt-4 w-full flex items-center gap-2.5 rounded-xl px-3 py-2 border transition",
             continuousPlay
-              ? "bg-gradient-to-r from-fuchsia-600/40 to-purple-600/40 border-fuchsia-400/50 text-white"
+              ? "bg-gradient-to-r from-fuchsia-600/35 to-purple-600/35 border-fuchsia-400/40 text-white"
               : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
           )}
           aria-pressed={continuousPlay}
         >
           <span
             className={cn(
-              "grid h-9 w-9 place-items-center rounded-full",
+              "grid h-7 w-7 shrink-0 place-items-center rounded-full",
               continuousPlay ? "bg-fuchsia-500 text-white" : "bg-white/10 text-white/70"
             )}
           >
-            <InfinityIcon className="h-5 w-5" />
+            <InfinityIcon className="h-4 w-4" />
           </span>
-          <div className="flex-1 text-left">
-            <p className="text-sm font-semibold">
+          <div className="flex-1 text-left min-w-0">
+            <p className="text-xs font-semibold leading-tight">
               Non-stop Play {continuousPlay ? "· ON" : "· OFF"}
             </p>
-            <p className="text-[11px] text-white/60">
+            <p className="text-[10px] text-white/55 leading-tight truncate">
               {continuousPlay
                 ? continuousUntil
-                  ? `Auto-plays for ${Math.max(1, Math.ceil((continuousUntil - Date.now()) / 60000))} min and keeps going`
-                  : "Auto-plays for 1 hour and keeps going"
-                : "Tap to keep music playing non-stop"}
+                  ? `Auto-refreshes every ${Math.max(1, Math.ceil((continuousUntil - Date.now()) / 60000))} min`
+                  : "Auto-refreshes every 10 min"
+                : "Tap for non-stop autoplay"}
             </p>
           </div>
           <span
