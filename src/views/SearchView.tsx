@@ -612,6 +612,28 @@ export function SearchView({ onClose }: { onClose: () => void }) {
           </div>
         )}
       </div>
+
+      <SongListSheet
+        open={!!openArtist}
+        onOpenChange={(v) => !v && setOpenArtist(null)}
+        title={openArtist?.name || ""}
+        subtitle={`${artistSongs.length} songs`}
+        cover={openArtist?.image}
+        songs={artistSongs as any}
+        kind="Artist"
+        emoji="🎤"
+      />
+
+      <SongListSheet
+        open={!!openAlbum}
+        onOpenChange={(v) => !v && setOpenAlbum(null)}
+        title={openAlbum?.name || ""}
+        subtitle={openAlbum?.artist}
+        cover={openAlbum?.image}
+        songs={albumSongs as any}
+        kind="Album"
+        emoji="💿"
+      />
     </div>
   );
 }
