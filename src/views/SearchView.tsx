@@ -3,6 +3,8 @@ import { Search, X, Play, Clock } from "lucide-react";
 import { uniqueSongs } from "@/data/allSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import { cn } from "@/lib/utils";
+import { SongListSheet } from "@/components/SongListSheet";
+import { Marquee } from "@/components/Marquee";
 
 /* Emoji-tagged genre browse tiles (Spotify-style colored cards). */
 const GENRE_TILES: Array<{
@@ -80,6 +82,8 @@ export function SearchView({ onClose }: { onClose: () => void }) {
   const [q, setQ] = useState("");
   const [genre, setGenre] = useState<string | null>(null);
   const [recent, setRecent] = useState<string[]>([]);
+  const [openArtist, setOpenArtist] = useState<{ name: string; image: string } | null>(null);
+  const [openAlbum, setOpenAlbum] = useState<{ name: string; image: string; artist: string } | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -193,6 +197,11 @@ export function SearchView({ onClose }: { onClose: () => void }) {
     };
   }, [q]);
 
+  const openArtistSheet = (name: string, image: string) => {
+    inputRef.current?.blur();
+    setOpenArtist({ name, image });
+    pushRecent(name);
+  };
   const playArtist = (name: string) => {
     inputRef.current?.blur();
     const list = base.filter(
@@ -200,6 +209,11 @@ export function SearchView({ onClose }: { onClose: () => void }) {
     );
     if (list.length > 0) playPlaylist(list as any);
     pushRecent(name);
+  };
+  const openAlbumSheet = (album: string, image: string, artist: string) => {
+    inputRef.current?.blur();
+    setOpenAlbum({ name: album, image, artist });
+    pushRecent(album);
   };
   const playAlbum = (album: string) => {
     inputRef.current?.blur();
@@ -212,6 +226,17 @@ export function SearchView({ onClose }: { onClose: () => void }) {
     playSong(s);
     pushRecent(s.title);
   };
+
+  const artistSongs = useMemo(() => {
+    if (!openArtist) return [];
+    return base.filter(
+      (s) => (s.singer || s.artist || "").toLowerCase() === openArtist.name.toLowerCase()
+    );
+  }, [openArtist]);
+  const albumSongs = useMemo(() => {
+    if (!openAlbum) return [];
+    return base.filter((s) => (s.album || "").toLowerCase() === openAlbum.name.toLowerCase());
+  }, [openAlbum]);
 
   const genreTile = genre ? GENRE_TILES.find((g) => g.key === genre) : null;
 
@@ -268,7 +293,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 </h3>
                 {results.topResult.kind === "artist" && (
                   <button
-                    onClick={() => playArtist(results.topResult!["artist"].name)}
+                    onClick={() => openArtistSheet(results.topResult!["artist"].name, results.topResult!["artist"].image)}
                     className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
                   >
                     <img
@@ -313,7 +338,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 )}
                 {results.topResult.kind === "album" && (
                   <button
-                    onClick={() => playAlbum(results.topResult!["album"].name)}
+                    onClick={() => openAlbumSheet(results.topResult!["album"].name, results.topResult!["album"].image, results.topResult!["album"].artist)}
                     className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
                   >
                     <img
@@ -345,7 +370,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                     {results.artists.map((a) => (
                       <button
                         key={a.name}
-                        onClick={() => playArtist(a.name)}
+                        onClick={() => openArtistSheet(a.name, a.image)}
                         className="shrink-0 w-20 text-center"
                       >
                         <img
@@ -397,7 +422,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 <h3 className="text-xs uppercase tracking-widest text-white/50 mb-3">
                   🎵 Songs
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-1">
                   {results.songs.map((s) => {
                     const playing = currentSong?.id === s.id;
                     return (
@@ -405,25 +430,25 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                         key={s.id}
                         onClick={() => playSongItem(s)}
                         className={cn(
-                          "flex items-center gap-3 p-2.5 rounded-2xl cursor-pointer transition",
+                          "flex items-center gap-2.5 p-1.5 rounded-xl cursor-pointer transition",
                           playing
                             ? "bg-fuchsia-500/15 border border-fuchsia-400/30"
                             : "hover:bg-white/5 border border-transparent"
                         )}
                       >
-                        <img src={s.imageUrl} className="h-12 w-12 rounded-xl object-cover" alt="" loading="lazy" />
+                        <img src={s.imageUrl} className="h-10 w-10 rounded-lg object-cover" alt="" loading="lazy" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold truncate">{s.title}</p>
-                          <p className="text-xs text-white/60 truncate">
+                          <Marquee text={s.title} className="text-[13px] font-semibold" />
+                          <p className="text-[11px] text-white/55 truncate">
                             {s.singer || s.artist}
                             {s.album ? ` · ${s.album}` : ""}
                           </p>
                         </div>
                         <button
                           aria-label="Play"
-                          className="h-9 w-9 grid place-items-center rounded-full bg-white/10 hover:bg-white/20"
+                          className="h-8 w-8 grid place-items-center rounded-full bg-white/10 hover:bg-white/20 shrink-0"
                         >
-                          <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
+                          <Play className="h-3.5 w-3.5 ml-0.5" fill="currentColor" />
                         </button>
                       </li>
                     );
@@ -442,7 +467,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                   {results.albums.map((a) => (
                     <button
                       key={a.name}
-                      onClick={() => playAlbum(a.name)}
+                      onClick={() => openAlbumSheet(a.name, a.image, a.artist)}
                       className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition"
                     >
                       <img src={a.image} className="w-full aspect-square rounded-xl object-cover" alt="" />
@@ -484,17 +509,17 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 <Play className="h-4 w-4" fill="currentColor" /> Play all
               </button>
             )}
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {genrePool.map((s: any) => (
                 <li
                   key={s.id}
                   onClick={() => playSongItem(s)}
-                  className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-white/5 cursor-pointer border border-transparent"
+                  className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-white/5 cursor-pointer border border-transparent"
                 >
-                  <img src={s.imageUrl} className="h-12 w-12 rounded-xl object-cover" alt="" loading="lazy" />
+                  <img src={s.imageUrl} className="h-10 w-10 rounded-lg object-cover" alt="" loading="lazy" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{s.title}</p>
-                    <p className="text-xs text-white/60 truncate">{s.singer || s.artist}</p>
+                    <Marquee text={s.title} className="text-[13px] font-semibold" />
+                    <p className="text-[11px] text-white/55 truncate">{s.singer || s.artist}</p>
                   </div>
                 </li>
               ))}
@@ -547,7 +572,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                   {topArtists.map((a) => (
                     <button
                       key={a.name}
-                      onClick={() => playArtist(a.name)}
+                      onClick={() => openArtistSheet(a.name, a.image)}
                       className="shrink-0 w-20 text-center"
                     >
                       <img
@@ -587,6 +612,28 @@ export function SearchView({ onClose }: { onClose: () => void }) {
           </div>
         )}
       </div>
+
+      <SongListSheet
+        open={!!openArtist}
+        onOpenChange={(v) => !v && setOpenArtist(null)}
+        title={openArtist?.name || ""}
+        subtitle={`${artistSongs.length} songs`}
+        cover={openArtist?.image}
+        songs={artistSongs as any}
+        kind="Artist"
+        emoji="🎤"
+      />
+
+      <SongListSheet
+        open={!!openAlbum}
+        onOpenChange={(v) => !v && setOpenAlbum(null)}
+        title={openAlbum?.name || ""}
+        subtitle={openAlbum?.artist}
+        cover={openAlbum?.image}
+        songs={albumSongs as any}
+        kind="Album"
+        emoji="💿"
+      />
     </div>
   );
 }
