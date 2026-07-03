@@ -146,13 +146,17 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Cover — only the image key-swaps for a smooth fade on track change */}
-        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10 relative">
+        {/* Cover — swipe on the image swaps tracks; page scrolls freely elsewhere */}
+        <div
+          className="mt-6 mx-auto w-full aspect-square max-w-[360px] sm:max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10 relative touch-pan-y select-none"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <img
             key={currentSong.id}
             src={currentSong.imageUrl}
             alt={currentSong.title}
-            className="h-full w-full object-cover animate-in fade-in zoom-in-95 duration-300"
+            className="h-full w-full object-cover animate-in fade-in zoom-in-95 duration-300 pointer-events-none"
           />
         </div>
 
