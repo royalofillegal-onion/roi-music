@@ -121,8 +121,6 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
         background:
           "radial-gradient(120% 80% at 50% -10%, #4a1f7a 0%, #21093e 50%, #0a0418 100%)",
       }}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
     >
       <div className="mx-auto max-w-[560px] px-5 pt-4 pb-32">
         {/* Top bar */}
