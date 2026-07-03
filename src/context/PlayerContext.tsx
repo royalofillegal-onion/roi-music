@@ -589,16 +589,16 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     setContinuousPlay((prev) => {
       const next = !prev;
       try { localStorage.setItem("continuousPlay", next ? "1" : "0"); } catch { /* ignore */ }
-      if (next) setContinuousUntil(Date.now() + 60 * 60 * 1000);
+      if (next) setContinuousUntil(Date.now() + 10 * 60 * 1000);
       else setContinuousUntil(null);
       return next;
     });
   }, []);
 
-  // When continuous play is ON and a song is playing, guarantee a fresh 1h window.
+  // When continuous play is ON and a song is playing, refresh the 10-min window.
   useEffect(() => {
     if (continuousPlay && isPlaying) {
-      setContinuousUntil((prev) => prev && prev > Date.now() ? prev : Date.now() + 60 * 60 * 1000);
+      setContinuousUntil((prev) => prev && prev > Date.now() ? prev : Date.now() + 10 * 60 * 1000);
     }
   }, [continuousPlay, isPlaying, currentSong?.id]);
 
