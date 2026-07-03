@@ -422,7 +422,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 <h3 className="text-xs uppercase tracking-widest text-white/50 mb-3">
                   🎵 Songs
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-1">
                   {results.songs.map((s) => {
                     const playing = currentSong?.id === s.id;
                     return (
@@ -430,25 +430,25 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                         key={s.id}
                         onClick={() => playSongItem(s)}
                         className={cn(
-                          "flex items-center gap-3 p-2.5 rounded-2xl cursor-pointer transition",
+                          "flex items-center gap-2.5 p-1.5 rounded-xl cursor-pointer transition",
                           playing
                             ? "bg-fuchsia-500/15 border border-fuchsia-400/30"
                             : "hover:bg-white/5 border border-transparent"
                         )}
                       >
-                        <img src={s.imageUrl} className="h-12 w-12 rounded-xl object-cover" alt="" loading="lazy" />
+                        <img src={s.imageUrl} className="h-10 w-10 rounded-lg object-cover" alt="" loading="lazy" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold truncate">{s.title}</p>
-                          <p className="text-xs text-white/60 truncate">
+                          <Marquee text={s.title} className="text-[13px] font-semibold" />
+                          <p className="text-[11px] text-white/55 truncate">
                             {s.singer || s.artist}
                             {s.album ? ` · ${s.album}` : ""}
                           </p>
                         </div>
                         <button
                           aria-label="Play"
-                          className="h-9 w-9 grid place-items-center rounded-full bg-white/10 hover:bg-white/20"
+                          className="h-8 w-8 grid place-items-center rounded-full bg-white/10 hover:bg-white/20 shrink-0"
                         >
-                          <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
+                          <Play className="h-3.5 w-3.5 ml-0.5" fill="currentColor" />
                         </button>
                       </li>
                     );
@@ -509,17 +509,17 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 <Play className="h-4 w-4" fill="currentColor" /> Play all
               </button>
             )}
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {genrePool.map((s: any) => (
                 <li
                   key={s.id}
                   onClick={() => playSongItem(s)}
-                  className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-white/5 cursor-pointer border border-transparent"
+                  className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-white/5 cursor-pointer border border-transparent"
                 >
-                  <img src={s.imageUrl} className="h-12 w-12 rounded-xl object-cover" alt="" loading="lazy" />
+                  <img src={s.imageUrl} className="h-10 w-10 rounded-lg object-cover" alt="" loading="lazy" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{s.title}</p>
-                    <p className="text-xs text-white/60 truncate">{s.singer || s.artist}</p>
+                    <Marquee text={s.title} className="text-[13px] font-semibold" />
+                    <p className="text-[11px] text-white/55 truncate">{s.singer || s.artist}</p>
                   </div>
                 </li>
               ))}
