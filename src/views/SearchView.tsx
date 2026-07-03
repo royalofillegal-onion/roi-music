@@ -269,15 +269,15 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 {results.topResult.kind === "artist" && (
                   <button
                     onClick={() => playArtist(results.topResult!["artist"].name)}
-                    className="w-full text-left flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
+                    className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
                   >
                     <img
                       src={results.topResult.artist.image}
-                      className="h-20 w-20 rounded-full object-cover"
+                      className="h-14 w-14 rounded-full object-cover"
                       alt=""
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xl font-bold truncate">
+                      <p className="text-base font-bold truncate">
                         {results.topResult.artist.name}
                       </p>
                       <span className="mt-1 inline-block text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10">
@@ -292,15 +292,15 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 {results.topResult.kind === "song" && (
                   <button
                     onClick={() => playSongItem(results.topResult!["song"])}
-                    className="w-full text-left flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
+                    className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
                   >
                     <img
                       src={results.topResult.song.imageUrl}
-                      className="h-20 w-20 rounded-xl object-cover"
+                      className="h-14 w-14 rounded-xl object-cover"
                       alt=""
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xl font-bold truncate">{results.topResult.song.title}</p>
+                      <p className="text-base font-bold truncate">{results.topResult.song.title}</p>
                       <p className="text-sm text-white/70 truncate">
                         <span className="inline-block text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/10 mr-2">🎵 Song</span>
                         {results.topResult.song.singer || results.topResult.song.artist}
@@ -314,15 +314,15 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 {results.topResult.kind === "album" && (
                   <button
                     onClick={() => playAlbum(results.topResult!["album"].name)}
-                    className="w-full text-left flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
+                    className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
                   >
                     <img
                       src={results.topResult.album.image}
-                      className="h-20 w-20 rounded-xl object-cover"
+                      className="h-14 w-14 rounded-xl object-cover"
                       alt=""
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xl font-bold truncate">
+                      <p className="text-base font-bold truncate">
                         {results.topResult.album.name}
                       </p>
                       <p className="text-sm text-white/70 truncate">
@@ -346,11 +346,11 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                       <button
                         key={a.name}
                         onClick={() => playArtist(a.name)}
-                        className="shrink-0 w-28 text-center"
+                        className="shrink-0 w-20 text-center"
                       >
                         <img
                           src={a.image}
-                          className="h-24 w-24 rounded-full object-cover mx-auto border border-white/10"
+                          className="h-16 w-16 rounded-full object-cover mx-auto border border-white/10"
                           alt=""
                         />
                         <p className="mt-2 text-sm font-semibold truncate">{a.name}</p>
@@ -377,7 +377,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                         setQ("");
                       }}
                       className={cn(
-                        "h-20 rounded-2xl p-3 text-left font-bold text-lg bg-gradient-to-br shadow-md relative overflow-hidden",
+                        "h-16 rounded-2xl p-3 text-left font-bold text-base bg-gradient-to-br shadow-md relative overflow-hidden",
                         g.gradient
                       )}
                     >
@@ -548,11 +548,11 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                     <button
                       key={a.name}
                       onClick={() => playArtist(a.name)}
-                      className="shrink-0 w-24 text-center"
+                      className="shrink-0 w-20 text-center"
                     >
                       <img
                         src={a.image}
-                        className="h-24 w-24 rounded-full object-cover mx-auto border border-white/10"
+                        className="h-16 w-16 rounded-full object-cover mx-auto border border-white/10"
                         alt=""
                       />
                       <p className="mt-2 text-xs font-semibold truncate">{a.name}</p>
@@ -572,7 +572,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                     key={g.key}
                     onClick={() => setGenre(g.key)}
                     className={cn(
-                      "h-24 rounded-2xl p-3 text-left font-bold text-lg bg-gradient-to-br shadow-md relative overflow-hidden",
+                      "h-20 rounded-2xl p-3 text-left font-bold text-base bg-gradient-to-br shadow-md relative overflow-hidden",
                       g.gradient
                     )}
                   >
