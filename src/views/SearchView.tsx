@@ -83,7 +83,11 @@ export function SearchView({ onClose }: { onClose: () => void }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    // Don't auto-focus on mobile — it pops the keyboard and hides content.
+    // Focus only on wider screens (tablet/desktop).
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      inputRef.current?.focus();
+    }
     setRecent(loadRecent());
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
