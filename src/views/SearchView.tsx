@@ -293,7 +293,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 </h3>
                 {results.topResult.kind === "artist" && (
                   <button
-                    onClick={() => playArtist(results.topResult!["artist"].name)}
+                    onClick={() => openArtistSheet(results.topResult!["artist"].name, results.topResult!["artist"].image)}
                     className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
                   >
                     <img
@@ -338,7 +338,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 )}
                 {results.topResult.kind === "album" && (
                   <button
-                    onClick={() => playAlbum(results.topResult!["album"].name)}
+                    onClick={() => openAlbumSheet(results.topResult!["album"].name, results.topResult!["album"].image, results.topResult!["album"].artist)}
                     className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
                   >
                     <img
@@ -370,7 +370,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                     {results.artists.map((a) => (
                       <button
                         key={a.name}
-                        onClick={() => playArtist(a.name)}
+                        onClick={() => openArtistSheet(a.name, a.image)}
                         className="shrink-0 w-20 text-center"
                       >
                         <img
@@ -467,7 +467,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                   {results.albums.map((a) => (
                     <button
                       key={a.name}
-                      onClick={() => playAlbum(a.name)}
+                      onClick={() => openAlbumSheet(a.name, a.image, a.artist)}
                       className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition"
                     >
                       <img src={a.image} className="w-full aspect-square rounded-xl object-cover" alt="" />
@@ -572,7 +572,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                   {topArtists.map((a) => (
                     <button
                       key={a.name}
-                      onClick={() => playArtist(a.name)}
+                      onClick={() => openArtistSheet(a.name, a.image)}
                       className="shrink-0 w-20 text-center"
                     >
                       <img
