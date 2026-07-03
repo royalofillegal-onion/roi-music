@@ -7,6 +7,8 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useWeather } from "@/hooks/useWeather";
 import { cn } from "@/lib/utils";
 import { LibrarySheet } from "@/components/LibrarySheet";
+import { SongListSheet } from "@/components/SongListSheet";
+import { Marquee } from "@/components/Marquee";
 import FloatingMascot from "@/components/FloatingMascot";
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { getDynamicRecommendations } from "@/data/moodRecommendations";
@@ -33,26 +35,24 @@ export function HomeView({
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [openPlaylistId, setOpenPlaylistId] = useState<string | null>(null);
 
   // Language filter for "Made for this moment" carousel.
-  type LangFilter = "telugu" | "hindi" | "tamil" | "english";
+  type LangFilter = "telugu" | "hindi" | "tamil";
   const LANG_OPTIONS: { key: LangFilter; label: string }[] = [
     { key: "telugu", label: "Telugu" },
     { key: "hindi", label: "Hindi" },
     { key: "tamil", label: "Tamil" },
-    { key: "english", label: "English" },
   ];
   const [momentLangs, setMomentLangs] = useState<LangFilter[]>([]);
   const toggleMomentLang = (k: LangFilter) =>
     setMomentLangs((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
   const matchesLang = (songLang: string | undefined) => {
-    if (momentLangs.length === 0) return true;
     const l = (songLang || "").toLowerCase();
-    return momentLangs.some((lf) =>
-      lf === "english"
-        ? l === "english" || l === "other" || l === "mixed" || l === ""
-        : l === lf
-    );
+    // Always hide English from this carousel.
+    if (l === "english") return false;
+    if (momentLangs.length === 0) return true;
+    return momentLangs.some((lf) => l === lf);
   };
 
   const songs = useMemo(() => {
@@ -337,9 +337,10 @@ export function HomeView({
                 {/* Top: title + heart */}
                 <div className="absolute top-4 left-4 right-4 flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="text-lg font-bold leading-tight line-clamp-2 drop-shadow">
-                      {song.title}
-                    </h3>
+                    <Marquee
+                      text={song.title}
+                      className="text-lg font-bold leading-tight drop-shadow"
+                    />
                     <p className="mt-1 text-sm text-white/85 line-clamp-1">
                       {song.singer || song.artist}
                     </p>
