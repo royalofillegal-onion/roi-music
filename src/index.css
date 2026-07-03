@@ -585,3 +585,14 @@
   .mascot-float, .mascot-aura, .mascot-shadow, .mascot-img { animation: none !important; }
   .mascot-img { transform: none; opacity: 1; }
 }
+
+/* Spotify-style marquee for long song titles */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-anim {
+  animation-name: marquee-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
