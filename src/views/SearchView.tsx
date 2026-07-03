@@ -194,6 +194,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
   }, [q]);
 
   const playArtist = (name: string) => {
+    inputRef.current?.blur();
     const list = base.filter(
       (s) => (s.singer || s.artist || "").toLowerCase() === name.toLowerCase()
     );
@@ -201,6 +202,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
     pushRecent(name);
   };
   const playAlbum = (album: string) => {
+    inputRef.current?.blur();
     const list = base.filter((s) => (s.album || "").toLowerCase() === album.toLowerCase());
     if (list.length > 0) playPlaylist(list as any);
     pushRecent(album);
