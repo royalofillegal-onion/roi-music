@@ -294,68 +294,69 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 {results.topResult.kind === "artist" && (
                   <button
                     onClick={() => openArtistSheet(results.topResult!["artist"].name, results.topResult!["artist"].image)}
-                    className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
+                    className="w-full text-left flex items-center gap-3 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
                   >
                     <img
                       src={results.topResult.artist.image}
-                      className="h-14 w-14 rounded-full object-cover"
+                      className="h-11 w-11 rounded-full object-cover"
                       alt=""
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-base font-bold truncate">
+                      <p className="text-sm font-bold truncate">
                         {results.topResult.artist.name}
                       </p>
-                      <span className="mt-1 inline-block text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10">
+                      <span className="mt-0.5 inline-block text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/10">
                         🎤 Artist
                       </span>
                     </div>
-                    <span className="grid h-11 w-11 place-items-center rounded-full bg-fuchsia-500 text-white opacity-0 group-hover:opacity-100 transition">
-                      <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-fuchsia-500 text-white opacity-0 group-hover:opacity-100 transition">
+                      <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
                     </span>
                   </button>
                 )}
                 {results.topResult.kind === "song" && (
                   <button
                     onClick={() => playSongItem(results.topResult!["song"])}
-                    className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
+                    className="w-full text-left flex items-center gap-3 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition group"
                   >
                     <img
                       src={results.topResult.song.imageUrl}
-                      className="h-14 w-14 rounded-xl object-cover"
+                      className="h-11 w-11 rounded-lg object-cover"
                       alt=""
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-base font-bold truncate">{results.topResult.song.title}</p>
-                      <p className="text-sm text-white/70 truncate">
-                        <span className="inline-block text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/10 mr-2">🎵 Song</span>
+                      <p className="text-sm font-bold truncate">{results.topResult.song.title}</p>
+                      <p className="text-[11px] text-white/70 truncate">
+                        <span className="inline-block text-[9px] font-semibold uppercase tracking-wider px-1 py-0.5 rounded bg-white/10 mr-1.5">🎵 Song</span>
                         {results.topResult.song.singer || results.topResult.song.artist}
                       </p>
                     </div>
-                    <span className="grid h-11 w-11 place-items-center rounded-full bg-fuchsia-500 text-white opacity-0 group-hover:opacity-100 transition">
-                      <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-fuchsia-500 text-white opacity-0 group-hover:opacity-100 transition">
+                      <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
                     </span>
                   </button>
                 )}
                 {results.topResult.kind === "album" && (
                   <button
                     onClick={() => openAlbumSheet(results.topResult!["album"].name, results.topResult!["album"].image, results.topResult!["album"].artist)}
-                    className="w-full text-left flex items-center gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
+                    className="w-full text-left flex items-center gap-3 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
                   >
                     <img
                       src={results.topResult.album.image}
-                      className="h-14 w-14 rounded-xl object-cover"
+                      className="h-11 w-11 rounded-lg object-cover"
                       alt=""
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-base font-bold truncate">
+                      <p className="text-sm font-bold truncate">
                         {results.topResult.album.name}
                       </p>
-                      <p className="text-sm text-white/70 truncate">
+                      <p className="text-[11px] text-white/70 truncate">
                         💿 Album · {results.topResult.album.artist}
                       </p>
                     </div>
                   </button>
                 )}
+
               </section>
             )}
 
