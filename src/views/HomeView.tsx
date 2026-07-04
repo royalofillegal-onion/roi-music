@@ -185,11 +185,15 @@ export function HomeView({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => setLibraryOpen(true)}
-            aria-label="Open your library"
-            className="grid h-11 w-11 place-items-center rounded-full bg-white/8 hover:bg-white/15 border border-white/10 transition"
-          >
-            <Library className="h-5 w-5" />
+            onClick={() => navigate("/profile")} // or setProfileOpen(true)
+            aria-label="Open Profile"
+            className="h-11 w-11 rounded-full overflow-hidden border border-white/10 hover:scale-105 transition"
+            >
+            <img
+              src={user?.photoURL || "/default-avatar.png"}
+              alt="Profile"
+              className="w-full h-full object-cover"
+              />
           </button>
         </div>
       </header>
