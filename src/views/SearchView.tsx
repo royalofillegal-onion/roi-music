@@ -464,19 +464,20 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 <h3 className="text-xs uppercase tracking-widest text-white/50 mb-3">
                   💿 Albums
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                   {results.albums.map((a) => (
                     <button
                       key={a.name}
                       onClick={() => openAlbumSheet(a.name, a.image, a.artist)}
-                      className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition"
+                      className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition"
                     >
-                      <img src={a.image} className="w-full aspect-square rounded-xl object-cover" alt="" />
-                      <p className="mt-2 text-sm font-semibold truncate">{a.name}</p>
-                      <p className="text-xs text-white/60 truncate">{a.artist}</p>
+                      <img src={a.image} className="w-full aspect-square rounded-lg object-cover" alt="" />
+                      <p className="mt-1.5 text-xs font-semibold truncate">{a.name}</p>
+                      <p className="text-[10px] text-white/60 truncate">{a.artist}</p>
                     </button>
                   ))}
                 </div>
+
               </section>
             )}
 
