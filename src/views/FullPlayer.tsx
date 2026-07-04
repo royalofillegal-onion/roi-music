@@ -285,51 +285,8 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Non-stop toggle (replaces volume) — compact 10-min window */}
-        <button
-          onClick={toggleContinuousPlay}
-          className={cn(
-            "mt-4 w-full flex items-center gap-2.5 rounded-xl px-3 py-2 border transition",
-            continuousPlay
-              ? "bg-gradient-to-r from-fuchsia-600/35 to-purple-600/35 border-fuchsia-400/40 text-white"
-              : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
-          )}
-          aria-pressed={continuousPlay}
-        >
-          <span
-            className={cn(
-              "grid h-7 w-7 shrink-0 place-items-center rounded-full",
-              continuousPlay ? "bg-fuchsia-500 text-white" : "bg-white/10 text-white/70"
-            )}
-          >
-            <InfinityIcon className="h-4 w-4" />
-          </span>
-          <div className="flex-1 text-left min-w-0">
-            <p className="text-xs font-semibold leading-tight">
-              Non-stop Play {continuousPlay ? "· ON" : "· OFF"}
-            </p>
-            <p className="text-[10px] text-white/55 leading-tight truncate">
-              {continuousPlay
-                ? continuousUntil
-                  ? `Auto-refreshes every ${Math.max(1, Math.ceil((continuousUntil - Date.now()) / 60000))} min`
-                  : "Auto-refreshes every 10 min"
-                : "Tap for non-stop autoplay"}
-            </p>
-          </div>
-          <span
-            className={cn(
-              "relative h-6 w-11 rounded-full transition",
-              continuousPlay ? "bg-fuchsia-500" : "bg-white/15"
-            )}
-          >
-            <span
-              className={cn(
-                "absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform",
-                continuousPlay ? "translate-x-5" : "translate-x-0.5"
-              )}
-            />
-          </span>
-        </button>
+        {/* Non-stop Play runs silently in the background (always on by default) */}
+
 
         {/* Tabs */}
         <div className="mt-8 border-b border-white/10">
