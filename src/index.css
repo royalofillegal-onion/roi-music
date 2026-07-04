@@ -596,3 +596,7 @@
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
+
+/* Hide scrollbars for horizontal chip/tab rows */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
