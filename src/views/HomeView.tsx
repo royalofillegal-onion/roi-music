@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { LibrarySheet } from "@/components/LibrarySheet";
 import { SongListSheet } from "@/components/SongListSheet";
 import { Marquee } from "@/components/Marquee";
-import FloatingMascot from "@/components/FloatingMascot";
+
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { getDynamicRecommendations } from "@/data/moodRecommendations";
 
