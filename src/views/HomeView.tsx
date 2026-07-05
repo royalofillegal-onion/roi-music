@@ -191,6 +191,13 @@ export function HomeView({
           >
             <Library className="h-5 w-5" />
           </button>
+          <button
+            onClick={() => setLibraryOpen(true)}
+            aria-label="Open Profile"
+            className="grid h-11 w-11 place-items-center rounded-full bg-white/8 hover:bg-white/15 border border-white/10 transition"
+          >
+            <User className="h-5 w-5" />
+          </button>
         </div>
       </header>
 
