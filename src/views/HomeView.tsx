@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Heart, ChevronLeft, ChevronRight, MapPin, Library } from "lucide-react";
+import { Play, Heart, ChevronLeft, ChevronRight, MapPin, Library, User } from "lucide-react";
 import { popularSongs, uniqueSongs, getLivePopularSongs } from "@/data/allSongs";
 import { getNewReleaseSongs } from "@/data/NewReleaseSongs";
 import { playlists, getPlaylistSongs } from "@/data/playlists";
