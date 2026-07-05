@@ -222,7 +222,7 @@ export function HomeView({
         );
       })()}
 
-      <FloatingMascot />
+      
 
       {/* New Releases — compact horizontal pill cards */}
       <section className="mt-10">
