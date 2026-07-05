@@ -11,6 +11,7 @@ import {
   Shuffle,
   Repeat,
   Infinity as InfinityIcon,
+  Moon,
 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
 import { Slider } from "@/components/ui/slider";
@@ -35,6 +36,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
     duration,
     seek,
     togglePlayPause,
+    pauseSong,
     nextSong,
     previousSong,
     toggleShuffle,
@@ -50,8 +52,72 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   } = usePlayer();
 
   const [tab, setTab] = useState<Tab>("lyrics");
+  const [sleepMenu, setSleepMenu] = useState(false);
+  const [sleepEndsAt, setSleepEndsAt] = useState<number | null>(null);
+  const [sleepEndOfTrack, setSleepEndOfTrack] = useState(false);
+  const [sleepNow, setSleepNow] = useState(Date.now());
+  const sleepTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
+
+  // Sleep timer: pauses playback after N minutes, or at end of track.
+  useEffect(() => {
+    if (sleepTimeoutRef.current) {
+      clearTimeout(sleepTimeoutRef.current);
+      sleepTimeoutRef.current = null;
+    }
+    if (!sleepEndsAt) return;
+    const ms = Math.max(0, sleepEndsAt - Date.now());
+    sleepTimeoutRef.current = setTimeout(() => {
+      pauseSong();
+      setSleepEndsAt(null);
+      toast.success("Sleep timer ended — playback paused");
+    }, ms);
+    return () => {
+      if (sleepTimeoutRef.current) clearTimeout(sleepTimeoutRef.current);
+    };
+  }, [sleepEndsAt, pauseSong]);
+
+  // End-of-track sleep: pause once the currently-playing track finishes.
+  useEffect(() => {
+    if (!sleepEndOfTrack) return;
+    if (!duration) return;
+    const remaining = Math.max(0, duration - currentTime);
+    if (remaining < 0.5) {
+      pauseSong();
+      setSleepEndOfTrack(false);
+      toast.success("Playback paused at end of track");
+    }
+  }, [sleepEndOfTrack, currentTime, duration, pauseSong]);
+
+  // Tick every 10s to refresh countdown UI.
+  useEffect(() => {
+    if (!sleepEndsAt) return;
+    const id = setInterval(() => setSleepNow(Date.now()), 10_000);
+    return () => clearInterval(id);
+  }, [sleepEndsAt]);
+
+  const setSleepMinutes = (m: number | "end" | null) => {
+    setSleepMenu(false);
+    if (m === null) {
+      setSleepEndsAt(null);
+      setSleepEndOfTrack(false);
+      toast("Sleep timer cleared");
+      return;
+    }
+    if (m === "end") {
+      setSleepEndsAt(null);
+      setSleepEndOfTrack(true);
+      toast.success("Will pause at end of track");
+      return;
+    }
+    setSleepEndOfTrack(false);
+    setSleepEndsAt(Date.now() + m * 60_000);
+    toast.success(`Sleep timer set for ${m} min`);
+  };
+
+  const sleepRemainingMin =
+    sleepEndsAt ? Math.max(0, Math.ceil((sleepEndsAt - sleepNow) / 60_000)) : null;
 
   // Swipe gestures: left/right to skip tracks, down to close.
   const onTouchStart = (e: React.TouchEvent) => {
@@ -286,6 +352,55 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Non-stop Play runs silently in the background (always on by default) */}
+
+        {/* Sleep timer */}
+        <div className="mt-5 flex items-center justify-center relative">
+          <button
+            onClick={() => setSleepMenu((v) => !v)}
+            className={cn(
+              "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition",
+              sleepEndsAt || sleepEndOfTrack
+                ? "bg-fuchsia-500/20 border-fuchsia-400/40 text-fuchsia-200"
+                : "bg-white/8 border-white/10 text-white/75 hover:bg-white/12"
+            )}
+          >
+            <Moon className="h-3.5 w-3.5" />
+            {sleepEndsAt
+              ? `Sleep in ${sleepRemainingMin}m`
+              : sleepEndOfTrack
+              ? "Sleep at end of track"
+              : "Sleep timer"}
+          </button>
+          {sleepMenu && (
+            <div className="absolute top-full mt-2 z-20 w-56 rounded-2xl border border-white/10 bg-[#1a0b34]/95 backdrop-blur-xl shadow-2xl p-1.5 animate-in fade-in slide-in-from-top-2">
+              {[5, 15, 30, 60].map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setSleepMinutes(m)}
+                  className="w-full text-left px-3 py-2 rounded-xl text-sm hover:bg-white/10"
+                >
+                  {m} minutes
+                </button>
+              ))}
+              <button
+                onClick={() => setSleepMinutes("end")}
+                className="w-full text-left px-3 py-2 rounded-xl text-sm hover:bg-white/10"
+              >
+                End of current track
+              </button>
+              {(sleepEndsAt || sleepEndOfTrack) && (
+                <button
+                  onClick={() => setSleepMinutes(null)}
+                  className="w-full text-left px-3 py-2 rounded-xl text-sm text-fuchsia-300 hover:bg-white/10"
+                >
+                  Turn off
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+
 
 
         {/* Tabs */}

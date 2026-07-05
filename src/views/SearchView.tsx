@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from "react";
-import { Search, X, Play, Clock } from "lucide-react";
+import { Search, X, Play, Clock, Mic } from "lucide-react";
+import { toast } from "sonner";
 import { uniqueSongs } from "@/data/allSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import { cn } from "@/lib/utils";
@@ -84,7 +85,43 @@ export function SearchView({ onClose }: { onClose: () => void }) {
   const [recent, setRecent] = useState<string[]>([]);
   const [openArtist, setOpenArtist] = useState<{ name: string; image: string } | null>(null);
   const [openAlbum, setOpenAlbum] = useState<{ name: string; image: string; artist: string } | null>(null);
+  const [listening, setListening] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const recognitionRef = useRef<any>(null);
+
+  const startVoiceSearch = () => {
+    const SR: any =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      toast.error("Voice search isn't supported on this browser");
+      return;
+    }
+    // Blur the input so mobile keyboard closes while listening.
+    inputRef.current?.blur();
+    if (listening && recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch { /* ignore */ }
+      return;
+    }
+    const rec = new SR();
+    recognitionRef.current = rec;
+    rec.lang = "en-US";
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+    rec.onstart = () => setListening(true);
+    rec.onerror = () => {
+      setListening(false);
+      toast.error("Couldn't hear you — try again");
+    };
+    rec.onend = () => setListening(false);
+    rec.onresult = (e: any) => {
+      const text = e.results?.[0]?.[0]?.transcript?.trim();
+      if (text) {
+        setQ(text);
+        setGenre(null);
+      }
+    };
+    try { rec.start(); } catch { /* already started */ }
+  };
 
   useEffect(() => {
     // Don't auto-focus on mobile — it pops the keyboard and hides content.
@@ -260,16 +297,37 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 setQ(e.target.value);
                 if (e.target.value) setGenre(null);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") inputRef.current?.blur();
+              }}
+              type="search"
+              inputMode="search"
+              enterKeyHint="search"
+              autoCapitalize="none"
+              autoCorrect="off"
               placeholder="Artists, songs, albums, genres…"
               className="flex-1 bg-transparent outline-none text-sm placeholder:text-white/50"
             />
-            {q && (
+            {q ? (
               <button
                 aria-label="Clear"
                 onClick={() => setQ("")}
                 className="grid h-6 w-6 place-items-center rounded-full bg-white/10 hover:bg-white/20"
               >
                 <X className="h-3.5 w-3.5" />
+              </button>
+            ) : (
+              <button
+                aria-label={listening ? "Stop voice search" : "Voice search"}
+                onClick={startVoiceSearch}
+                className={cn(
+                  "grid h-7 w-7 place-items-center rounded-full transition",
+                  listening
+                    ? "bg-fuchsia-500 text-white animate-pulse"
+                    : "bg-white/10 hover:bg-white/20 text-white/80"
+                )}
+              >
+                <Mic className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
