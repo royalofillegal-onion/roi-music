@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from "react";
-import { Search, X, Play, Clock } from "lucide-react";
+import { Search, X, Play, Clock, Mic } from "lucide-react";
+import { toast } from "sonner";
 import { uniqueSongs } from "@/data/allSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import { cn } from "@/lib/utils";
