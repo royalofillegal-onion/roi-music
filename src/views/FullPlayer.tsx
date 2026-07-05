@@ -353,6 +353,55 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
 
         {/* Non-stop Play runs silently in the background (always on by default) */}
 
+        {/* Sleep timer */}
+        <div className="mt-5 flex items-center justify-center relative">
+          <button
+            onClick={() => setSleepMenu((v) => !v)}
+            className={cn(
+              "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition",
+              sleepEndsAt || sleepEndOfTrack
+                ? "bg-fuchsia-500/20 border-fuchsia-400/40 text-fuchsia-200"
+                : "bg-white/8 border-white/10 text-white/75 hover:bg-white/12"
+            )}
+          >
+            <Moon className="h-3.5 w-3.5" />
+            {sleepEndsAt
+              ? `Sleep in ${sleepRemainingMin}m`
+              : sleepEndOfTrack
+              ? "Sleep at end of track"
+              : "Sleep timer"}
+          </button>
+          {sleepMenu && (
+            <div className="absolute top-full mt-2 z-20 w-56 rounded-2xl border border-white/10 bg-[#1a0b34]/95 backdrop-blur-xl shadow-2xl p-1.5 animate-in fade-in slide-in-from-top-2">
+              {[5, 15, 30, 60].map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setSleepMinutes(m)}
+                  className="w-full text-left px-3 py-2 rounded-xl text-sm hover:bg-white/10"
+                >
+                  {m} minutes
+                </button>
+              ))}
+              <button
+                onClick={() => setSleepMinutes("end")}
+                className="w-full text-left px-3 py-2 rounded-xl text-sm hover:bg-white/10"
+              >
+                End of current track
+              </button>
+              {(sleepEndsAt || sleepEndOfTrack) && (
+                <button
+                  onClick={() => setSleepMinutes(null)}
+                  className="w-full text-left px-3 py-2 rounded-xl text-sm text-fuchsia-300 hover:bg-white/10"
+                >
+                  Turn off
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+
+
 
         {/* Tabs */}
         <div className="mt-8 border-b border-white/10">
