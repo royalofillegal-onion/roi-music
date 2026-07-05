@@ -36,6 +36,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
     duration,
     seek,
     togglePlayPause,
+    pauseSong,
     nextSong,
     previousSong,
     toggleShuffle,
@@ -51,8 +52,72 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   } = usePlayer();
 
   const [tab, setTab] = useState<Tab>("lyrics");
+  const [sleepMenu, setSleepMenu] = useState(false);
+  const [sleepEndsAt, setSleepEndsAt] = useState<number | null>(null);
+  const [sleepEndOfTrack, setSleepEndOfTrack] = useState(false);
+  const [sleepNow, setSleepNow] = useState(Date.now());
+  const sleepTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
+
+  // Sleep timer: pauses playback after N minutes, or at end of track.
+  useEffect(() => {
+    if (sleepTimeoutRef.current) {
+      clearTimeout(sleepTimeoutRef.current);
+      sleepTimeoutRef.current = null;
+    }
+    if (!sleepEndsAt) return;
+    const ms = Math.max(0, sleepEndsAt - Date.now());
+    sleepTimeoutRef.current = setTimeout(() => {
+      pauseSong();
+      setSleepEndsAt(null);
+      toast.success("Sleep timer ended — playback paused");
+    }, ms);
+    return () => {
+      if (sleepTimeoutRef.current) clearTimeout(sleepTimeoutRef.current);
+    };
+  }, [sleepEndsAt, pauseSong]);
+
+  // End-of-track sleep: pause once the currently-playing track finishes.
+  useEffect(() => {
+    if (!sleepEndOfTrack) return;
+    if (!duration) return;
+    const remaining = Math.max(0, duration - currentTime);
+    if (remaining < 0.5) {
+      pauseSong();
+      setSleepEndOfTrack(false);
+      toast.success("Playback paused at end of track");
+    }
+  }, [sleepEndOfTrack, currentTime, duration, pauseSong]);
+
+  // Tick every 10s to refresh countdown UI.
+  useEffect(() => {
+    if (!sleepEndsAt) return;
+    const id = setInterval(() => setSleepNow(Date.now()), 10_000);
+    return () => clearInterval(id);
+  }, [sleepEndsAt]);
+
+  const setSleepMinutes = (m: number | "end" | null) => {
+    setSleepMenu(false);
+    if (m === null) {
+      setSleepEndsAt(null);
+      setSleepEndOfTrack(false);
+      toast("Sleep timer cleared");
+      return;
+    }
+    if (m === "end") {
+      setSleepEndsAt(null);
+      setSleepEndOfTrack(true);
+      toast.success("Will pause at end of track");
+      return;
+    }
+    setSleepEndOfTrack(false);
+    setSleepEndsAt(Date.now() + m * 60_000);
+    toast.success(`Sleep timer set for ${m} min`);
+  };
+
+  const sleepRemainingMin =
+    sleepEndsAt ? Math.max(0, Math.ceil((sleepEndsAt - sleepNow) / 60_000)) : null;
 
   // Swipe gestures: left/right to skip tracks, down to close.
   const onTouchStart = (e: React.TouchEvent) => {
