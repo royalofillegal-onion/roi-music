@@ -11,6 +11,7 @@ import {
   Shuffle,
   Repeat,
   Infinity as InfinityIcon,
+  Moon,
 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
 import { Slider } from "@/components/ui/slider";
