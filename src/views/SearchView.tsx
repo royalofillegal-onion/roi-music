@@ -297,16 +297,37 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 setQ(e.target.value);
                 if (e.target.value) setGenre(null);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") inputRef.current?.blur();
+              }}
+              type="search"
+              inputMode="search"
+              enterKeyHint="search"
+              autoCapitalize="none"
+              autoCorrect="off"
               placeholder="Artists, songs, albums, genres…"
               className="flex-1 bg-transparent outline-none text-sm placeholder:text-white/50"
             />
-            {q && (
+            {q ? (
               <button
                 aria-label="Clear"
                 onClick={() => setQ("")}
                 className="grid h-6 w-6 place-items-center rounded-full bg-white/10 hover:bg-white/20"
               >
                 <X className="h-3.5 w-3.5" />
+              </button>
+            ) : (
+              <button
+                aria-label={listening ? "Stop voice search" : "Voice search"}
+                onClick={startVoiceSearch}
+                className={cn(
+                  "grid h-7 w-7 place-items-center rounded-full transition",
+                  listening
+                    ? "bg-fuchsia-500 text-white animate-pulse"
+                    : "bg-white/10 hover:bg-white/20 text-white/80"
+                )}
+              >
+                <Mic className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
