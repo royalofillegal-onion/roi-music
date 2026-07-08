@@ -40,6 +40,43 @@ export function HomeView({
   const [activeIndex, setActiveIndex] = useState(0);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [openPlaylistId, setOpenPlaylistId] = useState<string | null>(null);
+  const [openCustomId, setOpenCustomId] = useState<string | null>(null);
+  const [sharedPlaylist, setSharedPlaylist] = useState<CustomPlaylist | null>(null);
+  const [menuForId, setMenuForId] = useState<string | null>(null);
+  const playlistLikes = usePlaylistLikes();
+
+  // Auto-open a shared playlist (?pl=<hash>) once on mount.
+  useEffect(() => {
+    const shared = getSharedPlaylistFromUrl();
+    if (shared) {
+      setSharedPlaylist(shared);
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("pl");
+        window.history.replaceState({}, "", url.pathname + url.search);
+      } catch { /* ignore */ }
+    }
+  }, []);
+
+  const sharePlaylist = async (p: CustomPlaylist) => {
+    const url = buildPlaylistShareUrl(p);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: p.name, text: `Listen to ${p.name}`, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast.success("Playlist link copied");
+      }
+    } catch {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success("Playlist link copied");
+      } catch {
+        toast.error("Unable to share");
+      }
+    }
+    setMenuForId(null);
+  };
 
   // Language filter for "Made for this moment" carousel.
   type LangFilter = "telugu" | "hindi" | "tamil";
