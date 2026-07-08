@@ -45,6 +45,10 @@ export const customPlaylists: CustomPlaylist[] = [
       "Night Changes",
       "Monica Telugu",
       "Ragile Ragile",
+      "rise-of-dragon",
+      "Night Changes",
+      "Monica Telugu",
+      "Ragile Ragile",
     ],
   },
   {
