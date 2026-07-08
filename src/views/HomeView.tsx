@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Heart, ChevronLeft, ChevronRight, MapPin, Library, User } from "lucide-react";
+import { Play, Heart, ChevronLeft, ChevronRight, MapPin, Library, User, MoreVertical, Share2, Check } from "lucide-react";
+import { toast } from "sonner";
 import { popularSongs, uniqueSongs, getLivePopularSongs } from "@/data/allSongs";
 import { getNewReleaseSongs } from "@/data/NewReleaseSongs";
 import { playlists, getPlaylistSongs } from "@/data/playlists";
+import { customPlaylists, getCustomPlaylistSongs, type CustomPlaylist } from "@/data/customPlaylists";
+import { buildPlaylistShareUrl, getSharedPlaylistFromUrl } from "@/lib/playlistShare";
+import { usePlaylistLikes } from "@/hooks/usePlaylistLikes";
 import { usePlayer } from "@/context/PlayerContext";
 import { useWeather } from "@/hooks/useWeather";
 import { cn } from "@/lib/utils";
