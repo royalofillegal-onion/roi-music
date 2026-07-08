@@ -256,6 +256,47 @@ export function HomeView({
         );
       })()}
 
+      {/* Custom (JSON-driven) playlist sheet */}
+      {(() => {
+        const p = customPlaylists.find((x) => x.id === openCustomId);
+        if (!p) return null;
+        const list = getCustomPlaylistSongs(p);
+        return (
+          <SongListSheet
+            open={!!openCustomId}
+            onOpenChange={(v) => !v && setOpenCustomId(null)}
+            title={p.name}
+            subtitle={p.description}
+            cover={p.cover}
+            songs={list as any}
+            kind="Playlist"
+            isPlaylistLiked={playlistLikes.isLiked(p.id)}
+            onTogglePlaylistLike={() => playlistLikes.toggle(p.id)}
+            shareUrl={buildPlaylistShareUrl(p)}
+          />
+        );
+      })()}
+
+      {/* Shared-link playlist sheet (opens automatically on ?pl=...) */}
+      {sharedPlaylist && (() => {
+        const p = sharedPlaylist;
+        const list = getCustomPlaylistSongs(p);
+        return (
+          <SongListSheet
+            open={!!sharedPlaylist}
+            onOpenChange={(v) => !v && setSharedPlaylist(null)}
+            title={p.name}
+            subtitle={p.description || "Shared with you"}
+            cover={p.cover}
+            songs={list as any}
+            kind="Shared Playlist"
+            isPlaylistLiked={playlistLikes.isLiked(p.id)}
+            onTogglePlaylistLike={() => playlistLikes.toggle(p.id)}
+            shareUrl={buildPlaylistShareUrl(p)}
+          />
+        );
+      })()}
+
       
 
       {/* New Releases — compact horizontal pill cards */}
