@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Heart, ChevronLeft, ChevronRight, MapPin, Library, User } from "lucide-react";
+import { Play, Heart, ChevronLeft, ChevronRight, MapPin, Library, User, MoreVertical, Share2, Check } from "lucide-react";
+import { toast } from "sonner";
 import { popularSongs, uniqueSongs, getLivePopularSongs } from "@/data/allSongs";
 import { getNewReleaseSongs } from "@/data/NewReleaseSongs";
 import { playlists, getPlaylistSongs } from "@/data/playlists";
+import { customPlaylists, getCustomPlaylistSongs, type CustomPlaylist } from "@/data/customPlaylists";
+import { buildPlaylistShareUrl, getSharedPlaylistFromUrl } from "@/lib/playlistShare";
+import { usePlaylistLikes } from "@/hooks/usePlaylistLikes";
 import { usePlayer } from "@/context/PlayerContext";
 import { useWeather } from "@/hooks/useWeather";
 import { cn } from "@/lib/utils";
@@ -36,6 +40,43 @@ export function HomeView({
   const [activeIndex, setActiveIndex] = useState(0);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [openPlaylistId, setOpenPlaylistId] = useState<string | null>(null);
+  const [openCustomId, setOpenCustomId] = useState<string | null>(null);
+  const [sharedPlaylist, setSharedPlaylist] = useState<CustomPlaylist | null>(null);
+  const [menuForId, setMenuForId] = useState<string | null>(null);
+  const playlistLikes = usePlaylistLikes();
+
+  // Auto-open a shared playlist (?pl=<hash>) once on mount.
+  useEffect(() => {
+    const shared = getSharedPlaylistFromUrl();
+    if (shared) {
+      setSharedPlaylist(shared);
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("pl");
+        window.history.replaceState({}, "", url.pathname + url.search);
+      } catch { /* ignore */ }
+    }
+  }, []);
+
+  const sharePlaylist = async (p: CustomPlaylist) => {
+    const url = buildPlaylistShareUrl(p);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: p.name, text: `Listen to ${p.name}`, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast.success("Playlist link copied");
+      }
+    } catch {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success("Playlist link copied");
+      } catch {
+        toast.error("Unable to share");
+      }
+    }
+    setMenuForId(null);
+  };
 
   // Language filter for "Made for this moment" carousel.
   type LangFilter = "telugu" | "hindi" | "tamil";
@@ -211,6 +252,47 @@ export function HomeView({
             emoji={(p as any).emoji}
             songs={list as any}
             kind="Playlist"
+          />
+        );
+      })()}
+
+      {/* Custom (JSON-driven) playlist sheet */}
+      {(() => {
+        const p = customPlaylists.find((x) => x.id === openCustomId);
+        if (!p) return null;
+        const list = getCustomPlaylistSongs(p);
+        return (
+          <SongListSheet
+            open={!!openCustomId}
+            onOpenChange={(v) => !v && setOpenCustomId(null)}
+            title={p.name}
+            subtitle={p.description}
+            cover={p.cover}
+            songs={list as any}
+            kind="Playlist"
+            isPlaylistLiked={playlistLikes.isLiked(p.id)}
+            onTogglePlaylistLike={() => playlistLikes.toggle(p.id)}
+            shareUrl={buildPlaylistShareUrl(p)}
+          />
+        );
+      })()}
+
+      {/* Shared-link playlist sheet (opens automatically on ?pl=...) */}
+      {sharedPlaylist && (() => {
+        const p = sharedPlaylist;
+        const list = getCustomPlaylistSongs(p);
+        return (
+          <SongListSheet
+            open={!!sharedPlaylist}
+            onOpenChange={(v) => !v && setSharedPlaylist(null)}
+            title={p.name}
+            subtitle={p.description || "Shared with you"}
+            cover={p.cover}
+            songs={list as any}
+            kind="Shared Playlist"
+            isPlaylistLiked={playlistLikes.isLiked(p.id)}
+            onTogglePlaylistLike={() => playlistLikes.toggle(p.id)}
+            shareUrl={buildPlaylistShareUrl(p)}
           />
         );
       })()}
@@ -412,6 +494,164 @@ export function HomeView({
           ))}
         </div>
       </div>
+
+      {/* Made-for-this-moment playlist stack (JSON-driven, likeable, shareable) */}
+      <section className="mt-10">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold">Made for this moment</h2>
+          <span className="text-xs text-white/45">Swipe to explore</span>
+        </div>
+
+        <div className="mt-4 -mx-5">
+          <div className="flex gap-4 overflow-x-auto px-5 pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {customPlaylists.map((p) => {
+              const list = getCustomPlaylistSongs(p);
+              const liked = playlistLikes.isLiked(p.id);
+              const menuOpen = menuForId === p.id;
+              return (
+                <article
+                  key={"cpl-" + p.id}
+                  className="snap-start shrink-0 w-[78vw] max-w-[320px] rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-xl"
+                >
+                  {/* Header */}
+                  <div
+                    className={cn(
+                      "relative p-4 bg-gradient-to-br",
+                      p.accent
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={p.cover}
+                        alt={p.name}
+                        className="h-16 w-16 rounded-xl object-cover border border-white/15 shadow-lg shrink-0 cursor-pointer"
+                        onClick={() => setOpenCustomId(p.id)}
+                        loading="lazy"
+                      />
+                      <div
+                        className="flex-1 min-w-0 cursor-pointer"
+                        onClick={() => setOpenCustomId(p.id)}
+                      >
+                        <p className="text-base font-bold truncate">{p.name}</p>
+                        <p className="text-[11px] text-white/75">{list.length} songs</p>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playlistLikes.toggle(p.id);
+                          }}
+                          aria-label={liked ? "Unlike playlist" : "Like playlist"}
+                          className="grid h-8 w-8 place-items-center rounded-full bg-black/30 hover:bg-black/50 border border-white/15"
+                        >
+                          <Heart
+                            className={cn(
+                              "h-4 w-4",
+                              liked ? "fill-fuchsia-400 text-fuchsia-400" : "text-white"
+                            )}
+                          />
+                        </button>
+                        <div className="relative">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setMenuForId(menuOpen ? null : p.id);
+                            }}
+                            aria-label="More"
+                            className="grid h-8 w-8 place-items-center rounded-full bg-black/30 hover:bg-black/50 border border-white/15"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </button>
+                          {menuOpen && (
+                            <>
+                              <div
+                                className="fixed inset-0 z-40"
+                                onClick={() => setMenuForId(null)}
+                              />
+                              <div className="absolute right-0 mt-2 z-50 min-w-[190px] rounded-xl border border-white/10 bg-[#1b0d33] shadow-2xl overflow-hidden">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    sharePlaylist(p);
+                                  }}
+                                  className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-white/5 text-left"
+                                >
+                                  <Share2 className="h-4 w-4" />
+                                  Share playlist
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Song list preview (scrollable) */}
+                  <ul className="max-h-[300px] overflow-y-auto divide-y divide-white/5">
+                    {list.slice(0, 12).map((s) => {
+                      const songLiked = isLiked(s.id);
+                      const playing = currentSong?.id === s.id;
+                      return (
+                        <li
+                          key={p.id + "-" + s.id}
+                          onClick={() => playSong(s)}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-2 cursor-pointer transition",
+                            playing ? "bg-fuchsia-500/10" : "hover:bg-white/5"
+                          )}
+                        >
+                          <div className="grid h-9 w-9 place-items-center rounded-lg bg-white/5 border border-white/10 shrink-0">
+                            <Play className="h-3.5 w-3.5 ml-0.5" fill="currentColor" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className={cn("text-sm font-medium truncate", playing && "text-fuchsia-300")}>
+                              {s.title}
+                            </p>
+                            <p className="text-[11px] text-white/55 truncate">
+                              {s.singer || s.artist}
+                            </p>
+                          </div>
+                          <span className="text-[11px] text-white/50 tabular-nums shrink-0">
+                            {(() => {
+                              const sec = s.duration || 0;
+                              const m = Math.floor(sec / 60);
+                              const r = Math.round(sec % 60);
+                              return sec ? `${m}:${r.toString().padStart(2, "0")}` : "--:--";
+                            })()}
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleLike(s.id);
+                            }}
+                            aria-label={songLiked ? "Unlike" : "Like"}
+                            className="grid h-7 w-7 place-items-center rounded-full hover:bg-white/10 shrink-0"
+                          >
+                            <Heart
+                              className={cn(
+                                "h-3.5 w-3.5",
+                                songLiked ? "fill-fuchsia-400 text-fuchsia-400" : "text-white/70"
+                              )}
+                            />
+                          </button>
+                        </li>
+                      );
+                    })}
+                    {list.length === 0 && (
+                      <li className="px-3 py-6 text-center text-xs text-white/50">
+                        No songs available.
+                      </li>
+                    )}
+                  </ul>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+
 
       
 

@@ -1,14 +1,24 @@
-import { Play, Shuffle } from "lucide-react";
+import { useState } from "react";
+import { Play, Shuffle, Heart, MoreVertical, Share2, Check } from "lucide-react";
+import { toast } from "sonner";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { usePlayer } from "@/context/PlayerContext";
 import { Marquee } from "@/components/Marquee";
 import { cn } from "@/lib/utils";
 import type { Song } from "@/data/Song";
 
+function formatTime(sec?: number) {
+  if (!sec || !isFinite(sec)) return "--:--";
+  const s = Math.round(sec);
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${m}:${r.toString().padStart(2, "0")}`;
+}
+
 /**
  * Spotify-style detail sheet used for playlists and artist collections.
- * Shows a big header (cover, title, subtitle), Play + Shuffle actions,
- * then the full song list.
+ * Optionally shows a heart + 3-dot share menu for the playlist itself,
+ * and always shows song duration + a per-song heart in the row.
  */
 export function SongListSheet({
   open,
@@ -20,6 +30,9 @@ export function SongListSheet({
   emoji,
   songs,
   kind = "Playlist",
+  isPlaylistLiked,
+  onTogglePlaylistLike,
+  shareUrl,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -30,8 +43,13 @@ export function SongListSheet({
   emoji?: string;
   songs: Song[];
   kind?: string;
+  isPlaylistLiked?: boolean;
+  onTogglePlaylistLike?: () => void;
+  shareUrl?: string;
 }) {
-  const { playSong, playPlaylist, currentSong } = usePlayer();
+  const { playSong, playPlaylist, currentSong, toggleLike, isLiked } = usePlayer();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const playAll = () => {
     if (songs.length > 0) playPlaylist(songs);
@@ -40,6 +58,28 @@ export function SongListSheet({
     if (songs.length === 0) return;
     const shuffled = [...songs].sort(() => Math.random() - 0.5);
     playPlaylist(shuffled);
+  };
+
+  const share = async () => {
+    if (!shareUrl) return;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, text: `Listen to ${title}`, url: shareUrl });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        setCopied(true);
+        toast.success("Playlist link copied");
+        setTimeout(() => setCopied(false), 1600);
+      }
+    } catch {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Playlist link copied");
+      } catch {
+        toast.error("Unable to share");
+      }
+    }
+    setMenuOpen(false);
   };
 
   return (
@@ -101,6 +141,59 @@ export function SongListSheet({
             >
               <Shuffle className="h-4 w-4" />
             </button>
+
+            {onTogglePlaylistLike && (
+              <button
+                onClick={onTogglePlaylistLike}
+                aria-label={isPlaylistLiked ? "Unlike playlist" : "Like playlist"}
+                className={cn(
+                  "grid h-10 w-10 place-items-center rounded-full border transition",
+                  isPlaylistLiked
+                    ? "bg-fuchsia-500/20 border-fuchsia-400/60"
+                    : "bg-white/10 hover:bg-white/15 border-white/10"
+                )}
+              >
+                <Heart
+                  className={cn(
+                    "h-4 w-4",
+                    isPlaylistLiked && "fill-fuchsia-400 text-fuchsia-400"
+                  )}
+                />
+              </button>
+            )}
+
+            {shareUrl && (
+              <div className="relative ml-auto">
+                <button
+                  onClick={() => setMenuOpen((v) => !v)}
+                  aria-label="More"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-white/10 hover:bg-white/15 border border-white/10"
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </button>
+                {menuOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setMenuOpen(false)}
+                    />
+                    <div className="absolute right-0 mt-2 z-50 min-w-[190px] rounded-xl border border-white/10 bg-[#1b0d33] shadow-2xl overflow-hidden">
+                      <button
+                        onClick={share}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-white/5 text-left"
+                      >
+                        {copied ? (
+                          <Check className="h-4 w-4 text-fuchsia-400" />
+                        ) : (
+                          <Share2 className="h-4 w-4" />
+                        )}
+                        {copied ? "Link copied" : "Share playlist"}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -109,6 +202,7 @@ export function SongListSheet({
           <ul className="space-y-1">
             {songs.map((s, i) => {
               const playing = currentSong?.id === s.id;
+              const liked = isLiked(s.id);
               return (
                 <li
                   key={s.id}
@@ -141,15 +235,23 @@ export function SongListSheet({
                       {s.singer || s.artist}
                     </p>
                   </div>
+                  <span className="text-[11px] text-white/50 tabular-nums shrink-0">
+                    {formatTime(s.duration)}
+                  </span>
                   <button
-                    aria-label="Play"
+                    aria-label={liked ? "Unlike" : "Like"}
                     onClick={(e) => {
                       e.stopPropagation();
-                      playSong(s);
+                      toggleLike(s.id);
                     }}
-                    className="grid h-8 w-8 place-items-center rounded-full bg-white/10 hover:bg-white/20 shrink-0"
+                    className="grid h-8 w-8 place-items-center rounded-full hover:bg-white/10 shrink-0"
                   >
-                    <Play className="h-3.5 w-3.5 ml-0.5" fill="currentColor" />
+                    <Heart
+                      className={cn(
+                        "h-4 w-4",
+                        liked ? "fill-fuchsia-400 text-fuchsia-400" : "text-white/70"
+                      )}
+                    />
                   </button>
                 </li>
               );
