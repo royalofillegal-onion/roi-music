@@ -173,7 +173,7 @@ export default function FloatingMascot({ onOpenChat }: { onOpenChat?: () => void
       }
     }
     ref.current?.releasePointerCapture?.(e.pointerId);
-  }, [poseKey, speak, flush]);
+  }, [poseKey, speak, flush, onOpenChat]);
 
   useEffect(() => () => { if (rafRef.current != null) cancelAnimationFrame(rafRef.current); }, []);
 
