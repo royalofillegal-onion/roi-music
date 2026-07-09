@@ -8,6 +8,8 @@ import { SearchView } from "@/views/SearchView";
 import SplashScreen from "@/components/SplashScreen";
 import { AudioPermissionPrompt } from "@/components/AudioPermissionPrompt";
 import { ShareAutoPlay } from "@/components/ShareAutoPlay";
+import FloatingMascot from "@/components/FloatingMascot";
+import MascotChat from "@/components/MascotChat";
 import { usePlayer } from "@/context/PlayerContext";
 import { getDeviceId } from "@/lib/deviceTracker";
 
@@ -15,6 +17,7 @@ function AppShell() {
   const { currentSong } = usePlayer();
   const [fullOpen, setFullOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     if (currentSong) setFullOpen(true);
@@ -30,6 +33,8 @@ function AppShell() {
       {searchOpen && <SearchView onClose={() => setSearchOpen(false)} />}
       {currentSong && !fullOpen && <MiniPlayer onExpand={() => setFullOpen(true)} />}
       {currentSong && fullOpen && <FullPlayer onClose={() => setFullOpen(false)} />}
+      <FloatingMascot onOpenChat={() => setChatOpen(true)} />
+      {chatOpen && <MascotChat onClose={() => setChatOpen(false)} />}
     </div>
   );
 }
