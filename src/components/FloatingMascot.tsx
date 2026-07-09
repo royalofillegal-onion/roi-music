@@ -159,12 +159,17 @@ export default function FloatingMascot({ onOpenChat }: { onOpenChat?: () => void
         setPos(final);
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(final)); } catch { /* ignore */ }
       } else {
-        const tp = timePose();
-        const next = tp === "night" || tp === "morning"
-          ? tp
-          : ROTATION[(ROTATION.indexOf(poseKey as any) + 1 + ROTATION.length) % ROTATION.length] || "dance";
-        setPoseKey(next);
-        speak(next);
+        // Tap (no drag) → open the mood chat. Fallback to pose rotate.
+        if (onOpenChat) {
+          onOpenChat();
+        } else {
+          const tp = timePose();
+          const next = tp === "night" || tp === "morning"
+            ? tp
+            : ROTATION[(ROTATION.indexOf(poseKey as any) + 1 + ROTATION.length) % ROTATION.length] || "dance";
+          setPoseKey(next);
+          speak(next);
+        }
       }
     }
     ref.current?.releasePointerCapture?.(e.pointerId);
