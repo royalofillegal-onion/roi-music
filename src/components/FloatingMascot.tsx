@@ -53,7 +53,7 @@ function timePose(): keyof typeof POSES {
 
 const ROTATION: (keyof typeof POSES)[] = ["dance", "peace", "mega"];
 
-export default function FloatingMascot() {
+export default function FloatingMascot({ onOpenChat }: { onOpenChat?: () => void } = {}) {
   const { isPlaying } = usePlayer();
   const ref = useRef<HTMLDivElement>(null);
   const dragState = useRef({ dragging: false, moved: false, offX: 0, offY: 0 });
