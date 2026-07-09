@@ -53,7 +53,7 @@ function timePose(): keyof typeof POSES {
 
 const ROTATION: (keyof typeof POSES)[] = ["dance", "peace", "mega"];
 
-export default function FloatingMascot() {
+export default function FloatingMascot({ onOpenChat }: { onOpenChat?: () => void } = {}) {
   const { isPlaying } = usePlayer();
   const ref = useRef<HTMLDivElement>(null);
   const dragState = useRef({ dragging: false, moved: false, offX: 0, offY: 0 });
@@ -159,16 +159,21 @@ export default function FloatingMascot() {
         setPos(final);
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(final)); } catch { /* ignore */ }
       } else {
-        const tp = timePose();
-        const next = tp === "night" || tp === "morning"
-          ? tp
-          : ROTATION[(ROTATION.indexOf(poseKey as any) + 1 + ROTATION.length) % ROTATION.length] || "dance";
-        setPoseKey(next);
-        speak(next);
+        // Tap (no drag) → open the mood chat. Fallback to pose rotate.
+        if (onOpenChat) {
+          onOpenChat();
+        } else {
+          const tp = timePose();
+          const next = tp === "night" || tp === "morning"
+            ? tp
+            : ROTATION[(ROTATION.indexOf(poseKey as any) + 1 + ROTATION.length) % ROTATION.length] || "dance";
+          setPoseKey(next);
+          speak(next);
+        }
       }
     }
     ref.current?.releasePointerCapture?.(e.pointerId);
-  }, [poseKey, speak, flush]);
+  }, [poseKey, speak, flush, onOpenChat]);
 
   useEffect(() => () => { if (rafRef.current != null) cancelAnimationFrame(rafRef.current); }, []);
 
