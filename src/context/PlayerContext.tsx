@@ -202,8 +202,21 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       setIsPlaying(false);
       mediaSessionManager.updatePlaybackState(false);
     };
-    // If a track errors out, auto-skip so playback never gets stuck.
-    const handleError = () => callbackRefs.current.nextSong();
+    // If a track truly errors out, auto-skip. Guard against phantom errors
+    // fired during src swaps / aborts (browsers fire "error" with
+    // MEDIA_ERR_ABORTED when we call load() on a new song) which would
+    // otherwise cause an infinite skip loop that manifests as songs
+    // pausing after 1-2 tracks.
+    let lastErrorSkipAt = 0;
+    const handleError = () => {
+      const err = audio.error;
+      // MEDIA_ERR_ABORTED = 1 (from load()/src swap) — ignore.
+      if (!err || err.code === 1) return;
+      const now = Date.now();
+      if (now - lastErrorSkipAt < 1500) return; // rate-limit skip loop
+      lastErrorSkipAt = now;
+      callbackRefs.current.nextSong();
+    };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("durationchange", handleDurationChange);
