@@ -7065,7 +7065,7 @@ export const TeluguSongs: Song[] = [
     "duration": 242,
     "album": "Prapanchame Alaa",
     "year": 2025,
-    "genre": "theme"
+    "genre": "theme",
     "language": "Telugu",
     "sync": "."
 },
