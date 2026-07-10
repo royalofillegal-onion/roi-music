@@ -7066,7 +7066,9 @@ export const TeluguSongs: Song[] = [
     "album": "Prapanchame Alaa",
     "year": 2025,
     "genre": "theme"
-  
+    "language": "Telugu",
+    "sync": "."
+},
   {
     "id": "emjarugutondi-karthiksangeetha",
     "title": "Emjarugutondi (Karthik,Sangeetha)",
