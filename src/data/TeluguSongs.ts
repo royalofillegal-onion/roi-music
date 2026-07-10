@@ -6335,7 +6335,7 @@ export const TeluguSongs: Song[] = [
     "title": "Yem Cheddaam",
     "artist": "seethamma vakitlo sirimalle chettu",
     "imageUrl": "https://res.cloudinary.com/dkhbceri0/image/upload/v1747289488/Seethamma-Vakitlo-Sirimalle-Chettu-2012-500x500_bturzy.jpg",
-    "audioUrl": "https://res.cloudinary.com/dkhbceri0/video/upload/v1747287741/iSongs.info_06_-_Nee_Manusu_Naan_Manusu_r6vi44.mp3",
+    "audioUrl": "https://res.cloudinary.com/dilqrz7sw/video/upload/v1783674801/Yem_Cheddaam-SenSongsMp3.Co_olul6m.mp3",
     "album": "seethamma vakitlo sirimalle chettu",
     "duration": 200,
     "year": 2025,
