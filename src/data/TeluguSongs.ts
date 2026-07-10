@@ -9212,12 +9212,12 @@ export const TeluguSongs: Song[] = [
     "sync": "."
   },
   {
-    "id": "kshana-kshanam",
-    "title": "Kshana Kshanam",
+    "id": "Kingulaa-Kanipisthunnadu",
+    "title": "Kingulaa Kanipisthunnadu",
     "artist": "Kshana Kshanam",
     "imageUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574337/Kshana-Kshanam-1991jpeg_qpaxv6.jpg",
-    "audioUrl": "https://res.cloudinary.com/dd6xwej67/image/upload/v1781574337/Kshana-Kshanam-1991jpeg_qpaxv6.jpg",
-    "duration": 329,
+    "audioUrl": "https://res.cloudinary.com/dd6xwej67/video/upload/v1781574329/06_Kingulaa_Kanipisthunnadu_-_SenSongsMp3.co_s3n3zl.mp3",
+    "duration": 268,
     "album": "Kshana Kshanam",
     "year": 1991,
     "genre": ".",
