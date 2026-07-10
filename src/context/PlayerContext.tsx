@@ -92,6 +92,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const loadTokenRef = useRef(0);
   const watchdogRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Guards against rapid multi-advance (ended + error + watchdog firing
+  // together) that skipped several tracks at once (1 -> 7 bug).
+  const lastAdvanceRef = useRef(0);
 
   // Refs to always hold latest callbacks (avoids stale closures in Media Session)
   const callbackRefs = useRef({
@@ -346,6 +349,23 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
+  // Re-sync UI play state with the actual audio element when returning to the
+  // app from the background (screen-off / app switch). Keeps the button and
+  // notification in agreement and audio flowing.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState !== "visible") return;
+      const audio = audioRef.current;
+      if (!audio) return;
+      const actuallyPlaying = !audio.paused && !audio.ended && audio.readyState > 2;
+      setIsPlaying(actuallyPlaying);
+      mediaSessionManager.updatePlaybackState(actuallyPlaying);
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
+
+
   const addToRecentlyPlayed = useCallback((song: Song) => {
     setRecentlyPlayed(prev => {
       const filtered = prev.filter(s => s.id !== song.id);
@@ -389,6 +409,13 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       watchdogRef.current = null;
     }
 
+    const clearWatchdog = () => {
+      if (watchdogRef.current) {
+        clearTimeout(watchdogRef.current);
+        watchdogRef.current = null;
+      }
+    };
+
     const attemptPlay = () => {
       if (token !== loadTokenRef.current) return; // a newer song took over
       const playPromise = audio.play();
@@ -396,10 +423,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
         playPromise
           .then(() => {
             if (token !== loadTokenRef.current) return;
-            if (watchdogRef.current) {
-              clearTimeout(watchdogRef.current);
-              watchdogRef.current = null;
-            }
+            clearWatchdog();
             setIsPlaying(true);
             mediaSessionManager.startPositionTracking(audio);
           })
@@ -413,26 +437,36 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    // Swap source and start playing. Wait for the element to be ready before
-    // calling play() to avoid the interruption race on rapid track changes.
+    // Swap source and load. Start playback from a SINGLE readiness listener
+    // (canplay) to avoid the "play() interrupted by load()" abort race that
+    // caused songs to pause after 1-2 tracks. No racing immediate play().
     audio.src = song.audioUrl;
     audio.load();
 
     const onCanPlay = () => {
+      if (token !== loadTokenRef.current) {
+        audio.removeEventListener("canplay", onCanPlay);
+        return;
+      }
       audio.removeEventListener("canplay", onCanPlay);
       attemptPlay();
     };
     audio.addEventListener("canplay", onCanPlay);
-    // Try immediately too — if already buffered this starts with no delay.
-    attemptPlay();
+    // If the element is already buffered (cached / instant), play now.
+    if (audio.readyState >= 3) {
+      audio.removeEventListener("canplay", onCanPlay);
+      attemptPlay();
+    }
 
-    // Watchdog: if nothing is playing shortly after load (stuck track), skip.
+    // Watchdog: only auto-skip when the track is genuinely stalled — same
+    // token still active AND still not even buffering (readyState 0) after a
+    // network-tolerant timeout. A slow-but-loading track is NOT skipped.
     watchdogRef.current = setTimeout(() => {
       if (token !== loadTokenRef.current) return;
-      if (audio.paused && audio.readyState < 2) {
+      if (audio.paused && audio.readyState === 0) {
         callbackRefs.current.nextSong();
       }
-    }, 6000);
+    }, 12000);
   }, [addToRecentlyPlayed, currentSong]);
 
   const pauseSong = useCallback(() => {
@@ -462,6 +496,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isPlaying, pauseSong, resumeSong]);
 
   const nextSong = useCallback(() => {
+    // Re-entry guard: ignore advances that fire <600ms apart so a single
+    // track transition can never skip several songs at once.
+    const now = Date.now();
+    if (now - lastAdvanceRef.current < 600) return;
+    lastAdvanceRef.current = now;
+
     // 1. FIFO Queue — if songs are queued, dequeue next
     const queuedSong = playbackQueueRef.current.dequeue();
     if (queuedSong) {
@@ -490,6 +530,11 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       audioRef.current.currentTime = 0;
       return;
     }
+
+    // Re-entry guard (same as nextSong) to avoid rapid multi-step jumps.
+    const now = Date.now();
+    if (now - lastAdvanceRef.current < 600) return;
+    lastAdvanceRef.current = now;
 
     // Check history from queue
     const prevFromHistory = playbackQueueRef.current.getPrevious();
