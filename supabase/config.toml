@@ -1,0 +1,4 @@
+project_id = "ogcegfnwaddxpvdvwakt"
+
+[functions.stream-media]
+verify_jwt = false
