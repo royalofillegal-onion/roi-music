@@ -38,7 +38,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
       className="fixed inset-0 z-40 overflow-y-auto text-white animate-in fade-in slide-in-from-bottom-4 duration-200"
       style={{
         background:
-          "radial-gradient(120% 80% at 50% -10%, #4a1f7a 0%, #2a0d4d 35%, #0a0418 75%)",
+          "radial-gradient(120% 80% at 50% -10%, #1a0507 0%, #0a0507 40%, #050005 80%)",
       }}
     >
       <div className="mx-auto max-w-[640px] px-5 pt-6 pb-40">
@@ -86,7 +86,7 @@ export function SearchView({ onClose }: { onClose: () => void }) {
                 className={cn(
                   "flex items-center gap-3 p-2.5 rounded-2xl cursor-pointer transition",
                   playing
-                    ? "bg-fuchsia-500/15 border border-fuchsia-400/30"
+                    ? "bg-red-950/40 border border-red-900/50"
                     : "hover:bg-white/5 border border-transparent"
                 )}
               >

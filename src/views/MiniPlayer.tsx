@@ -25,7 +25,7 @@ export function MiniPlayer({ onExpand }: { onExpand: () => void }) {
         </p>
         <div className="mt-1 h-0.5 w-full bg-white/10 rounded-full overflow-hidden">
           <div
-            className="h-full bg-fuchsia-400 transition-all"
+            className="h-full bg-red-700 transition-all"
             style={{ width: `${pct}%` }}
           />
         </div>
