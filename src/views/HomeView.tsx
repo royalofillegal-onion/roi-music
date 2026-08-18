@@ -238,42 +238,52 @@ export function HomeView({
 
 
       {/* Recently played */}
-      <section className="mt-10">
-        <h2 className="text-base font-semibold mb-4">Recently played</h2>
+      <section className="relative mt-10">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-zinc-200">Recently played</h2>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+            View all
+          </span>
+        </div>
         {recentlyPlayed.length === 0 ? (
-          <p className="text-sm text-white/55">
+          <p className="text-sm text-zinc-600">
             Songs you play will appear here.
           </p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-4">
             {recentlyPlayed.slice(0, 15).map((song) => {
               const playing = currentSong?.id === song.id;
               return (
                 <li
                   key={"recent-" + song.id}
                   onClick={() => playSong(song)}
-                  className={cn(
-                    "flex items-center gap-3 p-2.5 rounded-2xl cursor-pointer transition",
-                    playing
-                      ? "bg-fuchsia-500/15 border border-fuchsia-400/30"
-                      : "hover:bg-white/5 border border-transparent"
-                  )}
+                  className="flex cursor-pointer items-center gap-4"
                 >
                   <img
                     src={song.imageUrl}
                     alt=""
-                    className="h-12 w-12 rounded-xl object-cover"
+                    className={cn(
+                      "h-14 w-14 shrink-0 rounded-lg border object-cover",
+                      playing ? "border-red-800" : "border-white/5"
+                    )}
                     loading="lazy"
                   />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{song.title}</p>
-                    <p className="text-xs text-white/60 truncate">
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={cn(
+                        "truncate text-sm font-semibold",
+                        playing ? "text-red-600" : "text-zinc-100"
+                      )}
+                    >
+                      {song.title}
+                    </p>
+                    <p className="truncate text-xs text-zinc-500">
                       {song.singer || song.artist}
                     </p>
                   </div>
                   <button
                     aria-label="Play"
-                    className="h-9 w-9 grid place-items-center rounded-full bg-white/10 hover:bg-white/20"
+                    className="grid h-9 w-9 place-items-center rounded-full text-zinc-700 hover:text-white"
                   >
                     <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
                   </button>
