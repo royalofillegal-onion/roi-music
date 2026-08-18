@@ -64,21 +64,33 @@ export function HomeView({
 
   return (
     <main
-      className="relative min-h-dvh px-5 pt-10 pb-44"
+      className="relative min-h-dvh px-6 pt-12 pb-44"
       style={{
         background:
-          "radial-gradient(120% 80% at 50% -10%, #4a1f7a 0%, #2a0d4d 35%, #0a0418 75%)",
+          "radial-gradient(110% 70% at 50% -10%, #1a0507 0%, #0a0507 40%, #050005 80%)",
       }}
     >
+      {/* subtle fog */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        style={{
+          background:
+            "radial-gradient(60% 40% at 20% 20%, #fff 0%, transparent 60%), radial-gradient(50% 40% at 90% 60%, #b91c1c 0%, transparent 65%)",
+        }}
+      />
+
       {/* Header */}
-      <header className="flex items-start justify-between gap-4">
+      <header className="relative flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold leading-tight">
-            {greeting()} <span className="ml-1">{weather.emoji}</span>
+          <h1
+            className="text-2xl font-bold tracking-tight text-white"
+            style={{ fontFamily: "'Orbitron', sans-serif" }}
+          >
+            {greeting()}
           </h1>
-          <p className="mt-1.5 text-sm text-white/70">{todayStr}</p>
+          <p className="mt-1 text-sm text-zinc-500">{todayStr}</p>
           {(weather.city || weather.tempC !== null) && (
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-fuchsia-200/90">
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-zinc-500">
               {weather.city && (
                 <>
                   <MapPin className="h-3.5 w-3.5" />
@@ -89,7 +101,7 @@ export function HomeView({
                 </>
               )}
               {weather.tempC !== null && (
-                <span className="ml-1 text-white/80">
+                <span className="ml-1 text-zinc-400">
                   · {weather.tempC}°C {weather.condition}
                 </span>
               )}
@@ -97,49 +109,51 @@ export function HomeView({
           )}
           <button
             onClick={playWeatherMix}
-            className="mt-3 inline-flex items-center gap-2 rounded-full bg-fuchsia-500/20 hover:bg-fuchsia-500/30 border border-fuchsia-400/40 px-3.5 py-1.5 text-sm font-medium text-white transition"
+            className="mt-4 inline-flex items-center gap-2 rounded-full border border-red-900/50 bg-red-950/40 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-red-500 transition hover:bg-red-900/40"
           >
-            <Play className="h-3.5 w-3.5" fill="currentColor" />
+            <Play className="h-3 w-3" fill="currentColor" />
             Play {weather.condition ? weather.condition.toLowerCase() : "weather"} mix
           </button>
         </div>
-        <div className="flex items-center gap-2" />
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-zinc-800 bg-zinc-900 text-2xl">
+          <span className="text-base">{weather.emoji}</span>
+        </div>
       </header>
 
       {/* Section heading */}
-      <div className="mt-10 flex items-center justify-between">
-        <h2 className="text-base font-semibold tracking-wide">
+      <div className="relative mt-10 flex items-center justify-between">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-600">
           Made for this moment
         </h2>
         <button
           onClick={onOpenSearch}
-          className="text-sm font-medium text-fuchsia-400 hover:text-fuchsia-300"
+          className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 hover:text-red-600"
         >
-          Search Here
+          Search
         </button>
       </div>
 
       {/* Carousel */}
-      <div className="relative mt-6 -mx-5">
+      <div className="relative mt-4 -mx-6">
         <button
           aria-label="Previous"
           onClick={() => scrollBy(-1)}
-          className="hidden md:grid absolute left-3 top-1/2 -translate-y-1/2 z-20 h-11 w-11 place-items-center rounded-full bg-black/40 backdrop-blur border border-white/10 hover:bg-black/60"
+          className="hidden md:grid absolute left-3 top-1/2 -translate-y-1/2 z-20 h-11 w-11 place-items-center rounded-full bg-black/60 backdrop-blur border border-white/10 hover:bg-black/80"
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
         <button
           aria-label="Next"
           onClick={() => scrollBy(1)}
-          className="hidden md:grid absolute right-3 top-1/2 -translate-y-1/2 z-20 h-11 w-11 place-items-center rounded-full bg-black/40 backdrop-blur border border-white/10 hover:bg-black/60"
+          className="hidden md:grid absolute right-3 top-1/2 -translate-y-1/2 z-20 h-11 w-11 place-items-center rounded-full bg-black/60 backdrop-blur border border-white/10 hover:bg-black/80"
         >
           <ChevronRight className="h-5 w-5" />
         </button>
 
         <div
           ref={scrollerRef}
-          className="flex gap-4 overflow-x-auto px-5 pb-4 snap-x snap-mandatory scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-          style={{ scrollPaddingInline: "20px" }}
+          className="flex gap-4 overflow-x-auto px-6 pb-3 snap-x snap-mandatory scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          style={{ scrollPaddingInline: "24px" }}
         >
           {songs.map((song, i) => {
             const isCenter = i === activeIndex;
@@ -148,11 +162,11 @@ export function HomeView({
               <article
                 key={song.id}
                 className={cn(
-                  "snap-center shrink-0 relative rounded-3xl overflow-hidden border border-white/10 transition-all duration-500 cursor-pointer",
-                  "w-[78vw] max-w-[340px] aspect-[3/4]",
+                  "snap-center shrink-0 relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-900 transition-all duration-500 cursor-pointer",
+                  "w-[82vw] max-w-[340px] aspect-square",
                   isCenter
-                    ? "scale-100 opacity-100 shadow-[0_30px_80px_-20px_rgba(168,85,247,0.55)]"
-                    : "scale-[0.88] opacity-60"
+                    ? "opacity-100 shadow-[0_30px_70px_-25px_rgba(0,0,0,1)]"
+                    : "opacity-45"
                 )}
                 onClick={() => playSong(song)}
               >
@@ -162,66 +176,66 @@ export function HomeView({
                   className="absolute inset-0 h-full w-full object-cover"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/0 to-black/70" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/25 to-transparent" />
 
-                {/* Top: title + heart */}
-                <div className="absolute top-4 left-4 right-4 flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="text-lg font-bold leading-tight line-clamp-2 drop-shadow">
+                <div className="absolute bottom-6 left-6 right-6 z-20 flex items-end justify-between gap-4">
+                  <div className="min-w-0 space-y-1">
+                    <h3 className="text-2xl font-bold leading-tight tracking-tight line-clamp-2">
                       {song.title}
                     </h3>
-                    <p className="mt-1 text-sm text-white/85 line-clamp-1">
+                    <p className="text-sm font-light italic text-zinc-400 line-clamp-1">
                       {song.singer || song.artist}
                     </p>
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleLike(song.id);
-                    }}
-                    className="grid h-9 w-9 place-items-center rounded-full bg-black/30 backdrop-blur border border-white/15"
-                    aria-label="Like"
-                  >
-                    <Heart
-                      className={cn(
-                        "h-4.5 w-4.5",
-                        liked ? "fill-fuchsia-400 text-fuchsia-400" : "text-white"
-                      )}
-                    />
-                  </button>
+                  <div className="flex shrink-0 items-center gap-4">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleLike(song.id);
+                      }}
+                      aria-label="Like"
+                      className="transition-colors"
+                    >
+                      <Heart
+                        className={cn(
+                          "h-6 w-6",
+                          liked ? "fill-red-700 text-red-700" : "text-zinc-400"
+                        )}
+                      />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        playSong(song);
+                      }}
+                      aria-label="Play"
+                      className="grid h-14 w-14 place-items-center rounded-full bg-white text-black shadow-[0_0_30px_rgba(255,255,255,0.15)] transition hover:scale-105"
+                    >
+                      <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+                    </button>
+                  </div>
                 </div>
-
-                {/* Play button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    playSong(song);
-                  }}
-                  aria-label="Play"
-                  className="absolute bottom-5 left-1/2 -translate-x-1/2 grid h-16 w-16 place-items-center rounded-full bg-white text-black ring-4 ring-fuchsia-500/70 shadow-2xl hover:scale-105 transition"
-                >
-                  <Play className="h-7 w-7 ml-0.5" fill="currentColor" />
-                </button>
               </article>
             );
           })}
         </div>
 
         {/* Pagination dots */}
-        <div className="mt-2 flex items-center justify-center gap-1.5">
+        <div className="mt-3 flex items-center justify-center gap-2">
           {songs.slice(0, 6).map((_, i) => (
             <span
               key={i}
               className={cn(
-                "h-1.5 rounded-full transition-all",
+                "h-1 w-1 rounded-full transition-all",
                 i === activeIndex % 6
-                  ? "w-6 bg-fuchsia-400"
-                  : "w-1.5 bg-white/25"
+                  ? "bg-red-700 shadow-[0_0_8px_rgba(185,28,28,0.8)]"
+                  : "bg-zinc-800"
               )}
             />
           ))}
         </div>
       </div>
+
 
       {/* Recently played */}
       <section className="mt-10">
