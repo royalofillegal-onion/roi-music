@@ -120,17 +120,21 @@ export function HomeView({
         </div>
       </header>
 
-      {/* Section heading */}
-      <div className="relative mt-10 flex items-center justify-between">
-        <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-600">
+      {/* Section heading + inline search */}
+      <div className="relative mt-10 flex items-center gap-3">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-600 shrink-0">
           Made for this moment
         </h2>
-        <button
-          onClick={onOpenSearch}
-          className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 hover:text-red-600"
-        >
-          Search
-        </button>
+        <div className="flex flex-1 items-center gap-2 rounded-full border border-white/15 bg-white/8 backdrop-blur px-3 py-1.5">
+          <Search className="h-3.5 w-3.5 text-white/60" />
+          <input
+            type="text"
+            readOnly
+            placeholder="Find songs, artists, albums..."
+            onClick={onOpenSearch}
+            className="flex-1 bg-transparent outline-none text-xs text-white placeholder:text-white/45"
+          />
+        </div>
       </div>
 
       {/* Carousel */}
