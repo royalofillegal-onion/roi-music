@@ -18,7 +18,7 @@ function AppShell() {
   }, [currentSong?.id]);
 
   return (
-    <div className="min-h-dvh bg-[#0a0418] text-white overflow-x-hidden">
+    <div className="min-h-dvh bg-[#050005] text-white overflow-x-hidden">
       <HomeView onOpenSearch={() => setSearchOpen(true)} />
       {searchOpen && <SearchView onClose={() => setSearchOpen(false)} />}
       {currentSong && !fullOpen && <MiniPlayer onExpand={() => setFullOpen(true)} />}

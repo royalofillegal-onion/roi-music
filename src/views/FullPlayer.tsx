@@ -116,7 +116,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
       className="fixed inset-0 z-50 overflow-y-auto text-white animate-in fade-in slide-in-from-bottom-8 duration-300"
       style={{
         background:
-          "radial-gradient(120% 80% at 50% -10%, #4a1f7a 0%, #21093e 50%, #0a0418 100%)",
+          "radial-gradient(120% 80% at 50% -10%, #1a0507 0%, #0a0507 45%, #050005 100%)",
       }}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
@@ -164,7 +164,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
               {currentSong.singer || currentSong.artist}
             </p>
             <div className="mt-2.5 flex items-center gap-2 text-xs">
-              <span className="px-2 py-0.5 rounded bg-fuchsia-500/20 text-fuchsia-200 font-semibold">
+              <span className="px-2 py-0.5 rounded bg-red-950/60 text-red-500 font-semibold">
                 {currentSong.genre ? "FLAC" : "HQ"}
               </span>
               <span className="text-white/60">
@@ -181,7 +181,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
               <Heart
                 className={cn(
                   "h-5 w-5",
-                  liked ? "fill-fuchsia-400 text-fuchsia-400" : ""
+                  liked ? "fill-red-700 text-red-700" : ""
                 )}
               />
             </button>
@@ -217,7 +217,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
             aria-label="Shuffle"
             className={cn(
               "grid h-11 w-11 place-items-center rounded-full",
-              isShuffled ? "text-fuchsia-300" : "text-white/70"
+              isShuffled ? "text-red-600" : "text-white/70"
             )}
           >
             <Shuffle className="h-5 w-5" />
@@ -232,7 +232,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           <button
             onClick={togglePlayPause}
             aria-label={isPlaying ? "Pause" : "Play"}
-            className="grid h-16 w-16 place-items-center rounded-full bg-white text-black shadow-2xl ring-4 ring-fuchsia-500/60 hover:scale-105 transition"
+            className="grid h-16 w-16 place-items-center rounded-full bg-white text-black shadow-2xl ring-1 ring-white/20 hover:scale-105 transition"
           >
             {isPlaying ? (
               <Pause className="h-7 w-7" fill="currentColor" />
@@ -252,7 +252,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
             aria-label="Repeat"
             className={cn(
               "grid h-11 w-11 place-items-center rounded-full",
-              isRepeating ? "text-fuchsia-300" : "text-white/70"
+              isRepeating ? "text-red-600" : "text-white/70"
             )}
           >
             <Repeat className="h-5 w-5" />
@@ -283,13 +283,13 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
                 className={cn(
                   "pb-3 -mb-px capitalize transition relative",
                   tab === t
-                    ? "text-fuchsia-300 font-semibold"
+                    ? "text-red-600 font-semibold"
                     : "text-white/55 hover:text-white/80"
                 )}
               >
                 {t === "about" ? "About Song" : t}
                 {tab === t && (
-                  <span className="absolute left-0 right-0 -bottom-px h-0.5 bg-fuchsia-400 rounded-full" />
+                  <span className="absolute left-0 right-0 -bottom-px h-0.5 bg-red-700 rounded-full" />
                 )}
               </button>
             ))}
