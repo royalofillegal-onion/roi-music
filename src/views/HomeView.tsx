@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Heart, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Play, Heart, ChevronLeft, ChevronRight, MapPin, Search, X } from "lucide-react";
 import { popularSongs, uniqueSongs } from "@/data/allSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import { useWeather } from "@/hooks/useWeather";
