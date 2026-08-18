@@ -10,6 +10,6 @@ export interface Song {
   album?: string;
   year?: number;
   genre?: string;
-  language?: 'telugu' | 'hindi' | 'tamil' | 'kannada' | 'other';
+  language?: string;
   sync?: string;
 }
