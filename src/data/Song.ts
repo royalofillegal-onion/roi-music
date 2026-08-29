@@ -6,6 +6,8 @@ export interface Song {
   movie?: string;
   imageUrl: string;
   audioUrl: string;
+  /** Optional music video shown in the discovery feed. */
+  videoUrl?: string;
   duration: number;
   album?: string;
   year?: number;
