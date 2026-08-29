@@ -1,27 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { HomeView } from "@/views/HomeView";
 import { FullPlayer } from "@/views/FullPlayer";
 import { MiniPlayer } from "@/views/MiniPlayer";
 import { SearchView } from "@/views/SearchView";
+import { DiscoverFeed } from "@/views/DiscoverFeed";
+import { LibraryView } from "@/views/LibraryView";
+import { BottomNav, type TabKey } from "@/components/BottomNav";
 import SplashScreen from "@/components/SplashScreen";
 import { usePlayer } from "@/context/PlayerContext";
 
 function AppShell() {
   const { currentSong } = usePlayer();
+  const [tab, setTab] = useState<TabKey>("home");
   const [fullOpen, setFullOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-
-  useEffect(() => {
-    if (currentSong) setFullOpen(true);
-  }, [currentSong?.id]);
 
   return (
-    <div className="min-h-dvh bg-[#050005] text-white overflow-x-hidden">
-      <HomeView onOpenSearch={() => setSearchOpen(true)} />
-      {searchOpen && <SearchView onClose={() => setSearchOpen(false)} />}
+    <div className="min-h-dvh overflow-x-hidden bg-[#050005] text-white">
+      {tab === "home" && <HomeView onOpenSearch={() => setTab("search")} />}
+      {tab === "discover" && <DiscoverFeed onExpand={() => setFullOpen(true)} />}
+      {tab === "search" && <SearchView onClose={() => setTab("home")} />}
+      {tab === "library" && <LibraryView />}
+
       {currentSong && !fullOpen && <MiniPlayer onExpand={() => setFullOpen(true)} />}
+      <BottomNav active={tab} onChange={setTab} />
       {currentSong && fullOpen && <FullPlayer onClose={() => setFullOpen(false)} />}
     </div>
   );
