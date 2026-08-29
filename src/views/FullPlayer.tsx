@@ -17,13 +17,15 @@ import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { uniqueSongs } from "@/data/allSongs";
 import { getLyricsForSong } from "@/data/lyrics";
+import { buildRails } from "@/lib/recos";
+import { SongRail } from "@/components/SongRail";
 
 const fmt = (s: number) =>
   isFinite(s)
     ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`
     : "0:00";
 
-type Tab = "lyrics" | "related" | "credits" | "about";
+type Tab = "lyrics" | "queue" | "related" | "credits" | "about";
 
 export function FullPlayer({ onClose }: { onClose: () => void }) {
   const {
@@ -44,6 +46,8 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
     toggleLike,
     isLiked,
     playSong,
+    queue,
+    recentlyPlayed,
   } = usePlayer();
 
   const [tab, setTab] = useState<Tab>("lyrics");
@@ -102,6 +106,11 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
       })
       .slice(0, 8);
   }, [currentSong?.id]);
+
+  const rails = useMemo(
+    () => buildRails(currentSong ?? null, recentlyPlayed as any),
+    [currentSong?.id]
+  );
 
   const lyrics = useMemo(
     () => getLyricsForSong(currentSong?.id),
@@ -276,7 +285,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
         {/* Tabs */}
         <div className="mt-8 border-b border-white/10">
           <div className="flex gap-6 text-sm">
-            {(["lyrics", "related", "credits", "about"] as Tab[]).map((t) => (
+            {(["lyrics", "queue", "related", "credits", "about"] as Tab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -307,6 +316,31 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
                 Lyrics for “{currentSong.title}” aren't available yet.
               </p>
             )
+          )}
+
+          {tab === "queue" && (
+            <ul className="space-y-1.5">
+              {(queue || []).length === 0 && (
+                <li className="text-sm text-white/55">Queue is empty — songs auto-play next.</li>
+              )}
+              {(queue || []).map((s: any, i: number) => (
+                <li key={`${s.id}-${i}`}>
+                  <button
+                    onClick={() => playSong(s)}
+                    className="flex w-full items-center gap-3 rounded-xl p-1.5 text-left hover:bg-white/5"
+                  >
+                    <span className="w-4 text-xs text-white/40">{i + 1}</span>
+                    <img src={s.imageUrl} alt="" className="h-10 w-10 rounded-lg object-cover" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold">{s.title}</span>
+                      <span className="block truncate text-xs text-white/55">
+                        {s.singer || s.artist}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           )}
 
           {tab === "related" && (
@@ -351,6 +385,19 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
               to your wired or Bluetooth headphones from the audio settings.
             </p>
           )}
+        </div>
+
+        {/* Recommendations */}
+        <div className="-mx-5 mt-4">
+          {rails.map((r) => (
+            <SongRail
+              key={r.id}
+              title={r.title}
+              subtitle={r.subtitle}
+              songs={r.songs}
+              layout={r.layout}
+            />
+          ))}
         </div>
       </div>
     </div>
