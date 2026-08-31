@@ -1,16 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Heart, Play, Pause, Share2, ListPlus, Music4, Volume2 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
-import { popularSongs } from "@/data/allSongs";
-import { buildRails } from "@/lib/recos";
-import { SongRail } from "@/components/SongRail";
+import { popularSongs, uniqueSongs } from "@/data/allSongs";
 import { cn } from "@/lib/utils";
 import type { Song } from "@/data/Song";
 
+const PAGE = 12;
+
+function shuffle<T>(arr: T[], seed: number): T[] {
+  const a = [...arr];
+  let s = seed || 1;
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (s * 1103515245 + 12345) % 2147483647;
+    const j = Math.abs(s) % (i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 /**
  * Instagram-Reels style vertical music discovery feed.
- * Each panel shows a music video when available, otherwise the artwork
- * with an animated ken-burns + glow treatment.
+ * Infinite: new panels are appended as the user approaches the end,
+ * so scrolling never reaches a bottom.
  */
 export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
   const {
@@ -21,10 +32,22 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     toggleLike,
     isLiked,
     addToQueue,
-    recentlyPlayed,
   } = usePlayer();
 
-  const feed = useMemo<Song[]>(() => popularSongs.slice(0, 18), []);
+  const pool = useMemo<Song[]>(
+    () => (popularSongs.length > 20 ? popularSongs : (uniqueSongs as Song[])),
+    []
+  );
+  const [pages, setPages] = useState(1);
+  const feed = useMemo<Song[]>(() => {
+    const out: Song[] = [];
+    for (let p = 0; p < pages; p++) {
+      const chunk = shuffle(pool, p + 7).slice(0, PAGE);
+      out.push(...chunk);
+    }
+    return out;
+  }, [pages, pool]);
+
   const [activeIdx, setActiveIdx] = useState(0);
   const [started, setStarted] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -49,6 +72,19 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     return () => io.disconnect();
   }, [feed.length]);
 
+  // Endless feed: append another page when close to the end.
+  useEffect(() => {
+    if (activeIdx >= feed.length - 4) setPages((p) => p + 1);
+  }, [activeIdx, feed.length]);
+
+  const onScroll = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (el.scrollTop + el.clientHeight * 2.5 >= el.scrollHeight) {
+      setPages((p) => p + 1);
+    }
+  }, []);
+
   // Once the user has started playback, swiping changes the track (Reels behaviour).
   useEffect(() => {
     if (!started) return;
@@ -56,14 +92,11 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     if (song && song.id !== currentSong?.id) playSong(song);
   }, [activeIdx, started]);
 
-  const rails = useMemo(
-    () => buildRails(currentSong ?? feed[activeIdx] ?? null, recentlyPlayed as Song[]),
-    [currentSong?.id, activeIdx]
-  );
 
   return (
     <div
       ref={containerRef}
+      onScroll={onScroll}
       className="h-dvh snap-y snap-mandatory overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {feed.map((song, i) => {
@@ -74,7 +107,7 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
 
         return (
           <section
-            key={song.id}
+            key={`${song.id}-${i}`}
             data-idx={i}
             ref={(el) => (itemRefs.current[i] = el)}
             className="relative flex h-dvh snap-start snap-always items-center justify-center overflow-hidden bg-black"
@@ -215,13 +248,10 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
         );
       })}
 
-      {/* Recommendations panel at the end of the feed */}
-      <section className="min-h-dvh snap-start bg-black pt-8 pb-44">
-        <h2 className="px-5 text-lg font-bold text-white">Made for you</h2>
-        {rails.map((r) => (
-          <SongRail key={r.id} title={r.title} subtitle={r.subtitle} songs={r.songs} layout={r.layout} />
-        ))}
-      </section>
+      {/* endless feed - loader panel keeps the scroll going */}
+      <div className="flex h-24 items-center justify-center text-[10px] uppercase tracking-[0.3em] text-zinc-700">
+        loading more
+      </div>
     </div>
   );
 }
