@@ -96,6 +96,7 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
   return (
     <div
       ref={containerRef}
+      onScroll={onScroll}
       className="h-dvh snap-y snap-mandatory overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {feed.map((song, i) => {
@@ -106,7 +107,7 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
 
         return (
           <section
-            key={song.id}
+            key={`${song.id}-${i}`}
             data-idx={i}
             ref={(el) => (itemRefs.current[i] = el)}
             className="relative flex h-dvh snap-start snap-always items-center justify-center overflow-hidden bg-black"
@@ -247,13 +248,10 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
         );
       })}
 
-      {/* Recommendations panel at the end of the feed */}
-      <section className="min-h-dvh snap-start bg-black pt-8 pb-44">
-        <h2 className="px-5 text-lg font-bold text-white">Made for you</h2>
-        {rails.map((r) => (
-          <SongRail key={r.id} title={r.title} subtitle={r.subtitle} songs={r.songs} layout={r.layout} />
-        ))}
-      </section>
+      {/* endless feed - loader panel keeps the scroll going */}
+      <div className="flex h-24 items-center justify-center text-[10px] uppercase tracking-[0.3em] text-zinc-700">
+        loading more
+      </div>
     </div>
   );
 }
