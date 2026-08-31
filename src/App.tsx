@@ -8,6 +8,7 @@ import { SearchView } from "@/views/SearchView";
 import { DiscoverFeed } from "@/views/DiscoverFeed";
 import { LibraryView } from "@/views/LibraryView";
 import { BottomNav, type TabKey } from "@/components/BottomNav";
+import { BackgroundPlaybackPrompt } from "@/components/BackgroundPlaybackPrompt";
 import SplashScreen from "@/components/SplashScreen";
 import { usePlayer } from "@/context/PlayerContext";
 
@@ -25,6 +26,7 @@ function AppShell() {
 
       {currentSong && !fullOpen && <MiniPlayer onExpand={() => setFullOpen(true)} />}
       <BottomNav active={tab} onChange={setTab} />
+      <BackgroundPlaybackPrompt />
       {currentSong && fullOpen && <FullPlayer onClose={() => setFullOpen(false)} />}
     </div>
   );
