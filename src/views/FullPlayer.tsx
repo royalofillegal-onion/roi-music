@@ -155,14 +155,19 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Cover */}
-        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10">
+        {/* Cover — swipe here (and only here) to change tracks */}
+        <div
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10"
+        >
           <img
             src={currentSong.imageUrl}
             alt={currentSong.title}
             className="h-full w-full object-cover"
           />
         </div>
+
 
         {/* Title row */}
         <div className="mt-6 flex items-start justify-between gap-4">
