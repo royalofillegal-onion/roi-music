@@ -87,6 +87,13 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     seek: (time: number) => {},
   });
 
+  // Stable refs used by the one-time audio event listeners
+  const repeatRef = useRef(false);
+  const playingRef = useRef(false);
+  const failedAttemptsRef = useRef(0);
+  const wakeLockRef = useRef<any>(null);
+  const loadTokenRef = useRef(0);
+
   // Algorithm instances
   const playbackQueueRef = useRef(new PlaybackQueue());
   const shufflerRef = useRef(new NoRepeatShuffler(uniqueSongs));
