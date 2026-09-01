@@ -449,6 +449,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const pauseSong = useCallback(() => {
     if (audioRef.current) {
+      playingRef.current = false;
       audioRef.current.pause();
       setIsPlaying(false);
       mediaSessionManager.updatePlaybackState(false);
@@ -458,6 +459,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const resumeSong = useCallback(() => {
     if (audioRef.current && currentSong) {
+      playingRef.current = true;
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         mediaSessionManager.updatePlaybackState(true);
@@ -474,16 +476,24 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isPlaying, pauseSong, resumeSong]);
 
   const nextSong = useCallback(() => {
-    // 1. FIFO Queue — if songs are queued, dequeue next
-    const queuedSong = playbackQueueRef.current.dequeue();
+    // 1. FIFO Queue — if songs are queued, dequeue next (skip duplicates of
+    //    the current track so the same song never plays twice in a row).
+    let queuedSong = playbackQueueRef.current.dequeue();
+    while (queuedSong && currentSong && queuedSong.id === currentSong.id) {
+      queuedSong = playbackQueueRef.current.dequeue();
+    }
     if (queuedSong) {
+      setCircularQueue([...playbackQueueRef.current.getAll()]);
       playSong(queuedSong);
       return;
     }
 
     // 2. Shuffle mode — Fisher-Yates no-repeat shuffler
     if (isShuffled) {
-      const shuffled = shufflerRef.current.next();
+      let shuffled = shufflerRef.current.next();
+      if (shuffled && currentSong && shuffled.id === currentSong.id) {
+        shuffled = shufflerRef.current.next() ?? shuffled;
+      }
       if (shuffled) {
         playSong(shuffled);
         return;
@@ -491,11 +501,19 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     // 3. Sequential mode — play next in library order
-    if (!currentSong) return;
-    const currentIndex = uniqueSongs.findIndex(s => s.id === currentSong.id);
+    if (uniqueSongs.length === 0) return;
+    const currentIndex = currentSong
+      ? uniqueSongs.findIndex(s => s.id === currentSong.id)
+      : -1;
     const nextIndex = (currentIndex + 1) % uniqueSongs.length;
-    playSong(uniqueSongs[nextIndex]);
+    const next = uniqueSongs[nextIndex];
+    if (next && (!currentSong || next.id !== currentSong.id)) {
+      playSong(next);
+    } else if (uniqueSongs.length > 1) {
+      playSong(uniqueSongs[(nextIndex + 1) % uniqueSongs.length]);
+    }
   }, [currentSong, isShuffled, playSong]);
+
 
   const previousSong = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime > 3) {
