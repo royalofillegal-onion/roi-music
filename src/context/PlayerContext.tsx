@@ -383,20 +383,25 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
+    const audio = audioRef.current;
 
     // Record preference for the PREVIOUS song before switching
-    if (currentSong && audioRef.current) {
-      const listenedDuration = audioRef.current.currentTime;
-      userPreferenceLearner.recordPlay(currentSong, listenedDuration);
+    if (currentSong) {
+      userPreferenceLearner.recordPlay(currentSong, audio.currentTime);
     }
 
+    // Token guards against races when the user skips quickly: only the newest
+    // load request is allowed to start playback (kills AbortError stalls).
+    const token = ++loadTokenRef.current;
+
     setCurrentSong(song);
+    playingRef.current = true;
     addToRecentlyPlayed(song);
 
     // Try offline cache first
     let audioUrl = song.audioUrl;
     try {
-      const offlineUrl = await offlineCacheService.getOfflineAudioUrl(song.id);
+      const offlineUrl = await offlineCacheService.getOfflineAudioUrl?.(song.id);
       if (offlineUrl) {
         audioUrl = offlineUrl;
       } else if (navigator.onLine) {
@@ -407,29 +412,39 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch { /* ignore */ }
 
-    audioRef.current.src = audioUrl;
-    audioRef.current.load();
+    if (token !== loadTokenRef.current) return;
 
-    audioRef.current.play().then(() => {
+    audio.pause();
+    audio.src = audioUrl;
+    audio.load();
+
+    try {
+      await audio.play();
+      if (token !== loadTokenRef.current) return;
+      failedAttemptsRef.current = 0;
       setIsPlaying(true);
 
-      // Update Spotify-like Media Session (lock screen notification with rainbow art)
       mediaSessionManager.updateMetadata({
         title: song.title,
         artist: song.artist,
         album: song.album || song.artist,
         imageUrl: song.imageUrl,
-        duration: audioRef.current?.duration,
+        duration: audio.duration,
       });
       mediaSessionManager.updatePlaybackState(true);
-
-      if (audioRef.current) {
-        mediaSessionManager.startPositionTracking(audioRef.current);
+      mediaSessionManager.startPositionTracking(audio);
+    } catch (error: any) {
+      if (token !== loadTokenRef.current) return; // superseded by a newer track
+      if (error?.name === "AbortError") return;   // benign load interruption
+      // Unplayable source (404 / codec / CORS) — move on automatically.
+      failedAttemptsRef.current += 1;
+      if (failedAttemptsRef.current > 8) {
+        setIsPlaying(false);
+        return;
       }
-    }).catch((error) => {
-      console.error("Error playing song:", error);
-      setIsPlaying(false);
-    });
+      setTimeout(() => callbackRefs.current.nextSong(), 300);
+    }
+
   }, [addToRecentlyPlayed, currentSong]);
 
   const pauseSong = useCallback(() => {
