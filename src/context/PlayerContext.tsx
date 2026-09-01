@@ -152,50 +152,114 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [currentSong?.id]);
 
 
-  // Audio event listeners
+  // Audio event listeners — registered ONCE with ref-based callbacks so the
+  // "ended" handler never advances using a stale nextSong closure (that was
+  // causing the same song to repeat instead of continuing to the next one).
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
-      // Update lock screen seek bar
       if (audio.duration && isFinite(audio.duration)) {
         mediaSessionManager.updatePositionState(audio.currentTime, audio.duration);
       }
     };
 
-    const handleDurationChange = () => {
-      setDuration(audio.duration);
-    };
+    const handleDurationChange = () => setDuration(audio.duration);
 
     const handleEnded = () => {
-      if (isRepeating) {
+      // A finished track always counts as a success — reset the skip guard.
+      failedAttemptsRef.current = 0;
+      if (repeatRef.current) {
         audio.currentTime = 0;
-        audio.play();
+        void audio.play().catch(() => setIsPlaying(false));
         return;
       }
-      nextSong();
+      callbackRefs.current.nextSong();
     };
 
-    const handleCanPlay = () => {
-      if (isPlaying) {
-        audio.play().catch(() => setIsPlaying(false));
+    // Broken / unreachable source: auto-skip forward instead of dying silently.
+    const handleError = () => {
+      failedAttemptsRef.current += 1;
+      if (failedAttemptsRef.current > 8) {
+        setIsPlaying(false);
+        return;
       }
+      setTimeout(() => callbackRefs.current.nextSong(), 400);
+    };
+
+    const handlePlaying = () => {
+      failedAttemptsRef.current = 0;
+      setIsPlaying(true);
+    };
+    const handlePause = () => {
+      if (!audio.ended) setIsPlaying(false);
+    };
+
+    // Network stalls on mobile: nudge playback back to life.
+    const handleStalled = () => {
+      if (!playingRef.current) return;
+      window.setTimeout(() => {
+        if (playingRef.current && audio.paused) {
+          void audio.play().catch(() => {});
+        }
+      }, 1500);
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("durationchange", handleDurationChange);
     audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener("error", handleError);
+    audio.addEventListener("playing", handlePlaying);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("stalled", handleStalled);
+    audio.addEventListener("waiting", handleStalled);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("durationchange", handleDurationChange);
       audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("canplay", handleCanPlay);
+      audio.removeEventListener("error", handleError);
+      audio.removeEventListener("playing", handlePlaying);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("stalled", handleStalled);
+      audio.removeEventListener("waiting", handleStalled);
     };
-  }, [isRepeating, isPlaying, isShuffled]);
+  }, []);
+
+  // Mirror volatile state into refs used by the stable audio handlers.
+  useEffect(() => { repeatRef.current = isRepeating; }, [isRepeating]);
+  useEffect(() => { playingRef.current = isPlaying; }, [isPlaying]);
+
+  // Keep a screen wake lock while playing so Android doesn't suspend the tab,
+  // and re-acquire it whenever the app comes back to the foreground.
+  useEffect(() => {
+    let released = false;
+    const acquire = async () => {
+      if (!isPlaying) return;
+      try {
+        wakeLockRef.current = await (navigator as any).wakeLock?.request?.("screen");
+      } catch { /* unsupported or denied */ }
+    };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void acquire();
+      // Resume if the OS paused us while backgrounded.
+      if (playingRef.current && audioRef.current?.paused) {
+        void audioRef.current.play().catch(() => {});
+      }
+    };
+    void acquire();
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      released = true;
+      document.removeEventListener("visibilitychange", onVisible);
+      try { wakeLockRef.current?.release?.(); } catch { /* ignore */ }
+      wakeLockRef.current = null;
+      void released;
+    };
+  }, [isPlaying]);
+
 
 
   // Keep callback refs always pointing to the latest functions so the
