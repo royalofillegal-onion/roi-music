@@ -122,15 +122,16 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
 
   return (
     <div
+      ref={scrollRef}
+      onScroll={(e) => setShowTop((e.target as HTMLElement).scrollTop > 320)}
       className="fixed inset-0 z-50 overflow-y-auto text-white animate-in fade-in slide-in-from-bottom-8 duration-300"
       style={{
         background:
           "radial-gradient(120% 80% at 50% -10%, #1a0507 0%, #0a0507 45%, #050005 100%)",
       }}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
     >
       <div className="mx-auto max-w-[560px] px-5 pt-4 pb-32">
+
         {/* Top bar */}
         <div className="flex items-center justify-between">
           <button
