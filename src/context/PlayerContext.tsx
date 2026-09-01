@@ -87,6 +87,13 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     seek: (time: number) => {},
   });
 
+  // Stable refs used by the one-time audio event listeners
+  const repeatRef = useRef(false);
+  const playingRef = useRef(false);
+  const failedAttemptsRef = useRef(0);
+  const wakeLockRef = useRef<any>(null);
+  const loadTokenRef = useRef(0);
+
   // Algorithm instances
   const playbackQueueRef = useRef(new PlaybackQueue());
   const shufflerRef = useRef(new NoRepeatShuffler(uniqueSongs));
@@ -152,50 +159,114 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [currentSong?.id]);
 
 
-  // Audio event listeners
+  // Audio event listeners — registered ONCE with ref-based callbacks so the
+  // "ended" handler never advances using a stale nextSong closure (that was
+  // causing the same song to repeat instead of continuing to the next one).
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
-      // Update lock screen seek bar
       if (audio.duration && isFinite(audio.duration)) {
         mediaSessionManager.updatePositionState(audio.currentTime, audio.duration);
       }
     };
 
-    const handleDurationChange = () => {
-      setDuration(audio.duration);
-    };
+    const handleDurationChange = () => setDuration(audio.duration);
 
     const handleEnded = () => {
-      if (isRepeating) {
+      // A finished track always counts as a success — reset the skip guard.
+      failedAttemptsRef.current = 0;
+      if (repeatRef.current) {
         audio.currentTime = 0;
-        audio.play();
+        void audio.play().catch(() => setIsPlaying(false));
         return;
       }
-      nextSong();
+      callbackRefs.current.nextSong();
     };
 
-    const handleCanPlay = () => {
-      if (isPlaying) {
-        audio.play().catch(() => setIsPlaying(false));
+    // Broken / unreachable source: auto-skip forward instead of dying silently.
+    const handleError = () => {
+      failedAttemptsRef.current += 1;
+      if (failedAttemptsRef.current > 8) {
+        setIsPlaying(false);
+        return;
       }
+      setTimeout(() => callbackRefs.current.nextSong(), 400);
+    };
+
+    const handlePlaying = () => {
+      failedAttemptsRef.current = 0;
+      setIsPlaying(true);
+    };
+    const handlePause = () => {
+      if (!audio.ended) setIsPlaying(false);
+    };
+
+    // Network stalls on mobile: nudge playback back to life.
+    const handleStalled = () => {
+      if (!playingRef.current) return;
+      window.setTimeout(() => {
+        if (playingRef.current && audio.paused) {
+          void audio.play().catch(() => {});
+        }
+      }, 1500);
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("durationchange", handleDurationChange);
     audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener("error", handleError);
+    audio.addEventListener("playing", handlePlaying);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("stalled", handleStalled);
+    audio.addEventListener("waiting", handleStalled);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("durationchange", handleDurationChange);
       audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("canplay", handleCanPlay);
+      audio.removeEventListener("error", handleError);
+      audio.removeEventListener("playing", handlePlaying);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("stalled", handleStalled);
+      audio.removeEventListener("waiting", handleStalled);
     };
-  }, [isRepeating, isPlaying, isShuffled]);
+  }, []);
+
+  // Mirror volatile state into refs used by the stable audio handlers.
+  useEffect(() => { repeatRef.current = isRepeating; }, [isRepeating]);
+  useEffect(() => { playingRef.current = isPlaying; }, [isPlaying]);
+
+  // Keep a screen wake lock while playing so Android doesn't suspend the tab,
+  // and re-acquire it whenever the app comes back to the foreground.
+  useEffect(() => {
+    let released = false;
+    const acquire = async () => {
+      if (!isPlaying) return;
+      try {
+        wakeLockRef.current = await (navigator as any).wakeLock?.request?.("screen");
+      } catch { /* unsupported or denied */ }
+    };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void acquire();
+      // Resume if the OS paused us while backgrounded.
+      if (playingRef.current && audioRef.current?.paused) {
+        void audioRef.current.play().catch(() => {});
+      }
+    };
+    void acquire();
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      released = true;
+      document.removeEventListener("visibilitychange", onVisible);
+      try { wakeLockRef.current?.release?.(); } catch { /* ignore */ }
+      wakeLockRef.current = null;
+      void released;
+    };
+  }, [isPlaying]);
+
 
 
   // Keep callback refs always pointing to the latest functions so the
@@ -312,20 +383,25 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
+    const audio = audioRef.current;
 
     // Record preference for the PREVIOUS song before switching
-    if (currentSong && audioRef.current) {
-      const listenedDuration = audioRef.current.currentTime;
-      userPreferenceLearner.recordPlay(currentSong, listenedDuration);
+    if (currentSong) {
+      userPreferenceLearner.recordPlay(currentSong, audio.currentTime);
     }
 
+    // Token guards against races when the user skips quickly: only the newest
+    // load request is allowed to start playback (kills AbortError stalls).
+    const token = ++loadTokenRef.current;
+
     setCurrentSong(song);
+    playingRef.current = true;
     addToRecentlyPlayed(song);
 
     // Try offline cache first
     let audioUrl = song.audioUrl;
     try {
-      const offlineUrl = await offlineCacheService.getOfflineAudioUrl(song.id);
+      const offlineUrl = await offlineCacheService.getOfflineAudioUrl?.(song.id);
       if (offlineUrl) {
         audioUrl = offlineUrl;
       } else if (navigator.onLine) {
@@ -336,33 +412,44 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch { /* ignore */ }
 
-    audioRef.current.src = audioUrl;
-    audioRef.current.load();
+    if (token !== loadTokenRef.current) return;
 
-    audioRef.current.play().then(() => {
+    audio.pause();
+    audio.src = audioUrl;
+    audio.load();
+
+    try {
+      await audio.play();
+      if (token !== loadTokenRef.current) return;
+      failedAttemptsRef.current = 0;
       setIsPlaying(true);
 
-      // Update Spotify-like Media Session (lock screen notification with rainbow art)
       mediaSessionManager.updateMetadata({
         title: song.title,
         artist: song.artist,
         album: song.album || song.artist,
         imageUrl: song.imageUrl,
-        duration: audioRef.current?.duration,
+        duration: audio.duration,
       });
       mediaSessionManager.updatePlaybackState(true);
-
-      if (audioRef.current) {
-        mediaSessionManager.startPositionTracking(audioRef.current);
+      mediaSessionManager.startPositionTracking(audio);
+    } catch (error: any) {
+      if (token !== loadTokenRef.current) return; // superseded by a newer track
+      if (error?.name === "AbortError") return;   // benign load interruption
+      // Unplayable source (404 / codec / CORS) — move on automatically.
+      failedAttemptsRef.current += 1;
+      if (failedAttemptsRef.current > 8) {
+        setIsPlaying(false);
+        return;
       }
-    }).catch((error) => {
-      console.error("Error playing song:", error);
-      setIsPlaying(false);
-    });
+      setTimeout(() => callbackRefs.current.nextSong(), 300);
+    }
+
   }, [addToRecentlyPlayed, currentSong]);
 
   const pauseSong = useCallback(() => {
     if (audioRef.current) {
+      playingRef.current = false;
       audioRef.current.pause();
       setIsPlaying(false);
       mediaSessionManager.updatePlaybackState(false);
@@ -372,6 +459,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const resumeSong = useCallback(() => {
     if (audioRef.current && currentSong) {
+      playingRef.current = true;
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         mediaSessionManager.updatePlaybackState(true);
@@ -388,16 +476,24 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isPlaying, pauseSong, resumeSong]);
 
   const nextSong = useCallback(() => {
-    // 1. FIFO Queue — if songs are queued, dequeue next
-    const queuedSong = playbackQueueRef.current.dequeue();
+    // 1. FIFO Queue — if songs are queued, dequeue next (skip duplicates of
+    //    the current track so the same song never plays twice in a row).
+    let queuedSong = playbackQueueRef.current.dequeue();
+    while (queuedSong && currentSong && queuedSong.id === currentSong.id) {
+      queuedSong = playbackQueueRef.current.dequeue();
+    }
     if (queuedSong) {
+      setCircularQueue([...playbackQueueRef.current.getAll()]);
       playSong(queuedSong);
       return;
     }
 
     // 2. Shuffle mode — Fisher-Yates no-repeat shuffler
     if (isShuffled) {
-      const shuffled = shufflerRef.current.next();
+      let shuffled = shufflerRef.current.next();
+      if (shuffled && currentSong && shuffled.id === currentSong.id) {
+        shuffled = shufflerRef.current.next() ?? shuffled;
+      }
       if (shuffled) {
         playSong(shuffled);
         return;
@@ -405,11 +501,19 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     // 3. Sequential mode — play next in library order
-    if (!currentSong) return;
-    const currentIndex = uniqueSongs.findIndex(s => s.id === currentSong.id);
+    if (uniqueSongs.length === 0) return;
+    const currentIndex = currentSong
+      ? uniqueSongs.findIndex(s => s.id === currentSong.id)
+      : -1;
     const nextIndex = (currentIndex + 1) % uniqueSongs.length;
-    playSong(uniqueSongs[nextIndex]);
+    const next = uniqueSongs[nextIndex];
+    if (next && (!currentSong || next.id !== currentSong.id)) {
+      playSong(next);
+    } else if (uniqueSongs.length > 1) {
+      playSong(uniqueSongs[(nextIndex + 1) % uniqueSongs.length]);
+    }
   }, [currentSong, isShuffled, playSong]);
+
 
   const previousSong = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime > 3) {
