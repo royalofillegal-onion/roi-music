@@ -122,15 +122,16 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
 
   return (
     <div
+      ref={scrollRef}
+      onScroll={(e) => setShowTop((e.target as HTMLElement).scrollTop > 320)}
       className="fixed inset-0 z-50 overflow-y-auto text-white animate-in fade-in slide-in-from-bottom-8 duration-300"
       style={{
         background:
           "radial-gradient(120% 80% at 50% -10%, #1a0507 0%, #0a0507 45%, #050005 100%)",
       }}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
     >
       <div className="mx-auto max-w-[560px] px-5 pt-4 pb-32">
+
         {/* Top bar */}
         <div className="flex items-center justify-between">
           <button
@@ -154,14 +155,19 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Cover */}
-        <div className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10">
+        {/* Cover — swipe here (and only here) to change tracks */}
+        <div
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          className="mt-6 mx-auto w-full aspect-square max-w-[420px] rounded-3xl overflow-hidden shadow-[0_40px_120px_-20px_rgba(168,85,247,0.6)] border border-white/10"
+        >
           <img
             src={currentSong.imageUrl}
             alt={currentSong.title}
             className="h-full w-full object-cover"
           />
         </div>
+
 
         {/* Title row */}
         <div className="mt-6 flex items-start justify-between gap-4">
