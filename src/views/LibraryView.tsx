@@ -75,6 +75,7 @@ export function LibraryView() {
       <div className="mt-4 flex gap-2">
         {([
           ["liked", "Liked", Heart],
+          ["playlists", "Playlists", ListMusic],
           ["recent", "Recent", Clock],
           ["mixes", "Mixes", Sparkles],
         ] as const).map(([k, label, Icon]) => (
@@ -94,12 +95,75 @@ export function LibraryView() {
         ))}
       </div>
 
-      {tab === "mixes" ? (
+      {tab === "playlists" ? (
+        <div className="mt-6 space-y-3">
+          <button
+            disabled={liked.length === 0}
+            onClick={() => saveMix(`Liked mix · ${new Date().toLocaleDateString()}`, liked)}
+            className="inline-flex items-center gap-2 rounded-full bg-red-700 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white disabled:opacity-40"
+          >
+            <Plus className="h-3.5 w-3.5" /> New from liked
+          </button>
+
+          {playlists.length === 0 && (
+            <p className="pt-8 text-center text-sm text-zinc-600">
+              No playlists yet. Save a mix or open a shared link.
+            </p>
+          )}
+
+          {playlists.map((p) => {
+            const songs = resolve(p);
+            return (
+              <div
+                key={p.id}
+                className="flex items-center gap-3 rounded-2xl border border-white/8 bg-zinc-900/70 p-3"
+              >
+                <img
+                  src={songs[0]?.imageUrl}
+                  alt=""
+                  className="h-14 w-14 shrink-0 rounded-xl object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-white">{p.name}</p>
+                  <p className="text-[11px] text-zinc-500">
+                    {songs.length} songs{p.imported ? " · shared" : ""}
+                  </p>
+                </div>
+                <button
+                  onClick={() => togglePlaylistLike(p.id)}
+                  aria-label="Like playlist"
+                  className="grid h-9 w-9 place-items-center rounded-full"
+                >
+                  <Heart
+                    className={cn(
+                      "h-4 w-4",
+                      isPlaylistLiked(p.id) ? "fill-red-600 text-red-600" : "text-zinc-500"
+                    )}
+                  />
+                </button>
+                <button onClick={() => sharePlaylist(p)} aria-label="Share playlist" className="grid h-9 w-9 place-items-center rounded-full">
+                  <Share2 className="h-4 w-4 text-zinc-400" />
+                </button>
+                <button onClick={() => deletePlaylist(p.id)} aria-label="Delete playlist" className="grid h-9 w-9 place-items-center rounded-full">
+                  <Trash2 className="h-4 w-4 text-zinc-600" />
+                </button>
+                <button
+                  disabled={songs.length === 0}
+                  onClick={() => playPlaylist(songs)}
+                  aria-label="Play playlist"
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-black disabled:opacity-40"
+                >
+                  <Play className="ml-0.5 h-4 w-4" fill="currentColor" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      ) : tab === "mixes" ? (
         <div className="mt-6 grid grid-cols-2 gap-3">
           {mixes.map((m) => (
-            <button
+            <div
               key={m.name}
-              onClick={() => playPlaylist(m.songs)}
               className="group relative overflow-hidden rounded-2xl border border-white/8 bg-zinc-900 p-4 text-left"
             >
               <img
@@ -107,15 +171,22 @@ export function LibraryView() {
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover opacity-35 transition group-hover:opacity-50"
               />
-              <div className="relative">
+              <button onClick={() => playPlaylist(m.songs)} className="relative block w-full text-left">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-red-500">Mix</p>
                 <p className="mt-6 text-base font-bold text-white">{m.name}</p>
                 <p className="text-[11px] text-zinc-400">{m.songs.length} songs</p>
-              </div>
-            </button>
+              </button>
+              <button
+                onClick={() => saveMix(m.name, m.songs)}
+                className="relative mt-2 inline-flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white"
+              >
+                <Plus className="h-3 w-3" /> Save
+              </button>
+            </div>
           ))}
         </div>
       ) : (
+
         <>
           {list.length > 0 && (
             <button
