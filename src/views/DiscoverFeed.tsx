@@ -92,6 +92,25 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     if (song && song.id !== currentSong?.id) playSong(song);
   }, [activeIdx, started]);
 
+  // Auto-scroll when a track ends and the player advances on its own:
+  // jump to the panel of the new song, or back to the top if it isn't in view.
+  const prevSongId = useRef<string | null>(null);
+  useEffect(() => {
+    const id = currentSong?.id ?? null;
+    if (!id || id === prevSongId.current) return;
+    const isAutoAdvance = prevSongId.current !== null;
+    prevSongId.current = id;
+    if (!isAutoAdvance) return;
+    const idx = feed.findIndex((s) => s.id === id);
+    const root = containerRef.current;
+    if (!root) return;
+    if (idx >= 0) {
+      itemRefs.current[idx]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      root.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentSong?.id, feed]);
+
 
   return (
     <div
