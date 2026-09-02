@@ -53,6 +53,8 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   const [tab, setTab] = useState<Tab>("lyrics");
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [showTop, setShowTop] = useState(false);
 
   // Swipe gestures: left/right to skip tracks, down to close.
   const onTouchStart = (e: React.TouchEvent) => {
