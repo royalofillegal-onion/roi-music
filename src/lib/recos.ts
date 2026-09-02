@@ -76,19 +76,10 @@ export function buildRails(seed: Song | null, recentlyPlayed: Song[] = []): Rail
         title: `More from ${artist}`,
         songs: fromArtist,
       });
-    if (similar.length > 6)
-      rails.push({ id: "similar", title: "Similar songs", songs: similar.slice(6, 16) });
   }
-  rails.push({ id: "trending", title: "Trending now", songs: trending(12) });
-  rails.push({
-    id: "videos",
-    title: "Music videos",
-    songs: trending(10),
-    layout: "wide",
-  });
+  rails.push({ id: "trending", title: "Trending now", songs: trending(10) });
   if (recentlyPlayed.length)
-    rails.push({ id: "recent", title: "Recently played", songs: recentlyPlayed.slice(0, 12) });
-  rails.push({ id: "mayalso", title: "You may also like", songs: trending(12) });
+    rails.push({ id: "recent", title: "Recently played", songs: recentlyPlayed.slice(0, 10) });
   return rails;
 }
 

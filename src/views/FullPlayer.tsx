@@ -11,6 +11,7 @@ import {
   Shuffle,
   Repeat,
   Volume2,
+  ArrowUp,
 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
 import { Slider } from "@/components/ui/slider";
@@ -53,6 +54,8 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   const [tab, setTab] = useState<Tab>("lyrics");
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [showTop, setShowTop] = useState(false);
 
   // Swipe gestures: left/right to skip tracks, down to close.
   const onTouchStart = (e: React.TouchEvent) => {
@@ -406,6 +409,17 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           ))}
         </div>
       </div>
+
+      {/* Back to top */}
+      {showTop && (
+        <button
+          onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="Back to top"
+          className="fixed bottom-24 right-5 z-50 grid h-11 w-11 place-items-center rounded-full border border-red-900/50 bg-red-950/70 text-red-400 shadow-[0_0_20px_-4px_rgba(185,28,28,0.8)] backdrop-blur transition active:scale-90"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
+      )}
     </div>
   );
 }
