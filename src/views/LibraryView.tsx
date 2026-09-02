@@ -1,17 +1,28 @@
 import { useMemo, useState } from "react";
-import { Play, Heart, Clock, Sparkles } from "lucide-react";
+import { Play, Heart, Clock, Sparkles, ListMusic, Share2, Trash2, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { usePlayer } from "@/context/PlayerContext";
 import { uniqueSongs } from "@/data/allSongs";
 import { shuffle } from "@/lib/recos";
+import { usePlaylists, type StoredPlaylist } from "@/lib/playlistStore";
 import { cn } from "@/lib/utils";
 import type { Song } from "@/data/Song";
 
-type Tab = "liked" | "recent" | "mixes";
+type Tab = "liked" | "recent" | "mixes" | "playlists";
 
 export function LibraryView() {
   const { likedSongs, recentlyPlayed, playPlaylist, playSong, currentSong, toggleLike, isLiked } =
     usePlayer();
   const [tab, setTab] = useState<Tab>("liked");
+  const {
+    playlists,
+    isPlaylistLiked,
+    togglePlaylistLike,
+    savePlaylist,
+    deletePlaylist,
+    buildShareLink,
+    resolve,
+  } = usePlaylists();
 
   const liked = useMemo(
     () => (uniqueSongs as Song[]).filter((s) => (likedSongs as any)?.includes?.(s.id) || isLiked(s.id)),
@@ -33,7 +44,27 @@ export function LibraryView() {
     []
   );
 
+  const sharePlaylist = async (p: StoredPlaylist) => {
+    const url = buildShareLink(p);
+    try {
+      if (navigator.share) await navigator.share({ title: p.name, url });
+      else {
+        await navigator.clipboard.writeText(url);
+        toast.success("Share link copied");
+      }
+    } catch {
+      /* dismissed */
+    }
+  };
+
+  const saveMix = (name: string, songs: Song[]) => {
+    savePlaylist(name, songs.map((s) => s.id));
+    toast.success(`Saved "${name}" to your playlists`);
+    setTab("playlists");
+  };
+
   const list: Song[] = tab === "liked" ? liked : (recentlyPlayed as Song[]);
+
 
   return (
     <main className="min-h-dvh bg-black px-5 pt-12 pb-44">
