@@ -1,13 +1,14 @@
-import { Home, Search, Library, Clapperboard } from "lucide-react";
+import { Home, Search, Library, Clapperboard, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type TabKey = "home" | "discover" | "search" | "library";
+export type TabKey = "home" | "discover" | "search" | "library" | "profile";
 
 const TABS: { key: TabKey; label: string; Icon: typeof Home }[] = [
   { key: "home", label: "Home", Icon: Home },
   { key: "discover", label: "Discover", Icon: Clapperboard },
   { key: "search", label: "Search", Icon: Search },
   { key: "library", label: "Library", Icon: Library },
+  { key: "profile", label: "Profile", Icon: User },
 ];
 
 export function BottomNav({
