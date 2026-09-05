@@ -10,10 +10,10 @@ import type { Song } from "@/data/Song";
 
 type Tab = "liked" | "recent" | "mixes" | "playlists";
 
-export function LibraryView() {
+export function LibraryView({ initialTab = "liked" }: { initialTab?: Tab } = {}) {
   const { likedSongs, recentlyPlayed, playPlaylist, playSong, currentSong, toggleLike, isLiked } =
     usePlayer();
-  const [tab, setTab] = useState<Tab>("liked");
+  const [tab, setTab] = useState<Tab>(initialTab);
   const {
     playlists,
     isPlaylistLiked,
