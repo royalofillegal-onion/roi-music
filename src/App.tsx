@@ -13,12 +13,18 @@ import { BackgroundPlaybackPrompt } from "@/components/BackgroundPlaybackPrompt"
 import SplashScreen from "@/components/SplashScreen";
 import { usePlayer } from "@/context/PlayerContext";
 import { importSharedPlaylistFromUrl } from "@/lib/playlistStore";
+import { ProfileView } from "@/views/ProfileView";
+import { AuthView } from "@/views/AuthView";
+import { AuthProvider } from "@/context/AuthContext";
+import { useLibrarySync } from "@/lib/cloudLibrary";
 
 function AppShell() {
-  const { currentSong } = usePlayer();
+  const { currentSong, likedSongs } = usePlayer();
   const [tab, setTab] = useState<TabKey>("home");
   const [fullOpen, setFullOpen] = useState(false);
   const [sharedImported, setSharedImported] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  useLibrarySync(likedSongs);
 
   useEffect(() => {
     const imported = importSharedPlaylistFromUrl();
@@ -36,6 +42,13 @@ function AppShell() {
       {tab === "discover" && <DiscoverFeed onExpand={() => setFullOpen(true)} />}
       {tab === "search" && <SearchView onClose={() => setTab("home")} />}
       {tab === "library" && <LibraryView initialTab={sharedImported ? "playlists" : "liked"} />}
+      {tab === "profile" && <ProfileView onSignIn={() => setAuthOpen(true)} />}
+
+      {authOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black">
+          <AuthView onClose={() => setAuthOpen(false)} />
+        </div>
+      )}
 
       {currentSong && !fullOpen && <MiniPlayer onExpand={() => setFullOpen(true)} />}
       <BottomNav active={tab} onChange={setTab} />
@@ -49,8 +62,10 @@ export default function App() {
   const [splashDone, setSplashDone] = useState(false);
   return (
     <TooltipProvider>
+      <AuthProvider>
       {!splashDone && <SplashScreen onFinish={() => setSplashDone(true)} />}
       {splashDone && <AppShell />}
+      </AuthProvider>
       <Toaster position="top-center" theme="dark" />
     </TooltipProvider>
   );
