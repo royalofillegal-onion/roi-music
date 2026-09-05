@@ -322,6 +322,18 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
   }, [likedSongs]);
 
+  // Re-read liked songs when an account's library is restored from the cloud
+  useEffect(() => {
+    const restore = () => {
+      try {
+        const saved = localStorage.getItem("likedSongs");
+        if (saved) setLikedSongs(JSON.parse(saved));
+      } catch { /* ignore */ }
+    };
+    window.addEventListener("roi:likes-restored", restore);
+    return () => window.removeEventListener("roi:likes-restored", restore);
+  }, []);
+
   // Update play mode when repeat/shuffle changes
   useEffect(() => {
     if (isShuffled) setPlayMode('shuffle');
