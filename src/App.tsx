@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { HomeView } from "@/views/HomeView";
@@ -11,11 +12,21 @@ import { BottomNav, type TabKey } from "@/components/BottomNav";
 import { BackgroundPlaybackPrompt } from "@/components/BackgroundPlaybackPrompt";
 import SplashScreen from "@/components/SplashScreen";
 import { usePlayer } from "@/context/PlayerContext";
+import { importSharedPlaylistFromUrl } from "@/lib/playlistStore";
 
 function AppShell() {
   const { currentSong } = usePlayer();
   const [tab, setTab] = useState<TabKey>("home");
   const [fullOpen, setFullOpen] = useState(false);
+
+  useEffect(() => {
+    const imported = importSharedPlaylistFromUrl();
+    if (imported) {
+      setTab("library");
+      toast.success(`Added "${imported.name}" to your playlists`);
+    }
+  }, []);
+
 
   return (
     <div className="min-h-dvh overflow-x-hidden bg-[#050005] text-white">
