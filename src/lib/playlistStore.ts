@@ -41,6 +41,15 @@ export function getLikedPlaylistIds(): string[] {
   return read<string[]>(LIKES_KEY, []);
 }
 
+/** Bulk overwrite used when restoring an account's library from the cloud. */
+export function replaceLibrary(playlists: StoredPlaylist[], likedPlaylistIds: string[]) {
+  write(PLAYLISTS_KEY, playlists);
+  write(LIKES_KEY, likedPlaylistIds);
+}
+
+export const PLAYLISTS_CHANGED_EVENT = EVENT;
+
+
 export function savePlaylist(name: string, songIds: string[], opts: { imported?: boolean; id?: string } = {}) {
   const list = getPlaylists();
   const id = opts.id || `pl_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
