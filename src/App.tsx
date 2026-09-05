@@ -18,10 +18,12 @@ function AppShell() {
   const { currentSong } = usePlayer();
   const [tab, setTab] = useState<TabKey>("home");
   const [fullOpen, setFullOpen] = useState(false);
+  const [sharedImported, setSharedImported] = useState(false);
 
   useEffect(() => {
     const imported = importSharedPlaylistFromUrl();
     if (imported) {
+      setSharedImported(true);
       setTab("library");
       toast.success(`Added "${imported.name}" to your playlists`);
     }
@@ -33,7 +35,7 @@ function AppShell() {
       {tab === "home" && <HomeView onOpenSearch={() => setTab("search")} />}
       {tab === "discover" && <DiscoverFeed onExpand={() => setFullOpen(true)} />}
       {tab === "search" && <SearchView onClose={() => setTab("home")} />}
-      {tab === "library" && <LibraryView />}
+      {tab === "library" && <LibraryView initialTab={sharedImported ? "playlists" : "liked"} />}
 
       {currentSong && !fullOpen && <MiniPlayer onExpand={() => setFullOpen(true)} />}
       <BottomNav active={tab} onChange={setTab} />
