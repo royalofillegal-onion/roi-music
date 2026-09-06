@@ -8,6 +8,7 @@ import type { Song } from "@/data/Song";
 
 
 const PAGE = 12;
+const MAX_PAGES = 40;
 
 function shuffle<T>(arr: T[], seed: number): T[] {
   const a = [...arr];
