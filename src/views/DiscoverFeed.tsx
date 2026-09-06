@@ -80,10 +80,14 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     return () => io.disconnect();
   }, [feed.length]);
 
-  // Endless feed: append another page when close to the end.
+  // Endless feed: append another page and fetch more real tracks near the end.
   useEffect(() => {
-    if (activeIdx >= feed.length - 4) setPages((p) => p + 1);
+    if (activeIdx >= feed.length - 4) {
+      setPages((p) => p + 1);
+      void loadMore(2);
+    }
   }, [activeIdx, feed.length]);
+
 
   const onScroll = useCallback(() => {
     const el = containerRef.current;
