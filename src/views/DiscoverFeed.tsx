@@ -2,8 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Heart, Play, Pause, Share2, ListPlus, Music4, Volume2 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
 import { popularSongs, uniqueSongs } from "@/data/allSongs";
+import { useLiveMusicPool } from "@/lib/musicSource";
 import { cn } from "@/lib/utils";
 import type { Song } from "@/data/Song";
+
 
 const PAGE = 12;
 
@@ -34,19 +36,39 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     addToQueue,
   } = usePlayer();
 
-  const pool = useMemo<Song[]>(
-    () => (popularSongs.length > 20 ? popularSongs : (uniqueSongs as Song[])),
-    []
-  );
+  const { songs: liveSongs, loading, loadMore } = useLiveMusicPool();
+
+  // Interleave real streaming tracks with the local catalogue (2:1),
+  // so every few panels is a freshly fetched, actually-playable track.
+  const pool = useMemo<Song[]>(() => {
+    const local = shuffle(
+      (popularSongs.length > 20 ? popularSongs : (uniqueSongs as Song[])) || [],
+      13
+    );
+    if (liveSongs.length === 0) return local;
+    const out: Song[] = [];
+    let li = 0;
+    let lo = 0;
+    while (li < liveSongs.length || lo < local.length) {
+      if (li < liveSongs.length) out.push(liveSongs[li++]);
+      if (li < liveSongs.length) out.push(liveSongs[li++]);
+      if (lo < local.length) out.push(local[lo++]);
+    }
+    return out;
+  }, [liveSongs]);
+
   const [pages, setPages] = useState(1);
   const feed = useMemo<Song[]>(() => {
     const out: Song[] = [];
     for (let p = 0; p < pages; p++) {
-      const chunk = shuffle(pool, p + 7).slice(0, PAGE);
-      out.push(...chunk);
+      const start = (p * PAGE) % Math.max(pool.length, 1);
+      const chunk = pool.slice(start, start + PAGE);
+      out.push(...(chunk.length ? chunk : pool.slice(0, PAGE)));
     }
     return out;
   }, [pages, pool]);
+
+
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [started, setStarted] = useState(false);
@@ -72,10 +94,14 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     return () => io.disconnect();
   }, [feed.length]);
 
-  // Endless feed: append another page when close to the end.
+  // Endless feed: append another page and fetch more real tracks near the end.
   useEffect(() => {
-    if (activeIdx >= feed.length - 4) setPages((p) => p + 1);
+    if (activeIdx >= feed.length - 4) {
+      setPages((p) => p + 1);
+      void loadMore(2);
+    }
   }, [activeIdx, feed.length]);
+
 
   const onScroll = useCallback(() => {
     const el = containerRef.current;
