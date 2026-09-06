@@ -8,6 +8,7 @@ import type { Song } from "@/data/Song";
 
 
 const PAGE = 12;
+const MAX_PAGES = 40;
 
 function shuffle<T>(arr: T[], seed: number): T[] {
   const a = [...arr];
@@ -58,6 +59,10 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
   }, [liveSongs]);
 
   const [pages, setPages] = useState(1);
+  const growFeed = useCallback(
+    () => setPages((p) => Math.min(p + 1, MAX_PAGES)),
+    []
+  );
   const feed = useMemo<Song[]>(() => {
     const out: Song[] = [];
     for (let p = 0; p < pages; p++) {
@@ -97,19 +102,16 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
   // Endless feed: append another page and fetch more real tracks near the end.
   useEffect(() => {
     if (activeIdx >= feed.length - 4) {
-      setPages((p) => p + 1);
+      growFeed();
       void loadMore(2);
     }
-  }, [activeIdx, feed.length]);
-
+  }, [activeIdx, feed.length, growFeed]);
 
   const onScroll = useCallback(() => {
     const el = containerRef.current;
     if (!el) return;
-    if (el.scrollTop + el.clientHeight * 2.5 >= el.scrollHeight) {
-      setPages((p) => p + 1);
-    }
-  }, []);
+    if (el.scrollTop + el.clientHeight * 2.5 >= el.scrollHeight) growFeed();
+  }, [growFeed]);
 
   // Once the user has started playback, swiping changes the track (Reels behaviour).
   useEffect(() => {
