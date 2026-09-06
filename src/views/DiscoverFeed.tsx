@@ -58,6 +58,10 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
   }, [liveSongs]);
 
   const [pages, setPages] = useState(1);
+  const growFeed = useCallback(
+    () => setPages((p) => Math.min(p + 1, MAX_PAGES)),
+    []
+  );
   const feed = useMemo<Song[]>(() => {
     const out: Song[] = [];
     for (let p = 0; p < pages; p++) {
