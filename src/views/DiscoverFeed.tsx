@@ -34,10 +34,15 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     addToQueue,
   } = usePlayer();
 
-  const pool = useMemo<Song[]>(
-    () => (popularSongs.length > 20 ? popularSongs : (uniqueSongs as Song[])),
-    []
-  );
+  const { songs: liveSongs, loading, loadMore } = useLiveMusicPool();
+
+  const pool = useMemo<Song[]>(() => {
+    const local = (popularSongs.length > 20 ? popularSongs : (uniqueSongs as Song[])) || [];
+    if (liveSongs.length === 0) return local;
+    // Real streaming tracks lead the feed, local catalogue fills in behind.
+    return [...liveSongs, ...local];
+  }, [liveSongs]);
+
   const [pages, setPages] = useState(1);
   const feed = useMemo<Song[]>(() => {
     const out: Song[] = [];
@@ -47,6 +52,7 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
     }
     return out;
   }, [pages, pool]);
+
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [started, setStarted] = useState(false);
