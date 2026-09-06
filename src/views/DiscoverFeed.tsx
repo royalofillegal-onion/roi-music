@@ -38,22 +38,36 @@ export function DiscoverFeed({ onExpand }: { onExpand: () => void }) {
 
   const { songs: liveSongs, loading, loadMore } = useLiveMusicPool();
 
+  // Interleave real streaming tracks with the local catalogue (2:1),
+  // so every few panels is a freshly fetched, actually-playable track.
   const pool = useMemo<Song[]>(() => {
-    const local = (popularSongs.length > 20 ? popularSongs : (uniqueSongs as Song[])) || [];
+    const local = shuffle(
+      (popularSongs.length > 20 ? popularSongs : (uniqueSongs as Song[])) || [],
+      13
+    );
     if (liveSongs.length === 0) return local;
-    // Real streaming tracks lead the feed, local catalogue fills in behind.
-    return [...liveSongs, ...local];
+    const out: Song[] = [];
+    let li = 0;
+    let lo = 0;
+    while (li < liveSongs.length || lo < local.length) {
+      if (li < liveSongs.length) out.push(liveSongs[li++]);
+      if (li < liveSongs.length) out.push(liveSongs[li++]);
+      if (lo < local.length) out.push(local[lo++]);
+    }
+    return out;
   }, [liveSongs]);
 
   const [pages, setPages] = useState(1);
   const feed = useMemo<Song[]>(() => {
     const out: Song[] = [];
     for (let p = 0; p < pages; p++) {
-      const chunk = shuffle(pool, p + 7).slice(0, PAGE);
-      out.push(...chunk);
+      const start = (p * PAGE) % Math.max(pool.length, 1);
+      const chunk = pool.slice(start, start + PAGE);
+      out.push(...(chunk.length ? chunk : pool.slice(0, PAGE)));
     }
     return out;
   }, [pages, pool]);
+
 
 
   const [activeIdx, setActiveIdx] = useState(0);
