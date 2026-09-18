@@ -69,9 +69,22 @@ export function LibraryView({ initialTab = "liked" }: { initialTab?: Tab } = {})
 
   return (
     <main className="min-h-dvh bg-black px-5 pt-12 pb-44">
-      <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-        Your Library
-      </h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+          Your Library
+        </h1>
+        <button
+          onClick={() => {
+            const station = buildBlendRadio(liked.length ? liked : (recentlyPlayed as Song[]));
+            if (station.length) playPlaylist(station);
+            else toast.info("Like or play a few songs first");
+          }}
+          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-red-700 px-3.5 py-2 text-[11px] font-bold uppercase tracking-widest text-white"
+        >
+          <Radio className="h-3.5 w-3.5" /> Radio
+        </button>
+      </div>
+
 
       <div className="mt-4 flex gap-2">
         {([
