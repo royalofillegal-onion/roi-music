@@ -17,6 +17,7 @@ import { ProfileView } from "@/views/ProfileView";
 import { AuthView } from "@/views/AuthView";
 import { AuthProvider } from "@/context/AuthContext";
 import { useLibrarySync } from "@/lib/cloudLibrary";
+import { useListeningTracker } from "@/lib/listeningStats";
 
 function AppShell() {
   const { currentSong, likedSongs } = usePlayer();
@@ -25,6 +26,7 @@ function AppShell() {
   const [sharedImported, setSharedImported] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   useLibrarySync(likedSongs);
+  useListeningTracker(currentSong);
 
   useEffect(() => {
     const imported = importSharedPlaylistFromUrl();
