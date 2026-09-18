@@ -1,8 +1,10 @@
 import { useMemo } from "react";
-import { Play, Heart, MapPin, Search, SlidersHorizontal, Flame } from "lucide-react";
+import { Play, Heart, MapPin, Search, SlidersHorizontal, Flame, Radio } from "lucide-react";
 import { popularSongs, uniqueSongs } from "@/data/allSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import { useWeather } from "@/hooks/useWeather";
+import { useListeningStats } from "@/lib/listeningStats";
+import { buildRadio } from "@/lib/radio";
 import { cn } from "@/lib/utils";
 
 function greeting(): string {
@@ -37,6 +39,21 @@ export function HomeView({
 
   const playWeatherMix = () => {
     if (weatherMix.length > 0) playPlaylist(weatherMix as any);
+  };
+
+  const stats = useListeningStats();
+  const topArtists = stats.topArtists;
+
+  const startRadio = (seed: (typeof songs)[number]) => {
+    const station = buildRadio(seed as any);
+    if (station.length) playPlaylist(station as any);
+  };
+
+  const artistStation = (artist: string) => {
+    const seed = (uniqueSongs as any[]).find(
+      (s) => (s.singer || s.artist || "").toLowerCase() === artist.toLowerCase()
+    );
+    if (seed) startRadio(seed);
   };
 
   return (
@@ -121,14 +138,53 @@ export function HomeView({
                 )}
                 {weather.tempC !== null && <span>· {weather.tempC}°C</span>}
               </p>
-              <span className="mt-3 inline-flex items-center gap-2 rounded-full bg-red-700 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-white">
-                <Play className="h-3 w-3" fill="currentColor" />
-                Play now
-              </span>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-2 rounded-full bg-red-700 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-white">
+                  <Play className="h-3 w-3" fill="currentColor" />
+                  Play now
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startRadio(hero);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur"
+                >
+                  <Radio className="h-3 w-3" /> Radio
+                </button>
+              </div>
             </div>
           </div>
         </section>
       )}
+
+      {/* Your top artists */}
+      {topArtists.length > 0 && (
+        <section className="relative mt-8">
+          <h2 className="mb-3 text-lg font-bold text-white">Your top artists</h2>
+          <div className="-mx-5 flex gap-4 overflow-x-auto px-5 pb-2 scrollbar-hide">
+            {topArtists.map((a) => (
+              <button
+                key={a.key}
+                onClick={() => artistStation(a.label)}
+                className="w-20 shrink-0 text-center"
+              >
+                <img
+                  src={a.imageUrl}
+                  alt=""
+                  className="h-20 w-20 rounded-full border border-red-900/40 object-cover"
+                  loading="lazy"
+                />
+                <span className="mt-2 block truncate text-[11px] font-semibold text-zinc-300">
+                  {a.label}
+                </span>
+                <span className="block text-[10px] text-zinc-600">{Math.round(a.seconds / 60)} min</span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
 
       {/* Most popular */}
       <section className="relative mt-8">
