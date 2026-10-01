@@ -18,6 +18,7 @@ import { AuthView } from "@/views/AuthView";
 import { AuthProvider } from "@/context/AuthContext";
 import { useLibrarySync } from "@/lib/cloudLibrary";
 import { useListeningTracker } from "@/lib/listeningStats";
+import { CommandPalette } from "@/components/CommandPalette";
 
 function AppShell() {
   const { currentSong, likedSongs } = usePlayer();
