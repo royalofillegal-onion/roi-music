@@ -99,8 +99,8 @@ export function BackgroundPlaybackPrompt() {
   const Icon = active.icon;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[80] flex justify-center p-4 pb-24">
-      <div className="w-full max-w-md rounded-[28px] border border-red-900/50 bg-black/95 p-5 shadow-[0_30px_90px_-20px_rgba(220,38,38,0.5)] backdrop-blur-xl">
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[80] flex justify-center p-4 pb-24">
+      <div className="pointer-events-auto w-full max-w-md rounded-[28px] border border-red-900/50 bg-black/95 p-5 shadow-[0_30px_90px_-20px_rgba(220,38,38,0.5)] backdrop-blur-xl">
         <div className="flex items-start gap-3">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-red-800/60 bg-red-950/50">
             <Icon className="h-5 w-5 text-red-500" />
