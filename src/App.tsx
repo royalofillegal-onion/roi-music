@@ -41,11 +41,16 @@ function AppShell() {
 
   return (
     <div className="min-h-dvh overflow-x-hidden bg-[#050005] text-white">
-      {tab === "home" && <HomeView onOpenSearch={() => setTab("search")} />}
-      {tab === "discover" && <DiscoverFeed onExpand={() => setFullOpen(true)} />}
-      {tab === "search" && <SearchView onClose={() => setTab("home")} />}
-      {tab === "library" && <LibraryView initialTab={sharedImported ? "playlists" : "liked"} />}
-      {tab === "profile" && <ProfileView onSignIn={() => setAuthOpen(true)} />}
+      <div key={tab} className="view-enter">
+        {tab === "home" && <HomeView onOpenSearch={() => setTab("search")} />}
+        {tab === "discover" && <DiscoverFeed onExpand={() => setFullOpen(true)} />}
+        {tab === "search" && <SearchView onClose={() => setTab("home")} />}
+        {tab === "library" && <LibraryView initialTab={sharedImported ? "playlists" : "liked"} />}
+        {tab === "profile" && <ProfileView onSignIn={() => setAuthOpen(true)} />}
+      </div>
+
+      <CommandPalette onNavigate={setTab} />
+
 
       {authOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black">
