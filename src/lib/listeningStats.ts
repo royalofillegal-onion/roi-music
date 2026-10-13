@@ -58,6 +58,30 @@ export function recordPlay(song: Song, seconds: number) {
   write(file);
 }
 
+/** Taste profile learned from feedback: full plays boost, quick skips penalise. */
+export interface Taste {
+  song: Map<string, number>;
+  artist: Map<string, number>;
+  played: Set<string>;
+}
+
+export function getTaste(): Taste {
+  const song = new Map<string, number>();
+  const artist = new Map<string, number>();
+  const played = new Set<string>();
+  const now = Date.now();
+  for (const e of read().events) {
+    // Recent events count more (half-life ~30 days).
+    const decay = Math.pow(0.5, (now - e.at) / (30 * DAY));
+    const w = (e.seconds < 30 ? -1 : e.seconds >= 90 ? 1.5 : 0.5) * decay;
+    song.set(e.id, (song.get(e.id) || 0) + w);
+    const a = e.artist.toLowerCase().trim();
+    artist.set(a, (artist.get(a) || 0) + w);
+    played.add(e.id);
+  }
+  return { song, artist, played };
+}
+
 export function clearStats() {
   write({ events: [] });
 }

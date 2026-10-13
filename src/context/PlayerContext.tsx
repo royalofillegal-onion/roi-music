@@ -235,6 +235,30 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
+  // Headphones / Bluetooth disconnected: pause instead of blasting the speaker.
+  useEffect(() => {
+    const md = navigator.mediaDevices;
+    if (!md?.enumerateDevices || !md.addEventListener) return;
+    let outputs = -1;
+    const count = async () => {
+      try {
+        const d = await md.enumerateDevices();
+        return d.filter((x) => x.kind === "audiooutput").length;
+      } catch { return -1; }
+    };
+    void count().then((n) => { outputs = n; });
+    const onChange = async () => {
+      const n = await count();
+      if (outputs > 0 && n >= 0 && n < outputs && playingRef.current) {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      }
+      outputs = n;
+    };
+    md.addEventListener("devicechange", onChange);
+    return () => md.removeEventListener("devicechange", onChange);
+  }, []);
+
   // Mirror volatile state into refs used by the stable audio handlers.
   useEffect(() => { repeatRef.current = isRepeating; }, [isRepeating]);
   useEffect(() => { playingRef.current = isPlaying; }, [isPlaying]);
@@ -562,6 +586,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const addToQueue = useCallback((song: Song) => {
+    // No duplicates: skip if already queued or currently playing.
+    if (playbackQueueRef.current.getAll().some((s) => s.id === song.id)) return;
     playbackQueueRef.current.enqueue(song);
     // Force re-render
     setCircularQueue([...playbackQueueRef.current.getAll()]);
