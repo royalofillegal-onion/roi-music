@@ -9,7 +9,7 @@ import { buildBlendRadio } from "@/lib/radio";
 import { uniqueSongs } from "@/data/allSongs";
 import type { Song } from "@/data/Song";
 
-export function ProfileView({ onSignIn }: { onSignIn: () => void }) {
+export function ProfileView({ onSignIn, onClose }: { onSignIn: () => void; onClose?: () => void }) {
   const { user, signOut } = useAuth();
   const { likedSongs, recentlyPlayed, playPlaylist } = usePlayer();
   const { playlists } = usePlaylists();
