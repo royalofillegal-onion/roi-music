@@ -23,7 +23,8 @@ const todayStr = new Date().toLocaleDateString("en-US", {
 
 export function HomeView({
   onOpenSearch,
-}: { onOpenSearch?: () => void } = {}) {
+  onOpenAccount,
+}: { onOpenSearch?: () => void; onOpenAccount?: () => void } = {}) {
   const { playSong, playPlaylist, currentSong, toggleLike, isLiked, recentlyPlayed } = usePlayer();
   const weather = useWeather();
   const songs = useMemo(() => popularSongs.slice(0, 12), []);
