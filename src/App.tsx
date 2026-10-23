@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { HomeView } from "@/views/HomeView";
@@ -18,12 +17,13 @@ function AppShell() {
   const [tab, setTab] = useState<TabKey>("home");
   const [fullOpen, setFullOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  useLibrarySync(likedSongs);
   useListeningTracker(currentSong);
 
   return (
     <div className="min-h-dvh overflow-x-hidden bg-[#050005] text-white">
       <div key={tab} className="view-enter">
-        {tab === "home" && <HomeView onOpenSearch={() => setTab("search")} />}
+        {tab === "home" && <HomeView onOpenSearch={() => setTab("search")} onOpenAccount={() => setAccountOpen(true)} />}
         {tab === "search" && <SearchView onClose={() => setTab("home")} />}
       </div>
 
