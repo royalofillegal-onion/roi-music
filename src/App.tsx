@@ -9,7 +9,6 @@ import { SearchView } from "@/views/SearchView";
 import { BottomNav, type TabKey } from "@/components/BottomNav";
 import { usePlayer } from "@/context/PlayerContext";
 import { ProfileView } from "@/views/ProfileView";
-import { AuthView } from "@/views/AuthView";
 import { AuthProvider } from "@/context/AuthContext";
 import { useLibrarySync } from "@/lib/cloudLibrary";
 import { useListeningTracker } from "@/lib/listeningStats";
@@ -19,7 +18,6 @@ function AppShell() {
   const [tab, setTab] = useState<TabKey>("home");
   const [fullOpen, setFullOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  useLibrarySync(likedSongs);
   useListeningTracker(currentSong);
 
   return (
