@@ -6,6 +6,7 @@ import { FullPlayer } from "@/views/FullPlayer";
 import { MiniPlayer } from "@/views/MiniPlayer";
 import { SearchView } from "@/views/SearchView";
 import { BottomNav, type TabKey } from "@/components/BottomNav";
+import SplashScreen from "@/components/SplashScreen";
 import { usePlayer } from "@/context/PlayerContext";
 import { ProfileView } from "@/views/ProfileView";
 import { AuthProvider } from "@/context/AuthContext";
