@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Play, Heart, MapPin, Search, SlidersHorizontal, Flame, Radio } from "lucide-react";
+import { Play, Heart, MapPin, Search, SlidersHorizontal, Flame, Radio, CircleUserRound } from "lucide-react";
 import { popularSongs, uniqueSongs } from "@/data/allSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import { useWeather } from "@/hooks/useWeather";
@@ -85,8 +85,17 @@ export function HomeView({
           </h1>
           <p className="mt-1 text-[11px] text-zinc-600">{todayStr}</p>
         </div>
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-red-900/40 bg-zinc-900 text-lg shadow-[0_0_24px_-8px_rgba(185,28,28,0.9)]">
-          <span>{weather.emoji}</span>
+        <div className="flex shrink-0 items-center gap-2">
+          <div className="grid h-12 w-12 place-items-center rounded-full border border-red-900/40 bg-zinc-900 text-lg shadow-[0_0_24px_-8px_rgba(185,28,28,0.9)]">
+            <span>{weather.emoji}</span>
+          </div>
+          <button
+            onClick={onOpenAccount}
+            aria-label="Open account"
+            className="grid h-12 w-12 place-items-center rounded-full border border-red-900/40 bg-zinc-900 text-red-400 shadow-[0_0_24px_-8px_rgba(185,28,28,0.9)] transition active:scale-90"
+          >
+            <CircleUserRound className="h-5 w-5" />
+          </button>
         </div>
       </header>
 

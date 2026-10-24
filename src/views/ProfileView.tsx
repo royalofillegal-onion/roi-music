@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Heart, ListMusic, LogOut, Cloud, CheckCircle2, Flame, Clock3, Radio, Trash2 } from "lucide-react";
+import { Heart, ListMusic, LogOut, Cloud, CheckCircle2, Flame, Clock3, Radio, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { usePlayer } from "@/context/PlayerContext";
@@ -121,7 +121,16 @@ export function ProfileView({ onSignIn, onClose }: { onSignIn: () => void; onClo
 
   if (!user) {
     return (
-      <main className="min-h-dvh bg-black px-6 pt-24 pb-44 text-center">
+      <main className="relative min-h-dvh bg-black px-6 pt-24 pb-44 text-center">
+        {onClose && (
+          <button
+            onClick={onClose}
+            aria-label="Close account page"
+            className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition active:scale-90"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
         <div className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-red-800/60 bg-red-950/40 text-red-500 shadow-[0_0_30px_rgba(220,38,38,0.3)]">
           <Cloud className="h-8 w-8" />
         </div>
@@ -143,7 +152,16 @@ export function ProfileView({ onSignIn, onClose }: { onSignIn: () => void; onClo
   }
 
   return (
-    <main className="min-h-dvh bg-black px-5 pt-12 pb-44">
+      <main className="relative min-h-dvh bg-black px-5 pt-12 pb-44">
+        {onClose && (
+          <button
+            onClick={onClose}
+            aria-label="Close account page"
+            className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition active:scale-90"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       <div className="flex items-center gap-4">
         <div className="grid h-16 w-16 place-items-center rounded-full border border-red-800/60 bg-red-950/40 text-lg font-black text-red-400">
           {initials}
