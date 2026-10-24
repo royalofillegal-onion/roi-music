@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Heart, ListMusic, LogOut, Cloud, CheckCircle2, Flame, Clock3, Radio, Trash2 } from "lucide-react";
+import { Heart, ListMusic, LogOut, Cloud, CheckCircle2, Flame, Clock3, Radio, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { usePlayer } from "@/context/PlayerContext";
