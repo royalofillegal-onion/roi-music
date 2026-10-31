@@ -7005,8 +7005,8 @@ export const TeluguSongs: Song[] = [
   },
   {
     "id": "song181",
-    "title": "111",
-    "artist": "111",
+    "title": "hello",
+    "artist": "welcome",
     "imageUrl": "https://res.cloudinary.com/dkhbceri0/image/upload/v1748168857/Billa-2009-jpeg-300x300_wnpesg.jpg",
     "audioUrl": "https://res.cloudinary.com/dkhbceri0/video/upload/v1748168882/Billa_Theme_Song-SenSongsMp3.Co_tsqd5f.mp3",
     "duration": 272,
