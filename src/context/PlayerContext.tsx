@@ -428,6 +428,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
+    // First user gesture is the right moment to ask for notification
+    // permission (enables background "now playing" notifications).
+    void backgroundPlayback.requestPermission();
 
     // Record preference for the PREVIOUS song before switching
     if (currentSong) {
