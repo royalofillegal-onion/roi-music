@@ -5,6 +5,7 @@ import { PlaybackQueue } from "@/lib/algorithms/playbackQueue";
 import { NoRepeatShuffler, fisherYatesShuffle } from "@/lib/algorithms/fisherYatesShuffle";
 import { getHybridRecommendations } from "@/lib/algorithms/recommendations";
 import { mediaSessionManager } from "@/services/MediaSessionService";
+import { backgroundPlayback } from "@/services/BackgroundPlaybackService";
 const offlineCacheService = { initialize: async () => {}, cacheSong: async (_: any) => {}, getCachedSong: async (_: any) => null, getCacheStats: async () => ({ count: 0, totalSize: 0 }) } as any;
 const userPreferenceLearner = {
   recordPlay: (_s: any, _d?: number) => {},
@@ -301,7 +302,38 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       mediaSessionManager.stopPositionTracking();
     }
-  }, [isPlaying]);
+    // Background notification: appears when the app goes to the background
+    // mid-play, closes when playback stops or the app comes back to front.
+    if (currentSong && isPlaying) {
+      backgroundPlayback.showNowPlaying({
+        title: currentSong.title,
+        artist: currentSong.artist,
+        imageUrl: currentSong.imageUrl,
+      });
+    } else {
+      backgroundPlayback.close();
+    }
+  }, [isPlaying, currentSong]);
+
+  // Re-evaluate the background notification when the app is hidden/shown —
+  // the "hidden" check inside showNowPlaying runs at call time only.
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.hidden) {
+        if (playingRef.current && currentSong) {
+          backgroundPlayback.showNowPlaying({
+            title: currentSong.title,
+            artist: currentSong.artist,
+            imageUrl: currentSong.imageUrl,
+          });
+        }
+      } else {
+        backgroundPlayback.close();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [currentSong]);
 
 
 
@@ -396,6 +428,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const playSong = useCallback(async (song: Song) => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
+    // First user gesture is the right moment to ask for notification
+    // permission (enables background "now playing" notifications).
+    void backgroundPlayback.requestPermission();
 
     // Record preference for the PREVIOUS song before switching
     if (currentSong) {

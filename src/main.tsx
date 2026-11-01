@@ -12,16 +12,8 @@ import { initializeContentProtection } from './utils/contentProtection'
 // Initialize content protection
 initializeContentProtection();
 
-// Request notification permission
-const requestNotificationPermission = async () => {
-  if ('Notification' in window && Notification.permission === 'default') {
-    try {
-      await Notification.requestPermission();
-    } catch (e) {
-      console.log('Notification permission request failed:', e);
-    }
-  }
-};
+// Notification permission is requested on the first play tap (see
+// BackgroundPlaybackService) — page-load prompts are ignored by browsers.
 
 // Register service worker for PWA (only in production, not in iframes)
 const registerServiceWorker = async () => {
@@ -56,7 +48,6 @@ const registerServiceWorker = async () => {
 };
 
 // Initialize PWA features
-requestNotificationPermission();
 registerServiceWorker();
 
 // Request persistent storage
