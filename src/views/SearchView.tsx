@@ -7,16 +7,64 @@ import type { Song } from "@/data/Song";
 
 type SearchCategory = "Top Results" | "Artists" | "Albums" | "Songs";
 
+const RECENT_SEARCHES_KEY = "roi.recentSearches.v1";
+const MAX_RECENT_SEARCHES = 8;
+
 export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; mongoSongs?: Song[] }) {
   const { playSong, currentSong } = usePlayer();
   const [q, setQ] = useState("");
   const [category, setCategory] = useState<SearchCategory>("Top Results");
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [recentQueries, setRecentQueries] = useState<string[]>(() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) ?? "[]");
+      return Array.isArray(raw) ? raw.filter((t) => typeof t === "string" && t.trim()) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const saveRecent = (term: string) => {
+    const t = term.trim();
+    if (!t) return;
+    setRecentQueries((prev) => {
+      const next = [t, ...prev.filter((p) => p.toLowerCase() !== t.toLowerCase())].slice(0, 8);
+      try {
+        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next));
+      } catch {
+        // storage unavailable — recent searches stay in-memory for this session
+      }
+      return next;
+    });
+  };
+
+  const clearRecent = () => {
+    setRecentQueries([]);
+    try {
+      localStorage.removeItem(RECENT_SEARCHES_KEY);
+    } catch {
+      // ignore
+    }
+  };
+
+  const selectSong = (song: Song) => {
+    if (q.trim()) saveRecent(q);
+    inputRef.current?.blur();
+    playSong(song);
+  };
 
   useEffect(() => {
-    inputRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      // Desktop convenience: "/" focuses the field. Never auto-focus on load,
+      // so mobile browsers don't pop the keyboard open by themselves.
+      if (e.key === "/" && document.activeElement !== inputRef.current) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -26,19 +74,41 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
     return [...mongoSongs, ...uniqueSongs].filter((song, index, list) => list.findIndex((item) => item.id === song.id) === index);
   }, [mongoSongs]);
 
+  // Results are ranked, not just filtered: a title that starts with the query
+  // beats one that merely mentions it, so the best match is always on top.
   const results = useMemo(() => {
     const term = q.trim().toLowerCase();
     if (!term) return catalog.slice(0, 30);
-    return catalog.filter((s) => {
-      return (
-        s.title?.toLowerCase().includes(term) ||
-        s.artist?.toLowerCase().includes(term) ||
-        s.singer?.toLowerCase().includes(term) ||
-        s.album?.toLowerCase().includes(term) ||
-        s.genre?.toLowerCase().includes(term) ||
-        s.language?.toLowerCase().includes(term)
-      );
-    }).slice(0, 80);
+    const searchable = (s: Song) =>
+      [
+        s.title,
+        s.singer,
+        s.artist,
+        s.album,
+        s.genre,
+        s.language,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+    const score = (s: Song) => {
+      const title = (s.title ?? "").toLowerCase();
+      const artist = ((s.singer || s.artist) ?? "").toLowerCase();
+      let value = 0;
+      if (title.startsWith(term)) value += 6;
+      else if (title.includes(term)) value += 4;
+      if (artist.startsWith(term)) value += 3;
+      else if (artist.includes(term)) value += 2;
+      if ((s.album ?? "").toLowerCase().includes(term)) value += 1;
+      if ((s.genre ?? "").toLowerCase().includes(term) || (s.language ?? "").toLowerCase().includes(term)) value += 0.5;
+      return value;
+    };
+    return catalog
+      .filter((s) => searchable(s).includes(term))
+      .map((s) => ({ s, score: score(s) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 80)
+      .map((entry) => entry.s);
   }, [q, catalog]);
 
   const artists = useMemo(() => {
@@ -87,6 +157,14 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
               ref={inputRef}
               value={q}
               onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  saveRecent(q);
+                  inputRef.current?.blur();
+                }
+              }}
+              enterKeyHint="search"
+              autoComplete="off"
               placeholder="Search songs, artists, albums..."
               className="min-w-0 flex-1 bg-transparent text-[14px] outline-none placeholder:text-white/55"
             />
@@ -119,8 +197,31 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
           ))}
         </div>
 
+        {!q && recentQueries.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-1.5" aria-label="Recent searches">
+            {recentQueries.map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => setQ(term)}
+                className="flex items-center gap-1.5 rounded-full bg-white/[0.07] px-3 py-1.5 text-[12px] text-white/85 transition-colors hover:bg-white/[0.14]"
+              >
+                <Search className="h-3 w-3 text-white/55" />
+                {term}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={clearRecent}
+              className="rounded-full px-2.5 py-1.5 text-[12px] text-[#f4c327]/80 transition-colors hover:text-[#f4c327]"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
         <div className="mt-6 flex items-center justify-between">
-          <h2 className="text-[14px] font-medium text-white/90">{q ? "Search results" : category === "Top Results" ? "Recently searched" : category}</h2>
+          <h2 className="text-[14px] font-medium text-white/90">{q ? "Search results" : recentQueries.length ? "Recent searches" : category === "Top Results" ? "Suggested for you" : category}</h2>
           {q && <span className="text-xs text-white/50">{visibleSongs.length} found</span>}
         </div>
 
@@ -132,7 +233,7 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
             return (
               <li
                 key={song.id}
-                onClick={() => playSong(song)}
+                onClick={() => selectSong(song)}
                 className={cn(
                   "group flex cursor-pointer items-center gap-3 rounded-xl px-1 py-2 transition-colors",
                   playing
@@ -157,7 +258,7 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
                 ) : (
                   <>
                     <span className="text-[11px] tabular-nums text-white/75">{song.duration ? `${Math.floor(song.duration / 60)}:${String(song.duration % 60).padStart(2, "0")}` : ""}</span>
-                    <button aria-label={`Play ${song.title}`} onClick={(e) => { e.stopPropagation(); playSong(song); }} className="grid h-8 w-8 place-items-center rounded-full text-[#f4c327] opacity-0 transition group-hover:opacity-100 focus:opacity-100">
+                    <button aria-label={`Play ${song.title}`} onClick={(e) => { e.stopPropagation(); selectSong(song); }} className="grid h-8 w-8 place-items-center rounded-full text-[#f4c327] opacity-0 transition group-hover:opacity-100 focus:opacity-100">
                       <Play className="ml-0.5 h-4 w-4" fill="currentColor" />
                     </button>
                     <button aria-label={`More options for ${song.title}`} onClick={(e) => e.stopPropagation()} className="grid h-8 w-6 place-items-center text-[#f4c327]/75">
