@@ -93,7 +93,7 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
         .toLowerCase();
     const score = (s: Song) => {
       const title = (s.title ?? "").toLowerCase();
-      const artist = (s.singer || s.artist ?? "").toLowerCase();
+      const artist = ((s.singer || s.artist) ?? "").toLowerCase();
       let value = 0;
       if (title.startsWith(term)) value += 6;
       else if (title.includes(term)) value += 4;
