@@ -12,11 +12,56 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
   const [q, setQ] = useState("");
   const [category, setCategory] = useState<SearchCategory>("Top Results");
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [recentQueries, setRecentQueries] = useState<string[]>(() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) ?? "[]");
+      return Array.isArray(raw) ? raw.filter((t) => typeof t === "string" && t.trim()) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const saveRecent = (term: string) => {
+    const t = term.trim();
+    if (!t) return;
+    setRecentQueries((prev) => {
+      const next = [t, ...prev.filter((p) => p.toLowerCase() !== t.toLowerCase())].slice(0, 8);
+      try {
+        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next));
+      } catch {
+        // storage unavailable — recent searches stay in-memory for this session
+      }
+      return next;
+    });
+  };
+
+  const clearRecent = () => {
+    setRecentQueries([]);
+    try {
+      localStorage.removeItem(RECENT_SEARCHES_KEY);
+    } catch {
+      // ignore
+    }
+  };
+
+  const selectSong = (song: Song) => {
+    if (q.trim()) saveRecent(q);
+    inputRef.current?.blur();
+    playSong(song);
+  };
 
   useEffect(() => {
-    inputRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      // Desktop convenience: "/" focuses the field. Never auto-focus on load,
+      // so mobile browsers don't pop the keyboard open by themselves.
+      if (e.key === "/" && document.activeElement !== inputRef.current) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
