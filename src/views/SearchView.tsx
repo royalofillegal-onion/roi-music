@@ -7,6 +7,9 @@ import type { Song } from "@/data/Song";
 
 type SearchCategory = "Top Results" | "Artists" | "Albums" | "Songs";
 
+const RECENT_SEARCHES_KEY = "roi.recentSearches.v1";
+const MAX_RECENT_SEARCHES = 8;
+
 export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; mongoSongs?: Song[] }) {
   const { playSong, currentSong } = usePlayer();
   const [q, setQ] = useState("");
@@ -71,19 +74,41 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
     return [...mongoSongs, ...uniqueSongs].filter((song, index, list) => list.findIndex((item) => item.id === song.id) === index);
   }, [mongoSongs]);
 
+  // Results are ranked, not just filtered: a title that starts with the query
+  // beats one that merely mentions it, so the best match is always on top.
   const results = useMemo(() => {
     const term = q.trim().toLowerCase();
     if (!term) return catalog.slice(0, 30);
-    return catalog.filter((s) => {
-      return (
-        s.title?.toLowerCase().includes(term) ||
-        s.artist?.toLowerCase().includes(term) ||
-        s.singer?.toLowerCase().includes(term) ||
-        s.album?.toLowerCase().includes(term) ||
-        s.genre?.toLowerCase().includes(term) ||
-        s.language?.toLowerCase().includes(term)
-      );
-    }).slice(0, 80);
+    const searchable = (s: Song) =>
+      [
+        s.title,
+        s.singer,
+        s.artist,
+        s.album,
+        s.genre,
+        s.language,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+    const score = (s: Song) => {
+      const title = (s.title ?? "").toLowerCase();
+      const artist = (s.singer || s.artist ?? "").toLowerCase();
+      let value = 0;
+      if (title.startsWith(term)) value += 6;
+      else if (title.includes(term)) value += 4;
+      if (artist.startsWith(term)) value += 3;
+      else if (artist.includes(term)) value += 2;
+      if ((s.album ?? "").toLowerCase().includes(term)) value += 1;
+      if ((s.genre ?? "").toLowerCase().includes(term) || (s.language ?? "").toLowerCase().includes(term)) value += 0.5;
+      return value;
+    };
+    return catalog
+      .filter((s) => searchable(s).includes(term))
+      .map((s) => ({ s, score: score(s) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 80)
+      .map((entry) => entry.s);
   }, [q, catalog]);
 
   const artists = useMemo(() => {
