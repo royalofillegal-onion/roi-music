@@ -157,6 +157,14 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
               ref={inputRef}
               value={q}
               onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  saveRecent(q);
+                  inputRef.current?.blur();
+                }
+              }}
+              enterKeyHint="search"
+              autoComplete="off"
               placeholder="Search songs, artists, albums..."
               className="min-w-0 flex-1 bg-transparent text-[14px] outline-none placeholder:text-white/55"
             />
@@ -189,8 +197,31 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
           ))}
         </div>
 
+        {!q && recentQueries.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-1.5" aria-label="Recent searches">
+            {recentQueries.map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => setQ(term)}
+                className="flex items-center gap-1.5 rounded-full bg-white/[0.07] px-3 py-1.5 text-[12px] text-white/85 transition-colors hover:bg-white/[0.14]"
+              >
+                <Search className="h-3 w-3 text-white/55" />
+                {term}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={clearRecent}
+              className="rounded-full px-2.5 py-1.5 text-[12px] text-[#f4c327]/80 transition-colors hover:text-[#f4c327]"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
         <div className="mt-6 flex items-center justify-between">
-          <h2 className="text-[14px] font-medium text-white/90">{q ? "Search results" : category === "Top Results" ? "Recently searched" : category}</h2>
+          <h2 className="text-[14px] font-medium text-white/90">{q ? "Search results" : recentQueries.length ? "Recent searches" : category === "Top Results" ? "Suggested for you" : category}</h2>
           {q && <span className="text-xs text-white/50">{visibleSongs.length} found</span>}
         </div>
 
@@ -202,7 +233,7 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
             return (
               <li
                 key={song.id}
-                onClick={() => playSong(song)}
+                onClick={() => selectSong(song)}
                 className={cn(
                   "group flex cursor-pointer items-center gap-3 rounded-xl px-1 py-2 transition-colors",
                   playing
@@ -227,7 +258,7 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
                 ) : (
                   <>
                     <span className="text-[11px] tabular-nums text-white/75">{song.duration ? `${Math.floor(song.duration / 60)}:${String(song.duration % 60).padStart(2, "0")}` : ""}</span>
-                    <button aria-label={`Play ${song.title}`} onClick={(e) => { e.stopPropagation(); playSong(song); }} className="grid h-8 w-8 place-items-center rounded-full text-[#f4c327] opacity-0 transition group-hover:opacity-100 focus:opacity-100">
+                    <button aria-label={`Play ${song.title}`} onClick={(e) => { e.stopPropagation(); selectSong(song); }} className="grid h-8 w-8 place-items-center rounded-full text-[#f4c327] opacity-0 transition group-hover:opacity-100 focus:opacity-100">
                       <Play className="ml-0.5 h-4 w-4" fill="currentColor" />
                     </button>
                     <button aria-label={`More options for ${song.title}`} onClick={(e) => e.stopPropagation()} className="grid h-8 w-6 place-items-center text-[#f4c327]/75">
