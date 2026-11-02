@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Heart, Search, SlidersHorizontal, Flame, Radio, CircleUserRound, ChevronLeft, ChevronRight } from "lucide-react";
+import { Play, Heart, Search, SlidersHorizontal, Flame, Radio, CircleUserRound, ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
+import { toast } from "sonner";
 import { popularSongs, uniqueSongs } from "@/data/allSongs";
+import { fisherYatesShuffle } from "@/lib/algorithms/fisherYatesShuffle";
 import { usePlayer } from "@/context/PlayerContext";
 import { useWeather } from "@/hooks/useWeather";
 import { useListeningStats } from "@/lib/listeningStats";
@@ -26,7 +28,7 @@ export function HomeView({
   onOpenSearch,
   onOpenAccount,
 }: { mongoSongs?: import("@/data/Song").Song[]; onOpenSearch?: () => void; onOpenAccount?: () => void } = {}) {
-  const { playSong, playPlaylist, currentSong, toggleLike, isLiked, recentlyPlayed } = usePlayer();
+  const { playSong, playPlaylist, currentSong, toggleLike, isLiked, recentlyPlayed, addToQueue, isPlaying } = usePlayer();
   const weather = useWeather();
   const [activeBanner, setActiveBanner] = useState(0);
   const [isBannerPaused, setIsBannerPaused] = useState(false);
@@ -94,6 +96,41 @@ export function HomeView({
       (s) => (s.singer || s.artist || "").toLowerCase() === artist.toLowerCase()
     );
     if (seed) startRadio(seed);
+  };
+
+  // Press-and-hold (1s) on a card adds the song to the queue.
+  const pressTimer = useRef<number | null>(null);
+  const [pressingId, setPressingId] = useState<string | null>(null);
+
+  const startQueuePress = (song: any) => {
+    setPressingId(song.id);
+    pressTimer.current = window.setTimeout(() => {
+      pressTimer.current = null;
+      setPressingId(null);
+      addToQueue(song);
+      if ("vibrate" in navigator) navigator.vibrate?.(30);
+      toast.success("Added to queue", {
+        description: `${(song as any).singer || song.artist} · ${song.title}`,
+      });
+    }, 1000);
+  };
+
+  const cancelQueuePress = () => {
+    if (pressTimer.current) {
+      window.clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+    setPressingId(null);
+  };
+
+  useEffect(() => () => {
+    if (pressTimer.current) window.clearTimeout(pressTimer.current);
+  }, []);
+
+  const playPopularShuffle = () => {
+    if (!songs.length) return;
+    playPlaylist(fisherYatesShuffle([...songs]) as any);
+    toast("Shuffling Most Popular", { description: `${songs.length} songs, randomized` });
   };
 
   return (
