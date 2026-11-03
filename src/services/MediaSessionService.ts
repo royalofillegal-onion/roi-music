@@ -33,6 +33,10 @@ class MediaSessionManager {
   private callbacks: MediaSessionCallbacks | null = null;
   private positionInterval: ReturnType<typeof setInterval> | null = null;
   private artworkCanvas: HTMLCanvasElement | null = null;
+  // Guards against a race where a SLOWER artwork generation from the previous
+  // track resolves AFTER the next track already set its metadata, which would
+  // repaint the lock screen with the old song's title/artist/artwork.
+  private metadataGeneration = 0;
 
   /**
    * Register all media session action handlers (call once on app init).
@@ -185,6 +189,7 @@ class MediaSessionManager {
    */
   async updateMetadata(info: NowPlayingInfo): Promise<void> {
     if (!('mediaSession' in navigator)) return;
+    const generation = ++this.metadataGeneration;
 
     const sizes = [96, 128, 192, 256, 384, 512];
     const baseArtwork: MediaImage[] = info.imageUrl
@@ -206,6 +211,8 @@ class MediaSessionManager {
     if (info.imageUrl) {
       try {
         const enhanced = await this.createEnhancedArtwork(info.imageUrl, 512);
+        // A newer track changed metadata while we were generating — drop it.
+        if (generation !== this.metadataGeneration) return;
         if (enhanced.startsWith('data:')) {
           navigator.mediaSession.metadata = new MediaMetadata({
             title: info.title,

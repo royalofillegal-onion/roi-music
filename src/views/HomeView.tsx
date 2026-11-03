@@ -100,12 +100,15 @@ export function HomeView({
 
   // Press-and-hold (1s) on a card adds the song to the queue.
   const pressTimer = useRef<number | null>(null);
+  const longPressFired = useRef(false);
   const [pressingId, setPressingId] = useState<string | null>(null);
 
   const startQueuePress = (song: any) => {
+    longPressFired.current = false;
     setPressingId(song.id);
     pressTimer.current = window.setTimeout(() => {
       pressTimer.current = null;
+      longPressFired.current = true;
       setPressingId(null);
       addToQueue(song);
       if ("vibrate" in navigator) navigator.vibrate?.(30);
@@ -317,31 +320,70 @@ export function HomeView({
           <h2 className="flex items-center gap-2 text-[16px] font-bold text-white">
             <Flame className="h-4 w-4 text-[#ff5d68]" /> Most Popular
           </h2>
-          <button
-            onClick={onOpenSearch}
-            className="rounded-md bg-[#ff5d68] px-3 py-1 text-[9px] font-bold uppercase tracking-wide text-white"
-          >
-            View all
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={playPopularShuffle}
+              aria-label="Shuffle most popular"
+              className="grid h-8 w-8 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20 active:scale-90"
+            >
+              <Shuffle className="h-4 w-4" />
+            </button>
+            <button
+              onClick={onOpenSearch}
+              className="rounded-md bg-[#ff5d68] px-3 py-1 text-[9px] font-bold uppercase tracking-wide text-white"
+            >
+              View all
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3.5">
-          {songs.slice(0, 8).map((song) => {
+        <div className="-mx-5 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2 scrollbar-hide">
+          {songs.slice(0, 12).map((song) => {
             const liked = isLiked(song.id);
+            const playing = currentSong?.id === song.id && isPlaying;
             return (
               <article
                 key={song.id}
-                onClick={() => playSong(song)}
-                className="group cursor-pointer"
+                onClick={() => {
+                  if (longPressFired.current) {
+                    longPressFired.current = false;
+                    return;
+                  }
+                  playSong(song);
+                }}
+                onPointerDown={() => startQueuePress(song)}
+                onPointerUp={cancelQueuePress}
+                onPointerLeave={cancelQueuePress}
+                onPointerCancel={cancelQueuePress}
+                onContextMenu={(e) => e.preventDefault()}
+                className={cn(
+                  "group w-[148px] shrink-0 cursor-pointer select-none snap-start transition-transform",
+                  pressingId === song.id && "scale-[0.96]"
+                )}
               >
-                <div className="relative aspect-[1.05] overflow-hidden rounded-xl border border-white/[0.06] bg-zinc-900">
+                <div className="relative aspect-square overflow-hidden rounded-xl border border-white/[0.06] bg-zinc-900">
                   <img
                     src={song.imageUrl}
                     alt={song.title}
+                    draggable={false}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  {playing && (
+                    <div
+                      aria-label="Now playing"
+                      className="absolute left-2 top-2 flex items-end gap-[2px] rounded-md bg-black/55 px-1.5 py-1 backdrop-blur"
+                    >
+                      {[0, 1, 2].map((i) => (
+                        <span
+                          key={i}
+                          className="h-[10px] w-[3px] rounded-sm bg-[#ff5d68] [animation:eq_900ms_ease-in-out_infinite]"
+                          style={{ animationDelay: `${i * 140}ms` }}
+                        />
+                      ))}
+                    </div>
+                  )}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -367,7 +409,8 @@ export function HomeView({
                 </div>
                 <p className="mt-2 truncate text-[12px] font-semibold text-white">{song.title}</p>
                 <p className="truncate text-[10px] text-zinc-500">
-                  {(song as any).singer || song.artist}
+                  {(song as any).singer || song.artist} · {Math.floor(song.duration / 60)}:
+                  {String(song.duration % 60).padStart(2, "0")}
                 </p>
               </article>
             );

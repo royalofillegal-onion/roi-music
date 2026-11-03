@@ -286,6 +286,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   // toggles, etc.) will now also update the notification icon + metadata.
   useEffect(() => {
     if (!currentSong) return;
+    // Set the new track's metadata immediately so the lock screen /
+    // notification shade switches title, artist and artwork the moment the
+    // next / previous button fires — never showing the previous song.
     mediaSessionManager.updateMetadata({
       title: currentSong.title,
       artist: currentSong.artist,
@@ -293,7 +296,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       imageUrl: currentSong.imageUrl,
       duration: audioRef.current?.duration,
     });
-  }, [currentSong]);
+    // Re-assert the playing state too — Android refreshes the media
+    // notification when either metadata or playbackState changes.
+    mediaSessionManager.updatePlaybackState(isPlaying);
+  }, [currentSong, isPlaying]);
 
   useEffect(() => {
     mediaSessionManager.updatePlaybackState(isPlaying);
