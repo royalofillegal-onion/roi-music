@@ -1,0 +1,4 @@
+- [ ] Replace disconnected catalog administration with role-checked cloud song CRUD.
+- [ ] Show published cloud songs in Home and Search.
+- [ ] Add validation coverage and verify the admin catalog changes.
+- [ ] Confirm completion and note account-access and media-hosting blockers.
