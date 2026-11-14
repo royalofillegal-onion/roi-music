@@ -69,16 +69,21 @@ export type SongEditorInput = {
 export function parseSongEditorForm(value: SongEditorForm) {
   const result = songEditorSchema.safeParse(value);
   if (!result.success) return result;
+  const parsed = result.data;
   return {
     success: true as const,
     data: {
-      ...result.data,
-      album: result.data.album || "",
-      releaseDate: result.data.releaseDate || null,
-      genre: result.data.genre || "",
-      language: result.data.language || "",
-      lyrics: result.data.lyrics.trim() || null,
-      tags: result.data.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
+      title: value.title.trim(),
+      artist: value.artist.trim(),
+      album: parsed.album || "",
+      duration: Number(value.duration),
+      releaseDate: parsed.releaseDate || null,
+      genre: parsed.genre || "",
+      language: parsed.language || "",
+      audioUrl: value.audioUrl.trim(),
+      imageUrl: value.imageUrl.trim(),
+      lyrics: parsed.lyrics.trim() || null,
+      tags: parsed.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
     } satisfies SongEditorInput,
   };
 }
