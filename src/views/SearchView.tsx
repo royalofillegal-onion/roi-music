@@ -10,7 +10,7 @@ type SearchCategory = "Top Results" | "Artists" | "Albums" | "Songs";
 const RECENT_SEARCHES_KEY = "roi.recentSearches.v1";
 const MAX_RECENT_SEARCHES = 8;
 
-export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; mongoSongs?: Song[] }) {
+export function SearchView({ onClose, cloudSongs = [] }: { onClose: () => void; cloudSongs?: Song[] }) {
   const { playSong, currentSong } = usePlayer();
   const [q, setQ] = useState("");
   const [category, setCategory] = useState<SearchCategory>("Top Results");
@@ -71,8 +71,8 @@ export function SearchView({ onClose, mongoSongs = [] }: { onClose: () => void; 
   }, [onClose]);
 
   const catalog = useMemo(() => {
-    return [...mongoSongs, ...uniqueSongs].filter((song, index, list) => list.findIndex((item) => item.id === song.id) === index);
-  }, [mongoSongs]);
+    return [...cloudSongs, ...uniqueSongs].filter((song, index, list) => list.findIndex((item) => item.id === song.id) === index);
+  }, [cloudSongs]);
 
   // Results are ranked, not just filtered: a title that starts with the query
   // beats one that merely mentions it, so the best match is always on top.
