@@ -1,117 +1,227 @@
-import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, LoaderCircle, Music2, Plus, Upload, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowLeft, Check, LoaderCircle, Music2, Pencil, Plus, Search, Trash2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
-import type { Song } from "@/data/Song";
 import { useAuth } from "@/context/AuthContext";
-import { adminRequest } from "@/lib/mongoCatalog";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  deleteCloudSong,
+  fetchAdminCloudSongs,
+  parseSongEditorForm,
+  saveCloudSong,
+  setCloudSongPublished,
+  type CatalogSong,
+  type SongEditorForm,
+} from "@/lib/cloudSongCatalog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = { onClose: () => void };
 
+const emptyForm: SongEditorForm = {
+  title: "", artist: "", album: "", duration: "", releaseDate: "", genre: "", language: "",
+  audioUrl: "", imageUrl: "", lyrics: "", tags: "",
+};
+
+function formForSong(song: CatalogSong): SongEditorForm {
+  return {
+    title: song.title,
+    artist: song.artist,
+    album: song.album ?? "",
+    duration: String(song.duration || ""),
+    releaseDate: song.releaseDate ?? "",
+    genre: song.genre ?? "",
+    language: song.language ?? "",
+    audioUrl: song.audioUrl,
+    imageUrl: song.imageUrl,
+    lyrics: song.lyrics ?? "",
+    tags: song.tags?.join(", ") ?? "",
+  };
+}
+
+const inputClass = "border-border bg-background text-foreground placeholder:text-muted-foreground";
+
 export function AdminCatalogView({ onClose }: Props) {
   const { user } = useAuth();
-  const [songs, setSongs] = useState<Song[]>([]);
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const [songs, setSongs] = useState<CatalogSong[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [audio, setAudio] = useState<File | null>(null);
-  const [cover, setCover] = useState<File | null>(null);
-  const [form, setForm] = useState({ title: "", artist: "", album: "", duration: "", year: "", genre: "", language: "" });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState<SongEditorForm>(emptyForm);
+  const [query, setQuery] = useState("");
 
   const load = useCallback(async () => {
+    setLoading(true);
     try {
-      const result = await adminRequest<{ data: Song[] }>("/api/admin/songs");
-      setSongs(result.data);
+      const result = await fetchAdminCloudSongs();
+      setSongs(result);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unable to load catalog");
-    } finally { setLoading(false); }
+      toast.error(error instanceof Error ? error.message : "Could not load the catalog");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    let active = true;
+    if (!user) {
+      setAuthorized(false);
+      setLoading(false);
+      return;
+    }
+    void supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data, error }) => {
+      if (!active) return;
+      if (error) {
+        setAuthorized(false);
+        setLoading(false);
+        toast.error("Unable to verify administrator access");
+        return;
+      }
+      setAuthorized(data === true);
+    });
+    return () => { active = false; };
+  }, [user]);
 
-  const createSong = async (event: React.FormEvent) => {
+  useEffect(() => {
+    if (authorized === true) void load();
+  }, [authorized, load]);
+
+  const filteredSongs = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    if (!term) return songs;
+    return songs.filter((song) => `${song.title} ${song.artist} ${song.album ?? ""}`.toLowerCase().includes(term));
+  }, [query, songs]);
+
+  const resetEditor = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+  };
+
+  const saveSong = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!audio || !cover) return toast.error("Choose an MP3 and a cover image");
-    const formElement = event.currentTarget;
+    if (!user) return toast.error("Sign in with an administrator account first");
+    const parsed = parseSongEditorForm(form);
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      toast.error(issue?.message ?? "Check the song details");
+      return;
+    }
     setSaving(true);
     try {
-      const uploadBody = new FormData();
-      uploadBody.append("audio", audio);
-      uploadBody.append("cover", cover);
-      const media = await adminRequest<{ data: { audioUrl: string; imageUrl: string } }>("/api/admin/uploads", { method: "POST", body: uploadBody });
-      const data = await adminRequest<{ data: Song }>("/api/admin/songs", {
-        method: "POST",
-        body: JSON.stringify({
-          title: form.title, artist: form.artist, album: form.album || undefined,
-          duration: Number(form.duration), year: form.year ? Number(form.year) : undefined,
-          genre: form.genre || undefined, language: form.language || undefined,
-          ...media.data, isPublished: true,
-        }),
-      });
-      setSongs((current) => [data.data, ...current]);
-      setForm({ title: "", artist: "", album: "", duration: "", year: "", genre: "", language: "" });
-      setAudio(null); setCover(null);
-      if (formElement instanceof HTMLFormElement) formElement.reset();
-      toast.success("Song uploaded and published");
+      const saved = await saveCloudSong(editingId, parsed.data, user.id, editingId ? songs.find((song) => song.id === editingId)?.isPublished ?? false : true);
+      setSongs((current) => editingId ? current.map((song) => song.id === saved.id ? saved : song) : [saved, ...current]);
+      resetEditor();
+      toast.success(editingId ? "Song details updated" : "Song added to the catalog");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Song upload failed");
-    } finally { setSaving(false); }
+      toast.error(error instanceof Error ? error.message : "Could not save the song");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const togglePublished = async (song: Song) => {
-    if (song.isPublished === undefined) return toast.error("Song publication status is unavailable");
+  const togglePublished = async (song: CatalogSong) => {
     try {
-      const result = await adminRequest<{ data: Song }>(`/api/admin/songs/${encodeURIComponent(song.id)}`, {
-        method: "PATCH", body: JSON.stringify({ isPublished: !song.isPublished }),
-      });
-      setSongs((current) => current.map((item) => item.id === song.id ? result.data : item));
-      toast.success(result.data.isPublished ? "Song published" : "Song unpublished");
-    } catch (error) { toast.error(error instanceof Error ? error.message : "Update failed"); }
+      await setCloudSongPublished(song.id, !song.isPublished);
+      setSongs((current) => current.map((item) => item.id === song.id ? { ...item, isPublished: !song.isPublished } : item));
+      toast.success(song.isPublished ? "Song unpublished" : "Song published" );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not update song visibility");
+    }
   };
 
-  const removeSong = async (song: Song) => {
-    if (!window.confirm(`Delete “${song.title}” from MongoDB?`)) return;
+  const removeSong = async (song: CatalogSong) => {
+    if (!window.confirm(`Delete “${song.title}” from the catalog? This cannot be undone.`)) return;
     try {
-      await adminRequest(`/api/admin/songs/${encodeURIComponent(song.id)}`, { method: "DELETE" });
+      await deleteCloudSong(song.id);
       setSongs((current) => current.filter((item) => item.id !== song.id));
+      if (editingId === song.id) resetEditor();
       toast.success("Song deleted");
-    } catch (error) { toast.error(error instanceof Error ? error.message : "Delete failed"); }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not delete the song");
+    }
   };
 
-  if (!user) return <main className="min-h-dvh bg-[#08090a] p-8 text-white">Please sign in with an admin account, then reopen Admin catalog.</main>;
+  if (!user || authorized === false) {
+    return (
+      <main className="fixed inset-0 z-[70] grid place-items-center overflow-y-auto bg-background px-5 py-10 text-foreground">
+        <section className="w-full max-w-md border-y border-border py-8 text-center">
+          <Button variant="ghost" size="icon" aria-label="Close catalog" onClick={onClose} className="absolute right-5 top-5"><X /></Button>
+          <Music2 className="mx-auto h-9 w-9 text-primary" />
+          <h1 className="mt-4 text-xl font-bold">Administrator access required</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{user ? "This account is not assigned the administrator role." : "Sign in with an administrator account to manage music."}</p>
+          <Button variant="outline" className="mt-6" onClick={onClose}>Back to music</Button>
+        </section>
+      </main>
+    );
+  }
 
-  const inputClass = "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-amber-400/60";
+  if (authorized === null) {
+    return <main className="fixed inset-0 z-[70] grid place-items-center bg-background text-foreground"><LoaderCircle className="h-7 w-7 animate-spin text-primary" aria-label="Verifying access" /></main>;
+  }
+
+  const setField = (field: keyof SongEditorForm, value: string) => setForm((current) => ({ ...current, [field]: value }));
+
   return (
-    <main className="fixed inset-0 z-[70] overflow-y-auto bg-[#08090a] px-5 py-6 text-white sm:px-8">
-      <div className="mx-auto max-w-4xl pb-12">
-        <header className="flex items-center justify-between border-b border-white/10 pb-5">
-          <div className="flex items-center gap-3">
-            <button onClick={onClose} aria-label="Back" className="grid h-10 w-10 place-items-center rounded-full border border-white/10"><ArrowLeft size={18} /></button>
-            <div><p className="text-[10px] font-semibold uppercase tracking-[.24em] text-amber-300">Secure studio</p><h1 className="mt-1 text-xl font-semibold">Music catalog</h1></div>
+    <main className="fixed inset-0 z-[70] overflow-y-auto bg-background text-foreground">
+      <div className="mx-auto max-w-5xl px-5 pb-16 pt-5 sm:px-8">
+        <header className="flex items-center justify-between gap-4 border-b border-border pb-5">
+          <div className="flex min-w-0 items-center gap-3">
+            <Button variant="outline" size="icon" aria-label="Back" onClick={onClose}><ArrowLeft /></Button>
+            <div className="min-w-0"><p className="text-xs font-semibold uppercase text-primary">ROI Music · Studio</p><h1 className="truncate text-xl font-bold">Music catalog</h1></div>
           </div>
-          <span className="rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1.5 text-[11px] text-amber-200">Admin verified by API</span>
+          <span className="hidden items-center gap-1.5 text-xs text-muted-foreground sm:flex"><Check className="h-4 w-4 text-primary" /> Administrator verified</span>
         </header>
 
-        <form onSubmit={createSong} className="mt-6 rounded-3xl border border-white/10 bg-white/[0.025] p-5 sm:p-7">
-          <h2 className="flex items-center gap-2 text-base font-semibold"><Plus size={18} className="text-amber-300" /> Add a song</h2>
-          <p className="mt-1 text-xs text-zinc-500">Media is uploaded to server-managed storage credentials; MongoDB stores metadata and media URLs.</p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <input required maxLength={180} className={inputClass} placeholder="Song title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-            <input required maxLength={180} className={inputClass} placeholder="Artist" value={form.artist} onChange={(e) => setForm({ ...form, artist: e.target.value })} />
-            <input className={inputClass} placeholder="Album" value={form.album} onChange={(e) => setForm({ ...form, album: e.target.value })} />
-            <input required type="number" min="1" step="1" className={inputClass} placeholder="Duration (seconds)" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} />
-            <input type="number" min="1800" max="2200" className={inputClass} placeholder="Release year" value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} />
-            <input className={inputClass} placeholder="Genre" value={form.genre} onChange={(e) => setForm({ ...form, genre: e.target.value })} />
-            <input className={inputClass} placeholder="Language" value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value })} />
-            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-white/15 px-3 py-2.5 text-xs text-zinc-400"><Upload size={16} className="text-amber-300" /><span className="min-w-0 flex-1 truncate">{audio?.name || "Select MP3 (max 30 MB)"}</span><input required type="file" accept="audio/mpeg,.mp3" className="sr-only" onChange={(e) => setAudio(e.target.files?.[0] || null)} /></label>
-            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-white/15 px-3 py-2.5 text-xs text-zinc-400"><Upload size={16} className="text-amber-300" /><span className="min-w-0 flex-1 truncate">{cover?.name || "Select cover image"}</span><input required type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => setCover(e.target.files?.[0] || null)} /></label>
+        <form onSubmit={saveSong} className="mt-6 border-b border-border pb-7">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div><h2 className="flex items-center gap-2 text-base font-bold"><Plus className="h-4 w-4 text-primary" />{editingId ? "Edit song" : "Add a song"}</h2><p className="mt-1 text-xs text-muted-foreground">Add valid HTTPS links for MP3 audio and artwork.</p></div>
+            {editingId && <Button type="button" variant="ghost" size="icon" aria-label="Cancel editing" onClick={resetEditor}><X /></Button>}
           </div>
-          <button disabled={saving} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-300 py-3 text-sm font-bold text-zinc-950 disabled:opacity-60 sm:w-auto sm:px-6">{saving ? <LoaderCircle className="animate-spin" size={17} /> : <Upload size={16} />} Upload and publish</button>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Input required maxLength={180} className={inputClass} placeholder="Song title" value={form.title} onChange={(event) => setField("title", event.target.value)} />
+            <Input required maxLength={180} className={inputClass} placeholder="Artist" value={form.artist} onChange={(event) => setField("artist", event.target.value)} />
+            <Input maxLength={180} className={inputClass} placeholder="Album (optional)" value={form.album} onChange={(event) => setField("album", event.target.value)} />
+            <Input required type="number" min="1" max="86400" step="1" className={inputClass} placeholder="Duration in seconds" value={form.duration} onChange={(event) => setField("duration", event.target.value)} />
+            <Input type="date" className={inputClass} aria-label="Release date" value={form.releaseDate} onChange={(event) => setField("releaseDate", event.target.value)} />
+            <Input maxLength={80} className={inputClass} placeholder="Genre" value={form.genre} onChange={(event) => setField("genre", event.target.value)} />
+            <Input maxLength={80} className={inputClass} placeholder="Language" value={form.language} onChange={(event) => setField("language", event.target.value)} />
+            <Input required type="url" className={inputClass} placeholder="Audio URL (HTTPS .mp3)" value={form.audioUrl} onChange={(event) => setField("audioUrl", event.target.value)} />
+            <Input required type="url" className={inputClass} placeholder="Artwork URL (HTTPS)" value={form.imageUrl} onChange={(event) => setField("imageUrl", event.target.value)} />
+            <Input maxLength={500} className={`${inputClass} sm:col-span-2`} placeholder="Tags, separated by commas" value={form.tags} onChange={(event) => setField("tags", event.target.value)} />
+            <Textarea maxLength={20000} className={`${inputClass} sm:col-span-2`} placeholder="Lyrics (optional)" value={form.lyrics} onChange={(event) => setField("lyrics", event.target.value)} />
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <Button type="submit" disabled={saving}>
+              {saving ? <LoaderCircle className="animate-spin" /> : editingId ? <Check /> : <Upload />}
+              {saving ? "Saving…" : editingId ? "Save changes" : "Add song"}
+            </Button>
+            <p className="text-xs text-muted-foreground">New songs are published immediately.</p>
+          </div>
         </form>
 
-        <section className="mt-8">
-          <div className="mb-3 flex items-center justify-between"><h2 className="text-base font-semibold">Catalog <span className="ml-1 text-xs text-zinc-500">{songs.length}</span></h2><button onClick={() => { setLoading(true); void load(); }} className="text-xs text-amber-300">Refresh</button></div>
-          {loading ? <div className="flex justify-center py-10 text-zinc-500"><LoaderCircle className="animate-spin" /></div> : songs.length ? <ul className="divide-y divide-white/[0.07] rounded-2xl border border-white/[0.08] px-4">
-            {songs.map((song) => <li key={song.id} className="flex items-center gap-3 py-3"><img src={song.imageUrl} alt="" className="h-12 w-12 rounded-lg object-cover" /><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{song.title}</p><p className="truncate text-xs text-zinc-500">{song.artist} · {song.album || "Single"}</p></div><span className={`hidden rounded-full px-2 py-1 text-[10px] sm:block ${song.isPublished === false ? "bg-white/5 text-zinc-500" : "bg-emerald-400/10 text-emerald-300"}`}>{song.isPublished === false ? "Unpublished" : "Published"}</span><button onClick={() => void togglePublished(song)} className="rounded-lg border border-white/10 px-2.5 py-2 text-[11px] text-zinc-300">{song.isPublished === false ? "Publish" : "Unpublish"}</button><button onClick={() => void removeSong(song)} aria-label={`Delete ${song.title}`} className="grid h-9 w-9 place-items-center rounded-lg text-zinc-500 hover:bg-red-500/10 hover:text-red-300"><X size={15} /></button></li>)}
-          </ul> : <div className="rounded-2xl border border-dashed border-white/10 py-10 text-center text-sm text-zinc-500"><Music2 className="mx-auto mb-2" />No MongoDB songs yet</div>}
+        <section className="mt-7">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div><h2 className="text-base font-bold">Catalog <span className="ml-1 text-xs font-normal text-muted-foreground">{songs.length}</span></h2><p className="mt-1 text-xs text-muted-foreground">Manage songs, visibility, and details.</p></div>
+            <Button type="button" variant="outline" size="sm" onClick={() => void load()} disabled={loading}><LoaderCircle className={loading ? "animate-spin" : "hidden"} /> Refresh</Button>
+          </div>
+          <div className="mb-4 flex items-center gap-2 border-b border-border pb-2"><Search className="h-4 w-4 text-muted-foreground" /><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Find a song or artist" aria-label="Find a song or artist" className="h-9 border-0 bg-transparent shadow-none focus-visible:ring-0" /></div>
+          {loading ? <div className="flex justify-center py-12 text-muted-foreground"><LoaderCircle className="h-5 w-5 animate-spin" /></div> : filteredSongs.length ? (
+            <ul className="divide-y divide-border">
+              {filteredSongs.map((song) => (
+                <li key={song.id} className="flex min-w-0 flex-wrap items-center gap-3 py-3">
+                  <img src={song.imageUrl} alt="" className="h-12 w-12 shrink-0 rounded-md bg-muted object-cover" />
+                  <div className="min-w-0 flex-1 basis-[140px]"><p className="truncate text-sm font-semibold">{song.title}</p><p className="truncate text-xs text-muted-foreground">{song.artist} · {song.album || "Single"}</p></div>
+                  <span className="text-xs text-muted-foreground">{song.isPublished ? "Published" : "Unpublished"}</span>
+                  <div className="flex items-center gap-1">
+                    <Button type="button" variant="outline" size="sm" onClick={() => void togglePublished(song)}>{song.isPublished ? "Unpublish" : "Publish"}</Button>
+                    <Button type="button" variant="ghost" size="icon" aria-label={`Edit ${song.title}`} onClick={() => { setEditingId(song.id); setForm(formForSong(song)); window.scrollTo({ top: 0, behavior: "smooth" }); }}><Pencil /></Button>
+                    <Button type="button" variant="ghost" size="icon" aria-label={`Delete ${song.title}`} onClick={() => void removeSong(song)}><Trash2 /></Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : <div className="py-12 text-center text-sm text-muted-foreground"><Music2 className="mx-auto mb-2 h-6 w-6" />{songs.length ? "No matching songs." : "No songs yet. Add the first song above."}</div>}
         </section>
       </div>
     </main>

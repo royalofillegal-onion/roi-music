@@ -24,10 +24,10 @@ const todayStr = new Date().toLocaleDateString("en-US", {
 });
 
 export function HomeView({
-  mongoSongs = [],
+  cloudSongs = [],
   onOpenSearch,
   onOpenAccount,
-}: { mongoSongs?: import("@/data/Song").Song[]; onOpenSearch?: () => void; onOpenAccount?: () => void } = {}) {
+}: { cloudSongs?: import("@/data/Song").Song[]; onOpenSearch?: () => void; onOpenAccount?: () => void } = {}) {
   const { playSong, playPlaylist, currentSong, toggleLike, isLiked, recentlyPlayed, addToQueue, isPlaying } = usePlayer();
   const weather = useWeather();
   const [activeBanner, setActiveBanner] = useState(0);
@@ -35,9 +35,9 @@ export function HomeView({
   const [typedBannerText, setTypedBannerText] = useState("");
   const touchStartX = useRef<number | null>(null);
   const songs = useMemo(() => {
-    const combined = [...mongoSongs, ...popularSongs];
+    const combined = [...cloudSongs, ...popularSongs];
     return combined.filter((song, index, list) => list.findIndex((item) => item.id === song.id) === index).slice(0, 12);
-  }, [mongoSongs]);
+  }, [cloudSongs]);
   const bannerSongs = songs.slice(0, Math.min(5, songs.length));
   const hero = bannerSongs[activeBanner] || songs[0];
   const bannerLabel = activeBanner === 0 && weather.condition
