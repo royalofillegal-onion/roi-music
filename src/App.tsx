@@ -12,8 +12,10 @@ import { ProfileView } from "@/views/ProfileView";
 import { AuthProvider } from "@/context/AuthContext";
 import { useLibrarySync } from "@/lib/cloudLibrary";
 import { useListeningTracker } from "@/lib/listeningStats";
-import { fetchPublishedCloudSongs } from "@/lib/cloudSongCatalog";
+import type { Song } from "@/data/Song";
+import { fetchMongoSongs } from "@/lib/mongoCatalog";
 import { AdminCatalogView } from "@/views/AdminCatalogView";
+import { uniqueSongs } from "@/data/allSongs";
 
 function AppShell() {
   const { currentSong, likedSongs } = usePlayer();
@@ -21,16 +23,20 @@ function AppShell() {
   const [fullOpen, setFullOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
-  const [cloudSongs, setCloudSongs] = useState<import("@/lib/cloudSongCatalog").CatalogSong[]>([]);
+  const [mongoSongs, setMongoSongs] = useState<Song[]>([]);
   useLibrarySync(likedSongs);
   useListeningTracker(currentSong);
 
   useEffect(() => {
     let active = true;
-    fetchPublishedCloudSongs().then((songs) => {
-      if (active) setCloudSongs(songs);
+    fetchMongoSongs().then((songs) => {
+      if (!active) return;
+      for (const song of songs) {
+        if (!uniqueSongs.some((existing) => existing.id === song.id)) uniqueSongs.push(song);
+      }
+      setMongoSongs(songs);
     }).catch(() => {
-      // Keep the bundled catalog available if the cloud catalog cannot be reached.
+      // MongoDB is optional in local/static deployments; bundled catalog remains available.
     });
     return () => { active = false; };
   }, []);
@@ -38,8 +44,8 @@ function AppShell() {
   return (
     <div className="min-h-dvh overflow-x-hidden bg-[#050005] text-white">
       <div key={tab} className="view-enter">
-        {tab === "home" && <HomeView cloudSongs={cloudSongs} onOpenSearch={() => setTab("search")} onOpenAccount={() => setAccountOpen(true)} />}
-        {tab === "search" && <SearchView cloudSongs={cloudSongs} onClose={() => setTab("home")} />}
+        {tab === "home" && <HomeView mongoSongs={mongoSongs} onOpenSearch={() => setTab("search")} onOpenAccount={() => setAccountOpen(true)} />}
+        {tab === "search" && <SearchView mongoSongs={mongoSongs} onClose={() => setTab("home")} />}
       </div>
 
       {accountOpen && (
@@ -53,7 +59,12 @@ function AppShell() {
       {currentSong && fullOpen && <FullPlayer onClose={() => setFullOpen(false)} />}
       {adminOpen && <AdminCatalogView onClose={() => {
         setAdminOpen(false);
-        void fetchPublishedCloudSongs().then(setCloudSongs).catch(() => {});
+        void fetchMongoSongs().then((songs) => {
+          for (const song of songs) {
+            if (!uniqueSongs.some((existing) => existing.id === song.id)) uniqueSongs.push(song);
+          }
+          setMongoSongs(songs);
+        }).catch(() => {});
       }} />}
     </div>
   );

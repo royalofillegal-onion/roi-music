@@ -66,13 +66,9 @@ export type SongEditorInput = {
   tags: string[];
 };
 
-export type SongEditorParseResult =
-  | { success: false; error: z.ZodError }
-  | { success: true; data: SongEditorInput };
-
-export function parseSongEditorForm(value: SongEditorForm): SongEditorParseResult {
+export function parseSongEditorForm(value: SongEditorForm) {
   const result = songEditorSchema.safeParse(value);
-  if (!result.success) return { success: false, error: result.error };
+  if (!result.success) return result;
   const parsed = result.data;
   return {
     success: true as const,
