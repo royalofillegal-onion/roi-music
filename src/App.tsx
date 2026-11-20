@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { HomeView } from "@/views/HomeView";
@@ -13,9 +14,11 @@ import { AuthProvider } from "@/context/AuthContext";
 import { useLibrarySync } from "@/lib/cloudLibrary";
 import { useListeningTracker } from "@/lib/listeningStats";
 import type { Song } from "@/data/Song";
-import { fetchMongoSongs } from "@/lib/mongoCatalog";
+import { fetchPublishedCloudSongs } from "@/lib/cloudSongCatalog";
 import { AdminCatalogView } from "@/views/AdminCatalogView";
 import { uniqueSongs } from "@/data/allSongs";
+import { isSupabaseConfigured } from "@/integrations/supabase/client";
+import { AuthView } from "@/views/AuthView";
 
 function AppShell() {
   const { currentSong, likedSongs } = usePlayer();
@@ -23,20 +26,22 @@ function AppShell() {
   const [fullOpen, setFullOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
-  const [mongoSongs, setMongoSongs] = useState<Song[]>([]);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [cloudSongs, setCloudSongs] = useState<Song[]>([]);
   useLibrarySync(likedSongs);
   useListeningTracker(currentSong);
 
   useEffect(() => {
     let active = true;
-    fetchMongoSongs().then((songs) => {
+    if (!isSupabaseConfigured) return;
+    fetchPublishedCloudSongs().then((songs) => {
       if (!active) return;
       for (const song of songs) {
         if (!uniqueSongs.some((existing) => existing.id === song.id)) uniqueSongs.push(song);
       }
-      setMongoSongs(songs);
-    }).catch(() => {
-      // MongoDB is optional in local/static deployments; bundled catalog remains available.
+      setCloudSongs(songs);
+    }).catch((error) => {
+      if (active) toast.error(error instanceof Error ? error.message : "Unable to load published songs");
     });
     return () => { active = false; };
   }, []);
@@ -44,13 +49,19 @@ function AppShell() {
   return (
     <div className="min-h-dvh overflow-x-hidden bg-[#050005] text-white">
       <div key={tab} className="view-enter">
-        {tab === "home" && <HomeView mongoSongs={mongoSongs} onOpenSearch={() => setTab("search")} onOpenAccount={() => setAccountOpen(true)} />}
-        {tab === "search" && <SearchView mongoSongs={mongoSongs} onClose={() => setTab("home")} />}
+        {tab === "home" && <HomeView cloudSongs={cloudSongs} onOpenSearch={() => setTab("search")} onOpenAccount={() => setAccountOpen(true)} />}
+        {tab === "search" && <SearchView cloudSongs={cloudSongs} onClose={() => setTab("home")} />}
       </div>
 
       {accountOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black">
-          <ProfileView onSignIn={() => setAccountOpen(true)} onClose={() => setAccountOpen(false)} onOpenAdmin={() => { setAccountOpen(false); setAdminOpen(true); }} />
+          <ProfileView onSignIn={() => { setAccountOpen(false); setAuthOpen(true); }} onClose={() => setAccountOpen(false)} onOpenAdmin={() => { setAccountOpen(false); setAdminOpen(true); }} />
+        </div>
+      )}
+
+      {authOpen && (
+        <div className="fixed inset-0 z-[60] overflow-y-auto bg-background">
+          <AuthView onClose={() => { setAuthOpen(false); setAccountOpen(true); }} />
         </div>
       )}
 
@@ -59,12 +70,13 @@ function AppShell() {
       {currentSong && fullOpen && <FullPlayer onClose={() => setFullOpen(false)} />}
       {adminOpen && <AdminCatalogView onClose={() => {
         setAdminOpen(false);
-        void fetchMongoSongs().then((songs) => {
+        if (!isSupabaseConfigured) return;
+        void fetchPublishedCloudSongs().then((songs) => {
           for (const song of songs) {
             if (!uniqueSongs.some((existing) => existing.id === song.id)) uniqueSongs.push(song);
           }
-          setMongoSongs(songs);
-        }).catch(() => {});
+          setCloudSongs(songs);
+        }).catch((error) => toast.error(error instanceof Error ? error.message : "Unable to refresh songs"));
       }} />}
     </div>
   );

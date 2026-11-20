@@ -150,7 +150,7 @@ export async function fetchAdminCloudSongs(): Promise<CatalogSong[]> {
   return ((data || []) as unknown as CatalogRow[]).map(mapCatalogRow);
 }
 
-async function findOrCreateArtist(name: string, genre: string, language: string, userId: string) {
+async function findOrCreateArtist(name: string, genre: string, language: string, imageUrl: string, userId: string) {
   const { data: existing, error: findError } = await supabase
     .from("artists")
     .select("id")
@@ -158,18 +158,27 @@ async function findOrCreateArtist(name: string, genre: string, language: string,
     .limit(1)
     .maybeSingle();
   if (findError) throw new Error(findError.message);
-  if (existing) return existing.id;
+  if (existing) {
+    const { error } = await supabase.from("artists").update({
+      name,
+      genre: genre || null,
+      language: language || null,
+      image_url: imageUrl,
+    }).eq("id", existing.id);
+    if (error) throw new Error(error.message);
+    return existing.id;
+  }
 
   const { data, error } = await supabase
     .from("artists")
-    .insert({ name, genre: genre || null, language: language || null, created_by: userId })
+    .insert({ name, genre: genre || null, language: language || null, image_url: imageUrl, created_by: userId })
     .select("id")
     .single();
   if (error) throw new Error(error.message);
   return data.id;
 }
 
-async function findOrCreateAlbum(title: string, artistId: string, releaseDate: string | null) {
+async function findOrCreateAlbum(title: string, artistId: string, releaseDate: string | null, imageUrl: string) {
   if (!title) return null;
   const { data: existing, error: findError } = await supabase
     .from("albums")
@@ -179,11 +188,19 @@ async function findOrCreateAlbum(title: string, artistId: string, releaseDate: s
     .limit(1)
     .maybeSingle();
   if (findError) throw new Error(findError.message);
-  if (existing) return existing.id;
+  if (existing) {
+    const { error } = await supabase.from("albums").update({
+      title,
+      release_date: releaseDate,
+      cover_url: imageUrl,
+    }).eq("id", existing.id);
+    if (error) throw new Error(error.message);
+    return existing.id;
+  }
 
   const { data, error } = await supabase
     .from("albums")
-    .insert({ title, artist_id: artistId, release_date: releaseDate })
+    .insert({ title, artist_id: artistId, release_date: releaseDate, cover_url: imageUrl })
     .select("id")
     .single();
   if (error) throw new Error(error.message);
@@ -191,8 +208,8 @@ async function findOrCreateAlbum(title: string, artistId: string, releaseDate: s
 }
 
 export async function saveCloudSong(songId: string | null, input: SongEditorInput, userId: string, isPublished: boolean) {
-  const artistId = await findOrCreateArtist(input.artist, input.genre, input.language, userId);
-  const albumId = await findOrCreateAlbum(input.album, artistId, input.releaseDate);
+  const artistId = await findOrCreateArtist(input.artist, input.genre, input.language, input.imageUrl, userId);
+  const albumId = await findOrCreateAlbum(input.album, artistId, input.releaseDate, input.imageUrl);
   const values = {
     title: input.title,
     artist_id: artistId,
